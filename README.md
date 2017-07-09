@@ -29,12 +29,12 @@ Online-Tauschbörse im Rahmen des CAS FEE 2017. Ziel des Projekts ist es, eine W
     * Eingehende/Ausgehende Tauschanfragen
     * Vollzogene Tauschgeschäfte
   * Offene Tauschanfragen können von beiden Seiten storniert werden.
-  * Ist der Empfänger der Tauschanfrage einverstanden, wählt er die angebotenen Artikel aus, die er haben möchte.
+  * Ist der Empfänger der Tauschanfrage einverstanden, wählt er die angebotenen Artikel aus, die er im Gegenzug haben möchte.
   * Damit ist das Tauschgeschäft vollzogen.
 
 ### Optionale Anforderungen
 
-* Nach vollzogenem Tauschgeschäft haben die beiden Benutzern die Möglichkeit, sich gegenseitig zu bewerten.
-* Ranking-Systen: Die aktivsten Benutzer (Anzahl Tauschgeschäfte, Anzahl Artikel) werden in einer Rangliste geführt.
+* Nach vollzogenem Tauschgeschäft haben die beiden Benutzer die Möglichkeit, sich gegenseitig zu bewerten.
+* Ranking-System: Die aktivsten Benutzer (Anzahl Tauschgeschäfte, Anzahl Artikel) werden in einer Rangliste geführt.
 * Gewisse Artikel können nur zusammen gehandelt werden.
 * Login via externem Konto (z.B. Login via Facebook-Account).
