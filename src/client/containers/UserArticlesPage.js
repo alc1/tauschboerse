@@ -6,8 +6,8 @@ import DataService from '../services/DataService';
 
 class UserArticlesPage extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             articles: []
         };

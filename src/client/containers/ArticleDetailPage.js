@@ -5,8 +5,8 @@ import DataService from '../services/DataService';
 
 class ArticleDetailPage extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             article: undefined
         };
@@ -14,8 +14,17 @@ class ArticleDetailPage extends React.Component {
 
     componentDidMount() {
         const { articleId } = this.props.match.params;
+        this.loadArticle(articleId);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { articleId } = nextProps.match.params;
+        this.loadArticle(articleId);
+    }
+
+    loadArticle(theArticleId) {
         const dataService = new DataService();
-        const loadRequest = dataService.loadArticle(articleId);
+        const loadRequest = dataService.loadArticle(theArticleId);
         loadRequest.done((data) => {
             this.setState({
                 article: data.article
