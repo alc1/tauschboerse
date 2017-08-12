@@ -1,39 +1,20 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import ArticleComponent from '../components/ArticleComponent';
-import DataService from '../services/DataService';
+import * as Actions from '../actions/actions';
 
 class ArticleDetailPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            article: undefined
-        };
-    }
-
     componentDidMount() {
         const { articleId } = this.props.match.params;
-        this.loadArticle(articleId);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const { articleId } = nextProps.match.params;
-        this.loadArticle(articleId);
-    }
-
-    loadArticle(theArticleId) {
-        const dataService = new DataService();
-        const loadRequest = dataService.loadArticle(theArticleId);
-        loadRequest.done((data) => {
-            this.setState({
-                article: data.article
-            });
-        });
+        this.props.loadArticle(articleId);
     }
 
     render() {
-        const { article } = this.state;
+        const { article } = this.props;
         return (
             <div>
                 {article && <ArticleComponent id={article._id} title={article.title} description={article.description}/>}
@@ -42,4 +23,19 @@ class ArticleDetailPage extends React.Component {
     }
 }
 
-export default ArticleDetailPage;
+ArticleDetailPage.propTypes = {
+    article: PropTypes.object,
+    loadArticle: PropTypes.func.isRequired
+};
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(Actions, dispatch);
+}
+
+function mapStateToProps(theState) {
+    return {
+        article: theState.article
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleDetailPage);

@@ -1,31 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import ArticleComponent from '../components/ArticleComponent';
-import DataService from '../services/DataService';
+import * as Actions from '../actions/actions';
 
 class UserArticlesPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            articles: []
-        };
-    }
-
     componentDidMount() {
         const { userId } = this.props.match.params;
-        const dataService = new DataService();
-        const loadRequest = dataService.loadUserArticles(userId);
-        loadRequest.done((data) => {
-            this.setState({
-                articles: data.articles
-            });
-        });
+        this.props.loadUserArticles(userId);
     }
 
     render() {
-        const articleComponents = this.state.articles.map(article =>
+        const { userArticles } = this.props;
+        const articleComponents = userArticles.map(article =>
             <div key={article._id}>
                 <ArticleComponent id={article._id} title={article.title} description={article.description}/>
                 <Link to={`/article/${article._id}`}>Detail</Link>
@@ -39,4 +30,19 @@ class UserArticlesPage extends React.Component {
     }
 }
 
-export default UserArticlesPage;
+UserArticlesPage.propTypes = {
+    userArticles: PropTypes.array.isRequired,
+    loadUserArticles: PropTypes.func.isRequired
+};
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(Actions, dispatch);
+}
+
+function mapStateToProps(theState) {
+    return {
+        userArticles: theState.userArticles
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserArticlesPage);
