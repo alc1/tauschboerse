@@ -6,7 +6,7 @@ class NavigationComponent extends React.Component {
         return (
             <ul>
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/userarticles/1">Meine Artikel</Link></li>
+                <li><Link to="/userarticles/ph63KF1MYC8IZxfl">Meine Artikel</Link></li>
                 <li><Link to="/marketplace">Marktplatz</Link></li>
                 <li>Tauschgeschäfte
                     <ul>

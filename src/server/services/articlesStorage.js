@@ -17,7 +17,7 @@ function insertTestData(doAfterInsert) {
     });
 }
 
-function getUserArticles(theUserId, doAfterFind) {
+function getArticlesByUser(theUserId, doAfterFind) {
     db.find({ $where : function() { return this.userId === theUserId } }, (err, articles) => {
         if (doAfterFind) {
             doAfterFind(err, articles);
@@ -34,7 +34,7 @@ function getArticle(theArticleId, doAfterFind) {
 }
 
 module.exports = {
-    getUserArticles,
+    getArticlesByUser,
     getArticle,
     insertTestData
 };

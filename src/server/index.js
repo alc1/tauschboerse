@@ -5,7 +5,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
-const routes = require('./routes/articlesRoutes');
+const articlesRoutes = require('./routes/articlesRoutes');
+const usersRoutes = require('./routes/usersRoutes');
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -18,7 +19,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.use('/', express.static(path.join(__dirname, './../../public')));
-app.use(routes);
+app.use('/api/articles', articlesRoutes);
+app.use('/api/users', usersRoutes);
 
 const server = http.createServer(app);
 server.listen(3001, () => {
