@@ -21,7 +21,9 @@
     "react-router-dom": "^4.1.2",
     "react-scripts": "^1.0.10",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.71.3"
   },
   "scripts": {
     "start": "react-scripts start",

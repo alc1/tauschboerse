@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -17,10 +16,7 @@ class UserArticlesPage extends React.Component {
     render() {
         const { userArticles } = this.props;
         const articleComponents = userArticles.map(article =>
-            <div key={article._id}>
-                <ArticleComponent id={article._id} title={article.title} description={article.description}/>
-                <Link to={`/article/${article._id}`}>Detail</Link>
-            </div>
+            <ArticleComponent key={article._id} id={article._id} title={article.title} description={article.description} owner={article.user}/>
         );
         return (
             <div>

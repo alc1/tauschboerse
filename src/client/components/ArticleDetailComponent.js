@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Card, Icon, Button } from 'semantic-ui-react';
+import { Card, Icon } from 'semantic-ui-react';
 
-class ArticleComponent extends React.Component {
+class ArticleDetailComponent extends React.Component {
     render() {
         return (
+            // TODO: Currently this component shows the same as ArticleComponent, should be changed to an editor for the article
             <Card>
                 <Card.Content>
                     <Card.Header>{this.props.title}</Card.Header>
@@ -15,17 +15,14 @@ class ArticleComponent extends React.Component {
                 <Card.Content extra>
                     <Icon name='user'/>{this.props.owner.name}
                 </Card.Content>
-                <Card.Content>
-                    <Button><Link to={`/article/${this.props.id}`}>Detail</Link></Button>
-                </Card.Content>
             </Card>
         );
     }
 }
 
-export default ArticleComponent;
+export default ArticleDetailComponent;
 
-ArticleComponent.propTypes = {
+ArticleDetailComponent.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,

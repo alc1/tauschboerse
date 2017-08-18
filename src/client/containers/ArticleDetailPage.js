@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import ArticleComponent from '../components/ArticleComponent';
+import ArticleDetailComponent from '../components/ArticleDetailComponent';
 import * as Actions from '../actions/actions';
 
 class ArticleDetailPage extends React.Component {
@@ -17,7 +17,7 @@ class ArticleDetailPage extends React.Component {
         const { article } = this.props;
         return (
             <div>
-                {article && <ArticleComponent id={article._id} title={article.title} description={article.description}/>}
+                {article && <ArticleDetailComponent id={article._id} title={article.title} description={article.description} owner={article.user}/>}
             </div>
         );
     }
