@@ -32,11 +32,10 @@ Online-Tauschbörse im Rahmen des CAS FEE 2017. Ziel des Projekts ist es, eine W
 
 * Tauschgeschäfte
   * Nur registrierte Benutzer haben die Möglichkeit Tauschgeschäfte über den Marktplatz zu starten.
-  * In einer Übersicht sieht ein registrierter Benutzer, welche Tauschgeschäfte er noch offen hat:
-    * Eingehende/Ausgehende Tauschanfragen
-    * Vollzogene Tauschgeschäfte
+  * In einer Übersicht sieht ein registrierter Benutzer seine Tauschgeschäfte (offen oder abgeschlossen).
   * Offene Tauschanfragen können von beiden Seiten storniert werden.
-  * Ist der Empfänger der Tauschanfrage einverstanden, wählt er die angebotenen Artikel aus, die er im Gegenzug haben möchte. Damit ist das Tauschgeschäft vollzogen.
+  * Ist der Empfänger der Tauschanfrage einverstanden, wird das Tauschgeschäft durchgeführt.
+  * Ist er aber mit dem Angebot nicht einverstanden, kann er das Tauschgeschäft beenden, oder einen Gegenvorschlag machen.
 
 ### Optionale Ideen
 
@@ -56,3 +55,4 @@ Funktionserweiterungen:
 * Login via externem Konto (z.B. Login via Facebook-Account).
 * Paging-Mechanismus bei der Suche nach Artikeln (z.B. nächste 50 Artikel laden).
 * Administratorrolle zu Supportzwecken.
+* E-Mail-Benachrichtigung bei einer Aktivität (z.B. wenn eine Tauschanfrage eingegangen ist).
