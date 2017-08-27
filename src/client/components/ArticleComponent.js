@@ -12,11 +12,11 @@ class ArticleComponent extends React.Component {
                     <Card.Meta>{this.props.id}</Card.Meta>
                     <Card.Description>{this.props.description}</Card.Description>
                 </Card.Content>
-                <Card.Content extra>
+                <Card.Content>
                     <Icon name='user'/>{this.props.owner.name}
                 </Card.Content>
                 <Card.Content>
-                    <Button><Link to={`/article/${this.props.id}`}>Detail</Link></Button>
+                    <Link to={`/article/${this.props.id}`}><Button>Detail</Button></Link>
                 </Card.Content>
             </Card>
         );
