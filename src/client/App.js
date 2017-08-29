@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
@@ -12,9 +12,7 @@ import UserDetailsPage from './containers/UserDetailsPage';
 import UserTransactionsPage from './containers/UserTransactionsPage';
 import ArticleDetailPage from './containers/ArticleDetailPage';
 import RegistrationPage from './containers/RegistrationPage';
-
-import createBrowserHistory from 'history/createBrowserHistory';
-const history = createBrowserHistory();
+import LoginPage from './containers/LoginPage';
 
 class App extends React.Component {
 
@@ -54,20 +52,18 @@ class App extends React.Component {
             loginButtonBar = <FlatButton label="Login" onClick={this.toggleLogin}/>;
         }
         return (
-            <BrowserRouter history={history}>
-                <div>
-                    <AppBar title="Tauschbörse" iconElementRight={loginButtonBar} onLeftIconButtonTouchTap={this.toggleMenu}>
-                    </AppBar>
-                    <NavigationComponent isMenuOpen={this.state.isMenuOpen} isLoggedIn={this.state.isLoggedIn} user={this.state.user}/>
-                    <Route exact path="/" component={HomePage}/>
-                    <Route exact path="/marketplace" component={MarketplacePage}/>
-                    <Route exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
-                    <Route exact path="/user/:userId/articles" component={UserArticlesPage}/>
-                    <Route exact path="/user/:userId/details" component={UserDetailsPage}/>
-                    <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
-                    <Route exact path="/registration" component={RegistrationPage}/>
-                </div>
-            </BrowserRouter>
+            <div>
+                <AppBar title="Tauschbörse" iconElementRight={loginButtonBar} onLeftIconButtonTouchTap={this.toggleMenu}/>
+                <NavigationComponent isMenuOpen={this.state.isMenuOpen} isLoggedIn={this.state.isLoggedIn} user={this.state.user}/>
+                <Route exact path="/" component={HomePage}/>
+                <Route exact path="/marketplace" component={MarketplacePage}/>
+                <Route exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
+                <Route exact path="/user/:userId/articles" component={UserArticlesPage}/>
+                <Route exact path="/user/:userId/details" component={UserDetailsPage}/>
+                <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
+                <Route exact path="/registration" component={RegistrationPage}/>
+                <Route exact path="/login" component={LoginPage}/>
+            </div>
         );
     }
 }
