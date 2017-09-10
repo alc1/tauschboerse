@@ -1,38 +1,53 @@
-import $ from 'jquery';
+import axios from 'axios';
 
-export const SET_USER_ARTICLES = 'SET_USER_ARTICLES';
-export const SET_ARTICLE = 'SET_ARTICLE';
+/*
+ * Action Type Constants
+ */
 
-export function loadUserArticles(theUserId) {
-    return (dispatch) => {
-        const request = ajaxRequest('GET', `api/users/${theUserId}/articles`);
-        request.done((data) => {
-            dispatch({
-                type: SET_USER_ARTICLES,
-                userArticles: data.articles
-            });
-        })
-    };
-}
+export const USER_LOGGED_IN = 'USER_LOGGED_IN';
+export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
 
-export function loadArticle(theArticleId) {
-    return (dispatch) => {
-        const request = ajaxRequest('GET', `api/articles/${theArticleId}`);
-        request.done((data) => {
-            dispatch({
-                type: SET_ARTICLE,
-                article: data.article
-            });
-        })
-    };
-}
+export const USER_ARTICLES_FETCHED = 'USER_ARTICLES_FETCHED';
+export const ARTICLE_FETCHED = 'ARTICLE_FETCHED';
 
-function ajaxRequest(theMethod, theUrlPath, theData) {
-    return $.ajax({
-        method : theMethod,
-        url : 'http://localhost:3001/' + theUrlPath,
-        dataType : 'json',
-        contentType : 'application/json',
-        data : JSON.stringify(theData)
-    });
-}
+/*
+ * Action Creators
+ */
+
+const userLoggedIn = (theUser) => ({
+    type: USER_LOGGED_IN,
+    user: theUser
+});
+
+const userLoggedOut = () => ({
+    type: USER_LOGGED_OUT
+});
+
+const userArticlesFetched = (theArticles) => ({
+    type: USER_ARTICLES_FETCHED,
+    articles: theArticles
+});
+
+const articleFetched = (theArticle) => ({
+    type: ARTICLE_FETCHED,
+    article: theArticle
+});
+
+/*
+ * Actions
+ */
+
+export const login = (email, password) => dispatch =>
+    axios.post('/api/users/auth', { email, password })
+        .then(response => dispatch(userLoggedIn(response.data.user)));
+
+export const logout = () => dispatch =>
+    dispatch(userLoggedOut());
+
+export const loadUserArticles = (theUserId) => dispatch =>
+    axios.get(`/api/users/${theUserId}/articles`)
+        .then(response => dispatch(userArticlesFetched(response.data.articles)));
+
+export const loadArticle = (theArticleId) => dispatch =>
+    axios.get(`/api/articles/${theArticleId}`)
+        .then(response => dispatch(articleFetched(response.data.article)));

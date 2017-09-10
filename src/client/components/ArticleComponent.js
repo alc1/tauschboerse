@@ -8,15 +8,15 @@ class ArticleComponent extends React.Component {
         return (
             <Card>
                 <Card.Content>
-                    <Card.Header>{this.props.title}</Card.Header>
-                    <Card.Meta>{this.props.id}</Card.Meta>
-                    <Card.Description>{this.props.description}</Card.Description>
+                    <Card.Header>{this.props.article.title}</Card.Header>
+                    <Card.Meta>{this.props.article.id}</Card.Meta>
+                    <Card.Description>{this.props.article.description}</Card.Description>
                 </Card.Content>
                 <Card.Content>
-                    <Icon name='user'/>{this.props.owner.name}
+                    <Icon name='user'/>{this.props.article.user.name}
                 </Card.Content>
                 <Card.Content>
-                    <Link to={`/article/${this.props.id}`}><Button>Detail</Button></Link>
+                    <Link to={`/article/${this.props.article._id}`}><Button>Detail</Button></Link>
                 </Card.Content>
             </Card>
         );
@@ -26,8 +26,5 @@ class ArticleComponent extends React.Component {
 export default ArticleComponent;
 
 ArticleComponent.propTypes = {
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    owner: PropTypes.object.isRequired
+    article: PropTypes.object.isRequired
 };

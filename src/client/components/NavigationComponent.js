@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
@@ -12,12 +13,14 @@ import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import styled from 'styled-components';
 
+import { getUser } from '../store/user';
+
 class NavigationComponent extends React.Component {
     render() {
         let userTransactionsLink = '/';
         let userArticlesLink = '/';
         let userDetailsLink = '/';
-        if (this.props.isLoggedIn) {
+        if (this.props.user) {
             userTransactionsLink = `/user/${this.props.user._id}/transactions`;
             userArticlesLink = `/user/${this.props.user._id}/articles`;
             userDetailsLink = `/user/${this.props.user._id}/details`;
@@ -43,10 +46,10 @@ class NavigationComponent extends React.Component {
                         <NavigationDiv>
                             <Link to="/"><FlatButton label="Home" icon={<Home/>} primary/></Link>
                             <Link to="/marketplace"><FlatButton label="Marktplatz" icon={<Business/>} primary/></Link>
-                            {this.props.isLoggedIn && <Link to={userTransactionsLink}><FlatButton label="Tauschgeschäfte" icon={<CompareArrows/>} primary/></Link>}
-                            {this.props.isLoggedIn && <Link to={userArticlesLink}><FlatButton label="Artikel" icon={<List/>} primary/></Link>}
-                            {this.props.isLoggedIn && <Link to={userDetailsLink}><FlatButton label="Profil" icon={<AccountCircle/>} primary/></Link>}
-                            {!this.props.isLoggedIn && <Link to="/registration"><FlatButton label="Registrieren" icon={<PersonAdd/>} primary/></Link>}
+                            {this.props.user && <Link to={userTransactionsLink}><FlatButton label="Tauschgeschäfte" icon={<CompareArrows/>} primary/></Link>}
+                            {this.props.user && <Link to={userArticlesLink}><FlatButton label="Artikel" icon={<List/>} primary/></Link>}
+                            {this.props.user && <Link to={userDetailsLink}><FlatButton label={`Profil (${this.props.user.name})`} icon={<AccountCircle/>} primary/></Link>}
+                            {!this.props.user && <Link to="/registration"><FlatButton label="Registrieren" icon={<PersonAdd/>} primary/></Link>}
                         </NavigationDiv>
                     </ToolbarGroup>
                 </Toolbar>}
@@ -55,4 +58,10 @@ class NavigationComponent extends React.Component {
     }
 }
 
-export default NavigationComponent;
+function mapStateToProps(theState) {
+    return {
+        user: getUser(theState)
+    };
+}
+
+export default connect(mapStateToProps, null)(NavigationComponent);

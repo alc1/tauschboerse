@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
@@ -24,9 +26,7 @@ class RegistrationPage extends React.Component {
     }
 
     onSubmit(theEvent) {
-        this.setState({
-            errors: {name: "Name existiert bereits!"}
-        });
+        this.props.history.replace('/login');
     }
 
     render() {
@@ -68,5 +68,9 @@ class RegistrationPage extends React.Component {
         );
     }
 }
+
+RegistrationPage.propTypes = {
+    history: PropTypes.object.isRequired
+};
 
 export default RegistrationPage;

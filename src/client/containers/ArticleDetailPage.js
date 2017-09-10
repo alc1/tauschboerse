@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import ArticleDetailComponent from '../components/ArticleDetailComponent';
 import * as Actions from '../actions/actions';
+import { getArticle } from '../store/article';
 
 class ArticleDetailPage extends React.Component {
 
@@ -17,7 +18,7 @@ class ArticleDetailPage extends React.Component {
         const { article } = this.props;
         return (
             <div>
-                {article && <ArticleDetailComponent id={article._id} title={article.title} description={article.description} owner={article.user}/>}
+                {article && <ArticleDetailComponent article={article}/>}
             </div>
         );
     }
@@ -34,7 +35,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(theState) {
     return {
-        article: theState.article
+        article: getArticle(theState)
     };
 }
 

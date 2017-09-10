@@ -1,8 +1,16 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Route, withRouter } from 'react-router-dom';
+
+import PropTypes from 'prop-types';
 
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+
+import Menu from 'material-ui/svg-icons/navigation/menu';
+import ArrowDropDownCircle from 'material-ui/svg-icons/navigation/arrow-drop-down-circle';
 
 import NavigationComponent from './components/NavigationComponent';
 import HomePage from './containers/HomePage';
@@ -14,47 +22,57 @@ import ArticleDetailPage from './containers/ArticleDetailPage';
 import RegistrationPage from './containers/RegistrationPage';
 import LoginPage from './containers/LoginPage';
 
+import { getUser } from './store/user';
+import * as Actions from './actions/actions';
+
 class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            isMenuOpen: true,
-            isLoggedIn: false,
-            user: null
+            isMenuOpen: true
         };
-        this.toggleMenu = this.toggleMenu.bind(this);
-        this.toggleLogin = this.toggleLogin.bind(this);
+        this.onToggleMenu = this.onToggleMenu.bind(this);
+        this.onLogin = this.onLogin.bind(this);
+        this.onLogout = this.onLogout.bind(this);
     }
 
-    toggleMenu() {
+    onToggleMenu() {
         this.setState({
             isMenuOpen: !this.state.isMenuOpen
         });
     }
 
-    toggleLogin() {
-        this.setState({
-            isLoggedIn: !this.state.isLoggedIn,
-            user: {
-                _id: 'ph63KF1MYC8IZxfl',
-                name: 'Max Mustermann'
-            }
-        });
+    onLogin() {
+        this.props.history.push('/login');
+    }
+
+    onLogout() {
+        this.props.logout();
+        this.props.history.push('/');
     }
 
     render() {
         let loginButtonBar;
-        if (this.state.isLoggedIn) {
-            loginButtonBar = <FlatButton label="Logout" onClick={this.toggleLogin}/>;
+        if (this.props.user) {
+            loginButtonBar = <FlatButton label="Logout" onClick={this.onLogout}/>;
         }
         else {
-            loginButtonBar = <FlatButton label="Login" onClick={this.toggleLogin}/>;
+            loginButtonBar = <FlatButton label="Login" onClick={this.onLogin}/>;
         }
+
+        let menuIcon;
+        if (this.state.isMenuOpen) {
+            menuIcon = <IconButton><ArrowDropDownCircle/></IconButton>;
+        }
+        else {
+            menuIcon = <IconButton><Menu/></IconButton>;
+        }
+
         return (
             <div>
-                <AppBar title="Tauschbörse" iconElementRight={loginButtonBar} onLeftIconButtonTouchTap={this.toggleMenu}/>
-                <NavigationComponent isMenuOpen={this.state.isMenuOpen} isLoggedIn={this.state.isLoggedIn} user={this.state.user}/>
+                <AppBar title="Tauschbörse" iconElementLeft={menuIcon} iconElementRight={loginButtonBar} onLeftIconButtonTouchTap={this.onToggleMenu}/>
+                <NavigationComponent isMenuOpen={this.state.isMenuOpen}/>
                 <Route exact path="/" component={HomePage}/>
                 <Route exact path="/marketplace" component={MarketplacePage}/>
                 <Route exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
@@ -68,4 +86,19 @@ class App extends React.Component {
     }
 }
 
-export default App;
+App.propTypes = {
+    history: PropTypes.object.isRequired,
+    logout: PropTypes.func.isRequired
+};
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(Actions, dispatch);
+}
+
+function mapStateToProps(theState) {
+    return {
+        user: getUser(theState)
+    };
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

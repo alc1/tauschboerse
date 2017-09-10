@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import ArticleComponent from '../components/ArticleComponent';
 import * as Actions from '../actions/actions';
+import { getUserArticles } from '../store/user';
 
 class UserArticlesPage extends React.Component {
 
@@ -14,9 +15,9 @@ class UserArticlesPage extends React.Component {
     }
 
     render() {
-        const { userArticles } = this.props;
-        const articleComponents = userArticles.map(article =>
-            <ArticleComponent key={article._id} id={article._id} title={article.title} description={article.description} owner={article.user}/>
+        const { articles } = this.props;
+        const articleComponents = articles.map(article =>
+            <ArticleComponent key={article._id} article={article}/>
         );
         return (
             <div>
@@ -27,7 +28,7 @@ class UserArticlesPage extends React.Component {
 }
 
 UserArticlesPage.propTypes = {
-    userArticles: PropTypes.array.isRequired,
+    articles: PropTypes.array.isRequired,
     loadUserArticles: PropTypes.func.isRequired
 };
 
@@ -37,7 +38,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(theState) {
     return {
-        userArticles: theState.userArticles
+        articles: getUserArticles(theState)
     };
 }
 
