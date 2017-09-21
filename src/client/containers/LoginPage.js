@@ -11,28 +11,37 @@ import InputComponent from '../components/InputComponent';
 
 class LoginPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-            errors: {},
-            loading: false
-        };
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
+    static propTypes = {
+        login: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired
+    };
 
-    onChange(theEvent) {
+    state = {
+        email: '',
+        password: '',
+        errors: {},
+        loading: false
+    };
+
+    onChange = (theEvent) => {
         this.setState({ [theEvent.target.name]: theEvent.target.value });
-    }
+    };
 
-    onSubmit(theEvent) {
-        this.props.login(this.state.email, this.state.password).then(() => this.props.history.replace('/'));
-    }
+    onSubmit = (theEvent) => {
+        this.setState({
+            errors: {},
+            loading: true
+        });
+        this.props.login(this.state.email, this.state.password)
+            .then((res) => this.props.history.replace('/'))
+            .catch((err) => this.setState({
+                errors: err.response.data.errors,
+                loading: false
+            }));
+    };
 
     render() {
-        const { errors } = this.state;
+        const { errors, loading } = this.state;
         return (
             <form onSubmit={this.onSubmit}>
                 <InputComponent
@@ -41,6 +50,7 @@ class LoginPage extends React.Component {
                     onChange={this.onChange}
                     value={this.state.email}
                     field="email"
+                    disabled={loading}
                 />
                 <InputComponent
                     error={errors.password}
@@ -49,17 +59,13 @@ class LoginPage extends React.Component {
                     value={this.state.password}
                     field="password"
                     type="password"
+                    disabled={loading}
                 />
-                <RaisedButton label="Anmelden" icon={<LockOpen/>} onClick={this.onSubmit} primary/>
+                <RaisedButton label="Anmelden" icon={<LockOpen/>} onClick={this.onSubmit} disabled={loading} primary/>
             </form>
         );
     }
 }
-
-LoginPage.propTypes = {
-    login: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired
-};
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(Actions, dispatch);

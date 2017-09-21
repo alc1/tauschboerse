@@ -1,4 +1,7 @@
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
+
+import { JWT_TOKEN_KEY } from '../common';
 
 /*
  * Action Type Constants
@@ -14,7 +17,7 @@ export const ARTICLE_FETCHED = 'ARTICLE_FETCHED';
  * Action Creators
  */
 
-const userLoggedIn = (theUser) => ({
+export const userLoggedIn = (theUser) => ({
     type: USER_LOGGED_IN,
     user: theUser
 });
@@ -38,11 +41,20 @@ const articleFetched = (theArticle) => ({
  */
 
 export const login = (email, password) => dispatch =>
-    axios.post('/api/users/auth', { email, password })
-        .then(response => dispatch(userLoggedIn(response.data.user)));
+    axios.post('/api/users/auth', { credentials: { email, password }})
+        .then(response => {
+            const token = response.data.token;
+            localStorage.setItem(JWT_TOKEN_KEY, token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const user = jwt.decode(token);
+            dispatch(userLoggedIn(user));
+        });
 
-export const logout = () => dispatch =>
+export const logout = () => dispatch => {
+    localStorage.removeItem(JWT_TOKEN_KEY);
+    delete axios.defaults.headers.common['Authorization'];
     dispatch(userLoggedOut());
+};
 
 export const loadUserArticles = (theUserId) => dispatch =>
     axios.get(`/api/users/${theUserId}/articles`)

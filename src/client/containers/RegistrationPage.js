@@ -4,33 +4,44 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
+import axios from 'axios';
+
 import InputComponent from '../components/InputComponent';
 
-class RegistrationPage extends React.Component {
+export default class RegistrationPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: '',
-            email: '',
-            password: '',
-            passwordConfirmation: '',
-            errors: {}
-        };
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
+    static propTypes = {
+        history: PropTypes.object.isRequired
+    };
 
-    onChange(theEvent) {
+    state = {
+        name: '',
+        email: '',
+        password: '',
+        passwordConfirmation: '',
+        errors: {},
+        loading: false
+    };
+
+    onChange = (theEvent) => {
         this.setState({ [theEvent.target.name]: theEvent.target.value });
-    }
+    };
 
-    onSubmit(theEvent) {
-        this.props.history.replace('/login');
-    }
+    onSubmit = (theEvent) => {
+        this.setState({ loading: true });
+        const { email, name, password, passwordConfirmation } = this.state;
+        axios.post('/api/users', { credentials: { email, name, password, passwordConfirmation }})
+            .then(response => {
+                this.props.history.replace('/login');
+            })
+            .catch((err) => this.setState({
+                errors: err.response.data.errors,
+                loading: false
+            }));
+    };
 
     render() {
-        const { errors } = this.state;
+        const { errors, loading } = this.state;
         return (
             <form onSubmit={this.onSubmit}>
                 <InputComponent
@@ -39,6 +50,7 @@ class RegistrationPage extends React.Component {
                     onChange={this.onChange}
                     value={this.state.name}
                     field="name"
+                    disabled={loading}
                 />
                 <InputComponent
                     error={errors.email}
@@ -46,6 +58,7 @@ class RegistrationPage extends React.Component {
                     onChange={this.onChange}
                     value={this.state.email}
                     field="email"
+                    disabled={loading}
                 />
                 <InputComponent
                     error={errors.password}
@@ -54,6 +67,7 @@ class RegistrationPage extends React.Component {
                     value={this.state.password}
                     field="password"
                     type="password"
+                    disabled={loading}
                 />
                 <InputComponent
                     error={errors.passwordConfirmation}
@@ -62,15 +76,10 @@ class RegistrationPage extends React.Component {
                     value={this.state.passwordConfirmation}
                     field="passwordConfirmation"
                     type="password"
+                    disabled={loading}
                 />
-                <RaisedButton label="Registrieren" icon={<PersonAdd/>} onClick={this.onSubmit} primary/>
+                <RaisedButton label="Registrieren" icon={<PersonAdd/>} onClick={this.onSubmit} disabled={loading} primary/>
             </form>
         );
     }
 }
-
-RegistrationPage.propTypes = {
-    history: PropTypes.object.isRequired
-};
-
-export default RegistrationPage;

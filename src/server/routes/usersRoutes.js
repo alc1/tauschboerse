@@ -3,12 +3,12 @@
 const router = require('express').Router();
 const articlesController = require('../controller/articlesController');
 const usersController = require('../controller/usersController');
+const authenticationMiddleware = require('../middleware/authentication');
 
-router.get('/', usersController.getUsers);
-router.get('/:userId', usersController.getUser);
-router.get('/:userId/articles', articlesController.getArticlesByUser);
-router.post('/auth', (req, res) => {
-    res.json({ user: { _id: 'ph63KF1MYC8IZxfl', name: 'Max Mustermann', email: 'max@mustermann.com', token: 'test' } });
-});
+router.get('/', authenticationMiddleware, usersController.getUsers);
+router.post('/', usersController.createUser);
+router.get('/:userId', authenticationMiddleware, usersController.getUser);
+router.get('/:userId/articles', authenticationMiddleware, articlesController.getArticlesByUser);
+router.post('/auth', usersController.login);
 
 module.exports = router;

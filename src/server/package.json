@@ -12,8 +12,10 @@
   },
   "homepage": "https://github.com/alc-hsr/tauschboerse#readme",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "jsonwebtoken": "^8.0.1",
     "nedb": "^1.8.0"
   },
   "scripts": {
