@@ -21,6 +21,7 @@ import UserTransactionsPage from './containers/UserTransactionsPage';
 import ArticleDetailPage from './containers/ArticleDetailPage';
 import RegistrationPage from './containers/RegistrationPage';
 import LoginPage from './containers/LoginPage';
+import NoMatchPage from './containers/NoMatchPage';
 
 import PrivateRoute from './route/PrivateRoute';
 import PublicRoute from './route/PublicRoute';
@@ -84,6 +85,7 @@ class App extends React.Component {
                     <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
                     <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
                     <PrivateRoute exact path="/article/:articleId" component={ArticleDetailPage}/>
+                    <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );
