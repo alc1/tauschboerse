@@ -33,7 +33,10 @@ class LoginPage extends React.Component {
             loading: true
         });
         this.props.login(this.state.email, this.state.password)
-            .then((res) => this.props.history.replace('/'))
+            .then((res) => {
+                const { from } = this.props.location.state || { from: { pathname: '/' } };
+                this.props.history.replace(from);
+            })
             .catch((err) => this.setState({
                 errors: err.response.data.errors,
                 loading: false
