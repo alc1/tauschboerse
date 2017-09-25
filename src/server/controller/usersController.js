@@ -39,8 +39,7 @@ function createUser(req, res) {
     const { credentials } = req.body;
     if (credentials) {
         usersStore.createUser(credentials, (err, newDoc) => {
-            delete newDoc.password;
-            res.json({ user : newDoc });
+            login(req, res);
         });
     }
     else {

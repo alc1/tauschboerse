@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
-import axios from 'axios';
-
 import InputComponent from '../components/InputComponent';
+
+import store from '../store/store';
+import { JWT_TOKEN_KEY } from '../common';
+import { userLoggedIn } from '../actions/actions';
 
 export default class RegistrationPage extends React.Component {
 
@@ -32,7 +37,12 @@ export default class RegistrationPage extends React.Component {
         const { email, name, password, passwordConfirmation } = this.state;
         axios.post('/api/users', { credentials: { email, name, password, passwordConfirmation }})
             .then(response => {
-                this.props.history.replace('/login');
+                const token = response.data.token;
+                localStorage.setItem(JWT_TOKEN_KEY, token);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                const user = jwt.decode(token);
+                store.dispatch(userLoggedIn(user));
+                this.props.history.replace('/');
             })
             .catch((err) => this.setState({
                 errors: err.response.data.errors,
