@@ -1,4 +1,4 @@
-import { ARTICLE_FETCHED } from './../actions/actions';
+import { ARTICLE_FETCHED } from './../actions/article';
 
 const initialState = null;
 

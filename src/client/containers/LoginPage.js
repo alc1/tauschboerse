@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import LockOpen from 'material-ui/svg-icons/action/lock-open';
 
-import { login } from '../actions/actions';
+import { login } from '../actions/user';
 import InputComponent from '../components/InputComponent';
 
 class LoginPage extends React.Component {

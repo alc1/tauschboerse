@@ -25,8 +25,8 @@ import NoMatchPage from './containers/NoMatchPage';
 import PrivateRoute from './route/PrivateRoute';
 import PublicRoute from './route/PublicRoute';
 
-import { getUser } from './store/user';
-import { logout } from './actions/actions';
+import { getUser } from './selectors/user';
+import { logout } from './actions/user';
 
 class App extends React.Component {
 

@@ -13,7 +13,7 @@ import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import styled from 'styled-components';
 
-import { getUser } from '../store/user';
+import { getUser } from '../selectors/user';
 
 class NavigationComponent extends React.Component {
     render() {

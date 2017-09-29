@@ -10,7 +10,7 @@ import './client/styles.css';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { userLoggedIn } from './client/actions/actions';
+import { userLoggedIn } from './client/actions/user';
 import { JWT_TOKEN_KEY } from './client/common';
 import store from './client/store/store';
 import history from './client/history/history';

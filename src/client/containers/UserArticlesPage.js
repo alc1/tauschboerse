@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ArticleComponent from '../components/ArticleComponent';
-import { loadUserArticles } from '../actions/actions';
-import { getUserArticles } from '../store/user';
+import { loadUserArticles } from '../actions/user';
+import { getUserArticles } from '../selectors/user';
 
 class UserArticlesPage extends React.Component {
 

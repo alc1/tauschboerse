@@ -9,9 +9,7 @@ import { JWT_TOKEN_KEY } from '../common';
 
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
 export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
-
 export const USER_ARTICLES_FETCHED = 'USER_ARTICLES_FETCHED';
-export const ARTICLE_FETCHED = 'ARTICLE_FETCHED';
 
 /*
  * Action Creators
@@ -29,11 +27,6 @@ const userLoggedOut = () => ({
 const userArticlesFetched = (theArticles) => ({
     type: USER_ARTICLES_FETCHED,
     articles: theArticles
-});
-
-const articleFetched = (theArticle) => ({
-    type: ARTICLE_FETCHED,
-    article: theArticle
 });
 
 /*
@@ -59,7 +52,3 @@ export const logout = () => dispatch => {
 export const loadUserArticles = (theUserId) => dispatch =>
     axios.get(`/api/users/${theUserId}/articles`)
         .then(response => dispatch(userArticlesFetched(response.data.articles)));
-
-export const loadArticle = (theArticleId) => dispatch =>
-    axios.get(`/api/articles/${theArticleId}`)
-        .then(response => dispatch(articleFetched(response.data.article)));

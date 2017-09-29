@@ -2,7 +2,7 @@ import {
     USER_LOGGED_IN,
     USER_LOGGED_OUT,
     USER_ARTICLES_FETCHED
-} from './../actions/actions';
+} from './../actions/user';
 
 const initialState = null;
 

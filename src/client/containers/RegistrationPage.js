@@ -11,7 +11,7 @@ import InputComponent from '../components/InputComponent';
 
 import store from '../store/store';
 import { JWT_TOKEN_KEY } from '../common';
-import { userLoggedIn } from '../actions/actions';
+import { userLoggedIn } from '../actions/user';
 
 export default class RegistrationPage extends React.Component {
 
