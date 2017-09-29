@@ -1,10 +1,9 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ArticleDetailComponent from '../components/ArticleDetailComponent';
-import * as Actions from '../actions/actions';
+import { loadArticle } from '../actions/actions';
 import { getArticle } from '../store/article';
 
 class ArticleDetailPage extends React.Component {
@@ -29,14 +28,10 @@ ArticleDetailPage.propTypes = {
     loadArticle: PropTypes.func.isRequired
 };
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Actions, dispatch);
-}
-
 function mapStateToProps(theState) {
     return {
         article: getArticle(theState)
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArticleDetailPage);
+export default connect(mapStateToProps, { loadArticle })(ArticleDetailPage);

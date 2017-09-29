@@ -1,12 +1,11 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import LockOpen from 'material-ui/svg-icons/action/lock-open';
 
-import * as Actions from '../actions/actions';
+import { login } from '../actions/actions';
 import InputComponent from '../components/InputComponent';
 
 class LoginPage extends React.Component {
@@ -70,8 +69,4 @@ class LoginPage extends React.Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Actions, dispatch);
-}
-
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default connect(null, { login })(LoginPage);

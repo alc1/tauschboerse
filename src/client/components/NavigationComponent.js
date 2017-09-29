@@ -64,4 +64,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, null)(NavigationComponent);
+export default connect(mapStateToProps)(NavigationComponent);
