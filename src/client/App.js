@@ -1,5 +1,4 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
@@ -27,7 +26,7 @@ import PrivateRoute from './route/PrivateRoute';
 import PublicRoute from './route/PublicRoute';
 
 import { getUser } from './store/user';
-import * as Actions from './actions/actions';
+import { logout } from './actions/actions';
 
 class App extends React.Component {
 
@@ -79,21 +78,17 @@ class App extends React.Component {
                 <Switch>
                     <Route exact path="/" component={HomePage}/>
                     <Route exact path="/marketplace" component={MarketplacePage}/>
+                    <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
                     <PublicRoute exact path="/registration" component={RegistrationPage}/>
                     <PublicRoute exact path="/login" component={LoginPage}/>
                     <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
                     <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
                     <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
-                    <PrivateRoute exact path="/article/:articleId" component={ArticleDetailPage}/>
                     <Route component={NoMatchPage}/>
                 </Switch>
             </div>
         );
     }
-}
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Actions, dispatch);
 }
 
 function mapStateToProps(theState) {
@@ -102,4 +97,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, { logout })(App));
