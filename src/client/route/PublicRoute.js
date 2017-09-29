@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 
 import { getUser } from '../store/user';
 
-const PublicRoute = ({ isAuthenticated, component: Component, ...rest }) => (
+const PublicRoute = ({ isLoggedIn, component: Component, ...rest }) => (
     <Route {...rest} render={props =>
-        !isAuthenticated ? (
+        !isLoggedIn ? (
             <Component {...props}/>
         ) : (
             <Redirect to="/"/>
@@ -17,12 +17,12 @@ const PublicRoute = ({ isAuthenticated, component: Component, ...rest }) => (
 
 PublicRoute.propTypes = {
     component: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired
+    isLoggedIn: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(theState) {
     return {
-        isAuthenticated: !!getUser(theState)
+        isLoggedIn: !!getUser(theState)
     };
 }
 

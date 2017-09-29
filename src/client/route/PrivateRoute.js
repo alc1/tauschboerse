@@ -3,29 +3,34 @@ import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { getUser } from '../store/user';
+import { getUser, getUserId } from '../store/user';
 
-const PrivateRoute = ({ isAuthenticated, component: Component, ...rest }) => (
+const PrivateRoute = ({ isLoggedIn, userId, component: Component, ...rest }) => (
     <Route {...rest} render={props =>
-        isAuthenticated ? (
+        props.match.params.userId === userId ? (
             <Component {...props}/>
         ) : (
-            <Redirect to={{
-                pathname: '/login',
-                state: { from: props.location }
-            }}/>
+            isLoggedIn ? (
+                <Redirect to="/"/>
+            ) : (
+                <Redirect to={{
+                    pathname: '/login',
+                    state: { from: props.location }
+                }}/>
+            )
         )}
     />
 );
 
 PrivateRoute.propTypes = {
     component: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired
+    isLoggedIn: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(theState) {
     return {
-        isAuthenticated: !!getUser(theState)
+        isLoggedIn: !!getUser(theState),
+        userId: getUserId(theState)
     };
 }
 
