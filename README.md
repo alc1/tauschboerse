@@ -56,3 +56,4 @@ Funktionserweiterungen:
 * Paging-Mechanismus bei der Suche nach Artikeln (z.B. nächste 50 Artikel laden).
 * Administratorrolle zu Supportzwecken.
 * E-Mail-Benachrichtigung bei einer Aktivität (z.B. wenn eine Tauschanfrage eingegangen ist).
+* Die Applikation wird in mehreren Sprachen angeboten. Über eine Auswahl kann der Benutzer die Sprache für die Anzeige einstellen (z.B. Deutsch, Englisch).
