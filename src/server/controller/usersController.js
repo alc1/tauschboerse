@@ -1,5 +1,6 @@
 'use strict';
 
+const registrationValidator = require('../../shared/validations/registration');
 const usersStore = require('../services/usersStorage');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
@@ -37,13 +38,14 @@ function login(req, res) {
 
 function createUser(req, res) {
     const { credentials } = req.body;
-    if (credentials) {
+    const validation = registrationValidator.validate(credentials);
+    if (validation.isValid) {
         usersStore.createUser(credentials, (err, newDoc) => {
             login(req, res);
         });
     }
     else {
-        res.status(400).json({ errors: {email: 'Invalid', name: 'Invalid', password: 'Invalid', passwordConfirmation: 'Invalid' }});
+        res.status(400).json({ errors: validation.errors });
     }
 }
 

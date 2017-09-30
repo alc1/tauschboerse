@@ -16,7 +16,9 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "jsonwebtoken": "^8.0.1",
-    "nedb": "^1.8.0"
+    "lodash": "^4.17.4",
+    "nedb": "^1.8.0",
+    "validator": "^9.0.0"
   },
   "scripts": {
     "start": "node index.js"

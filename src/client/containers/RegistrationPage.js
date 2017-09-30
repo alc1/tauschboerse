@@ -13,6 +13,8 @@ import store from '../store/store';
 import { JWT_TOKEN_KEY } from '../common';
 import { userLoggedIn } from '../actions/user';
 
+import registrationValidator from '../../shared/validations/registration';
+
 export default class RegistrationPage extends React.Component {
 
     static propTypes = {
@@ -35,19 +37,28 @@ export default class RegistrationPage extends React.Component {
     onSubmit = (theEvent) => {
         this.setState({ loading: true });
         const { email, name, password, passwordConfirmation } = this.state;
-        axios.post('/api/users', { credentials: { email, name, password, passwordConfirmation }})
-            .then(response => {
-                const token = response.data.token;
-                localStorage.setItem(JWT_TOKEN_KEY, token);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                const user = jwt.decode(token);
-                store.dispatch(userLoggedIn(user));
-                this.props.history.replace('/');
-            })
-            .catch((err) => this.setState({
-                errors: err.response.data.errors,
+        const validation = registrationValidator.validate({ email, name, password, passwordConfirmation });
+        if (validation.isValid) {
+            axios.post('/api/users', { credentials: { email, name, password, passwordConfirmation } })
+                .then(response => {
+                    const token = response.data.token;
+                    localStorage.setItem(JWT_TOKEN_KEY, token);
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    const user = jwt.decode(token);
+                    store.dispatch(userLoggedIn(user));
+                    this.props.history.replace('/');
+                })
+                .catch((err) => this.setState({
+                    errors: err.response.data.errors,
+                    loading: false
+                }));
+        }
+        else {
+            this.setState({
+                errors: validation.errors,
                 loading: false
-            }));
+            });
+        }
     };
 
     render() {
