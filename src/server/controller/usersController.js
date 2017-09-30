@@ -21,7 +21,7 @@ function getUser(req, res) {
 
 function login(req, res) {
     const { email, password } = req.body.credentials;
-    usersStore.login(email, (err, user) => {
+    usersStore.getUserByEmail(email, (err, user) => {
         if (user && bcrypt.compareSync(password, user.password)) {
             const token = jwt.sign({
                 _id: user._id,
@@ -31,7 +31,7 @@ function login(req, res) {
             res.json({ token: token });
         }
         else {
-            res.status(401).json({ errors: {email: 'Invalid credentials', password: 'Invalid credentials' }});
+            res.status(401).json({ errors: { email: 'E-Mail oder Passwort unbekannt', password: 'E-Mail oder Passwort unbekannt' }});
         }
     });
 }
@@ -40,8 +40,15 @@ function createUser(req, res) {
     const { credentials } = req.body;
     const validation = registrationValidator.validate(credentials);
     if (validation.isValid) {
-        usersStore.createUser(credentials, (err, newDoc) => {
-            login(req, res);
+        usersStore.getUserByEmail(credentials.email, (err, user) => {
+            if (!user) {
+                usersStore.createUser(credentials, (err, newDoc) => {
+                    login(req, res);
+                });
+            }
+            else {
+                res.status(400).json({ errors: { email: 'Diese E-Mail existiert bereits' } });
+            }
         });
     }
     else {

@@ -32,7 +32,7 @@ function getUser(theUserId, doAfterFind) {
     });
 }
 
-function login(theEmail, doAfterFind) {
+function getUserByEmail(theEmail, doAfterFind) {
     db.findOne({ email : theEmail }, (err, user) => {
         if (doAfterFind) {
             doAfterFind(err, user);
@@ -57,7 +57,7 @@ function createUser(theCredentials, doAfterInsert) {
 module.exports = {
     getUsers,
     getUser,
-    login,
+    getUserByEmail,
     createUser,
     insertTestData
 };
