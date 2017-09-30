@@ -24,11 +24,11 @@ export default class InputComponent extends React.Component {
         return (
             <div>
                 <TextField
+                    style={this.props.style}
                     hintText={this.props.label}
                     floatingLabelText={this.props.label}
                     errorText={this.props.error}
                     onChange={this.props.onChange}
-                    onBlur={this.props.checkUserExists}
                     value={this.props.value}
                     type={this.props.type}
                     name={this.props.field}

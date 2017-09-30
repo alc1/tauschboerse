@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
+import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
@@ -63,9 +64,17 @@ export default class RegistrationPage extends React.Component {
 
     render() {
         const { errors, loading } = this.state;
+        const inputStyles = { width: '350px' };
+        const formStyles = {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+        };
         return (
-            <form onSubmit={this.onSubmit}>
+            <form style={formStyles} onSubmit={this.onSubmit}>
+                {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
                 <InputComponent
+                    style={inputStyles}
                     error={errors.name}
                     label="Name"
                     onChange={this.onChange}
@@ -74,6 +83,7 @@ export default class RegistrationPage extends React.Component {
                     disabled={loading}
                 />
                 <InputComponent
+                    style={inputStyles}
                     error={errors.email}
                     label="E-Mail"
                     onChange={this.onChange}
@@ -82,6 +92,7 @@ export default class RegistrationPage extends React.Component {
                     disabled={loading}
                 />
                 <InputComponent
+                    style={inputStyles}
                     error={errors.password}
                     label="Passwort"
                     onChange={this.onChange}
@@ -91,6 +102,7 @@ export default class RegistrationPage extends React.Component {
                     disabled={loading}
                 />
                 <InputComponent
+                    style={inputStyles}
                     error={errors.passwordConfirmation}
                     label="Passwort bestätigen"
                     onChange={this.onChange}
@@ -99,6 +111,7 @@ export default class RegistrationPage extends React.Component {
                     type="password"
                     disabled={loading}
                 />
+                <br/>
                 <RaisedButton label="Registrieren" icon={<PersonAdd/>} onClick={this.onSubmit} disabled={loading} primary/>
             </form>
         );
