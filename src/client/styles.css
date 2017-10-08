@@ -3,16 +3,10 @@
     padding: 0;
 }
 
-/*.card-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 0;
-    padding: 0;
+.article-card {
+    margin: 10px;
 }
 
-.card-element {
-    margin: 0;
-    padding: 0;
-}*/
+.article-card:hover {
+    box-shadow: 0 6px 20px 0 gray;
+}

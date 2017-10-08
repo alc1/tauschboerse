@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
-import 'semantic-ui-css/semantic.min.css';
 import './client/styles.css';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';

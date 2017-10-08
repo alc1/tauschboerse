@@ -1,30 +1,40 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Card, Icon, Button } from 'semantic-ui-react';
+
+import { Card, CardHeader, CardMedia, CardTitle, CardText, CardActions } from 'material-ui/Card';
+import Avatar from 'material-ui/Avatar';
+
+import NoPicture from '../images/NoPicture.png';
 
 class ArticleComponent extends React.Component {
+
+    static propTypes = {
+        article: PropTypes.object.isRequired,
+        actions: PropTypes.array.isRequired
+    };
+
+    static defaultProps = {
+        actions: []
+    };
+
     render() {
+        const { article, actions } = this.props;
+        const { user/*, categories*/ } = article;
+        let categories = [];
+        const categoryNames = categories.map(category => category.name).join(', ');
         return (
-            <Card>
-                <Card.Content>
-                    <Card.Header>{this.props.article.title}</Card.Header>
-                    <Card.Meta>{this.props.article.id}</Card.Meta>
-                    <Card.Description>{this.props.article.description}</Card.Description>
-                </Card.Content>
-                <Card.Content>
-                    <Icon name='user'/>{this.props.article.user.name}
-                </Card.Content>
-                <Card.Content>
-                    <Link to={`/article/${this.props.article._id}`}><Button>Detail</Button></Link>
-                </Card.Content>
-            </Card>
+            <div className="article-card">
+                <Card>
+                    <CardHeader title={user.name} avatar={<Avatar size={20}>{user.name.substr(0, 1)}</Avatar>}/>
+                    <CardMedia overlay={<CardTitle title={article.title} subtitle={categoryNames} />}>
+                        <img src={NoPicture} alt=""/>
+                    </CardMedia>
+                    <CardText>{article.description}</CardText>
+                    <CardActions>{actions}</CardActions>
+                </Card>
+            </div>
         );
     }
 }
 
 export default ArticleComponent;
-
-ArticleComponent.propTypes = {
-    article: PropTypes.object.isRequired
-};

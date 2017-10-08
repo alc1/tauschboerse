@@ -2,11 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import ArticleDetailComponent from '../components/ArticleDetailComponent';
+import ArticleComponent from '../components/ArticleComponent';
 import { loadArticle } from '../actions/article';
 import { getArticle } from '../selectors/article';
 
 class ArticleDetailPage extends React.Component {
+
+    static propTypes = {
+        article: PropTypes.object,
+        loadArticle: PropTypes.func.isRequired
+    };
 
     componentDidMount() {
         const { articleId } = this.props.match.params;
@@ -17,16 +22,11 @@ class ArticleDetailPage extends React.Component {
         const { article } = this.props;
         return (
             <div>
-                {article && <ArticleDetailComponent article={article}/>}
+                {article && <ArticleComponent article={article}/>}
             </div>
         );
     }
 }
-
-ArticleDetailPage.propTypes = {
-    article: PropTypes.object,
-    loadArticle: PropTypes.func.isRequired
-};
 
 function mapStateToProps(theState) {
     return {

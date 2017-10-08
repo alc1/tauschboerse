@@ -8,11 +8,10 @@ export default class InputComponent extends React.Component {
         field: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
-        error: PropTypes.string,
         type: PropTypes.string.isRequired,
         onChange: PropTypes.func.isRequired,
         disabled: PropTypes.bool.isRequired,
-        checkUserExists: PropTypes.func
+        error: PropTypes.string
     };
 
     static defaultProps = {
