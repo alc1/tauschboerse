@@ -6,50 +6,51 @@ const config = require('../config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-function getUsers(req, res) {
-    usersStore.getUsers((err, users) => {
-        res.json({ users : users || [] });
-    });
+async function getAllUsers(req, res) {
+    const users = await usersStore.getAllUsers();
+    res.json({ users : users || [] });
 }
 
-function getUser(req, res) {
+async function getUser(req, res) {
     const { userId } = req.params;
-    usersStore.getUser(userId, (err, user) => {
-        res.json({ user : user || {} });
-    });
+    const user = await usersStore.getUser(userId);
+    res.json({ user : user || {} });
 }
 
-function login(req, res) {
+async function login(req, res) {
     const { email, password } = req.body.credentials;
-    usersStore.getUserByEmail(email, (err, user) => {
-        if (user && bcrypt.compareSync(password, user.password)) {
-            const token = jwt.sign({
-                _id: user._id,
-                name: user.name,
-                email: user.email
-            }, config.jwtSecret, { expiresIn: '1h' });
-            res.json({ token: token });
-        }
-        else {
-            res.status(401).json({ errors: { email: 'E-Mail oder Passwort unbekannt', password: 'E-Mail oder Passwort unbekannt' }});
-        }
-    });
+    const user = await usersStore.getUserByEmail(email);
+    if (user && bcrypt.compareSync(password, user.password)) {
+        const token = jwt.sign({
+            _id: user._id,
+            name: user.name,
+            email: user.email
+        }, config.jwtSecret, { expiresIn: '1h' });
+        res.json({ token: token });
+    }
+    else {
+        res.status(401).json({ errors: { email: 'E-Mail oder Passwort unbekannt', password: 'E-Mail oder Passwort unbekannt' }});
+    }
 }
 
-function createUser(req, res) {
+async function createUser(req, res) {
     const { credentials } = req.body;
     const validation = registrationValidator.validate(credentials);
     if (validation.isValid) {
-        usersStore.getUserByEmail(credentials.email, (err, user) => {
-            if (!user) {
-                usersStore.createUser(credentials, (err, newDoc) => {
-                    login(req, res);
-                });
+        const user = await usersStore.getUserByEmail(credentials.email);
+        if (!user) {
+            const createdUser = await usersStore.createUser(credentials);
+            if (createdUser) {
+                await login(req, res);
             }
             else {
-                res.status(400).json({ errors: { email: 'Diese E-Mail existiert bereits' } });
+                const error = 'Benutzer konnte nicht erstellt werden';
+                res.status(500).json({ errors: { name: error, email: error, password: error, passwordConfirmation: error } });
             }
-        });
+        }
+        else {
+            res.status(400).json({ errors: { email: 'Diese E-Mail existiert bereits' } });
+        }
     }
     else {
         res.status(400).json({ errors: validation.errors });
@@ -57,7 +58,7 @@ function createUser(req, res) {
 }
 
 module.exports = {
-    getUsers,
+    getAllUsers,
     getUser,
     login,
     createUser

@@ -19,9 +19,8 @@ class ArticleComponent extends React.Component {
 
     render() {
         const { article, actions } = this.props;
-        const { user/*, categories*/ } = article;
-        let categories = [];
-        const categoryNames = categories.map(category => category.name).join(', ');
+        const { user, categories } = article;
+        const categoryNames = (categories) ? categories.map(category => category.name).join(', ') : '';
         return (
             <div className="article-card">
                 <Card>

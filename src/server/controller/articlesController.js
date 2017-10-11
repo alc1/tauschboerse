@@ -1,28 +1,31 @@
 'use strict';
 
 const articlesStore = require('../services/articlesStorage');
+const categoriesStore = require('../services/categoriesStorage');
 const usersStore = require('../services/usersStorage');
 
-function getArticlesByUser(req, res) {
-    const userId = req.params.userId;
-    articlesStore.getArticlesByUser(userId, (err, articles) => {
-        usersStore.getUser(userId, (err, user) => {
-            articles.forEach((article) => {
-                addUserDetailsToArticle(article, user);
-            });
-            res.json({ articles : articles || [] });
-        });
-    });
+async function getArticlesByUser(req, res) {
+    const { userId } = req.params;
+    const articles = await articlesStore.getArticlesByUser(userId);
+    for (let article of articles) {
+        await fetchArticleDetails(article);
+    }
+    res.json({ articles : articles || [] });
 }
 
-function getArticle(req, res) {
-    const articleId = req.params.articleId;
-    articlesStore.getArticle(articleId, (err, article) => {
-        usersStore.getUser(article.userId, (err, user) => {
-            addUserDetailsToArticle(article, user);
-            res.json({ article : article || {} });
-        });
-    });
+async function getArticle(req, res) {
+    const { articleId } = req.params;
+    const article = await articlesStore.getArticle(articleId);
+    await fetchArticleDetails(article);
+    res.json({ article : article || {} });
+}
+
+async function fetchArticleDetails(theArticle) {
+    const user = await usersStore.getUser(theArticle.userId);
+    addUserDetailsToArticle(theArticle, user);
+
+    const categories = await categoriesStore.getCategories(theArticle.categories);
+    addCategoriesToArticle(theArticle, categories);
 }
 
 function addUserDetailsToArticle(theArticle, theUser) {
@@ -31,6 +34,10 @@ function addUserDetailsToArticle(theArticle, theUser) {
         _id: theUser._id,
         name : theUser.name
     };
+}
+
+function addCategoriesToArticle(theArticle, theCategories) {
+    theArticle.categories = theCategories;
 }
 
 module.exports = {

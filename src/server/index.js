@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const articlesRoutes = require('./routes/articlesRoutes');
+const categoriesRoutes = require('./routes/categoriesRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 
 app.use((req, res, next) => {
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 
 app.use('/', express.static(path.join(__dirname, './../../public')));
 app.use('/api/articles', articlesRoutes);
+app.use('/api/categories', categoriesRoutes);
 app.use('/api/users', usersRoutes);
 
 const server = http.createServer(app);
