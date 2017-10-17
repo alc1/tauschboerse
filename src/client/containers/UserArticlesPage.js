@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import LinearProgress from 'material-ui/LinearProgress';
 import FlatButton from 'material-ui/FlatButton';
 
 import ArticleComponent from '../components/ArticleComponent';
@@ -17,9 +18,16 @@ class UserArticlesPage extends React.Component {
         history: PropTypes.object.isRequired
     };
 
+    state = {
+        loading: false
+    };
+
     componentDidMount() {
+        this.setState({ loading: true });
         const { userId } = this.props.match.params;
-        this.props.loadUserArticles(userId);
+        this.props.loadUserArticles(userId)
+            .then((res) => this.setState({ loading: false }))
+            .catch((err) => this.setState({ loading: false }));
     }
 
     showArticleDetails = (theArticleId) => {
@@ -27,6 +35,7 @@ class UserArticlesPage extends React.Component {
     };
 
     render() {
+        const { loading } = this.state;
         const { articles } = this.props;
         const articleComponents = articles.map(article => {
             let actions = [];
@@ -44,9 +53,12 @@ class UserArticlesPage extends React.Component {
             }
         `;
         return (
-            <ListWrapper>
-                {articleComponents}
-            </ListWrapper>
+            <div>
+                {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
+                <ListWrapper>
+                    {articleComponents}
+                </ListWrapper>
+            </div>
         );
     }
 }
