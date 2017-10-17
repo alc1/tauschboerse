@@ -1,15 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
-
 import Menu from 'material-ui/svg-icons/navigation/menu';
-import ArrowDropDownCircle from 'material-ui/svg-icons/navigation/arrow-drop-down-circle';
 
 import NavigationComponent from './components/NavigationComponent';
 import HomePage from './containers/HomePage';
@@ -36,13 +35,7 @@ class App extends React.Component {
     };
 
     state = {
-        isMenuOpen: true
-    };
-
-    onToggleMenu = () => {
-        this.setState({
-            isMenuOpen: !this.state.isMenuOpen
-        });
+        isMenuOpen: false
     };
 
     onLogin = () => {
@@ -54,6 +47,24 @@ class App extends React.Component {
         this.props.history.push('/');
     };
 
+    toggleMenu = () => {
+        this.setState({
+            isMenuOpen: !this.state.isMenuOpen
+        });
+    };
+
+    closeMenu = () => {
+        this.setState({
+            isMenuOpen: false
+        });
+    };
+
+    handleMenuChange = (open) => {
+        this.setState({
+            isMenuOpen: open
+        });
+    };
+
     render() {
         let loginButtonBar;
         if (this.props.user) {
@@ -63,29 +74,29 @@ class App extends React.Component {
             loginButtonBar = <FlatButton label="Login" onClick={this.onLogin}/>;
         }
 
-        let menuIcon;
-        if (this.state.isMenuOpen) {
-            menuIcon = <IconButton><ArrowDropDownCircle/></IconButton>;
-        }
-        else {
-            menuIcon = <IconButton><Menu/></IconButton>;
-        }
+        const ContentWrapper = styled.div`
+            padding-top: 64px;
+        `;
 
         return (
             <div>
-                <AppBar title="Tauschbörse" iconElementLeft={menuIcon} iconElementRight={loginButtonBar} onLeftIconButtonTouchTap={this.onToggleMenu}/>
-                <NavigationComponent isMenuOpen={this.state.isMenuOpen}/>
-                <Switch>
-                    <Route exact path="/" component={HomePage}/>
-                    <Route exact path="/marketplace" component={MarketplacePage}/>
-                    <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
-                    <PublicRoute exact path="/registration" component={RegistrationPage}/>
-                    <PublicRoute exact path="/login" component={LoginPage}/>
-                    <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
-                    <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
-                    <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
-                    <Route component={NoMatchPage}/>
-                </Switch>
+                <AppBar style={{position: 'fixed'}} title="Tauschbörse" iconElementLeft={<IconButton><Menu/></IconButton>} iconElementRight={loginButtonBar} onLeftIconButtonTouchTap={this.toggleMenu}/>
+                <Drawer docked={false} open={this.state.isMenuOpen} onRequestChange={this.handleMenuChange}>
+                    <NavigationComponent closeMenu={this.closeMenu}/>
+                </Drawer>
+                <ContentWrapper>
+                    <Switch>
+                        <Route exact path="/" component={HomePage}/>
+                        <Route exact path="/marketplace" component={MarketplacePage}/>
+                        <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
+                        <PublicRoute exact path="/registration" component={RegistrationPage}/>
+                        <PublicRoute exact path="/login" component={LoginPage}/>
+                        <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
+                        <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
+                        <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
+                        <Route component={NoMatchPage}/>
+                    </Switch>
+                </ContentWrapper>
             </div>
         );
     }
