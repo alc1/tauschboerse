@@ -33,7 +33,9 @@ class ArticleDetailPage extends React.Component {
         return (
             <div>
                 {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
-                {article && <ArticleComponent article={article}/>}
+                <div className="articles-list">
+                    {article && <ArticleComponent article={article}/>}
+                </div>
             </div>
         );
     }
