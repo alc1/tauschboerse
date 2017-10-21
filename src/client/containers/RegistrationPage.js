@@ -8,7 +8,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
-import InputComponent from '../components/InputComponent';
+import UserDetailsForm from '../components/UserDetailsForm';
 
 import store from '../store/store';
 import { JWT_TOKEN_KEY } from '../common';
@@ -36,6 +36,7 @@ export default class RegistrationPage extends React.Component {
     };
 
     onSubmit = (theEvent) => {
+        theEvent.preventDefault();
         this.setState({ loading: true });
         const { email, name, password, passwordConfirmation } = this.state;
         const validation = registrationValidator.validate({ email, name, password, passwordConfirmation });
@@ -63,57 +64,22 @@ export default class RegistrationPage extends React.Component {
     };
 
     render() {
-        const { errors, loading } = this.state;
-        const inputStyles = { width: '350px' };
-        const formStyles = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        };
+        const { name, email, password, passwordConfirmation, errors, loading } = this.state;
         return (
-            <form style={formStyles} onSubmit={this.onSubmit}>
+            <div>
                 {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.name}
-                    label="Name"
+                <UserDetailsForm
+                    name={name}
+                    email={email}
+                    password={password}
+                    passwordConfirmation={passwordConfirmation}
+                    errors={errors}
+                    loading={loading}
                     onChange={this.onChange}
-                    value={this.state.name}
-                    field="name"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.email}
-                    label="E-Mail"
-                    onChange={this.onChange}
-                    value={this.state.email}
-                    field="email"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.password}
-                    label="Passwort"
-                    onChange={this.onChange}
-                    value={this.state.password}
-                    field="password"
-                    type="password"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.passwordConfirmation}
-                    label="Passwort bestätigen"
-                    onChange={this.onChange}
-                    value={this.state.passwordConfirmation}
-                    field="passwordConfirmation"
-                    type="password"
-                    disabled={loading}
-                />
-                <br/>
-                <RaisedButton label="Registrieren" icon={<PersonAdd/>} onClick={this.onSubmit} disabled={loading} primary/>
-            </form>
+                    onSubmit={this.onSubmit}>
+                    <RaisedButton type="submit" label="Registrieren" icon={<PersonAdd/>} disabled={loading} primary/>
+                </UserDetailsForm>
+            </div>
         );
     }
 }

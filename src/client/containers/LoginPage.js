@@ -10,7 +10,7 @@ import LockOpen from 'material-ui/svg-icons/action/lock-open';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import { login } from '../actions/user';
-import InputComponent from '../components/InputComponent';
+import LoginForm from '../components/LoginForm';
 
 class LoginPage extends React.Component {
 
@@ -31,6 +31,7 @@ class LoginPage extends React.Component {
     };
 
     onSubmit = (theEvent) => {
+        theEvent.preventDefault();
         this.setState({
             errors: {},
             loading: true
@@ -47,40 +48,24 @@ class LoginPage extends React.Component {
     };
 
     render() {
-        const { errors, loading } = this.state;
-        const inputStyles = { width: '350px' };
-        const formStyles = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        };
+        const { email, password, errors, loading } = this.state;
         return (
-            <form style={formStyles} onSubmit={this.onSubmit}>
+            <div>
                 {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.email}
-                    label="E-Mail"
+                <LoginForm
+                    email={email}
+                    password={password}
+                    errors={errors}
+                    loading={loading}
                     onChange={this.onChange}
-                    value={this.state.email}
-                    field="email"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.password}
-                    label="Passwort"
-                    onChange={this.onChange}
-                    value={this.state.password}
-                    field="password"
-                    type="password"
-                    disabled={loading}
-                />
-                <br/>
-                <RaisedButton label="Anmelden" icon={<LockOpen/>} onClick={this.onSubmit} disabled={loading} primary/>
-                <br/>
-                <Link to="/registration"><FlatButton label="Neues Konto erstellen" icon={<PersonAdd/>} disabled={loading} secondary/></Link>
-            </form>
+                    onSubmit={this.onSubmit}>
+                    <RaisedButton type="submit" label="Anmelden" icon={<LockOpen/>} disabled={loading} primary/>
+                    <br/>
+                    <Link to="/registration">
+                        <FlatButton label="Neues Konto erstellen" icon={<PersonAdd/>} disabled={loading} secondary/>
+                    </Link>
+                </LoginForm>
+            </div>
         );
     }
 }
