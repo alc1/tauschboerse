@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import LinearProgress from 'material-ui/LinearProgress';
 import FlatButton from 'material-ui/FlatButton';
 
+import LoadingIndicatorComponent from "../components/LoadingIndicatorComponent";
 import ArticleComponent from '../components/ArticleComponent';
 import { loadUserArticles } from '../actions/user';
 import { getUserArticles } from '../selectors/user';
@@ -43,7 +43,7 @@ class UserArticlesPage extends React.Component {
         });
         return (
             <div>
-                {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
+                <LoadingIndicatorComponent loading={loading}/>
                 <div className="articles-list">
                     {articleComponents}
                 </div>

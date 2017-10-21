@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import LockOpen from 'material-ui/svg-icons/action/lock-open';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import { login } from '../actions/user';
+import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import LoginForm from '../components/LoginForm';
 
 class LoginPage extends React.Component {
@@ -51,7 +51,7 @@ class LoginPage extends React.Component {
         const { email, password, errors, loading } = this.state;
         return (
             <div>
-                {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
+                <LoadingIndicatorComponent loading={loading}/>
                 <LoginForm
                     email={email}
                     password={password}

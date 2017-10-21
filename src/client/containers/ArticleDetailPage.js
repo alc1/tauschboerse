@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import LinearProgress from 'material-ui/LinearProgress';
-
+import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import ArticleComponent from '../components/ArticleComponent';
 import { loadArticle } from '../actions/article';
 import { getArticle } from '../selectors/article';
@@ -32,7 +31,7 @@ class ArticleDetailPage extends React.Component {
         const { article } = this.props;
         return (
             <div>
-                {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
+                <LoadingIndicatorComponent loading={loading}/>
                 <div className="articles-list">
                     {article && <ArticleComponent article={article}/>}
                 </div>

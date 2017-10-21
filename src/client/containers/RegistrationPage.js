@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
-import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
+import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import UserDetailsForm from '../components/UserDetailsForm';
 
 import store from '../store/store';
@@ -67,7 +67,7 @@ export default class RegistrationPage extends React.Component {
         const { name, email, password, passwordConfirmation, errors, loading } = this.state;
         return (
             <div>
-                {loading && <LinearProgress mode="indeterminate" color="#FF9800"/>}
+                <LoadingIndicatorComponent loading={loading}/>
                 <UserDetailsForm
                     name={name}
                     email={email}
