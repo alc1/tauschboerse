@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const Datastore = require('nedb');
 const db = new Datastore({ filename : './data/users.db', autoload : true });
 
-export class UserCache {
+class UserCache {
     constructor() {
         this.users = [];
     }
@@ -22,3 +22,7 @@ export class UserCache {
         return this.users.find(user => user._id === id);
     }
 }
+
+module.exports = {
+    UserCache
+};

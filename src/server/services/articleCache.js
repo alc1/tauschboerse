@@ -4,7 +4,7 @@ const Datastore = require('nedb');
 const dbArticles = new Datastore({ filename : './data/articles.db', autoload : true });
 const dbArticleCategories = new Datastore({ filename : './data/articleCategories.db', autoload : true });
 
-export class ArticleCache {
+class ArticleCache {
     constructor(users, categories) {
         this.users = users;
         this.categores = categories;
@@ -53,3 +53,7 @@ export class ArticleCache {
         return this.articles.find(article => article._id === id);
     }
 }
+
+module.exports = {
+    ArticleCache
+};

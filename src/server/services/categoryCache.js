@@ -3,7 +3,7 @@
 const Datastore = require('nedb');
 const db = new Datastore({ filename : './data/categories.db', autoload : true });
 
-export class CategoryCache {
+class CategoryCache {
     constructor() {
         this.categories = [];
     }
@@ -21,3 +21,7 @@ export class CategoryCache {
         return this.categories.find(cat => cat._id === id);
     }
 }
+
+module.exports = {
+    CategoryCache
+};

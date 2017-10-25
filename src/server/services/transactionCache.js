@@ -4,7 +4,7 @@ const Datastore = require('nedb');
 const dbTransactions = new Datastore({ filename : './data/transactions.db', autoload : true });
 const dbTransactionOffers = new Datastore({ filename : './data/transactionOffers.db', autoload : true });
 
-export class TransactionCache {
+class TransactionCache {
     constructor(users, offers) {
         this.users = users;
         this.offers = offers;
@@ -54,3 +54,7 @@ export class TransactionCache {
         return this.transactions.find(trans => trans._id === id);
     }
 }
+
+module.exports = {
+    TransactionCache
+};

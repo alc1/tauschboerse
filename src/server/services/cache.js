@@ -3,13 +3,13 @@
 const bcrypt = require('bcrypt');
 const Datastore = require('nedb');
 
-const ArticleCache = require('./articleCache');
-const CategoryCache = require('./categoryCache');
-const OfferCache = require('./offerCache');
-const TransactionCache = require('./transactionCache');
-const UserCache = require('./userCache');
+const ArticleCache = require('./articleCache').ArticleCache;
+const CategoryCache = require('./categoryCache').CategoryCache;
+const OfferCache = require('./offerCache').OfferCache;
+const TransactionCache = require('./transactionCache').TransactionCache;
+const UserCache = require('./userCache').UserCache;
 
-export class DataCache {
+class DataCache {
 
     constructor() {
         this.users = new UserCache();
@@ -43,3 +43,15 @@ export class DataCache {
         return this.transactions.findAll();
     }
 }
+
+var  dataCache;
+
+function initDataCache() {
+    dataCache = new DataCache();
+    return dataCache.init();
+}
+
+module.exports = {
+    dataCache,
+    initDataCache
+};
