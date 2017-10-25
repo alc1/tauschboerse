@@ -1,0 +1,23 @@
+Simple Trade
+------------
+
+Detlef sucht einen Fussball, da sein kleiner Neffe ihn bald besucht. Detlef will aber so wenig Geld ausgeben wie möglich.
+Er hat von einer Online-Tauschbörse gehört und möchte diesen probieren. Er öffnet seinen Browser, gibt die URL ein und
+sieht nach einem Bruchteil einer Sekunde die Eingangsseite der Tauschbörse. Der Suchfeld sticht ins Auge. Er tippt
+"Fussball" ein und ist bereits nach ein paar wenigen Sekunden angenhem überrascht, wenn 4 verschiedene Fussbälle im
+Browserfenster erscheinen. Der Ball mit dem Transformers-Motiv scheint optimal zu sein. Als er die Maus über das Bild des
+Balls erscheint die Meldung, wenn er einen Tausch vorschlägen möchte, müsse er sich zuerst anmelden oder registrieren.
+detlef entschliesst sich dazu, sich zu registrieren. Er muss seine E-Mail-Adresse eingeben und einen Alias anzugeben.
+Nach abgeschlossener Registrierung befindet er sich wieder bei seinen Suchresultaten, und kann nun den Ball auswählen.
+Die Seite wechselt und er sieht, dass ein neues Tauschgeschäft mit dem User Olaf eröffnet wurde, und der Ball ist unter
+der Rubrik "Gesuchte Artikel" aufgelistet. Er sieht, dass er die Möglichkeit hat, weiter Artikel von Olaf auszuwählen,
+ignoriert diese Möglichkeit, da er nur den Ball sucht. Neben der Rubrik "Gesuchte Artikel" steht "Dafür biete ich...".
+Unterhalb diesem Text sind zwei Knöpfe, "Artikel aussuchen" und "Artikel hinzufügen". Er wählt "Artikel hinzufügen", da
+er noch keine Artikel erfasst hat. Eine Maske erscheint in der er einen Titel und eine Beschreibung eingeben kann. Er
+kann auch ein Bild hochladen. Er hat einen Twister-Spiel in Kleinformat, der einfach auf Reisen mitzunehmen ist, aber
+den er gar nicht spielt. Er erfasst die entsprechenden Texte, lädt ein Bild hoch, das er mit seinem Handy gemacht hat
+und klickt auf Speichern. Der Artikel erscheint unter "Dafür biete ich...". Mit einem Klick auf dem etwas weiter unten
+stehenden Knopf "Senden", meldet das System, dass seine Anfrage an Olaf gesendet wurde.
+
+Vierzig Minuten später erhält Detlef ein E-Mail von der Tauschbörse, dass sein Angebot von Olaf angenommen wurde, und
+dass er sich wieder anmelden sollte, um der Tausch abzuwickeln. Ein Link zum Tauschgeschäft steht im E-Mail.
