@@ -21,7 +21,7 @@ async function getArticle(req, res) {
 }
 
 async function fetchArticleDetails(theArticle) {
-    const user = await usersStore.getUser(theArticle.userId);
+    const user = await usersStore.getUserById(theArticle.userId);
     addUserDetailsToArticle(theArticle, user);
 
     const categories = await categoriesStore.getCategories(theArticle.categories);

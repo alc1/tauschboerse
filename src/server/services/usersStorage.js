@@ -28,7 +28,7 @@ function getAllUsers() {
     });
 }
 
-function getUser(theUserId) {
+function getUserById(theUserId) {
     return new Promise((resolve, reject) => {
         db.findOne({ _id : theUserId }, (err, user) => {
             storageUtils.handlePromiseResult(resolve, user, reject, err);
@@ -58,10 +58,19 @@ function createUser(theCredentials) {
     });
 }
 
+function updateUser(theUserId, theUserDetails) {
+    return new Promise((resolve, reject) => {
+        db.update({ _id: theUserId }, { $set: theUserDetails }, {}, (err, numAffected) => {
+            storageUtils.handlePromiseResult(resolve, numAffected, reject, err);
+        });
+    });
+}
+
 module.exports = {
     getAllUsers,
-    getUser,
+    getUserById,
     getUserByEmail,
     createUser,
+    updateUser,
     insertTestData
 };

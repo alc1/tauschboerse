@@ -1,8 +1,13 @@
+/*
+ * This middleware checks that the authorization token is available in the request
+ * and the corresponding user exists.
+ */
+'use strict';
+
 const jwt = require('jsonwebtoken');
 
 const config = require('../config');
-
-//const usersStore = require('../services/usersStorage');
+const usersStore = require('../services/usersStorage');
 
 module.exports = (req, res, next) => {
     let token;
@@ -12,24 +17,19 @@ module.exports = (req, res, next) => {
     }
 
     if (token) {
-        jwt.verify(token, config.jwtSecret, (err, decoded) => {
+        jwt.verify(token, config.jwtSecret, async (err, decoded) => {
             if (err) {
                 res.status(401).json({ error: 'Unauthorized (authentication failed)!' });
             }
             else {
-                req.userId = decoded._id;
-                next();
-                /*
-                // Fetch user on each request to be sure that the user still exists?
-                usersStore.getUser(decoded._id, (err, user) => {
-                    if (!user) {
-                        res.status(404).json({ error: 'No such user' });
-                    } else {
-                        req.userId = user._id;
-                        next();
-                    }
-                });
-                */
+                const user = await usersStore.getUserById(decoded._id);
+                if (user) {
+                    req.user = user;
+                    next();
+                }
+                else {
+                    res.status(404).json({ error: 'User from token not found' });
+                }
             }
         });
     }
