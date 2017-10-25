@@ -42,6 +42,14 @@ class DataCache {
     getTransactions() {
         return this.transactions.findAll();
     }
+
+    getUser(id) {
+        return this.users.find(id);
+    }
+
+    authenticateUser(id, pwd) {
+        return this.users.authenticate(id, pwd);
+    }
 }
 
 var  dataCache;

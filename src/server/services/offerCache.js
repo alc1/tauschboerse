@@ -16,8 +16,8 @@ class OfferCache {
             return new Promise((resolve, reject) => {
                 dbOffers.find({}, (err, recs) => {
                     this.offers = recs;
+                    resolve(this);
                 });
-                resolve(this);
             });
         }
 
@@ -33,8 +33,8 @@ class OfferCache {
                         }
                         offer.articles.push(article);
                     });
+                    resolve(this);
                 });
-                resolve(this);
             });
         }
 

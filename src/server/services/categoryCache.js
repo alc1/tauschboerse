@@ -12,8 +12,8 @@ class CategoryCache {
         return new Promise((resolve, reject) => {
             db.find({}, (err, recs) => {
                 this.categories = recs;
+                resolve(this);
             });
-            resolve(this);
         });
     }
 
