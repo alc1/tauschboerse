@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
-import UserDetailsForm from '../components/UserDetailsForm';
+import RegistrationForm from '../components/RegistrationForm';
 
 import store from '../store/store';
 import { JWT_TOKEN_KEY } from '../common';
@@ -68,7 +68,7 @@ export default class RegistrationPage extends React.Component {
         return (
             <div>
                 <LoadingIndicatorComponent loading={loading}/>
-                <UserDetailsForm
+                <RegistrationForm
                     name={name}
                     email={email}
                     password={password}
@@ -78,7 +78,7 @@ export default class RegistrationPage extends React.Component {
                     onChange={this.onChange}
                     onSubmit={this.onSubmit}>
                     <RaisedButton type="submit" label="Registrieren" icon={<PersonAdd/>} disabled={loading} primary/>
-                </UserDetailsForm>
+                </RegistrationForm>
             </div>
         );
     }

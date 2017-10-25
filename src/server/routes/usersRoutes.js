@@ -4,10 +4,12 @@ const router = require('express').Router();
 const articlesController = require('../controller/articlesController');
 const usersController = require('../controller/usersController');
 const authenticationMiddleware = require('../middleware/authentication');
+const userMiddleware = require('../middleware/user');
 
 router.get('/', authenticationMiddleware, usersController.getAllUsers);
 router.post('/', usersController.createUser);
-router.get('/:userId', authenticationMiddleware, usersController.getUser);
+router.get('/:userId', authenticationMiddleware, usersController.getUserById);
+router.put('/:userId', [authenticationMiddleware, userMiddleware], usersController.updateUser);
 router.get('/:userId/articles', authenticationMiddleware, articlesController.getArticlesByUser);
 router.post('/auth', usersController.login);
 
