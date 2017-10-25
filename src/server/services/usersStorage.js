@@ -2,7 +2,9 @@
 
 const bcrypt = require('bcrypt');
 const Datastore = require('nedb');
-const db = new Datastore({ filename : './data/users.db', autoload : true });
+const dataFiles = require('./dataFiles');
+
+const db = dataFiles.dbUsers;
 
 const storageUtils = require('../utils/storageUtils');
 

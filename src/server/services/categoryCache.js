@@ -1,7 +1,8 @@
 'use strict'
 
 const Datastore = require('nedb');
-const db = new Datastore({ filename : './data/categories.db', autoload : true });
+const dataFiles = require('./dataFiles');
+const dbCategories = dataFiles.dbCategories;
 
 class CategoryCache {
     constructor() {
@@ -10,7 +11,9 @@ class CategoryCache {
 
     init() {
         return new Promise((resolve, reject) => {
-            db.find({}, (err, recs) => {
+            console.log('Loading categories...');
+            dbCategories.find({}, (err, recs) => {
+                console.log('categories loaded');
                 this.categories = recs;
                 resolve(this);
             });

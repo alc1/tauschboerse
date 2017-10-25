@@ -1,8 +1,10 @@
 'use strict'
 
 const Datastore = require('nedb');
-const dbOffers = new Datastore({ filename : './data/offers.db', autoload : true });
-const dbOfferArticles = new Datastore({ filename : './data/offerArticles.db', autoload : true });
+const dataFiles = require('./dataFiles');
+
+const dbOffers = dataFiles.dbOffers;
+const dbOfferArticles = dataFiles.dbOfferArticles;
 
 class OfferCache {
     constructor(articles) {
@@ -14,8 +16,10 @@ class OfferCache {
     init() {
         function initOffers() {
             return new Promise((resolve, reject) => {
+                console.log('Loading offers...');
                 dbOffers.find({}, (err, recs) => {
                     this.offers = recs;
+                    console.log('offers loaded');
                     resolve(this);
                 });
             });
@@ -23,6 +27,7 @@ class OfferCache {
 
         function initOfferArticles() {
             return new Promise((resolve, reject) => {
+                console.log('Loading offer articles...');
                 dbOfferArticles.find({}, (err, recs) => {
                     recs.forEach(rec => {
                         let offer = this.find(rec.offerId);
@@ -33,6 +38,7 @@ class OfferCache {
                         }
                         offer.articles.push(article);
                     });
+                    console.log('offer articles loaded');
                     resolve(this);
                 });
             });

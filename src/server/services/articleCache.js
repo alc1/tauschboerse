@@ -1,13 +1,15 @@
 'use strict'
 
 const Datastore = require('nedb');
-const dbArticles = new Datastore({ filename : './data/articles.db', autoload : true });
-const dbArticleCategories = new Datastore({ filename : './data/articleCategories.db', autoload : true });
+const dataFiles = require('./dataFiles');
+
+const dbArticles = dataFiles.dbArticles;
+const dbArticleCategories = dataFiles.dbArticleCategories;
 
 class ArticleCache {
     constructor(users, categories) {
         this.users = users;
-        this.categores = categories;
+        this.categories = categories;
 
         this.articles = [];
     }
@@ -15,11 +17,13 @@ class ArticleCache {
     init() {
         function initArticles() {
             return new Promise((resolve, reject) => {
+                console.log('Loading articles...');
                 dbArticles.find({}, (err, recs) => {
                     this.articles = recs;
                     recs.forEach(rec => {
                         rec.owner = this.users.find(rec.ownerId);
                     });
+                    console.log('articles loaded');
                     resolve(this);
                 });
             });
@@ -27,6 +31,7 @@ class ArticleCache {
 
         function initArticleCategories() {
             return new Promise((resolve, reject) => {
+                console.log('Loading article categories...');
                 dbArticleCategories.find({}, (err, recs) => {
                     recs.forEach(rec => {
                         let article = this.find(rec.articleId);
@@ -37,6 +42,7 @@ class ArticleCache {
                         }
                         article.categories.push(category);
                     });
+                    console.log('article categories loaded');
                     resolve(this);
                 });
             });

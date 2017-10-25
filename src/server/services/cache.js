@@ -21,8 +21,8 @@ class DataCache {
 
     init() {
         return Promise.all([
-            this.users.init(),
-            this.categories.init()
+                this.users.init(),
+                this.categories.init()
             ])
             .then(
                 () => this.articles.init()
@@ -39,8 +39,12 @@ class DataCache {
         return this.articles.findAll();
     }
 
-    getTransactions() {
-        return this.transactions.findAll();
+    getTransaction(id) {
+        return this.transactions.find(id);
+    }
+
+    getUserTransactions(userId) {
+        return this.transactions.findByUser(userId);
     }
 
     getUser(id) {
@@ -56,6 +60,7 @@ var  dataCache;
 
 function initDataCache() {
     dataCache = new DataCache();
+    console.log('Initialising data cache...');
     return dataCache.init();
 }
 

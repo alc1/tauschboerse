@@ -1,7 +1,9 @@
 'use strict';
 
 const Datastore = require('nedb');
-const db = new Datastore({ filename : './data/categories.db', autoload : true });
+const dataFiles = require('./dataFiles');
+
+const db = dataFiles.dbCategories;
 
 const storageUtils = require('../utils/storageUtils');
 

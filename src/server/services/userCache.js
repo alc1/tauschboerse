@@ -2,7 +2,9 @@
 
 const bcrypt = require('bcrypt');
 const Datastore = require('nedb');
-const db = new Datastore({ filename : './data/users.db', autoload : true });
+const dataFiles = require('./dataFiles');
+
+const db = dataFiles.dbUsers;
 
 class UserCache {
     constructor() {
@@ -11,12 +13,14 @@ class UserCache {
 
     init() {
         return new Promise((resolve, reject) => {
+            console.log('Loading users...');
             db.find({}, (err, recs) => {
                 this.passwords = recs.map(user => { return { id: user._id, pwd: user.password}; });
                 this.users = recs;
                 this.users.forEach(user => {
                     delete user.password;
                 });
+                console.log('users loaded');
                 resolve(this);
             });
         });
