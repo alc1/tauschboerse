@@ -20,11 +20,19 @@ export class DataCache {
     }
 
     init() {
-        this.users.init();
-        this.categories.init();
-        this.articles.init();
-        this.offers.init();
-        this.transactions.init();
+        return Promise.all([
+            this.users.init(),
+            this.categories.init()
+            ])
+            .then(
+                () => this.articles.init()
+            )
+            .then (
+                () => this.offers.init()
+            )
+            .then(
+                () => this.transactions.init()
+            );
     }
 
     getArticles() {

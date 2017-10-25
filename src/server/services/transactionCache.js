@@ -13,25 +13,37 @@ export class TransactionCache {
     }
 
     init() {
-        db.find({}, (err, recs) => {
-            this.transactions = recs;
-            recs.forEach(rec => {
-                rec.user1 = this.users.find(rec.user1Id);
-                rec.user2 = this.users.find(rec.user2Id);
+        function initTransactions() {
+            return new Promise((resolve, reject) => {
+                dbTransactions.find({}, (err, recs) => {
+                    this.transactions = recs;
+                    recs.forEach(rec => {
+                        rec.user1 = this.users.find(rec.user1Id);
+                        rec.user2 = this.users.find(rec.user2Id);
+                    });
+                    resolve(this);
+                });
             });
-        });
-
-        db.find({}, (err, recs) => {
-            recs.forEach(rec => {
-                let transaction = this.find(rec.transactionId);
-                let offer = this.offers.find(rec.offerId);
-
-                if (!transaction.offers) {
-                    transaction.offers = [];
-                }
-                transaction.offers.push(offer);
+        }
+    
+        function initTransactionOffers() {
+            return new Promise((resolve, reject) => {
+                dbTransactionOffers.find({}, (err, recs) => {
+                    recs.forEach(rec => {
+                        let transaction = this.find(rec.transactionId);
+                        let offer = this.offers.find(rec.offerId);
+        
+                        if (!transaction.offers) {
+                            transaction.offers = [];
+                        }
+                        transaction.offers.push(offer);
+                    });
+                    resolve(this);
+                });
             });
-        });
+        }
+    
+        return this.initTransactions().then(() => this.initTransactionOffers());
     }
 
     findAll() {

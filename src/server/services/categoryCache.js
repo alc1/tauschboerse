@@ -9,8 +9,11 @@ export class CategoryCache {
     }
 
     init() {
-        db.find({}, (err, recs) => {
-            this.categories = recs;
+        return new Promise((resolve, reject) => {
+            db.find({}, (err, recs) => {
+                this.categories = recs;
+            });
+            resolve(this);
         });
     }
 

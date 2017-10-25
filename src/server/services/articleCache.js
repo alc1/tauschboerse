@@ -13,24 +13,36 @@ export class ArticleCache {
     }
 
     init() {
-        dbArticles.find({}, (err, recs) => {
-            this.articles = recs;
-            recs.forEach(rec => {
-                rec.owner = this.users.find(rec.ownerId);
+        function initArticles() {
+            return new Promise((resolve, reject) => {
+                dbArticles.find({}, (err, recs) => {
+                    this.articles = recs;
+                    recs.forEach(rec => {
+                        rec.owner = this.users.find(rec.ownerId);
+                    });
+                    resolve(this);
+                });
             });
-        });
+        }
 
-        dbArticleCategories.find({}, (err, recs) => {
-            recs.forEach(rec => {
-                let article = this.find(rec.articleId);
-                let category = this.categories.find(rec.categoryId);
-
-                if (!article.categories) {
-                    article.categories = [];
-                }
-                article.categories.push(category);
+        function initArticleCategories() {
+            return new Promise((resolve, reject) => {
+                dbArticleCategories.find({}, (err, recs) => {
+                    recs.forEach(rec => {
+                        let article = this.find(rec.articleId);
+                        let category = this.categories.find(rec.categoryId);
+        
+                        if (!article.categories) {
+                            article.categories = [];
+                        }
+                        article.categories.push(category);
+                    });
+                    resolve(this);
+                });
             });
-        });
+        }
+
+        return initArticles().then(() => this.initArticleCategories());
     }
 
     findAll() {

@@ -12,21 +12,33 @@ export class OfferCache {
     }
 
     init() {
-        dbOffers.find({}, (err, recs) => {
-            this.offers = recs;
-        });
-
-        dbOfferArticles.find({}, (err, recs) => {
-            recs.forEach(rec => {
-                let offer = this.find(rec.offerId);
-                let article = this.articles.find(rec.articleId);
-
-                if (!offer.articles) {
-                    offer.articles = [];
-                }
-                offer.articles.push(article);
+        function initOffers() {
+            return new Promise((resolve, reject) => {
+                dbOffers.find({}, (err, recs) => {
+                    this.offers = recs;
+                });
+                resolve(this);
             });
-        });
+        }
+
+        function initOfferArticles() {
+            return new Promise((resolve, reject) => {
+                dbOfferArticles.find({}, (err, recs) => {
+                    recs.forEach(rec => {
+                        let offer = this.find(rec.offerId);
+                        let article = this.articles.find(rec.articleId);
+        
+                        if (!offer.articles) {
+                            offer.articles = [];
+                        }
+                        offer.articles.push(article);
+                    });
+                });
+                resolve(this);
+            });
+        }
+
+        return initOffers().then(() => initOfferArticles());
     }
 
     find(id) {

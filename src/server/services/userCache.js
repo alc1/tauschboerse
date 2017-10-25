@@ -10,8 +10,11 @@ export class UserCache {
     }
 
     init() {
-        db.find({}, (err, recs) => {
-            this.users = recs;
+        return new Promise((resolve, reject) => {
+            db.find({}, (err, recs) => {
+                this.users = recs;
+            });
+            resolve(this);
         });
     }
 
