@@ -2,6 +2,7 @@
 
 const registrationValidator = require('../../shared/validations/registration');
 const usersStore = require('../services/usersStorage');
+const userCreator = require('./userCreator');
 const userUpdater = require('./userUpdater');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
@@ -33,25 +34,12 @@ async function login(req, res) {
 
 async function createUser(req, res) {
     const { credentials } = req.body;
-    const validation = registrationValidator.validate(credentials);
-    if (validation.isValid) {
-        const user = await usersStore.getUserByEmail(credentials.email);
-        if (!user) {
-            const createdUser = await usersStore.createUser(credentials);
-            if (createdUser) {
-                await login(req, res);
-            }
-            else {
-                const error = 'Benutzer konnte nicht erstellt werden';
-                res.status(500).json({ errors: { name: error, email: error, password: error, passwordConfirmation: error } });
-            }
-        }
-        else {
-            res.status(400).json({ errors: { email: 'Diese E-Mail existiert bereits' } });
-        }
+    const result = await userCreator.create(credentials);
+    if (result.success) {
+        await login(req, res);
     }
     else {
-        res.status(400).json({ errors: validation.errors });
+        res.status(result.status).json({ errors: result.errors });
     }
 }
 
