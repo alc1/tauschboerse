@@ -1,6 +1,5 @@
 'use strict';
 
-const registrationValidator = require('../../shared/validations/registration');
 const usersStore = require('../services/usersStorage');
 const userCreator = require('./userCreator');
 const userUpdater = require('./userUpdater');
