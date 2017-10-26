@@ -14,21 +14,23 @@ class OfferCache {
     }
 
     init() {
-        function initOffers() {
-            return new Promise((resolve, reject) => {
+        let initOffers = (function() {
+            let load = (function(resolve, reject) {
                 console.log('Loading offers...');
-                dbOffers.find({}, (err, recs) => {
+                dbOffers.find({}, (function(err, recs) {
                     this.offers = recs;
                     console.log('offers loaded');
                     resolve(this);
-                });
-            });
-        }
+                }).bind(this));
+            }).bind(this);
+                        
+            return new Promise((load).bind(this));
+        }).bind(this);
 
-        function initOfferArticles() {
-            return new Promise((resolve, reject) => {
+        let initOfferArticles = (function() {
+            let load = (function(resolve, reject) {
                 console.log('Loading offer articles...');
-                dbOfferArticles.find({}, (err, recs) => {
+                dbOfferArticles.find({}, (function(err, recs) {
                     recs.forEach(rec => {
                         let offer = this.find(rec.offerId);
                         let article = this.articles.find(rec.articleId);
@@ -40,9 +42,11 @@ class OfferCache {
                     });
                     console.log('offer articles loaded');
                     resolve(this);
-                });
-            });
-        }
+                }).bind(this));
+            }).bind(this);
+            
+            return new Promise(load);
+        }).bind(this);
 
         return initOffers().then(() => initOfferArticles());
     }

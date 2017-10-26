@@ -12,9 +12,9 @@ class UserCache {
     }
 
     init() {
-        return new Promise((resolve, reject) => {
+        let load = (function(resolve, reject) {
             console.log('Loading users...');
-            db.find({}, (err, recs) => {
+            db.find({}, (function(err, recs) {
                 this.passwords = recs.map(user => { return { id: user._id, pwd: user.password}; });
                 this.users = recs;
                 this.users.forEach(user => {
@@ -22,8 +22,10 @@ class UserCache {
                 });
                 console.log('users loaded');
                 resolve(this);
-            });
-        });
+            }).bind(this));
+        }).bind(this);
+        
+        return new Promise(load);
     }
 
     find(id) {

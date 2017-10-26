@@ -10,14 +10,16 @@ class CategoryCache {
     }
 
     init() {
-        return new Promise((resolve, reject) => {
+        let load = (function(resolve, reject) {
             console.log('Loading categories...');
-            dbCategories.find({}, (err, recs) => {
+            dbCategories.find({}, (function(err, recs) {
                 console.log('categories loaded');
                 this.categories = recs;
                 resolve(this);
-            });
-        });
+            }).bind(this));
+        }).bind(this);
+                    
+        return new Promise(load);
     }
 
     find(id) {

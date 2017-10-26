@@ -15,10 +15,10 @@ class TransactionCache {
     }
 
     init() {
-        function initTransactions() {
-            return new Promise((resolve, reject) => {
+        let initTransactions = (function() {
+            let load = (function(resolve, reject) {
                 console.log('Loading transactions...');
-                dbTransactions.find({}, (err, recs) => {
+                dbTransactions.find({}, (function(err, recs) {
                     this.transactions = recs;
                     recs.forEach(rec => {
                         rec.user1 = this.users.find(rec.user1Id);
@@ -26,14 +26,16 @@ class TransactionCache {
                     });
                     console.log('transactions loaded');
                     resolve(this);
-                });
-            });
-        }
+                }).bind(this));
+            }).bind(this);
+            
+            return new Promise(load);
+        }).bind(this);
     
-        function initTransactionOffers() {
-            return new Promise((resolve, reject) => {
+        let initTransactionOffers = (function() {
+            let load = ((function(resolve, reject) {
                 console.log('Loading transaction offers...');
-                dbTransactionOffers.find({}, (err, recs) => {
+                dbTransactionOffers.find({}, (function(err, recs) {
                     recs.forEach(rec => {
                         let transaction = this.find(rec.transactionId);
                         let offer = this.offers.find(rec.offerId);
@@ -45,11 +47,13 @@ class TransactionCache {
                     });
                     console.log('transaction offers loaded');
                     resolve(this);
-                });
-            });
-        }
+                }).bind(this));
+            }).bind(this)).bind(this);
+            
+            return new Promise(load);
+        }).bind(this);
     
-        return this.initTransactions().then(() => this.initTransactionOffers());
+        return initTransactions().then(() => initTransactionOffers());
     }
 
     findAll() {

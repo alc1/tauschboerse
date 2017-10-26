@@ -15,24 +15,26 @@ class ArticleCache {
     }
 
     init() {
-        function initArticles() {
-            return new Promise((resolve, reject) => {
+        let initArticles = (function() {
+            let load = (function(resolve, reject) {
                 console.log('Loading articles...');
-                dbArticles.find({}, (err, recs) => {
+                dbArticles.find({}, (function(err, recs) {
                     this.articles = recs;
                     recs.forEach(rec => {
                         rec.owner = this.users.find(rec.ownerId);
                     });
                     console.log('articles loaded');
                     resolve(this);
-                });
-            });
-        }
+                }).bind(this));
+            }).bind(this);
 
-        function initArticleCategories() {
-            return new Promise((resolve, reject) => {
+            return new Promise(load);
+        }).bind(this);
+
+        let initArticleCategories = (function() {
+            let load = (function(resolve, reject) {
                 console.log('Loading article categories...');
-                dbArticleCategories.find({}, (err, recs) => {
+                dbArticleCategories.find({}, (function(err, recs) {
                     recs.forEach(rec => {
                         let article = this.find(rec.articleId);
                         let category = this.categories.find(rec.categoryId);
@@ -44,11 +46,13 @@ class ArticleCache {
                     });
                     console.log('article categories loaded');
                     resolve(this);
-                });
-            });
-        }
+                }).bind(this));
+            }).bind(this);
 
-        return initArticles().then(() => this.initArticleCategories());
+            return new Promise(load);
+        }).bind(this);
+
+        return initArticles().then(() => initArticleCategories());
     }
 
     findAll() {

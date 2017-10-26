@@ -9,7 +9,7 @@ const dbTransactions = new Datastore({ filename : './data/transactions.db', auto
 const dbTransactionOffers = new Datastore({ filename : './data/transactionOffers.db', autoload : true });
 const dbUsers = new Datastore({ filename : './data/users.db', autoload : true });
 
-module.export = {
+module.exports = {
     dbArticles,
     dbArticleCategories,
     dbCategories,
