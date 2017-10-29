@@ -1,8 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
@@ -10,15 +8,14 @@ import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import RegistrationForm from '../components/RegistrationForm';
 
-import store from '../store/store';
-import { JWT_TOKEN_KEY } from '../common';
-import { userLoggedIn } from '../actions/user';
+import { createUser } from '../actions/user';
 
 import registrationValidator from '../../shared/validations/registration';
 
-export default class RegistrationPage extends React.Component {
+class RegistrationPage extends React.Component {
 
     static propTypes = {
+        createUser: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -41,13 +38,8 @@ export default class RegistrationPage extends React.Component {
         const { email, name, password, passwordConfirmation } = this.state;
         const validation = registrationValidator.validate({ email, name, password, passwordConfirmation });
         if (validation.isValid) {
-            axios.post('/api/users', { credentials: { email, name, password, passwordConfirmation } })
-                .then(response => {
-                    const token = response.data.token;
-                    localStorage.setItem(JWT_TOKEN_KEY, token);
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                    const user = jwt.decode(token);
-                    store.dispatch(userLoggedIn(user));
+            this.props.createUser(email, name, password, passwordConfirmation)
+                .then(res => {
                     this.props.history.replace('/');
                 })
                 .catch((err) => this.setState({
@@ -83,3 +75,5 @@ export default class RegistrationPage extends React.Component {
         );
     }
 }
+
+export default connect(null, { createUser })(RegistrationPage);

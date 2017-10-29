@@ -5,15 +5,20 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import Save from 'material-ui/svg-icons/content/save';
 
+import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import UserDetailsForm from '../components/UserDetailsForm';
 
 import { updateUser } from '../actions/user';
 import { getUser } from '../selectors/user';
 
 import userDetailsValidator from '../../shared/validations/userDetails';
-import LoadingIndicatorComponent from "../components/LoadingIndicatorComponent";
 
 class UserDetailsPage extends React.Component {
+
+    static propTypes = {
+        updateUser: PropTypes.func.isRequired,
+        user: PropTypes.object.isRequired
+    };
 
     state = {
         name: '',
@@ -25,11 +30,6 @@ class UserDetailsPage extends React.Component {
         errors: {},
         loading: false,
         modified: false
-    };
-
-    static propTypes = {
-        updateUser: PropTypes.func.isRequired,
-        user: PropTypes.object.isRequired
     };
 
     componentDidMount() {

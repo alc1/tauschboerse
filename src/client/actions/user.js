@@ -9,6 +9,7 @@ import { JWT_TOKEN_KEY } from '../common';
 
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
 export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
+export const USER_CREATED = 'USER_CREATED';
 export const USER_UPDATED = 'USER_UPDATED';
 export const USER_ARTICLES_FETCHED = 'USER_ARTICLES_FETCHED';
 
@@ -23,6 +24,11 @@ export const userLoggedIn = (theUser) => ({
 
 const userLoggedOut = () => ({
     type: USER_LOGGED_OUT
+});
+
+const userCreated = (theUser) => ({
+    type: USER_CREATED,
+    user: theUser
 });
 
 const userUpdated = (theUser) => ({
@@ -49,6 +55,10 @@ export const logout = () => dispatch => {
     dispatch(userLoggedOut());
 };
 
+export const createUser = (email, name, password, passwordConfirmation) => dispatch =>
+    axios.post('/api/users', { credentials: { email, name, password, passwordConfirmation } })
+        .then(response => onTokenReceived(response.data.token, dispatch, userCreated));
+
 export const updateUser = (userId, email, name, oldPassword, password, passwordConfirmation) => dispatch =>
     axios.put(`/api/users/${userId}`, { credentials: { email, name, oldPassword, password, passwordConfirmation } })
         .then(response => onTokenReceived(response.data.token, dispatch, userUpdated));
@@ -57,9 +67,9 @@ export const loadUserArticles = (theUserId) => dispatch =>
     axios.get(`/api/users/${theUserId}/articles`)
         .then(response => dispatch(userArticlesFetched(response.data.articles)));
 
-const onTokenReceived = (token, dispatch, action) => {
+const onTokenReceived = (token, dispatch, actionCreator) => {
     localStorage.setItem(JWT_TOKEN_KEY, token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     const user = jwt.decode(token);
-    dispatch(action(user));
+    dispatch(actionCreator(user));
 };
