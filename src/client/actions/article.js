@@ -6,6 +6,7 @@ import axios from 'axios';
 
 export const ARTICLE_FETCHED = 'ARTICLE_FETCHED';
 export const ARTICLE_CREATED = 'ARTICLE_CREATED';
+export const ARTICLE_UPDATED = 'ARTICLE_UPDATED';
 
 /*
  * Action Creators
@@ -21,6 +22,11 @@ const articleCreated = (theArticle) => ({
     article: theArticle
 });
 
+const articleUpdated = (theArticle) => ({
+    type: ARTICLE_UPDATED,
+    article: theArticle
+});
+
 /*
  * Thunk Actions
  */
@@ -32,3 +38,7 @@ export const loadArticle = (theArticleId) => dispatch =>
 export const createArticle = (title, description, categories) => dispatch =>
     axios.post('/api/articles', { article: { title, description, categories } })
         .then(response => dispatch(articleCreated(response.data.article)));
+
+export const updateArticle = (userId, articleId, title, description, categories) => dispatch =>
+    axios.put(`/api/users/${userId}/articles/${articleId}`, { article: { title, description, categories } })
+        .then(response => dispatch(articleUpdated(response.data.article)));

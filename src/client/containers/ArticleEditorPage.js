@@ -8,7 +8,7 @@ import Save from 'material-ui/svg-icons/content/save';
 
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import ArticleForm from '../components/ArticleForm';
-import { loadArticle, createArticle } from '../actions/article';
+import { loadArticle, createArticle, updateArticle } from '../actions/article';
 import { getArticle } from '../selectors/article';
 import { getUser } from '../selectors/user';
 
@@ -21,6 +21,7 @@ class ArticleEditorPage extends React.Component {
         user: PropTypes.object.isRequired,
         loadArticle: PropTypes.func.isRequired,
         createArticle: PropTypes.func.isRequired,
+        updateArticle: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -66,23 +67,24 @@ class ArticleEditorPage extends React.Component {
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.setState({ loading: true });
+        const { user } = this.props;
         const { title, description, categories } = this.state;
         const validation = articleDetailsValidator.validate({ title, description, categories });
         if (validation.isValid) {
+            let articleRequest;
             const { articleId } = this.props.match.params;
             if (articleId) {
-                this.props.createArticle(title, description, categories)
-                    .then((res) => {
-                        this.props.history.replace(`/article/${res.article._id}`);
-                    })
-                    .catch((err) => this.setState({
-                        errors: err.response.data.errors,
-                        loading: false
-                    }));
+                articleRequest = this.props.updateArticle(user._id, articleId, title, description, categories);
             }
             else {
-                console.log('TODO: Edit article');
+                articleRequest = this.props.createArticle(title, description, categories);
             }
+            articleRequest.then((res) => {
+                this.props.history.replace(`/article/${res.article._id}`);
+            }).catch((err) => this.setState({
+                errors: err.response.data.errors,
+                loading: false
+            }));
         }
         else {
             this.setState({
@@ -127,4 +129,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadArticle, createArticle })(ArticleEditorPage);
+export default connect(mapStateToProps, { loadArticle, createArticle, updateArticle })(ArticleEditorPage);

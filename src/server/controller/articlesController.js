@@ -5,6 +5,7 @@ const categoriesStore = require('../services/categoriesStorage');
 const usersStore = require('../services/usersStorage');
 
 const articleCreator = require('./articleCreator');
+const articleUpdater = require('./articleUpdater');
 
 async function getArticlesByUser(req, res) {
     const { userId } = req.params;
@@ -57,8 +58,21 @@ async function createArticle(req, res) {
     }
 }
 
+async function updateArticle(req, res) {
+    const { articleId } = req.params;
+    const { article } = req.body;
+    const result = await articleUpdater.update(articleId, article);
+    if (result.success) {
+        await getArticle(req, res);
+    }
+    else {
+        res.status(result.status).json({ errors: result.errors });
+    }
+}
+
 module.exports = {
     getArticlesByUser,
     getArticle,
-    createArticle
+    createArticle,
+    updateArticle
 };
