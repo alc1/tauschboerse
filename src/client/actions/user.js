@@ -42,7 +42,7 @@ const userArticlesFetched = (theArticles) => ({
 });
 
 /*
- * Actions
+ * Thunk Actions
  */
 
 export const login = (email, password) => dispatch =>
@@ -67,8 +67,16 @@ export const loadUserArticles = (theUserId) => dispatch =>
     axios.get(`/api/users/${theUserId}/articles`)
         .then(response => dispatch(userArticlesFetched(response.data.articles)));
 
+/*
+ * Actions
+ */
+
 const onTokenReceived = (token, dispatch, actionCreator) => {
     localStorage.setItem(JWT_TOKEN_KEY, token);
+    setToken(token, dispatch, actionCreator);
+};
+
+export const setToken = (token, dispatch, actionCreator) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     const user = jwt.decode(token);
     dispatch(actionCreator(user));

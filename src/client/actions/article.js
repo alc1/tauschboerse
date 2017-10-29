@@ -16,7 +16,7 @@ const articleFetched = (theArticle) => ({
 });
 
 /*
- * Actions
+ * Thunk Actions
  */
 
 export const loadArticle = (theArticleId) => dispatch =>
