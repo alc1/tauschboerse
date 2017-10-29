@@ -37,8 +37,17 @@ function getArticle(theArticleId) {
     });
 }
 
+function createArticle(theArticle) {
+    return new Promise((resolve, reject) => {
+        db.insert(theArticle, (err, newDoc) => {
+            storageUtils.handlePromiseResult(resolve, newDoc, reject, err);
+        });
+    });
+}
+
 module.exports = {
     getArticlesByUser,
     getArticle,
+    createArticle,
     insertTestData
 };

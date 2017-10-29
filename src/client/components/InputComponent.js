@@ -9,6 +9,7 @@ export default class InputComponent extends React.Component {
         value: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
+        multiLine: PropTypes.bool.isRequired,
         onChange: PropTypes.func.isRequired,
         disabled: PropTypes.bool.isRequired,
         error: PropTypes.string
@@ -16,6 +17,7 @@ export default class InputComponent extends React.Component {
 
     static defaultProps = {
         type: 'text',
+        multiLine: false,
         disabled: false
     };
 
@@ -30,6 +32,7 @@ export default class InputComponent extends React.Component {
                     onChange={this.props.onChange}
                     value={this.props.value}
                     type={this.props.type}
+                    multiLine={this.props.multiLine}
                     name={this.props.field}
                     disabled={this.props.disabled}
                 />

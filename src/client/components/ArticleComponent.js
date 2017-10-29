@@ -28,7 +28,7 @@ class ArticleComponent extends React.Component {
                     <CardMedia overlay={<CardTitle title={article.title} subtitle={categoryNames} />}>
                         <img src={NoPicture} alt=""/>
                     </CardMedia>
-                    <CardText>{article.description}</CardText>
+                    <CardText style={{whiteSpace: 'pre-wrap'}}>{article.description}</CardText>
                     <CardActions>{actions}</CardActions>
                 </Card>
             </div>

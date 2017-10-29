@@ -17,6 +17,7 @@ import UserArticlesPage from './containers/UserArticlesPage';
 import UserDetailsPage from './containers/UserDetailsPage';
 import UserTransactionsPage from './containers/UserTransactionsPage';
 import ArticleDetailPage from './containers/ArticleDetailPage';
+import ArticleEditorPage from './containers/ArticleEditorPage';
 import RegistrationPage from './containers/RegistrationPage';
 import LoginPage from './containers/LoginPage';
 import NoMatchPage from './containers/NoMatchPage';
@@ -94,6 +95,8 @@ class App extends React.Component {
                         <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
                         <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
                         <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
+                        <PrivateRoute exact path="/user/:userId/article" component={ArticleEditorPage}/>
+                        <PrivateRoute exact path="/user/:userId/article/:articleId" component={ArticleEditorPage}/>
                         <Route component={NoMatchPage}/>
                     </Switch>
                 </ContentWrapper>
