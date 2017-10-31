@@ -2,23 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-
 import RaisedButton from 'material-ui/RaisedButton';
 import Save from 'material-ui/svg-icons/content/save';
 
+import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import UserDetailsForm from '../components/UserDetailsForm';
 
-import store from '../store/store';
-import { JWT_TOKEN_KEY } from '../common';
-import { userLoggedIn } from '../actions/user';
+import { updateUser } from '../actions/user';
 import { getUser } from '../selectors/user';
 
 import userDetailsValidator from '../../shared/validations/userDetails';
-import LoadingIndicatorComponent from "../components/LoadingIndicatorComponent";
 
 class UserDetailsPage extends React.Component {
+
+    static propTypes = {
+        updateUser: PropTypes.func.isRequired,
+        user: PropTypes.object.isRequired
+    };
 
     state = {
         name: '',
@@ -30,10 +30,6 @@ class UserDetailsPage extends React.Component {
         errors: {},
         loading: false,
         modified: false
-    };
-
-    static propTypes = {
-        user: PropTypes.object.isRequired
     };
 
     componentDidMount() {
@@ -73,14 +69,7 @@ class UserDetailsPage extends React.Component {
         const { email, name, oldPassword, password, passwordConfirmation } = this.state;
         const validation = userDetailsValidator.validate({ email, name, oldPassword, password, passwordConfirmation });
         if (validation.isValid) {
-            axios.put(`/api/users/${this.props.user._id}`, { credentials: { email, name, oldPassword, password, passwordConfirmation } })
-                .then(response => {
-                    const token = response.data.token;
-                    localStorage.setItem(JWT_TOKEN_KEY, token);
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                    const user = jwt.decode(token);
-                    store.dispatch(userLoggedIn(user));
-                })
+            this.props.updateUser(this.props.user._id, email, name, oldPassword, password, passwordConfirmation)
                 .catch((err) => this.setState({
                     errors: err.response.data.errors,
                     loading: false
@@ -124,4 +113,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps)(UserDetailsPage);
+export default connect(mapStateToProps, { updateUser })(UserDetailsPage);

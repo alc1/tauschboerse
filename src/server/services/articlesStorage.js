@@ -37,8 +37,26 @@ function getArticle(theArticleId) {
     });
 }
 
+function createArticle(theArticle) {
+    return new Promise((resolve, reject) => {
+        db.insert(theArticle, (err, newDoc) => {
+            storageUtils.handlePromiseResult(resolve, newDoc, reject, err);
+        });
+    });
+}
+
+function updateArticle(theArticleId, theArticleDetails) {
+    return new Promise((resolve, reject) => {
+        db.update({ _id: theArticleId }, { $set: theArticleDetails }, {}, (err, numAffected) => {
+            storageUtils.handlePromiseResult(resolve, numAffected, reject, err);
+        });
+    });
+}
+
 module.exports = {
     getArticlesByUser,
     getArticle,
+    createArticle,
+    updateArticle,
     insertTestData
 };
