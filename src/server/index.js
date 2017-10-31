@@ -11,6 +11,7 @@ const usersRoutes = require('./routes/usersRoutes');
 const initDataCache = require('./services/cache').initDataCache;
 
 function startServer(port) {
+    console.log('Starting web server...');
     let server = http.createServer(app);
     server.listen(port, () => {
         console.log(`Exchange Application API Server is ready on http://localhost:${server.address().port}! Waiting for requests...`);
@@ -33,12 +34,12 @@ app.use('/api/categories', categoriesRoutes);
 app.use('/api/users', usersRoutes);
 
 let useDataCache = false;
+let resetData = false;
 
 if (useDataCache) {
-    initDataCache()
+    initDataCache(resetData)
         .then(() => {
             console.log('Data Cache initialised');
-            console.log('Starting web server...');
             startServer(3001);
         })
         .catch((err) => {

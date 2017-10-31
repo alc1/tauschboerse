@@ -15,8 +15,8 @@ class DataCache {
         this.users = new UserCache();
         this.categories = new CategoryCache();
         this.articles = new ArticleCache(this.users, this.categories);
-        this.offers = new OfferCache(this.articles);
-        this.transactions = new TransactionCache(this.users, this.offers);
+        this.transactions = new TransactionCache(this.users);
+        this.offers = new OfferCache(this.transactions, this.articles, this.users);
     }
 
     init() {
@@ -28,15 +28,35 @@ class DataCache {
                 () => this.articles.init()
             )
             .then (
-                () => this.offers.init()
+                () => this.transactions.init()
             )
             .then(
-                () => this.transactions.init()
+                () => this.offers.init()
             );
+    }
+
+    clear() {
+        return this.offers.clear()
+            .then(() => this.transactions.clear())
+            .then(() => this.articles.clear())
+            .then(() => this.categories.clear())
+            .then(() => this.users.clear());
     }
 
     getArticles() {
         return this.articles.findAll();
+    }
+
+    saveArticle(article) {
+        return this.articles.save(article);
+    }
+
+    getCategories() {
+        return this.categories.findAll();
+    }
+
+    saveCategory(category) {
+        return this.categories.save(category);
     }
 
     getTransaction(id) {
@@ -51,6 +71,10 @@ class DataCache {
         return this.users.find(id);
     }
 
+    saveUser(user) {
+        return this.users.save(user);
+    }
+
     authenticateUser(id, pwd) {
         return this.users.authenticate(id, pwd);
     }
@@ -58,10 +82,17 @@ class DataCache {
 
 var  dataCache;
 
-function initDataCache() {
-    dataCache = new DataCache();
+function initDataCache(reset) {
     console.log('Initialising data cache...');
-    return dataCache.init();
+
+    dataCache = new DataCache();
+    let promise = dataCache.init();
+
+    if (reset) {
+        promise = promise.then(() => resetData(dataCache));
+    }
+
+    return promise;
 }
 
 module.exports = {

@@ -7,8 +7,10 @@ const dbOffers = dataFiles.dbOffers;
 const dbOfferArticles = dataFiles.dbOfferArticles;
 
 class OfferCache {
-    constructor(articles) {
+    constructor(transactions, articles, users) {
+        this.transactions = transactions;
         this.articles = articles;
+        this.users = users;
 
         this.offers = [];
     }
@@ -19,6 +21,11 @@ class OfferCache {
                 console.log('Loading offers...');
                 dbOffers.find({}, (function(err, recs) {
                     this.offers = recs;
+                    this.offers.forEach(offer => {
+                        offer.transaction = this.transactions.find(offer.transactionId);
+                        offer.sender = this.users.find(offer.senderId);
+                        offer.receiver = this.users.find(offer.receiverId);
+                    });
                     console.log('offers loaded');
                     resolve(this);
                 }).bind(this));
@@ -49,6 +56,31 @@ class OfferCache {
         }).bind(this);
 
         return initOffers().then(() => initOfferArticles());
+    }
+
+    clear() {
+        let removeOfferArticles = (function() {
+            return new Promise((function(resolve, reject) {
+                this.dbOfferArticles.remove({}, { multi: true }, (err, numRemoved) => {
+                    resolve(numRemoved);
+                });
+            }).bind(this));
+        }).bind(this);
+
+        let removeOffers = (function() {
+            return new Promise((function(resolve, reject) {
+                this.dbOffers.remove({}, { multi: true }, (function(err, numRemoved) {
+                    this.offers = [];
+                    resolve(numRemoved);
+                }).bind(this));
+            }).bind(this));
+        }).bind(this);
+
+        return removeOfferArticles().then(() => removeOffers());
+    }
+
+    save(offer) {
+        
     }
 
     find(id) {

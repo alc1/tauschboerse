@@ -14,8 +14,7 @@ function getTransaction(req, res) {
     if (transaction) {
         res.json({ transaction: transaction });
     } else {
-        // TODO: send 404 Object not found
-        res.json({ transaction: null });
+        res.sendStatus(404);
     }
 }
 

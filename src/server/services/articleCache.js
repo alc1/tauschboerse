@@ -55,6 +55,55 @@ class ArticleCache {
         return initArticles().then(() => initArticleCategories());
     }
 
+    clear() {
+        let removeArticleCategories = (function() {
+            return new Promise((function(resolve, reject) {
+                this.dbArticleCategories.remove({}, { multi: true }, (err, numRemoved) => {
+                    resolve(numRemoved);
+                });
+            }).bind(this));
+        }).bind(this);
+
+        let removeArticles = (function() {
+            return new Promise((function(resolve, reject) {
+                this.dbArticles.remove({}, { multi: true }, (function(err, numRemoved) {
+                    this.articles = [];
+                    resolve(this);
+                }).bind(this));
+            }).bind(this));
+        }).bind(this);
+
+        return removeArticleCategories().then(() => removeArticles());
+    }
+
+    save(article) {
+        let rec;
+        let saveOp;
+
+        // retrieve article from cache if possible
+        if (article.hasOwnProperty('_id')) {
+            let rec = this.find(article._id);
+        }
+
+        if (rec == null) {
+            // if article wasn't found insert it
+            saveOp = (function(resolve, reject) {
+
+            })
+        } else {
+            // article was found - update it
+            saveOp = (function(resolve, reject) {
+                if (rec.update(article)) {
+                    dbArticles.update({}, rec, function(err, newArticle) {
+                        resolve(newArticle);
+                    });
+                } else {
+                    resolve(0);
+                }
+            });
+        }
+    }
+
     findAll() {
         return this.articles.slice();
     }
