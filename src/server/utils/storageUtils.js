@@ -8,7 +8,7 @@ function handlePromiseResult(resolve, result, reject, error) {
     }
 }
 
-function getValue(obj, propertName, defaultValue) {
+function getValue(obj, propertyName, defaultValue) {
     return (typeof obj[propertyName] === 'undefined') ? defaultValue : obj[propertyName];
 }
 
@@ -23,7 +23,7 @@ function updateValue(obj, propertyName, valueObj) {
     let newVal = getValue(valueObj, propertyName, undefined);
     if ((typeof newVal !== 'undefined') && (obj[propertyName] !== newVal)) {
         obj[propertyName] = newVal;
-        modifed = true;
+        modified = true;
     }
 
     return modified;

@@ -62,11 +62,11 @@ class UserCache {
         } else {            
             saveOp = (function(resolve, reject){
                 if (rec.update(user)) {
-                    this.dbUsers.update({ _id: rec._id }, rec, (function(err, newUser){
-                        resolve(newUser);
+                    this.dbUsers.update({ _id: rec._id }, rec, (function(err, numAffected){
+                        err ? reject(err) : resolve(rec);
                     }));
                 } else {
-                    resolve(0);
+                    resolve(rec);
                 }
             });
         }
