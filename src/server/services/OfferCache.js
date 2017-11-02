@@ -1,6 +1,5 @@
-'use strict'
+'use strict';
 
-const Datastore = require('nedb');
 const dataFiles = require('./dataFiles');
 
 const dbOffers = dataFiles.dbOffers;
@@ -61,7 +60,7 @@ class OfferCache {
     clear() {
         let removeOfferArticles = (function() {
             return new Promise((function(resolve, reject) {
-                this.dbOfferArticles.remove({}, { multi: true }, (err, numRemoved) => {
+                dbOfferArticles.remove({}, { multi: true }, (err, numRemoved) => {
                     resolve(numRemoved);
                 });
             }).bind(this));
@@ -69,7 +68,7 @@ class OfferCache {
 
         let removeOffers = (function() {
             return new Promise((function(resolve, reject) {
-                this.dbOffers.remove({}, { multi: true }, (function(err, numRemoved) {
+                dbOffers.remove({}, { multi: true }, (function(err, numRemoved) {
                     this.offers = [];
                     resolve(numRemoved);
                 }).bind(this));

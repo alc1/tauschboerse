@@ -1,9 +1,6 @@
-'use strict'
+'use strict';
 
-const Datastore = require('nedb');
-const dataFiles = require('./dataFiles');
-
-const dbTransactions = dataFiles.dbTransactions;
+const db = require('./dataFiles').dbTransactions;
 
 class TransactionCache {
     constructor(users) {
@@ -15,7 +12,7 @@ class TransactionCache {
     init() {
         let load = (function(resolve, reject) {
             console.log('Loading transactions...');
-            dbTransactions.find({}, (function(err, recs) {
+            db.find({}, (function(err, recs) {
                 this.transactions = recs;
                 recs.forEach(rec => {
                     rec.user1 = this.users.find(rec.user1Id);
@@ -31,7 +28,7 @@ class TransactionCache {
 
     clear() {
         return new Promise((function(resolve, reject) {
-            this.dbTransactionss.remove({}, { multi: true }, (function(err, numRemoved) {
+            db.remove({}, { multi: true }, (function(err, numRemoved) {
                 this.transactionss = [];
                 resolve(numRemoved);
             }).bind(this));

@@ -1,11 +1,8 @@
-'use strict'
+'use strict';
 
-const User = require('./user');
+const User = require('../../shared/businessobjects/User');
 const bcrypt = require('bcrypt');
-const Datastore = require('nedb');
-const dataFiles = require('./dataFiles');
-
-const db = dataFiles.dbUsers;
+const db = require('./dataFiles').dbUsers;
 
 class UserCache {
     constructor() {
@@ -31,7 +28,7 @@ class UserCache {
 
     clear() {
         return new Promise((function(resolve, reject) {
-            this.dbUsers.remove({}, { multi: true }, (function(err, numRemoved) {
+            db.remove({}, { multi: true }, (function(err, numRemoved) {
                 this.users = [];
                 resolve(numRemoved);
             }).bind(this));
@@ -50,10 +47,10 @@ class UserCache {
             rec = this.find(user._id);
         }
 
-        if (rec == null) {
+        if (!rec) {
             rec = new User(user);
             saveOp = (function(resolve, reject){
-                this.dbUsers.insert(rec, (function(err, newUser){
+                db.insert(rec, (function(err, newUser){
                     this.users.push(newUser);
                     user._id = newUser._id;
                     resolve(newUser);
@@ -62,7 +59,7 @@ class UserCache {
         } else {            
             saveOp = (function(resolve, reject){
                 if (rec.update(user)) {
-                    this.dbUsers.update({ _id: rec._id }, rec, (function(err, numAffected){
+                    db.update({ _id: rec._id }, rec, (function(err, numAffected){
                         err ? reject(err) : resolve(rec);
                     }));
                 } else {

@@ -8,7 +8,7 @@ const app = express();
 const articlesRoutes = require('./routes/articlesRoutes');
 const categoriesRoutes = require('./routes/categoriesRoutes');
 const usersRoutes = require('./routes/usersRoutes');
-const initDataCache = require('./services/cache').initDataCache;
+const initDataCache = require('./services/DataCache').initDataCache;
 
 function startServer(port) {
     console.log('Starting web server...');

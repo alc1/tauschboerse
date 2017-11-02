@@ -1,6 +1,6 @@
 'use strict';
 
-const dataCache = require('../services/cache').dataCache;
+const dataCache = require('../services/DataCache').dataCache;
 
 function getUserTransactions(req, res) {
     const { userId } = req.params;
@@ -19,7 +19,7 @@ function getTransaction(req, res) {
 }
 
 function findTransaction(id, userId) {
-    let transaction = dataCache.getTransaction(transactionId);
+    let transaction = dataCache.getTransaction(id);
     if (transaction) {
         if ((transaction.user1Id !== userId) && (transaction.user2Id !== userId)) {
             transaction = undefined;

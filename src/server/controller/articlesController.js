@@ -7,6 +7,8 @@ const usersStore = require('../services/usersStorage');
 const articleCreator = require('./articleCreator');
 const articleUpdater = require('./articleUpdater');
 
+//const dataCache = require('../services/DataCache').dataCache;
+
 async function getArticlesByUser(req, res) {
     const { userId } = req.params;
     const articles = await articlesStore.getArticlesByUser(userId);
@@ -48,6 +50,12 @@ function addCategoriesToArticle(theArticle, theCategories) {
 async function createArticle(req, res) {
     const { article } = req.body;
     article.userId = req.user._id;
+
+    /*let preparedArticle = dataCache.prepareArticle(article, req.user);
+    dataCache.saveArticle(preparedArticle).then(
+        article => res.json({ article: article })
+    );*/
+
     const result = await articleCreator.create(article);
     if (result.success) {
         await fetchArticleDetails(result.article);
@@ -61,6 +69,12 @@ async function createArticle(req, res) {
 async function updateArticle(req, res) {
     const { articleId } = req.params;
     const { article } = req.body;
+
+    /*let preparedArticle = dataCache.prepareArticle(article, req.user);
+    dataCache.saveArticle(preparedArticle).then(
+        article => res.json({ article: article })
+    );*/
+
     const result = await articleUpdater.update(articleId, article);
     if (result.success) {
         await getArticle(req, res);

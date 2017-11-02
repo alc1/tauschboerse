@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 
 function resetData(dataCache) {
     const articles = [
@@ -13,16 +14,9 @@ function resetData(dataCache) {
         {name: 'Sport'},
         {name: 'Kindersachen'}
     ];
-    const articleCategories = [
-        { articleId: 0, categoryId: 0 },
-        { articleId: 1, categoryId: 1 },
-        { articleId: 2, categoryId: 2 },
-        { articleId: 2, categoryId: 3 },
-        { articleId: 3, categoryId: 4 },
-    ];
     const offerArticles = [
         { offerId: 0, articleId: 0},
-    ],
+    ];
     const offers = [
         { transactionId: 0, senderId: 0, receiverId: 1}
     ];
@@ -37,23 +31,17 @@ function resetData(dataCache) {
     ];
 
     function insertUsers() {
-        return Promise.all(users.map(user => dataCache.addUser(user)));
+        return Promise.all(users.map(user => dataCache.saveUser(user)));
     }
 
     function insertCategories() {
-        return Promise.all(categories.map(category => dataCache.addCategory(category)));
+        return Promise.all(categories.map(category => dataCache.saveCategory(category)));
     }
 
     function insertArticles() {
         return Promise.all(articles.map(article => {
             article.userId = users[article.userId]._id;
-            return dataCache.addArticle(article);
-        }));
-    }
-
-    function insertArticleCategories() {
-        return Promise.all(articleCategories.map(rec => {
-
+            return dataCache.saveArticle(article);
         }));
     }
 
@@ -61,7 +49,7 @@ function resetData(dataCache) {
         return Promise.all(transactions.map(transaction => {
             transaction.user1Id = users[transaction.user1Id]._id;
             transaction.user2Id = users[transaction.user2Id]._id;
-            return dataCache.addTransaction(transaction);
+            return dataCache.saveTransaction(transaction);
         }));
     }
 
@@ -73,12 +61,13 @@ function resetData(dataCache) {
 
     }
 
-    return dataCache.ckear()
+    return dataCache.clear()
         .then(() => insertUsers())
         .then(() => insertCategories())
         .then(() => insertArticles())
-        .then(() => insertArticleCategories())
         .then(() => insertTransactions())
         .then(() => insertOffers())
         .then(() => insertOfferArticles());
 }
+
+module.exports = { resetData };

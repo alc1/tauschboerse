@@ -1,18 +1,18 @@
-const storageUtils = require('../utils/storageUtils');
+const utils = require('../utils/businessUtils');
 
 class Transaction {
     constructor(obj) {
         if (obj) {
-            storageUtils.setValue(this, 'name', obj, null);
+            utils.setValue(this, 'name', obj, null);
         } else {
             this.name = null;
         }
     }
 
     update(obj) {
-        modified = false;
+        let modified = false;
 
-        modified = modified || storageUtils.updateValue(this, 'name', obj, null);
+        modified = modified || utils.updateValue(this, 'name', obj, null);
 
         return modified;
     }
