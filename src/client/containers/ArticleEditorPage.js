@@ -43,10 +43,10 @@ class ArticleEditorPage extends React.Component {
                 .then((res) => {
                     const { article } = this.props;
                     this.setState({
-                        title: article.title,
-                        description: article.description,
-                        categories: article.categories,
-                        articleUser: article.user,
+                        title: article ? article.title : this.state.title,
+                        description: article ? article.description : this.state.description,
+                        categories: article ? article.categories : this.state.categories,
+                        articleUser: article ? article.user : this.state.articleUser,
                         loading: false
                     });
                 })
@@ -60,6 +60,21 @@ class ArticleEditorPage extends React.Component {
     onChange = (theEvent) => {
         this.setState({
             [theEvent.target.name]: theEvent.target.value,
+            modified: true
+        });
+    };
+
+    onAddCategory = (theCategory) => {
+        let newCategories = [...this.state.categories, theCategory];
+        this.setState({
+            categories: newCategories,
+            modified: true
+        });
+    };
+
+    onRemoveCategory = (theCategoryName) => {
+        this.setState({
+            categories: this.state.categories.filter(category => category.name !== theCategoryName),
             modified: true
         });
     };
@@ -112,7 +127,9 @@ class ArticleEditorPage extends React.Component {
                         errors={errors}
                         loading={loading}
                         onChange={this.onChange}
-                        onSubmit={this.onSubmit}>
+                        onSubmit={this.onSubmit}
+                        onAddCategory={this.onAddCategory}
+                        onRemoveCategory={this.onRemoveCategory}>
                         <RaisedButton type="submit" label="Speichern" icon={<Save/>} disabled={loading || !modified} primary/>
                     </ArticleForm>
                     :
