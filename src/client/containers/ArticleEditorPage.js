@@ -84,18 +84,19 @@ class ArticleEditorPage extends React.Component {
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.setState({ loading: true });
-        const { user } = this.props;
+        const { user, article } = this.props;
         const { title, description, categories } = this.state;
-        let article = new Article({ title, description, categories });
-        const validation = articleDetailsValidator.validate(article);
+        const { articleId } = this.props.match.params;
+        let articleToSave = new Article({ ...article, title, description, categories });
+        const validation = articleDetailsValidator.validate(articleToSave);
         if (validation.isValid) {
             let articleRequest;
-            const { articleId } = this.props.match.params;
             if (articleId) {
-                articleRequest = this.props.updateArticle(user._id, articleId, article);
+                articleToSave._id = articleId;
+                articleRequest = this.props.updateArticle(user._id, articleToSave);
             }
             else {
-                articleRequest = this.props.createArticle(article);
+                articleRequest = this.props.createArticle(articleToSave);
             }
             articleRequest.then((res) => {
                 this.props.history.replace(`/article/${res.article._id}`);

@@ -39,6 +39,6 @@ export const createArticle = (article) => dispatch =>
     axios.post('/api/articles', { article })
         .then(response => dispatch(articleCreated(response.data.article)));
 
-export const updateArticle = (ownerId, articleId, article) => dispatch =>
-    axios.put(`/api/users/${ownerId}/articles/${articleId}`, { article })
+export const updateArticle = (ownerId, article) => dispatch =>
+    axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
         .then(response => dispatch(articleUpdated(response.data.article)));

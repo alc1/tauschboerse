@@ -58,6 +58,7 @@ function addUserDetailsToArticle(theArticle, theUser) {
 }
 
 function addCategoriesToArticle(theArticle, theCategories) {
+    delete theArticle.categoryIds;
     theArticle.categories = theCategories;
 }
 
