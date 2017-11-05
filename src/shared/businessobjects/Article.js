@@ -19,8 +19,8 @@ class Article {
             }
 
             utils.setValue(this, 'owner', obj, null);
-            utils.setValue(this, 'created', obj, null);
-            utils.setValue(this, 'status', obj, null);
+            utils.setValue(this, 'created', obj, new Date());
+            utils.setValue(this, 'status', obj, STATUS_FREE);
         } else {
             this.title = null;
             this.description = null;

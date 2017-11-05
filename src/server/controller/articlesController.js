@@ -7,37 +7,51 @@ const usersStore = require('../services/usersStorage');
 const articleCreator = require('./articleCreator');
 const articleUpdater = require('./articleUpdater');
 
-//const dataCache = require('../services/DataCache').dataCache;
+const useDataCache = require('../useDataCache').useDataCache;
+const dataCache = require('../services/DataCache').dataCache;
+const ArticleCache = require('../services/ArticleCache').ArticleCache;
 
-async function getArticlesByUser(req, res) {
-    const { userId } = req.params;
-    const articles = await articlesStore.getArticlesByUser(userId);
-    for (let article of articles) {
-        await fetchArticleDetails(article);
+async function getArticlesByOwner(req, res) {
+    if (useDataCache) {
+        const { userId } = req.params;
+        res.json({ articles: dataCache.getArticlesByOwner(userId) || [] });
     }
-    res.json({ articles : articles || [] });
+    else {
+        const { userId } = req.params;
+        const articles = await articlesStore.getArticlesByOwner(userId);
+        for (let article of articles) {
+            await fetchArticleDetails(article);
+        }
+        res.json({ articles: articles || [] });
+    }
 }
 
-async function getArticle(req, res) {
-    const { articleId } = req.params;
-    const article = await articlesStore.getArticle(articleId);
-    if (article) {
-        await fetchArticleDetails(article);
+async function getArticleById(req, res) {
+    if (useDataCache) {
+        const { articleId } = req.params;
+        res.json({ article: dataCache.getArticleById(articleId) || {} });
     }
-    res.json({ article : article || {} });
+    else {
+        const { articleId } = req.params;
+        const article = await articlesStore.getArticleById(articleId);
+        if (article) {
+            await fetchArticleDetails(article);
+        }
+        res.json({article: article || {}});
+    }
 }
 
 async function fetchArticleDetails(theArticle) {
-    const user = await usersStore.getUserById(theArticle.userId);
+    const user = await usersStore.getUserById(theArticle.ownerId);
     addUserDetailsToArticle(theArticle, user);
 
-    const categories = await categoriesStore.getCategories(theArticle.categories);
+    const categories = await categoriesStore.getCategories(theArticle.categoryIds);
     addCategoriesToArticle(theArticle, categories);
 }
 
 function addUserDetailsToArticle(theArticle, theUser) {
-    delete theArticle.userId;
-    theArticle.user = {
+    delete theArticle.ownerId;
+    theArticle.owner = {
         _id: theUser._id,
         name : theUser.name
     };
@@ -48,45 +62,60 @@ function addCategoriesToArticle(theArticle, theCategories) {
 }
 
 async function createArticle(req, res) {
-    const { article } = req.body;
-    article.userId = req.user._id;
+    if (useDataCache) {
+        const { article } = req.body;
 
-    /*let preparedArticle = dataCache.prepareArticle(article, req.user);
-    dataCache.saveArticle(preparedArticle).then(
-        article => res.json({ article: article })
-    );*/
-
-    const result = await articleCreator.create(article);
-    if (result.success) {
-        await fetchArticleDetails(result.article);
-        res.json({ article: result.article });
+        let preparedArticle = dataCache.prepareArticle(article, req.user);
+        dataCache.saveArticle(preparedArticle).then(
+            article => {
+                console.log(article);
+                res.json({ article: article });
+            }
+        );
     }
     else {
-        res.status(result.status).json({ errors: result.errors });
+        const { article } = req.body;
+        article.owner = req.user;
+
+        const result = await articleCreator.create(ArticleCache.toPhysicalRecord(article));
+        if (result.success) {
+            await fetchArticleDetails(result.article);
+            res.json({ article: result.article });
+        }
+        else {
+            res.status(result.status).json({ errors: result.errors });
+        }
     }
 }
 
 async function updateArticle(req, res) {
-    const { articleId } = req.params;
-    const { article } = req.body;
+    if (useDataCache) {
+        const { articleId } = req.params;
+        const { article } = req.body;
 
-    /*let preparedArticle = dataCache.prepareArticle(article, req.user);
-    dataCache.saveArticle(preparedArticle).then(
-        article => res.json({ article: article })
-    );*/
-
-    const result = await articleUpdater.update(articleId, article);
-    if (result.success) {
-        await getArticle(req, res);
+        let preparedArticle = dataCache.prepareArticle(article, req.user);
+        dataCache.saveArticle(preparedArticle).then(
+            article => res.json({ article: article })
+        );
     }
     else {
-        res.status(result.status).json({ errors: result.errors });
+        const { articleId } = req.params;
+        const { article } = req.body;
+        article.owner = req.user;
+
+        const result = await articleUpdater.update(articleId, ArticleCache.toPhysicalRecord(article));
+        if (result.success) {
+            await getArticleById(req, res);
+        }
+        else {
+            res.status(result.status).json({ errors: result.errors });
+        }
     }
 }
 
 module.exports = {
-    getArticlesByUser,
-    getArticle,
+    getArticlesByOwner,
+    getArticleById,
     createArticle,
     updateArticle
 };

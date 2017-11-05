@@ -1,4 +1,4 @@
-{"userId":"ph63KF1MYC8IZxfl","title":"PC","description":"Computer mit super Grafikkarte","categories":["rjm33SUoKDYeMMY9"],"_id":"6nXYNuDx0m7v9q9n"}
-{"userId":"P9M7IejwdldJ8Us6","title":"Kinderwagen","description":"Kind ist schon zu gross dafür","categories":["v8VXwqrenbtQH0JM"],"_id":"8zPSpKZH8PUeddUz"}
-{"userId":"ph63KF1MYC8IZxfl","title":"Fussballschuhe","description":"Fussballschuhe, fast neu...","categories":["6wbU1I6ZKsOjBAYR","bU1rD7WGoB5w0goc"],"_id":"XcuJ9KoGpfmztMSj"}
-{"userId":"ph63KF1MYC8IZxfl","title":"Tisch","description":"Antiker Tisch aus dem Jahr 1900","_id":"jfqJ6RYroasCOIBk"}
+{"ownerId":"ph63KF1MYC8IZxfl","title":"PC","description":"Computer mit super Grafikkarte","created":{"$$date":1503042166765},"status":"FREE","photos":[],"categoryIds":["rjm33SUoKDYeMMY9"],"_id":"6nXYNuDx0m7v9q9n"}
+{"ownerId":"P9M7IejwdldJ8Us6","title":"Kinderwagen","description":"Kind ist schon zu gross dafür","created":{"$$date":1503042166765},"status":"FREE","photos":[],"categoryIds":["v8VXwqrenbtQH0JM"],"_id":"8zPSpKZH8PUeddUz"}
+{"ownerId":"ph63KF1MYC8IZxfl","title":"Fussballschuhe","description":"Fussballschuhe, fast neu...","created":{"$$date":1503042166765},"status":"FREE","photos":[],"categoryIds":["6wbU1I6ZKsOjBAYR","bU1rD7WGoB5w0goc"],"_id":"XcuJ9KoGpfmztMSj"}
+{"ownerId":"ph63KF1MYC8IZxfl","title":"Tisch","description":"Antiker Tisch aus dem Jahr 1900","created":{"$$date":1503042166765},"status":"FREE","photos":[],"categoryIds":[],"_id":"jfqJ6RYroasCOIBk"}

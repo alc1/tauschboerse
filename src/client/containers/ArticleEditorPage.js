@@ -14,6 +14,8 @@ import { getUser } from '../selectors/user';
 
 import articleDetailsValidator from '../../shared/validations/articleDetails';
 
+import Article from '../../shared/businessobjects/Article';
+
 class ArticleEditorPage extends React.Component {
 
     static propTypes = {
@@ -29,7 +31,7 @@ class ArticleEditorPage extends React.Component {
         title: '',
         description: '',
         categories: [],
-        articleUser: {},
+        owner: {},
         errors: {},
         loading: false,
         modified: false
@@ -46,7 +48,7 @@ class ArticleEditorPage extends React.Component {
                         title: article ? article.title : this.state.title,
                         description: article ? article.description : this.state.description,
                         categories: article ? article.categories : this.state.categories,
-                        articleUser: article ? article.user : this.state.articleUser,
+                        owner: article ? article.owner : this.state.owner,
                         loading: false
                     });
                 })
@@ -84,15 +86,16 @@ class ArticleEditorPage extends React.Component {
         this.setState({ loading: true });
         const { user } = this.props;
         const { title, description, categories } = this.state;
-        const validation = articleDetailsValidator.validate({ title, description, categories });
+        let article = new Article({ title, description, categories });
+        const validation = articleDetailsValidator.validate(article);
         if (validation.isValid) {
             let articleRequest;
             const { articleId } = this.props.match.params;
             if (articleId) {
-                articleRequest = this.props.updateArticle(user._id, articleId, title, description, categories);
+                articleRequest = this.props.updateArticle(user._id, articleId, article);
             }
             else {
-                articleRequest = this.props.createArticle(title, description, categories);
+                articleRequest = this.props.createArticle(article);
             }
             articleRequest.then((res) => {
                 this.props.history.replace(`/article/${res.article._id}`);
@@ -111,9 +114,9 @@ class ArticleEditorPage extends React.Component {
 
     render() {
         const { user } = this.props;
-        const { title, description, categories, articleUser, errors, loading, modified } = this.state;
+        const { title, description, categories, owner, errors, loading, modified } = this.state;
         let isUserPermitted = true;
-        if (articleUser._id && articleUser._id !== user._id) {
+        if (owner._id && owner._id !== user._id) {
             isUserPermitted = false;
         }
         return (

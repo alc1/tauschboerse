@@ -42,17 +42,33 @@ class DataCache {
             .then(() => this.users.clear());
     }
 
+    /*
+     * Article
+     */
+
     prepareArticle(obj, user) {
         return this.articles.prepare(obj, user);
     }
 
-    getArticles() {
+    getAllArticles() {
         return this.articles.findAll();
     }
 
-    saveArticle(article) {
-        return this.articles.save(article);
+    getArticleById(theArticleId) {
+        return this.articles.findById(theArticleId);
     }
+
+    getArticlesByOwner(theOwnerId) {
+        return this.articles.findByOwner(theOwnerId);
+    }
+
+    saveArticle(theArticle) {
+        return this.articles.save(theArticle);
+    }
+
+    /*
+     * Category
+     */
 
     getCategories() {
         return this.categories.findAll();
@@ -61,6 +77,10 @@ class DataCache {
     saveCategory(category) {
         return this.categories.save(category);
     }
+
+    /*
+     * Transaction
+     */
 
     getTransaction(id) {
         return this.transactions.find(id);
@@ -73,6 +93,10 @@ class DataCache {
     getUserTransactions(userId) {
         return this.transactions.findByUserId(userId);
     }
+
+    /*
+     * User
+     */
 
     getUser(id) {
         return this.users.find(id);

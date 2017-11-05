@@ -11,7 +11,7 @@ router.get('/', authenticationMiddleware, usersController.getAllUsers);
 router.post('/', usersController.createUser);
 router.get('/:userId', authenticationMiddleware, usersController.getUserById);
 router.put('/:userId', [authenticationMiddleware, userMiddleware], usersController.updateUser);
-router.get('/:userId/articles', authenticationMiddleware, articlesController.getArticlesByUser);
+router.get('/:userId/articles', authenticationMiddleware, articlesController.getArticlesByOwner);
 router.put('/:userId/articles/:articleId', [authenticationMiddleware, userMiddleware], articlesController.updateArticle);
 router.get('/:userId/transactions', authenticationMiddleware, transactionsController.getUserTransactions);
 router.post('/auth', usersController.login);

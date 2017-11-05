@@ -33,8 +33,8 @@ app.use('/api/articles', articlesRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/users', usersRoutes);
 
-let useDataCache = false;
-let resetData = false;
+const useDataCache = require('./useDataCache').useDataCache;
+const resetData = require('./useDataCache').resetData;
 
 if (useDataCache) {
     initDataCache(resetData)

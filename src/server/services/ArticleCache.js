@@ -45,15 +45,15 @@ class ArticleCache {
 
         // retrieve article from cache if possible
         if (article.hasOwnProperty('_id')) {
-            let rec = this.find(article._id);
+            let rec = this.findById(article._id);
         }
 
         if (!rec) {
             // if article wasn't found insert it
             saveOp = function(resolve, reject) {
-                db.insert(this.toPhysicalRecord(article), (function(err, newArticle){
+                db.insert(ArticleCache.toPhysicalRecord(article), (function(err, savedArticle) {
+                    const newArticle = this.toLogicalRecord(savedArticle);
                     this.articles.push(newArticle);
-                    article._id = newArticle._id;
                     resolve(newArticle);
                 }).bind(this))
             };
@@ -77,8 +77,12 @@ class ArticleCache {
         return this.articles.slice();
     }
 
-    find(id) {
-        return this.articles.find(article => article._id === id);
+    findById(theArticleId) {
+        return this.articles.find(article => article._id === theArticleId);
+    }
+
+    findByOwner(theOwnerId) {
+        return this.articles.filter(article => article.owner._id === theOwnerId);
     }
 
     prepare(obj, user) {

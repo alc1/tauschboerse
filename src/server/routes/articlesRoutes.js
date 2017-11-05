@@ -5,6 +5,6 @@ const articlesController = require('../controller/articlesController');
 const authenticationMiddleware = require('../middleware/authentication');
 
 router.post('/', authenticationMiddleware, articlesController.createArticle);
-router.get('/:articleId', articlesController.getArticle);
+router.get('/:articleId', articlesController.getArticleById);
 
 module.exports = router;
