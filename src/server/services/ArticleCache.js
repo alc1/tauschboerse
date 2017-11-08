@@ -78,7 +78,7 @@ class ArticleCache {
             // article was found - update it
             saveOp = function(resolve, reject) {
                 if (rec.update(article)) {
-                    db.update({ _id: rec._id }, { $set: ArticleCache.toPhysicalRecord(rec) }, {}, function(err, numAffected) {
+                    db.update({ _id: rec._id }, ArticleCache.toPhysicalRecord(rec), {}, function(err, numAffected) {
                         err ? reject(err) : resolve(rec);
                     });
                 } else {

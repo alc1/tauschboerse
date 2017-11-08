@@ -89,13 +89,14 @@ class UserCache {
                     const newUser = this.toLogicalRecord(savedUser);
                     this.users.push(newUser);
                     this.passwords.push({ id: savedUser._id, password: savedUser.password });
+                    user._id = newUser._id;
                     resolve(newUser);
                 }).bind(this));
             });
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(user)) {
-                    db.update({ _id: rec._id }, { $set: UserCache.toPhysicalRecord(rec) }, {}, function(err, numAffected) {
+                    db.update({ _id: rec._id }, UserCache.toPhysicalRecord(rec), {}, function(err, numAffected) {
                         err ? reject(err) : resolve(rec);
                     });
                 } else {

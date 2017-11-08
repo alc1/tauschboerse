@@ -77,7 +77,7 @@ class CategoryCache {
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(category)) {
-                    db.update({_id: rec._id}, CategoryCache.toPhysicalRecord(rec), function(err, newRec) {
+                    db.update({_id: rec._id}, CategoryCache.toPhysicalRecord(rec), {}, function(err, newRec) {
                         resolve(rec);
                     });
                 } else {
