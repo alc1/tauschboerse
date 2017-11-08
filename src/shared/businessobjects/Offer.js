@@ -13,8 +13,8 @@ class Offer {
     update(obj) {
         let modified = false;
 
-        modified = modified || utils.updateValue(this, 'sender', obj, null);
-        modified = modified || utils.updateValue(this, 'receiver', obj, null);
+        modified = utils.updateValue(this, 'sender', obj, null) || modified;
+        modified = utils.updateValue(this, 'receiver', obj, null) || modified;
         
         return modified;
     }

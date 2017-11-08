@@ -115,6 +115,9 @@ class CategoryCache {
 
     prepare(obj) {
         let category = new Category(obj);
+        if (obj.hasOwnProperty('_id')) {
+            category._id = obj._id;
+        }
 
         return category;
     }

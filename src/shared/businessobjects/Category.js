@@ -12,7 +12,7 @@ class Category {
     update(obj) {
         let modified = false;
 
-        modified = modified || utils.updateValue(this, 'name', obj);
+        modified = utils.updateValue(this, 'name', obj) || modified;
 
         return modified;
     }

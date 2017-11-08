@@ -29,33 +29,55 @@ function resetData(dataCache) {
 
     function insertUsers() {
         console.log('inserting users...');
+
+        for(let i = 0, ii = users.length; i < ii; i++) {
+            users[i] = dataCache.prepareUser(users[i]);
+        }
+
         return Promise.all(users.map(
-            user => dataCache.saveUser(dataCache.prepareUser(user))
+            user => dataCache.saveUser(user)
         ));
     }
 
     function insertCategories() {
         console.log('inserting categories...');
+
+        for(let i = 0, ii = categories.length; i < ii; i++) {
+            categories[i] = dataCache.prepareCategory(categories[i]);
+        }
+
         return Promise.all(categories.map(
-            category => dataCache.saveCategory(dataCache.prepareCategory(category))
+            category => dataCache.saveCategory(category)
         ));
     }
 
     function insertArticles() {
         console.log('inserting articles...');
-        return Promise.all(articles.map(article => {
+
+        for(let i = 0, ii = articles.length; i < ii; i++) {
+            let article = articles[i];
             article.owner = users[article.ownerId];
             article.categories = article.categoryIds.map(id => categories[id]);
-            return dataCache.saveArticle(dataCache.prepareArticle(article));
+            articles[i] = dataCache.prepareArticle(article);
+        }
+
+        return Promise.all(articles.map(article => {
+            return dataCache.saveArticle(article);
         }));
     }
 
     function insertTransactions() {
         console.log('inserting transactions...');
-        return Promise.all(transactions.map(transaction => {
+
+        for(let i = 0, ii = transactions.length; i < ii; i++) {
+            let transaction = transactions[i];
             transaction.user1Id = users[transaction.user1Id]._id;
             transaction.user2Id = users[transaction.user2Id]._id;
-            return dataCache.saveTransaction(dataCache.prepareTransaction(transaction));
+            transactions[i] = dataCache.prepareTransaction(transaction);
+        }
+
+        return Promise.all(transactions.map(transaction => {
+            return dataCache.saveTransaction(transaction);
         }));
     }
 

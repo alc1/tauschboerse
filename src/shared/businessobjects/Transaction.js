@@ -14,8 +14,8 @@ class Transaction {
     update(obj) {
         let modified = false;
 
-        modified = modified || utils.updateValue(this, 'user1', obj, null);
-        modified = modified || utils.updateValue(this, 'user2', obj, null);
+        modified = utils.updateValue(this, 'user1', obj, null) || modified;
+        modified = utils.updateValue(this, 'user2', obj, null) || modified;
         
         return modified;
     }
