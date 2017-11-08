@@ -14,6 +14,8 @@ import { getUser } from '../selectors/user';
 
 import articleDetailsValidator from '../../shared/validations/articleDetails';
 
+import Article from '../../shared/businessobjects/Article';
+
 class ArticleEditorPage extends React.Component {
 
     static propTypes = {
@@ -29,7 +31,7 @@ class ArticleEditorPage extends React.Component {
         title: '',
         description: '',
         categories: [],
-        articleUser: {},
+        owner: {},
         errors: {},
         loading: false,
         modified: false
@@ -43,10 +45,10 @@ class ArticleEditorPage extends React.Component {
                 .then((res) => {
                     const { article } = this.props;
                     this.setState({
-                        title: article.title,
-                        description: article.description,
-                        categories: article.categories,
-                        articleUser: article.user,
+                        title: article ? article.title : this.state.title,
+                        description: article ? article.description : this.state.description,
+                        categories: article ? article.categories : this.state.categories,
+                        owner: article ? article.owner : this.state.owner,
                         loading: false
                     });
                 })
@@ -64,20 +66,37 @@ class ArticleEditorPage extends React.Component {
         });
     };
 
+    onAddCategory = (theCategory) => {
+        let newCategories = [...this.state.categories, theCategory];
+        this.setState({
+            categories: newCategories,
+            modified: true
+        });
+    };
+
+    onRemoveCategory = (theCategoryName) => {
+        this.setState({
+            categories: this.state.categories.filter(category => category.name !== theCategoryName),
+            modified: true
+        });
+    };
+
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.setState({ loading: true });
-        const { user } = this.props;
+        const { user, article } = this.props;
         const { title, description, categories } = this.state;
-        const validation = articleDetailsValidator.validate({ title, description, categories });
+        const { articleId } = this.props.match.params;
+        let articleToSave = new Article({ ...article, title, description, categories });
+        const validation = articleDetailsValidator.validate(articleToSave);
         if (validation.isValid) {
             let articleRequest;
-            const { articleId } = this.props.match.params;
             if (articleId) {
-                articleRequest = this.props.updateArticle(user._id, articleId, title, description, categories);
+                articleToSave._id = articleId;
+                articleRequest = this.props.updateArticle(user._id, articleToSave);
             }
             else {
-                articleRequest = this.props.createArticle(title, description, categories);
+                articleRequest = this.props.createArticle(articleToSave);
             }
             articleRequest.then((res) => {
                 this.props.history.replace(`/article/${res.article._id}`);
@@ -96,9 +115,9 @@ class ArticleEditorPage extends React.Component {
 
     render() {
         const { user } = this.props;
-        const { title, description, categories, articleUser, errors, loading, modified } = this.state;
+        const { title, description, categories, owner, errors, loading, modified } = this.state;
         let isUserPermitted = true;
-        if (articleUser._id && articleUser._id !== user._id) {
+        if (owner._id && owner._id !== user._id) {
             isUserPermitted = false;
         }
         return (
@@ -112,7 +131,9 @@ class ArticleEditorPage extends React.Component {
                         errors={errors}
                         loading={loading}
                         onChange={this.onChange}
-                        onSubmit={this.onSubmit}>
+                        onSubmit={this.onSubmit}
+                        onAddCategory={this.onAddCategory}
+                        onRemoveCategory={this.onRemoveCategory}>
                         <RaisedButton type="submit" label="Speichern" icon={<Save/>} disabled={loading || !modified} primary/>
                     </ArticleForm>
                     :

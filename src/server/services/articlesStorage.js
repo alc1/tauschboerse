@@ -9,10 +9,10 @@ const storageUtils = require('../utils/storageUtils');
 
 function insertTestData() {
     const articles = [
-        {userId: '1', title: 'Tisch', description: 'Antiker Tisch aus dem Jahr 1900'},
-        {userId: '1', title: 'PC', description: 'Computer mit super Grafikkarte'},
-        {userId: '1', title: 'Fussballschuhe', description: 'Fussballschuhe, fast neu...'},
-        {userId: '2', title: 'Kinderwagen', description: 'Kind ist schon zu gross dafür'},
+        {ownerId: '1', title: 'Tisch', description: 'Antiker Tisch aus dem Jahr 1900'},
+        {ownerId: '1', title: 'PC', description: 'Computer mit super Grafikkarte'},
+        {ownerId: '1', title: 'Fussballschuhe', description: 'Fussballschuhe, fast neu...'},
+        {ownerId: '2', title: 'Kinderwagen', description: 'Kind ist schon zu gross dafür'},
     ];
     return new Promise((resolve, reject) => {
         db.insert(articles, (err, newDocs) => {
@@ -21,15 +21,15 @@ function insertTestData() {
     });
 }
 
-function getArticlesByUser(theUserId) {
+function getArticlesByOwner(theOwnerId) {
     return new Promise((resolve, reject) => {
-        db.find({ $where : function() { return this.userId === theUserId } }, (err, articles) => {
+        db.find({ $where : function() { return this.ownerId === theOwnerId } }, (err, articles) => {
             storageUtils.handlePromiseResult(resolve, articles, reject, err);
         });
     });
 }
 
-function getArticle(theArticleId) {
+function getArticleById(theArticleId) {
     return new Promise((resolve, reject) => {
         db.findOne({ _id : theArticleId }, (err, article) => {
             storageUtils.handlePromiseResult(resolve, article, reject, err);
@@ -45,17 +45,17 @@ function createArticle(theArticle) {
     });
 }
 
-function updateArticle(theArticleId, theArticleDetails) {
+function updateArticle(theArticleId, theArticle) {
     return new Promise((resolve, reject) => {
-        db.update({ _id: theArticleId }, { $set: theArticleDetails }, {}, (err, numAffected) => {
+        db.update({ _id: theArticleId }, { $set: theArticle }, {}, (err, numAffected) => {
             storageUtils.handlePromiseResult(resolve, numAffected, reject, err);
         });
     });
 }
 
 module.exports = {
-    getArticlesByUser,
-    getArticle,
+    getArticlesByOwner,
+    getArticleById,
     createArticle,
     updateArticle,
     insertTestData

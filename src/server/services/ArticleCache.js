@@ -45,7 +45,7 @@ class ArticleCache {
 
         // retrieve article from cache if possible
         if (article.hasOwnProperty('_id')) {
-            let rec = this.find(article._id);
+            rec = this.findById(article._id);
         }
 
         if (!rec) {
@@ -66,7 +66,7 @@ class ArticleCache {
             // article was found - update it
             saveOp = function(resolve, reject) {
                 if (rec.update(article)) {
-                    db.update({}, ArticleCache.toPhysicalRecord(rec), function(err, numAffected) {
+                    db.update({ _id: rec._id }, { $set: ArticleCache.toPhysicalRecord(rec) }, {}, function(err, numAffected) {
                         err ? reject(err) : resolve(rec);
                     });
                 } else {
@@ -82,12 +82,19 @@ class ArticleCache {
         return this.articles.slice();
     }
 
-    find(id) {
-        return this.articles.find(article => article._id === id);
+    findById(theArticleId) {
+        return this.articles.find(article => article._id === theArticleId);
+    }
+
+    findByOwner(theOwnerId) {
+        return this.articles.filter(article => article.owner._id === theOwnerId);
     }
 
     prepare(obj, user) {
         let article = new Article(obj);
+        if (obj.hasOwnProperty('_id')) {
+            article._id = obj._id;
+        }
 
         // each article must have an owner
         if (!article.owner) {

@@ -40,6 +40,10 @@ class UserArticlesPage extends React.Component {
         this.props.history.push(`/user/${theUserId}/article/${theArticleId}`);
     };
 
+    createNewArticle = (theUserId) => {
+        this.props.history.push(`/user/${theUserId}/article`);
+    };
+
     render() {
         const { loading } = this.state;
         const { user, articles } = this.props;
@@ -63,7 +67,7 @@ class UserArticlesPage extends React.Component {
                 <div className="articles-list">
                     {articleComponents}
                 </div>
-                <FloatingActionButton style={buttonPositionStyle} href={`/user/${this.props.user._id}/article`}>
+                <FloatingActionButton style={buttonPositionStyle} onClick={this.createNewArticle.bind(this, user._id)}>
                     <ContentAdd />
                 </FloatingActionButton>
             </div>

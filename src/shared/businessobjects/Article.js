@@ -19,8 +19,8 @@ class Article {
             }
 
             utils.setValue(this, 'owner', obj, null);
-            utils.setValue(this, 'created', obj, null);
-            utils.setValue(this, 'status', obj, null);
+            utils.setValue(this, 'created', obj, new Date());
+            utils.setValue(this, 'status', obj, STATUS_FREE);
         } else {
             this.title = null;
             this.description = null;
@@ -33,7 +33,20 @@ class Article {
     }
 
     update(obj) {
-        let modified = false;
+        utils.updateValue(this, 'title', obj);
+        utils.updateValue(this, 'description', obj);
+        utils.updateValue(this, 'categories', obj);
+        utils.updateValue(this, 'photos', obj);
+        utils.updateValue(this, 'owner', obj);
+        utils.updateValue(this, 'created', obj);
+        utils.updateValue(this, 'status', obj);
+        return true;
+
+        // TODO:
+        // This pattern does not work since as soon as a property has been updated,
+        // the following properties will not be updated because 'modified' is already true
+        // and the rest of the will not be executed.
+        /*let modified = false;
 
         modified = modified || utils.updateValue(this, 'title', obj);
         modified = modified || utils.updateValue(this, 'description', obj);
@@ -43,7 +56,7 @@ class Article {
         modified = modified || utils.updateValue(this, 'created', obj);
         modified = modified || utils.updateValue(this, 'status', obj);
 
-        return modified;
+        return modified;*/
     }
 
     canSave() {

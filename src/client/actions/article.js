@@ -35,10 +35,10 @@ export const loadArticle = (theArticleId) => dispatch =>
     axios.get(`/api/articles/${theArticleId}`)
         .then(response => dispatch(articleFetched(response.data.article)));
 
-export const createArticle = (title, description, categories) => dispatch =>
-    axios.post('/api/articles', { article: { title, description, categories } })
+export const createArticle = (article) => dispatch =>
+    axios.post('/api/articles', { article })
         .then(response => dispatch(articleCreated(response.data.article)));
 
-export const updateArticle = (userId, articleId, title, description, categories) => dispatch =>
-    axios.put(`/api/users/${userId}/articles/${articleId}`, { article: { title, description, categories } })
+export const updateArticle = (ownerId, article) => dispatch =>
+    axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
         .then(response => dispatch(articleUpdated(response.data.article)));

@@ -25,7 +25,7 @@ function isDifferentArray(oldArray, newArray) {
             return true;
         }
     } else {
-        throw 'Only for arrays!';
+        throw new Error('Only for arrays!');
     }
 }
 

@@ -42,19 +42,28 @@ class DataCache {
             .then(() => this.users.clear());
     }
 
-    //--------------------
-    // article methods
-    //--------------------
+    /*
+     * Article
+     */
+
     prepareArticle(obj, user) {
         return this.articles.prepare(obj, user);
     }
 
-    getArticles() {
+    getAllArticles() {
         return this.articles.findAll();
     }
 
-    saveArticle(article) {
-        return this.articles.save(article);
+    getArticleById(theArticleId) {
+        return this.articles.findById(theArticleId);
+    }
+
+    getArticlesByOwner(theOwnerId) {
+        return this.articles.findByOwner(theOwnerId);
+    }
+
+    saveArticle(theArticle) {
+        return this.articles.save(theArticle);
     }
 
     //--------------------
@@ -114,9 +123,10 @@ class DataCache {
         return this.transactions.delete(transactionId);
     }
 
-    //--------------------
-    // user methods
-    //--------------------
+    /*
+     * User
+     */
+
     getUser(id) {
         return this.users.find(id);
     }
