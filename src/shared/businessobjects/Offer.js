@@ -3,7 +3,8 @@ const utils = require('../utils/businessUtils');
 class Offer {
     constructor(obj) {
         if (obj) {
-            utils.setValue(this, 'name', obj, null);
+            utils.setValue(this, 'sender', obj, null);
+            utils.setValue(this, 'receiver', obj, null);
         } else {
             this.name = null;
         }
@@ -12,8 +13,9 @@ class Offer {
     update(obj) {
         let modified = false;
 
-        modified = modified || utils.updateValue(this, 'name', obj, null);
-
+        modified = modified || utils.updateValue(this, 'sender', obj, null);
+        modified = modified || utils.updateValue(this, 'receiver', obj, null);
+        
         return modified;
     }
 

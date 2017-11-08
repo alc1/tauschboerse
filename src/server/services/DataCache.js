@@ -42,6 +42,9 @@ class DataCache {
             .then(() => this.users.clear());
     }
 
+    //--------------------
+    // article methods
+    //--------------------
     prepareArticle(obj, user) {
         return this.articles.prepare(obj, user);
     }
@@ -54,12 +57,49 @@ class DataCache {
         return this.articles.save(article);
     }
 
+    //--------------------
+    // category methods
+    //--------------------
+    prepareCategory(obj) {
+        return this.categories.prepare(obj);
+    }
+
     getCategories() {
         return this.categories.findAll();
     }
 
     saveCategory(category) {
         return this.categories.save(category);
+    }
+
+    deleteCategory(categoryId) {
+        return this.categories.delete(categoryId);
+    }
+    
+    //--------------------
+    // offer methods
+    //--------------------
+    prepareOffer(obj) {
+        return this.offers.prepare(obj);
+    }
+
+    saveOffer(offer) {
+        return this.offers.save(offer);
+    }
+
+    deleteOffer(offerId) {
+        return this.offers.delete(offerId);
+    }
+
+    //--------------------
+    // transaction methods
+    //--------------------
+    prepareTransaction(obj) {
+        return this.transactions.prepare(obj);
+    }
+
+    getUserTransactions(userId) {
+        return this.transactions.findByUserId(userId);
     }
 
     getTransaction(id) {
@@ -70,10 +110,13 @@ class DataCache {
         // TODO
     }
 
-    getUserTransactions(userId) {
-        return this.transactions.findByUserId(userId);
+    deleteTransaction(transactionId) {
+        return this.transactions.delete(transactionId);
     }
 
+    //--------------------
+    // user methods
+    //--------------------
     getUser(id) {
         return this.users.find(id);
     }

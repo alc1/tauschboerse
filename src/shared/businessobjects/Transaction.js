@@ -3,17 +3,20 @@ const utils = require('../utils/businessUtils');
 class Transaction {
     constructor(obj) {
         if (obj) {
-            utils.setValue(this, 'name', obj, null);
+            utils.setValue(this, 'user1', obj, null);
+            utils.setValue(this, 'user2', obj, null);
         } else {
-            this.name = null;
+            this.user1 = null;
+            this.user2 = null;
         }
     }
 
     update(obj) {
         let modified = false;
 
-        modified = modified || utils.updateValue(this, 'name', obj, null);
-
+        modified = modified || utils.updateValue(this, 'user1', obj, null);
+        modified = modified || utils.updateValue(this, 'user2', obj, null);
+        
         return modified;
     }
 

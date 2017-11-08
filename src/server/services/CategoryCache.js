@@ -1,5 +1,6 @@
 'use strict';
 
+const Category = require('../../shared/businessobjects/Category');
 const dataFiles = require('./dataFiles');
 const db = dataFiles.dbCategories;
 
@@ -9,16 +10,21 @@ class CategoryCache {
     }
 
     init() {
-        let load = (function(resolve, reject) {
+        let load = function(resolve, reject) {
             console.log('Loading categories...');
             db.find({}, (function(err, recs) {
-                console.log('categories loaded');
-                this.categories = recs;
-                resolve(this);
+                if (err) {
+                    console.log('error loading categories');
+                    reject(err);
+                } else {
+                    console.log('categories loaded');
+                    this.categories = recs.map(r => this.toLogicalRecord(r));
+                    resolve(this);
+                }
             }).bind(this));
-        }).bind(this);
+        };
                     
-        return new Promise(load);
+        return new Promise(load.bind(this));
     }
 
     clear() {
@@ -39,26 +45,46 @@ class CategoryCache {
         }
 
         if (!rec) {
-            rec = new CategoryCache();
             saveOp = (function(resolve, reject) {
-                this.db.insert(user, (function(err, newUser){
-                    this.users.push(newUser);
-                    resolve(newUser);
+                db.insert(CategoryCache.toPhysicalRecord(category), (function(err, newRec) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        let newCategory = this.toLogicalRecord(newRec);
+                        this.categories.push(newCategory);
+                        resolve(newCategory);
+                    }
                 }).bind(this));
             });
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(category)) {
-                    this.db.update({_id: rec._id}, rec, function(err, newCategory) {
-                        resolve(newCategory);
+                    db.update({_id: rec._id}, CategoryCache.toPhysicalRecord(rec), function(err, newRec) {
+                        resolve(rec);
                     });
                 } else {
-                    resolve(0);
+                    resolve(rec);
                 }
             });
         }
 
         return new Promise(saveOp.bind(this));
+    }
+
+    delete(id) {
+        deleteOp = function(resolve, reject) {
+            let category = this.find(id);
+            if (category) {
+                this.categories.remove(category);
+                db.remove({ _id: category._id }, function(err, numRemoved) {
+                    err ? reject(err) : resolve(true);
+                });
+            } else {
+                resolve(true);
+            }
+        }
+        
+        return new Promise(deleteOp.bind(this));
     }
 
     find(id) {
@@ -67,6 +93,32 @@ class CategoryCache {
 
     findAll() {
         return this.categories.slice();
+    }
+
+    prepare(obj) {
+        let category = new Category(obj);
+
+        return category;
+    }
+
+    static toPhysicalRecord(category) {
+        let rec = {};
+
+        if (category.hasOwnProperty('_id')) {
+            rec._id = category._id;
+        }
+
+        rec.name = category.name;
+
+        return rec;
+    }
+
+    toLogicalRecord(rec) {
+        let category = new Category(null);
+        category._id = rec._id;
+        category.name = rec.name;
+
+        return category;
     }
 }
 

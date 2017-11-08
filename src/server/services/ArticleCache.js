@@ -51,10 +51,15 @@ class ArticleCache {
         if (!rec) {
             // if article wasn't found insert it
             saveOp = function(resolve, reject) {
-                db.insert(this.toPhysicalRecord(article), (function(err, newArticle){
-                    this.articles.push(newArticle);
-                    article._id = newArticle._id;
-                    resolve(newArticle);
+                db.insert(ArticleCache.toPhysicalRecord(article), (function(err, newRec){
+                    if (err) {
+                        reject(err);
+                    } else {
+                        let newArticle = this.toLogicalRecord(newRec);
+                        this.articles.push(newArticle);
+                        article._id = newArticle._id;
+                        resolve(newArticle);
+                    }
                 }).bind(this))
             };
         } else {
