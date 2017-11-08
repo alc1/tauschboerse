@@ -6,20 +6,21 @@ class User {
             utils.setValue(this, 'email', obj, null);
             utils.setValue(this, 'name', obj, null);
             utils.setValue(this, 'password', obj, null);
+            utils.setValue(this, 'registration', obj, new Date());
         } else {
             this.email = null;
             this.name = null;
             this.password = null;
+            this.registration = new Date();
         }
-        this.registration = new DateTime();
     }
 
     update(obj) {
         let modified = false;
 
-        modified = modified || utils.updateValue(this, 'email', obj, null);
-        modified = modified || utils.updateValue(this, 'name', obj, null);
-        modified = modified || utils.updateValue(this, 'password', obj, null);
+        modified = utils.updateValue(this, 'email', obj, null) || modified;
+        modified = utils.updateValue(this, 'name', obj, null) || modified;
+        modified = utils.updateValue(this, 'registration', obj, null) || modified;
 
         return modified;
     }

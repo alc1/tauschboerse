@@ -130,16 +130,24 @@ class DataCache {
         return this.users.prepare(obj);
     }
 
-    getUser(id) {
-        return this.users.find(id);
+    getAllUsers() {
+        return this.users.findAll();
+    }
+
+    getUserById(theUserId) {
+        return this.users.findById(theUserId);
+    }
+
+    getUserByEmail(theEmail) {
+        return this.users.findByEmail(theEmail);
     }
 
     saveUser(user) {
         return this.users.save(user);
     }
 
-    authenticateUser(id, pwd) {
-        return this.users.authenticate(id, pwd);
+    authenticateUser(theEmail, thePassword) {
+        return this.users.authenticate(theEmail, thePassword);
     }
 }
 

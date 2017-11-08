@@ -143,7 +143,7 @@ class ArticleCache {
     toLogicalRecord(rec) {
         let article = new Article(null);
         article._id = rec._id;
-        article.owner = this.users.find(rec.ownerId);
+        article.owner = this.users.findById(rec.ownerId);
         article.title = rec.title;
         article.description = rec.description;
         article.created = rec.created;

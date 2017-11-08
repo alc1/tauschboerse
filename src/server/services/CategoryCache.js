@@ -90,7 +90,7 @@ class CategoryCache {
     }
 
     delete(id) {
-        deleteOp = function(resolve, reject) {
+        let deleteOp = function(resolve, reject) {
             let category = this.find(id);
             if (category) {
                 this.categories.remove(category);
@@ -100,8 +100,8 @@ class CategoryCache {
             } else {
                 resolve(true);
             }
-        }
-        
+        };
+
         return new Promise(deleteOp.bind(this));
     }
 
