@@ -3,7 +3,7 @@
 const Datastore = require('nedb');
 const dataFiles = require('./dataFiles');
 
-const db = dataFiles.datafiles.dbArticles;
+const db = dataFiles.dbArticles;
 
 const storageUtils = require('../utils/storageUtils');
 

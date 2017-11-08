@@ -68,10 +68,7 @@ async function createArticle(req, res) {
 
         let preparedArticle = dataCache.prepareArticle(article, req.user);
         dataCache.saveArticle(preparedArticle).then(
-            article => {
-                console.log(article);
-                res.json({ article: article });
-            }
+            article => res.json({ article: article })
         );
     }
     else {

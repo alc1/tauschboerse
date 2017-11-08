@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require('./dataFiles').datafiles.dbOffers;
+const db = require('./dataFiles').dbOffers;
 
 class OfferCache {
     constructor(transactions, articles, users) {

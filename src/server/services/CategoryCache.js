@@ -1,7 +1,7 @@
 'use strict';
 
 const Category = require('../../shared/businessobjects/Category');
-const db = require('./dataFiles').datafiles.dbCategories;
+const db = require('./dataFiles').dbCategories;
 
 class CategoryCache {
     constructor() {
@@ -90,7 +90,7 @@ class CategoryCache {
     }
 
     delete(id) {
-        deleteOp = function(resolve, reject) {
+        let deleteOp = function(resolve, reject) {
             let category = this.find(id);
             if (category) {
                 this.categories.remove(category);
@@ -100,8 +100,8 @@ class CategoryCache {
             } else {
                 resolve(true);
             }
-        }
-        
+        };
+
         return new Promise(deleteOp.bind(this));
     }
 

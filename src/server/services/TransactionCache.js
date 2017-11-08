@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require('./dataFiles').datafiles.dbTransactions;
+const db = require('./dataFiles').dbTransactions;
 
 class TransactionCache {
     constructor(users) {
