@@ -24,6 +24,4 @@ class Offer {
     }
 }
 
-module.exports = {
-    Offer
-};
+module.exports = Offer;

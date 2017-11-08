@@ -1,8 +1,7 @@
 'use strict';
 
 const Category = require('../../shared/businessobjects/Category');
-const dataFiles = require('./dataFiles');
-const db = dataFiles.dbCategories;
+const db = require('./dataFiles').dbCategories;
 
 class CategoryCache {
     constructor() {
