@@ -33,6 +33,9 @@ app.use('/api/articles', articlesRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/users', usersRoutes);
 
+const datafiles = require('./services/dataFiles');
+datafiles.init(false);
+
 const useDataCache = require('./useDataCache').useDataCache;
 const resetData = require('./useDataCache').resetData;
 

@@ -1,15 +1,19 @@
 const Datastore = require('nedb');
 
-const dbArticles = new Datastore({ filename : './data/articles.db', autoload : true });
-const dbCategories = new Datastore({ filename : './data/categories.db', autoload : true });
-const dbOffers = new Datastore({ filename : './data/offers.db', autoload : true });
-const dbTransactions = new Datastore({ filename : './data/transactions.db', autoload : true });
-const dbUsers = new Datastore({ filename : './data/users.db', autoload : true });
+class DataFiles {
+    constructor() {}
+    
+    init(inMemory) {
+        this.dbArticles = new Datastore(inMemory ? undefined : { filename : './data/articles.db', autoload : true });
+        this.dbCategories = new Datastore(inMemory ? undefined : { filename : './data/categories.db', autoload : true });
+        this.dbOffers = new Datastore(inMemory ? undefined : { filename : './data/offers.db', autoload : true });
+        this.dbTransactions = new Datastore(inMemory ? undefined : { filename : './data/transactions.db', autoload : true });
+        this.dbUsers = new Datastore(inMemory ? undefined : { filename : './data/users.db', autoload : true });
+    }
+}
+
+const datafiles = new DataFiles();
 
 module.exports = {
-    dbArticles,
-    dbCategories,
-    dbOffers,
-    dbTransactions,
-    dbUsers
+    datafiles
 };

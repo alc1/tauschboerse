@@ -2,7 +2,7 @@
 
 const User = require('../../shared/businessobjects/User');
 const bcrypt = require('bcrypt');
-const db = require('./dataFiles').dbUsers;
+const db = require('./dataFiles').datafiles.dbUsers;
 
 class UserCache {
     constructor() {

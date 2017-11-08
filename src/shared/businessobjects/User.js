@@ -11,7 +11,7 @@ class User {
             this.name = null;
             this.password = null;
         }
-        this.registration = new DateTime();
+        this.registration = new Date();
     }
 
     update(obj) {

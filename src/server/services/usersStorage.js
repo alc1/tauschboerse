@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const Datastore = require('nedb');
 const dataFiles = require('./dataFiles');
 
-const db = dataFiles.dbUsers;
+const db = dataFiles.datafiles.dbUsers;
 
 const storageUtils = require('../utils/storageUtils');
 

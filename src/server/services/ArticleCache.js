@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require('./dataFiles').dbArticles;
+const db = require('./dataFiles').datafiles.dbArticles;
 const Article = require('../../shared/businessobjects/Article');
 
 class ArticleCache {
