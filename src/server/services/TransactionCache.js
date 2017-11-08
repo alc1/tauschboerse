@@ -28,12 +28,30 @@ class TransactionCache {
     }
 
     clear() {
-        return new Promise((function(resolve, reject) {
+        let clearOp = function(resolve, reject) {
+            console.log('Clearing transactions...');
             db.remove({}, { multi: true }, (function(err, numRemoved) {
-                this.transactionss = [];
-                resolve(numRemoved);
+                if (err) {
+                    console.log('Error clearing transactions: ' + err);
+                    reject(err);
+                } else {
+                    console.log('Transactions cleared');
+                    this.transactionss = [];
+                    resolve(numRemoved);
+                }
             }).bind(this));
-        }).bind(this));
+        };
+
+        let compactOp = function(resolve, reject) {
+            console.log('Compacting transactions datafile...');
+            db.on('compaction.done', () => {
+                console.log('Transactions datafile compacted');
+                resolve(null);
+            });
+            db.persistence.compactDatafile();
+        };
+
+        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
     }
 
     save(transaction) {

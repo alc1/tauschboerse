@@ -27,12 +27,30 @@ class UserCache {
     }
 
     clear() {
-        return new Promise((function(resolve, reject) {
+        let clearOp = function(resolve, reject) {
+            console.log('Clearing users...');
             db.remove({}, { multi: true }, (function(err, numRemoved) {
-                this.users = [];
-                resolve(numRemoved);
+                if (err) {
+                    console.log('Error clearing users: ' + err);
+                    reject(err);
+                } else {
+                    console.log('Users have been cleared');
+                    this.users = [];
+                    resolve(numRemoved);
+                }
             }).bind(this));
-        }).bind(this));
+        };
+
+        let compactOp = function(resolve, reject) {
+            console.log('Compacting users datafile...');
+            db.once('compaction.done', () => {
+                console.log('Users datafile compacted');
+                resolve(null);
+            });
+            db.persistence.compactDatafile();
+        };
+
+        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
     }
 
     find(id) {

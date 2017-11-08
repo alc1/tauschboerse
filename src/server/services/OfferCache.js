@@ -29,16 +29,30 @@ class OfferCache {
     }
 
     clear() {
-        return new Promise((function(resolve, reject) {
+        let clearOp = function(resolve, reject) {
+            console.log('Clearing offers...');
             db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
+                    console.log('Error clearing offers: ' + err);
                     reject(err);
                 } else {
+                    console.log('Offers cleared');
                     this.offers = [];
                     resolve(numRemoved);
                 }
             }).bind(this));
-        }).bind(this));
+        };
+
+        let compactOp = function(resolve, reject) {
+            console.log('Compacting offers datafile...');
+            db.on('compaction.done', () => {
+                console.log('Offers datafile compacted');
+                resolve(null);
+            });
+            db.persistence.compactDatafile();
+        };
+
+        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
     }
 
     save(offer) {

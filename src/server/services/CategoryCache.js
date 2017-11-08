@@ -27,12 +27,30 @@ class CategoryCache {
     }
 
     clear() {
-        return new Promise((function(resolve, reject) {
+        let clearOp = function(resolve, reject) {
+            console.log('Clearing categories...');
             db.remove({}, { multi: true }, (function(err, numRemoved) {
-                this.categories = [];
-                resolve(numRemoved);
+                if (err) {
+                    console.log('Error clearing categories: ' + err);
+                    reject(err);
+                } else {
+                    console.log('Categories have been cleared');
+                    this.categories = [];
+                    resolve(numRemoved);
+                }
             }).bind(this));
-        }).bind(this));
+        };
+
+        let compactOp = function(resolve, reject) {
+            console.log('Compacting categories datafile...');
+            db.once('compaction.done', () => {
+                console.log('Categories datafile compacted');
+                resolve(null);
+            });
+            db.persistence.compactDatafile();
+        };
+
+        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
     }
 
     save(category) {
@@ -51,6 +69,7 @@ class CategoryCache {
                     } else {
                         let newCategory = this.toLogicalRecord(newRec);
                         this.categories.push(newCategory);
+                        category._id = newCategory._id;
                         resolve(newCategory);
                     }
                 }).bind(this));

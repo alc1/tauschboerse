@@ -126,6 +126,9 @@ class DataCache {
     /*
      * User
      */
+    prepareUser(obj) {
+        return this.users.prepare(obj);
+    }
 
     getUser(id) {
         return this.users.find(id);

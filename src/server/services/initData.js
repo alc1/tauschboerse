@@ -2,10 +2,10 @@ const bcrypt = require('bcrypt');
 
 function resetData(dataCache) {
     const articles = [
-        {userId: 0, title: 'Tisch', description: 'Antiker Tisch aus dem Jahr 1900'},
-        {userId: 0, title: 'PC', description: 'Computer mit super Grafikkarte'},
-        {userId: 0, title: 'Fussballschuhe', description: 'Fussballschuhe, fast neu...'},
-        {userId: 1, title: 'Kinderwagen', description: 'Kind ist schon zu gross dafür'},
+        {ownerId: 0, title: 'Tisch', description: 'Antiker Tisch aus dem Jahr 1900', photos: [], categoryIds: [0]},
+        {ownerId: 0, title: 'PC', description: 'Computer mit super Grafikkarte', photos: [], categoryIds: [1]},
+        {ownerId: 0, title: 'Fussballschuhe', description: 'Fussballschuhe, fast neu...', photos: [], categoryIds: [2, 3]},
+        {ownerId: 1, title: 'Kinderwagen', description: 'Kind ist schon zu gross dafür', photos: [], categoryIds: [4]},
     ];
     const categories = [
         {name: 'Möbel'},
@@ -13,9 +13,6 @@ function resetData(dataCache) {
         {name: 'Fussball'},
         {name: 'Sport'},
         {name: 'Kindersachen'}
-    ];
-    const offerArticles = [
-        { offerId: 0, articleId: 0},
     ];
     const offers = [
         { transactionId: 0, senderId: 0, receiverId: 1}
@@ -31,43 +28,48 @@ function resetData(dataCache) {
     ];
 
     function insertUsers() {
-        return Promise.all(users.map(user => dataCache.saveUser(user)));
+        console.log('inserting users...');
+        return Promise.all(users.map(
+            user => dataCache.saveUser(dataCache.prepareUser(user))
+        ));
     }
 
     function insertCategories() {
-        return Promise.all(categories.map(category => dataCache.saveCategory(category)));
+        console.log('inserting categories...');
+        return Promise.all(categories.map(
+            category => dataCache.saveCategory(dataCache.prepareCategory(category))
+        ));
     }
 
     function insertArticles() {
+        console.log('inserting articles...');
         return Promise.all(articles.map(article => {
-            article.userId = users[article.userId]._id;
-            return dataCache.saveArticle(article);
+            article.owner = users[article.ownerId];
+            article.categories = article.categoryIds.map(id => categories[id]);
+            return dataCache.saveArticle(dataCache.prepareArticle(article));
         }));
     }
 
     function insertTransactions() {
+        console.log('inserting transactions...');
         return Promise.all(transactions.map(transaction => {
             transaction.user1Id = users[transaction.user1Id]._id;
             transaction.user2Id = users[transaction.user2Id]._id;
-            return dataCache.saveTransaction(transaction);
+            return dataCache.saveTransaction(dataCache.prepareTransaction(transaction));
         }));
     }
 
     function insertOffers() {
-        
-    }
-
-    function insertOfferArticles() {
-
+        console.log('inserting offers...');
     }
 
     return dataCache.clear()
         .then(() => insertUsers())
         .then(() => insertCategories())
         .then(() => insertArticles())
-        .then(() => insertTransactions())
-        .then(() => insertOffers())
-        .then(() => insertOfferArticles());
+//        .then(() => insertTransactions())
+//        .then(() => insertOffers())
+    ;
 }
 
 module.exports = { resetData };

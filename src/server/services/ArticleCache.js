@@ -25,18 +25,30 @@ class ArticleCache {
     }
 
     clear() {
-        let deleteAll = function(resolve, reject) {
+        let clearOp = function(resolve, reject) {
+            console.log('Clearing articles...');
             db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
+                    console.log('Error clearing articles: ' + err);
                     reject(err);
                 } else {
+                    console.log('Articles have been cleared');
                     this.articles = [];
                     resolve(this);
                 }
             }).bind(this));
         };
 
-        return new Promise(deleteAll.bind(this));
+        let compactOp = function(resolve, reject) {
+            console.log('Compacting articles datafile...');
+            db.on('compaction.done', () => {
+                console.log('Articles datafile compacted');
+                resolve(null);
+            });
+            db.persistence.compactDatafile();
+        };
+
+        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
     }
 
     save(article) {
