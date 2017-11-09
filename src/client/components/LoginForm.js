@@ -14,6 +14,10 @@ export default class LoginForm extends React.Component {
         onSubmit: PropTypes.func.isRequired
     };
 
+    componentDidMount() {
+        this.firstInputElement.focus();
+    }
+
     render() {
         const { email, password, errors, loading, onChange, onSubmit } = this.props;
         const inputStyles = { width: '350px' };
@@ -25,6 +29,7 @@ export default class LoginForm extends React.Component {
         return (
             <form style={formStyles} onSubmit={onSubmit}>
                 <InputComponent
+                    inputRef={inputElement => this.firstInputElement = inputElement}
                     style={inputStyles}
                     error={errors.email}
                     label="E-Mail"

@@ -18,6 +18,10 @@ export default class ArticleForm extends React.Component {
         onRemoveCategory: PropTypes.func.isRequired
     };
 
+    componentDidMount() {
+        this.firstInputElement.focus();
+    }
+
     render() {
         const { title, description, categories, errors, loading, onChange, onSubmit, onAddCategory, onRemoveCategory } = this.props;
         const inputStyles = { width: '350px' };
@@ -29,6 +33,7 @@ export default class ArticleForm extends React.Component {
         return (
             <form style={formStyles} onSubmit={onSubmit}>
                 <InputComponent
+                    inputRef={inputElement => this.firstInputElement = inputElement}
                     style={inputStyles}
                     error={errors.title}
                     label="Titel"

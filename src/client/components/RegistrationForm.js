@@ -16,6 +16,10 @@ export default class UserDetailsForm extends React.Component {
         onSubmit: PropTypes.func.isRequired
     };
 
+    componentDidMount() {
+        this.firstInputElement.focus();
+    }
+
     render() {
         const { name, email, password, passwordConfirmation, errors, loading, onChange, onSubmit } = this.props;
         const inputStyles = { width: '350px' };
@@ -27,6 +31,7 @@ export default class UserDetailsForm extends React.Component {
         return (
             <form style={formStyles} onSubmit={onSubmit}>
                 <InputComponent
+                    inputRef={inputElement => this.firstInputElement = inputElement}
                     style={inputStyles}
                     error={errors.name}
                     label="Name"

@@ -25,6 +25,7 @@ export default class InputComponent extends React.Component {
         return (
             <div>
                 <TextField
+                    ref={this.props.inputRef}
                     style={this.props.style}
                     hintText={this.props.label}
                     floatingLabelText={this.props.label}
