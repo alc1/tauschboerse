@@ -13,6 +13,9 @@ import { getUser } from '../selectors/user';
 
 import userDetailsValidator from '../../shared/validations/userDetails';
 
+import User from '../../shared/businessobjects/User';
+import Credentials from '../../shared/businessobjects/Credentials';
+
 class UserDetailsPage extends React.Component {
 
     static propTypes = {
@@ -23,8 +26,8 @@ class UserDetailsPage extends React.Component {
     state = {
         name: '',
         email: '',
-        oldPassword: '',
-        password: '',
+        currentPassword: '',
+        newPassword: '',
         passwordConfirmation: '',
         changePassword: false,
         errors: {},
@@ -50,14 +53,14 @@ class UserDetailsPage extends React.Component {
         const newChangePasswordState = !this.state.changePassword;
         this.setState({
             changePassword: newChangePasswordState,
-            oldPassword: !newChangePasswordState ? '' : this.state.oldPassword,
-            password: !newChangePasswordState ? '' : this.state.password,
+            currentPassword: !newChangePasswordState ? '' : this.state.currentPassword,
+            newPassword: !newChangePasswordState ? '' : this.state.newPassword,
             passwordConfirmation: !newChangePasswordState ? '' : this.state.passwordConfirmation,
             errors: {
                 name: this.state.errors.name,
                 email: this.state.errors.email,
-                oldPassword: !newChangePasswordState ? undefined : this.state.errors.oldPassword,
-                password: !newChangePasswordState ? undefined : this.state.errors.password,
+                currentPassword: !newChangePasswordState ? undefined : this.state.errors.currentPassword,
+                newPassword: !newChangePasswordState ? undefined : this.state.errors.newPassword,
                 passwordConfirmation: !newChangePasswordState ? undefined : this.state.errors.passwordConfirmation,
             }
         });
@@ -66,10 +69,13 @@ class UserDetailsPage extends React.Component {
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.setState({ loading: true });
-        const { email, name, oldPassword, password, passwordConfirmation } = this.state;
-        const validation = userDetailsValidator.validate({ email, name, oldPassword, password, passwordConfirmation });
+        const { email, name, currentPassword, newPassword, passwordConfirmation } = this.state;
+        const user = new User({ email, name });
+        user._id = this.props.user._id;
+        const credentials = new Credentials({ currentPassword, newPassword, passwordConfirmation });
+        const validation = userDetailsValidator.validate(user, credentials);
         if (validation.isValid) {
-            this.props.updateUser(this.props.user._id, email, name, oldPassword, password, passwordConfirmation)
+            this.props.updateUser(user, credentials)
                 .catch((err) => this.setState({
                     errors: err.response.data.errors,
                     loading: false
@@ -84,7 +90,7 @@ class UserDetailsPage extends React.Component {
     };
 
     render() {
-        const { name, email, oldPassword, password, passwordConfirmation, changePassword, errors, loading, modified } = this.state;
+        const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, modified } = this.state;
         return (
             <div>
                 <LoadingIndicatorComponent loading={loading}/>
@@ -92,8 +98,8 @@ class UserDetailsPage extends React.Component {
                     name={name}
                     email={email}
                     changePassword={changePassword}
-                    oldPassword={oldPassword}
-                    password={password}
+                    currentPassword={currentPassword}
+                    newPassword={newPassword}
                     passwordConfirmation={passwordConfirmation}
                     errors={errors}
                     loading={loading}

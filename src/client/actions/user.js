@@ -45,8 +45,8 @@ const userArticlesFetched = (theArticles) => ({
  * Thunk Actions
  */
 
-export const login = (email, password) => dispatch =>
-    axios.post('/api/users/auth', { credentials: { email, password } })
+export const login = (user, credentials) => dispatch =>
+    axios.post('/api/users/auth', { user, credentials })
         .then(response => onTokenReceived(response.data.token, dispatch, userLoggedIn));
 
 export const logout = () => dispatch => {
@@ -55,12 +55,12 @@ export const logout = () => dispatch => {
     dispatch(userLoggedOut());
 };
 
-export const createUser = (email, name, password, passwordConfirmation) => dispatch =>
-    axios.post('/api/users', { credentials: { email, name, password, passwordConfirmation } })
+export const createUser = (user, credentials) => dispatch =>
+    axios.post('/api/users', { user, credentials })
         .then(response => onTokenReceived(response.data.token, dispatch, userCreated));
 
-export const updateUser = (userId, email, name, oldPassword, password, passwordConfirmation) => dispatch =>
-    axios.put(`/api/users/${userId}`, { credentials: { email, name, oldPassword, password, passwordConfirmation } })
+export const updateUser = (user, credentials) => dispatch =>
+    axios.put(`/api/users/${user._id}`, { user, credentials })
         .then(response => onTokenReceived(response.data.token, dispatch, userUpdated));
 
 export const loadUserArticles = (theUserId) => dispatch =>

@@ -84,7 +84,7 @@ class UserCache {
         if (!rec) {
             saveOp = (function(resolve, reject) {
                 let phUser = UserCache.toPhysicalRecord(user);
-                phUser.password = bcrypt.hashSync(user.password, 10);
+                phUser.password = bcrypt.hashSync(user.currentPassword, 10);
                 db.insert(phUser, (function(err, savedUser) {
                     const newUser = this.toLogicalRecord(savedUser);
                     this.users.push(newUser);
@@ -143,6 +143,9 @@ class UserCache {
         user.registration = rec.registration;
 
         delete user.password;
+        delete user.currentPassword;
+        delete user.newPassword;
+        delete user.passwordConfirmation;
 
         return user;
     }

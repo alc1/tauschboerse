@@ -7,7 +7,7 @@ export default class LoginForm extends React.Component {
 
     static propTypes = {
         email: PropTypes.string.isRequired,
-        password: PropTypes.string.isRequired,
+        currentPassword: PropTypes.string.isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         onChange: PropTypes.func.isRequired,
@@ -19,7 +19,7 @@ export default class LoginForm extends React.Component {
     }
 
     render() {
-        const { email, password, errors, loading, onChange, onSubmit } = this.props;
+        const { email, currentPassword, errors, loading, onChange, onSubmit } = this.props;
         const inputStyles = { width: '350px' };
         const formStyles = {
             display: 'flex',
@@ -40,11 +40,11 @@ export default class LoginForm extends React.Component {
                 />
                 <InputComponent
                     style={inputStyles}
-                    error={errors.password}
+                    error={errors.currentPassword}
                     label="Passwort"
                     onChange={onChange}
-                    value={password}
-                    field="password"
+                    value={currentPassword}
+                    field="currentPassword"
                     type="password"
                     disabled={loading}
                 />

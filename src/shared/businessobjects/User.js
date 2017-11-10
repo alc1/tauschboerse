@@ -5,12 +5,16 @@ class User {
         if (obj) {
             utils.setValue(this, 'email', obj, null);
             utils.setValue(this, 'name', obj, null);
-            utils.setValue(this, 'password', obj, null);
+            utils.setValue(this, 'currentPassword', obj, null);
+            utils.setValue(this, 'newPassword', obj, null);
+            utils.setValue(this, 'passwordConfirmation', obj, null);
             utils.setValue(this, 'registration', obj, new Date());
         } else {
             this.email = null;
             this.name = null;
-            this.password = null;
+            this.currentPassword = null;
+            this.newPassword = null;
+            this.passwordConfirmation = null;
             this.registration = new Date();
         }
     }
@@ -26,7 +30,7 @@ class User {
     }
 
     canSave() {
-        return (this.email != null) && (this.name != null) && (this.password != null);
+        return (this.email != null) && (this.name != null);
     }
 }
 

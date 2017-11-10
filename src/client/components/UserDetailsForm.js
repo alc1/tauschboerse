@@ -10,8 +10,8 @@ export default class UserDetailsForm extends React.Component {
     static propTypes = {
         name: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
-        oldPassword: PropTypes.string.isRequired,
-        password: PropTypes.string.isRequired,
+        currentPassword: PropTypes.string.isRequired,
+        newPassword: PropTypes.string.isRequired,
         passwordConfirmation: PropTypes.string.isRequired,
         changePassword: PropTypes.bool.isRequired,
         errors: PropTypes.object.isRequired,
@@ -26,7 +26,7 @@ export default class UserDetailsForm extends React.Component {
     }
 
     render() {
-        const { name, email, oldPassword, password, passwordConfirmation, changePassword, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
+        const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
         const inputStyles = { width: '350px' };
         const formStyles = {
             display: 'flex',
@@ -63,21 +63,21 @@ export default class UserDetailsForm extends React.Component {
                 />
                 {changePassword && <InputComponent
                     style={inputStyles}
-                    error={errors.oldPassword}
+                    error={errors.currentPassword}
                     label="Bisheriges Passwort"
                     onChange={onChange}
-                    value={oldPassword}
-                    field="oldPassword"
+                    value={currentPassword}
+                    field="currentPassword"
                     type="password"
                     disabled={loading}
                 />}
                 {changePassword && <InputComponent
                     style={inputStyles}
-                    error={errors.password}
+                    error={errors.newPassword}
                     label="Neues Passwort"
                     onChange={onChange}
-                    value={password}
-                    field="password"
+                    value={newPassword}
+                    field="newPassword"
                     type="password"
                     disabled={loading}
                 />}

@@ -8,7 +8,7 @@ export default class UserDetailsForm extends React.Component {
     static propTypes = {
         name: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
-        password: PropTypes.string.isRequired,
+        newPassword: PropTypes.string.isRequired,
         passwordConfirmation: PropTypes.string.isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
@@ -21,7 +21,7 @@ export default class UserDetailsForm extends React.Component {
     }
 
     render() {
-        const { name, email, password, passwordConfirmation, errors, loading, onChange, onSubmit } = this.props;
+        const { name, email, newPassword, passwordConfirmation, errors, loading, onChange, onSubmit } = this.props;
         const inputStyles = { width: '350px' };
         const formStyles = {
             display: 'flex',
@@ -51,11 +51,11 @@ export default class UserDetailsForm extends React.Component {
                 />
                 <InputComponent
                     style={inputStyles}
-                    error={errors.password}
+                    error={errors.newPassword}
                     label="Passwort"
                     onChange={onChange}
-                    value={password}
-                    field="password"
+                    value={newPassword}
+                    field="newPassword"
                     type="password"
                     disabled={loading}
                 />

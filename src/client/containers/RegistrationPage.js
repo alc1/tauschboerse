@@ -12,6 +12,9 @@ import { createUser } from '../actions/user';
 
 import registrationValidator from '../../shared/validations/registration';
 
+import User from '../../shared/businessobjects/User';
+import Credentials from '../../shared/businessobjects/Credentials';
+
 class RegistrationPage extends React.Component {
 
     static propTypes = {
@@ -22,7 +25,7 @@ class RegistrationPage extends React.Component {
     state = {
         name: '',
         email: '',
-        password: '',
+        newPassword: '',
         passwordConfirmation: '',
         errors: {},
         loading: false
@@ -35,10 +38,12 @@ class RegistrationPage extends React.Component {
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.setState({ loading: true });
-        const { email, name, password, passwordConfirmation } = this.state;
-        const validation = registrationValidator.validate({ email, name, password, passwordConfirmation });
+        const { email, name, newPassword, passwordConfirmation } = this.state;
+        const user = new User({ email, name });
+        const credentials = new Credentials({ newPassword, passwordConfirmation });
+        const validation = registrationValidator.validate(user, credentials);
         if (validation.isValid) {
-            this.props.createUser(email, name, password, passwordConfirmation)
+            this.props.createUser(user, credentials)
                 .then(res => {
                     this.props.history.replace('/');
                 })
@@ -56,14 +61,14 @@ class RegistrationPage extends React.Component {
     };
 
     render() {
-        const { name, email, password, passwordConfirmation, errors, loading } = this.state;
+        const { name, email, newPassword, passwordConfirmation, errors, loading } = this.state;
         return (
             <div>
                 <LoadingIndicatorComponent loading={loading}/>
                 <RegistrationForm
                     name={name}
                     email={email}
-                    password={password}
+                    newPassword={newPassword}
                     passwordConfirmation={passwordConfirmation}
                     errors={errors}
                     loading={loading}

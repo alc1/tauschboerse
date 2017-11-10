@@ -4,35 +4,40 @@ const lodash = require('lodash');
 const isEmail = validator.isEmail;
 const isEmpty = lodash.isEmpty;
 
-function validate(theCredentials) {
+function validate(theUser, theCredentials) {
     let errors = {};
 
-    if (theCredentials) {
-        if (isEmpty(theCredentials.name)) {
+    if (theUser) {
+        if (isEmpty(theUser.name)) {
             errors.name = 'Der Name ist obligatorisch';
         }
-        if (isEmpty(theCredentials.email)) {
+        if (isEmpty(theUser.email)) {
             errors.email = 'Die E-Mail ist obligatorisch';
         }
         else {
-            if (!isEmail(theCredentials.email)) {
+            if (!isEmail(theUser.email)) {
                 errors.email = 'Ungültige E-Mail';
             }
-        }
-        if (isEmpty(theCredentials.password)) {
-            errors.password = 'Das Passwort ist obligatorisch';
-        }
-        if (isEmpty(theCredentials.passwordConfirmation)) {
-            errors.passwordConfirmation = 'Die Passwortbestätigung ist obligatorisch';
-        }
-        if (theCredentials.password !== theCredentials.passwordConfirmation) {
-            errors.passwordConfirmation = 'Die Passwortbestätigung stimmt nicht überein';
         }
     }
     else {
         errors.name = 'Der Name ist obligatorisch';
         errors.email = 'Die E-Mail ist obligatorisch';
-        errors.password = 'Das Passwort ist obligatorisch';
+    }
+
+    if (theCredentials) {
+        if (isEmpty(theCredentials.newPassword)) {
+            errors.newPassword = 'Das Passwort ist obligatorisch';
+        }
+        if (isEmpty(theCredentials.passwordConfirmation)) {
+            errors.passwordConfirmation = 'Die Passwortbestätigung ist obligatorisch';
+        }
+        if (theCredentials.newPassword !== theCredentials.passwordConfirmation) {
+            errors.passwordConfirmation = 'Die Passwortbestätigung stimmt nicht überein';
+        }
+    }
+    else {
+        errors.newPassword = 'Das Passwort ist obligatorisch';
         errors.passwordConfirmation = 'Die Passwortbestätigung ist obligatorisch';
     }
 

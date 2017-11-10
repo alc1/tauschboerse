@@ -2,14 +2,15 @@
 
 const usersStore = require('../services/usersStorage');
 const userCreator = require('./userCreator');
+const userCreatorValidator = require('./userCreatorValidator');
 const userUpdater = require('./userUpdater');
+const userUpdaterValidator = require('./userUpdaterValidator');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
-const UserCache = require('../services/UserCache').UserCache;
 
 async function getAllUsers(req, res) {
     if (useDataCache) {
@@ -35,8 +36,8 @@ async function getUserById(req, res) {
 
 async function login(req, res) {
     if (useDataCache) {
-        const { email, password } = req.body.credentials;
-        const acceptedUser = dataCache.authenticateUser(email, password);
+        const { user, credentials } = req.body;
+        const acceptedUser = dataCache.authenticateUser(user.email, credentials.currentPassword);
         if (acceptedUser) {
             res.json({ token: createToken(acceptedUser._id, acceptedUser.name, acceptedUser.email) });
         }
@@ -44,22 +45,25 @@ async function login(req, res) {
             res.status(401).json({
                 errors: {
                     email: 'E-Mail oder Passwort unbekannt',
-                    password: 'E-Mail oder Passwort unbekannt'
+                    currentPassword: 'E-Mail oder Passwort unbekannt',
+                    newPassword: 'E-Mail oder Passwort unbekannt'
                 }
             });
         }
     }
     else {
-        const { email, password } = req.body.credentials;
-        const user = await usersStore.getUserByEmail(email);
-        if (user && bcrypt.compareSync(password, user.password)) {
-            res.json({ token: createToken(user._id, user.name, user.email) });
+        const { user, credentials } = req.body;
+        const foundUser = await usersStore.getUserByEmail(user.email);
+        let passwordToCheck = (req.isNewUser) ? credentials.newPassword: credentials.currentPassword;
+        if (foundUser && bcrypt.compareSync(passwordToCheck, foundUser.password)) {
+            res.json({ token: createToken(foundUser._id, foundUser.name, foundUser.email) });
         }
         else {
             res.status(401).json({
                 errors: {
                     email: 'E-Mail oder Passwort unbekannt',
-                    password: 'E-Mail oder Passwort unbekannt'
+                    currentPassword: 'E-Mail oder Passwort unbekannt',
+                    newPassword: 'E-Mail oder Passwort unbekannt'
                 }
             });
         }
@@ -68,17 +72,35 @@ async function login(req, res) {
 
 async function createUser(req, res) {
     if (useDataCache) {
-        const { credentials } = req.body;
+        const { user, credentials } = req.body;
+        const userObject = {
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+            currentPassword: credentials.currentPassword,
+            newPassword: credentials.newPassword,
+            passwordConfirmation: credentials.passwordConfirmation
+        };
 
-        let preparedUser = dataCache.prepareUser(credentials);
-        dataCache.saveUser(preparedUser).then(
-            user => login(req, res)
-        );
+        const validation = await userCreatorValidator.validate(user, credentials);
+        if (validation.success) {
+            let preparedUser = dataCache.prepareUser(userObject);
+            dataCache.saveUser(preparedUser).then(
+                user => {
+                    req.isNewUser = true;
+                    return login(req, res);
+                }
+            );
+        }
+        else {
+            res.status(validation.status).json({ errors: validation.errors });
+        }
     }
     else {
-        const { credentials } = req.body;
-        const result = await userCreator.create(credentials);
+        const { user, credentials } = req.body;
+        const result = await userCreator.create(user, credentials);
         if (result.success) {
+            req.isNewUser = true;
             await login(req, res);
         }
         else {
@@ -90,19 +112,33 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
     if (useDataCache) {
         const { userId } = req.params;
-        const { credentials } = req.body;
+        const { user, credentials } = req.body;
+        const userObject = {
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+            currentPassword: credentials.currentPassword,
+            newPassword: credentials.newPassword,
+            passwordConfirmation: credentials.passwordConfirmation
+        };
 
-        let preparedUser = dataCache.prepareUser(credentials);
-        dataCache.saveUser(preparedUser).then(
-            user => res.json({ token: createToken(user._id, user.name, user.email) })
-        );
+        const validation = await userUpdaterValidator.validate(userId, user, credentials);
+        if (validation.success) {
+            let preparedUser = dataCache.prepareUser(userObject);
+            dataCache.saveUser(preparedUser).then(
+                user => res.json({ token: createToken(user._id, user.name, user.email) })
+            );
+        }
+        else {
+            res.status(validation.status).json({ errors: validation.errors });
+        }
     }
     else {
         const { userId } = req.params;
-        const { credentials } = req.body;
-        const result = await userUpdater.update(userId, credentials);
+        const { user, credentials } = req.body;
+        const result = await userUpdater.update(userId, user, credentials);
         if (result.success) {
-            res.json({ token: createToken(result.credentials.userId, result.credentials.name, result.credentials.email) });
+            res.json({ token: createToken(result.user.userId, result.user.name, result.user.email) });
         }
         else {
             res.status(result.status).json({ errors: result.errors });
@@ -111,6 +147,7 @@ async function updateUser(req, res) {
 }
 
 function createToken(theUserId, theName, theEmail) {
+    console.log(`Create token for user ID [${theUserId}], name [${theName}], email [${theEmail}]`);
     return jwt.sign({
         _id: theUserId,
         name: theName,
