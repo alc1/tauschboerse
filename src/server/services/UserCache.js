@@ -16,6 +16,7 @@ class UserCache {
             db.find({}, (function(err, recs) {
                 this.users = recs;
                 this.users.forEach(user => {
+                    this.passwords.set(user._id, user.password);
                     delete user.password;
                 });
                 console.log('users loaded');
@@ -36,6 +37,7 @@ class UserCache {
                 } else {
                     console.log('Users have been cleared');
                     this.users = [];
+                    this.passwords = new Map();
                     resolve(numRemoved);
                 }
             }).bind(this));
