@@ -37,9 +37,10 @@ async function getUserById(req, res) {
 async function login(req, res) {
     if (useDataCache) {
         const { user, credentials } = req.body;
-        const acceptedUser = dataCache.authenticateUser(user.email, credentials.currentPassword);
+        const passwordToCheck = (req.isNewUser) ? credentials.newPassword: credentials.currentPassword;
+        const acceptedUser = dataCache.authenticateUser(user.email, passwordToCheck);
         if (acceptedUser) {
-            res.json({ token: createToken(acceptedUser._id, acceptedUser.name, acceptedUser.email) });
+            res.json({ token: createToken(acceptedUser._id, acceptedUser.name, acceptedUser.email, acceptedUser.registration) });
         }
         else {
             res.status(401).json({
@@ -54,9 +55,9 @@ async function login(req, res) {
     else {
         const { user, credentials } = req.body;
         const foundUser = await usersStore.getUserByEmail(user.email);
-        let passwordToCheck = (req.isNewUser) ? credentials.newPassword: credentials.currentPassword;
+        const passwordToCheck = (req.isNewUser) ? credentials.newPassword: credentials.currentPassword;
         if (foundUser && bcrypt.compareSync(passwordToCheck, foundUser.password)) {
-            res.json({ token: createToken(foundUser._id, foundUser.name, foundUser.email) });
+            res.json({ token: createToken(foundUser._id, foundUser.name, foundUser.email, foundUser.registration) });
         }
         else {
             res.status(401).json({
@@ -77,6 +78,7 @@ async function createUser(req, res) {
             _id: user._id,
             email: user.email,
             name: user.name,
+            registration: user.registration,
             currentPassword: credentials.currentPassword,
             newPassword: credentials.newPassword,
             passwordConfirmation: credentials.passwordConfirmation
@@ -117,6 +119,7 @@ async function updateUser(req, res) {
             _id: user._id,
             email: user.email,
             name: user.name,
+            registration: user.registration,
             currentPassword: credentials.currentPassword,
             newPassword: credentials.newPassword,
             passwordConfirmation: credentials.passwordConfirmation
@@ -126,7 +129,7 @@ async function updateUser(req, res) {
         if (validation.success) {
             let preparedUser = dataCache.prepareUser(userObject);
             dataCache.saveUser(preparedUser).then(
-                user => res.json({ token: createToken(user._id, user.name, user.email) })
+                user => res.json({ token: createToken(user._id, user.name, user.email, user.registration) })
             );
         }
         else {
@@ -138,7 +141,7 @@ async function updateUser(req, res) {
         const { user, credentials } = req.body;
         const result = await userUpdater.update(userId, user, credentials);
         if (result.success) {
-            res.json({ token: createToken(result.user.userId, result.user.name, result.user.email) });
+            res.json({ token: createToken(result.user.userId, result.user.name, result.user.email, result.user.registration) });
         }
         else {
             res.status(result.status).json({ errors: result.errors });
@@ -146,12 +149,13 @@ async function updateUser(req, res) {
     }
 }
 
-function createToken(theUserId, theName, theEmail) {
-    console.log(`Create token for user ID [${theUserId}], name [${theName}], email [${theEmail}]`);
+function createToken(theUserId, theName, theEmail, theRegistrationDate) {
+    console.log(`Create token for user ID [${theUserId}], name [${theName}], email [${theEmail}], email [${theRegistrationDate}]`);
     return jwt.sign({
         _id: theUserId,
         name: theName,
-        email: theEmail
+        email: theEmail,
+        registration: theRegistrationDate
     }, config.jwtSecret, { expiresIn: '1h' });
 }
 

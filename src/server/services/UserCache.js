@@ -7,13 +7,13 @@ const db = require('./dataFiles').dbUsers;
 class UserCache {
     constructor() {
         this.users = [];
+        this.passwords = new Map();
     }
 
     init() {
         let load = function(resolve, reject) {
             console.log('Loading users...');
             db.find({}, (function(err, recs) {
-                this.passwords = recs.map(user => { return { id: user._id, password: user.password}; });
                 this.users = recs;
                 this.users.forEach(user => {
                     delete user.password;
@@ -83,12 +83,12 @@ class UserCache {
 
         if (!rec) {
             saveOp = (function(resolve, reject) {
-                let phUser = UserCache.toPhysicalRecord(user);
-                phUser.password = bcrypt.hashSync(user.currentPassword, 10);
-                db.insert(phUser, (function(err, savedUser) {
+                let userToSave = UserCache.toPhysicalRecord(user);
+                userToSave.password = bcrypt.hashSync(user.newPassword, 10);
+                db.insert(userToSave, (function(err, savedUser) {
                     const newUser = this.toLogicalRecord(savedUser);
                     this.users.push(newUser);
-                    this.passwords.push({ id: savedUser._id, password: savedUser.password });
+                    this.passwords.set(savedUser._id, savedUser.password);
                     user._id = newUser._id;
                     resolve(newUser);
                 }).bind(this));
@@ -96,9 +96,17 @@ class UserCache {
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(user)) {
-                    db.update({ _id: rec._id }, UserCache.toPhysicalRecord(rec), {}, function(err, numAffected) {
-                        err ? reject(err) : resolve(rec);
-                    });
+                    let userToSave = UserCache.toPhysicalRecord(rec);
+                    userToSave.password = (user.newPassword) ? bcrypt.hashSync(user.newPassword, 10) : this.getPasswordByUserId(rec._id);
+                    db.update({ _id: rec._id }, userToSave, {}, (function(err, numAffected) {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            this.passwords.set(rec._id, userToSave.password);
+                            resolve(rec);
+                        }
+                    }).bind(this));
                 } else {
                     resolve(rec);
                 }
@@ -111,12 +119,16 @@ class UserCache {
     authenticate(theEmail, thePassword) {
         const user = this.findByEmail(theEmail);
         if (user) {
-            const foundPasswordRecord = this.passwords.find(passwordRecord => passwordRecord.id === user._id);
-            if (foundPasswordRecord && bcrypt.compareSync(thePassword, foundPasswordRecord.password)) {
+            const password = this.getPasswordByUserId(user._id);
+            if (password && bcrypt.compareSync(thePassword, password)) {
                 return user;
             }
         }
         return null;
+    }
+
+    getPasswordByUserId(theUserId) {
+        return this.passwords.get(theUserId);
     }
 
     static toPhysicalRecord(user) {
@@ -128,8 +140,7 @@ class UserCache {
 
         rec.email = user.email;
         rec.name = user.name;
-        rec.registration = user.registration;
-        // rec.password = bcrypt.hashSync(user.password, 10);
+        rec.registration = new Date(user.registration);
 
         return rec;
     }

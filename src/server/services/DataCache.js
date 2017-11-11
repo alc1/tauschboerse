@@ -149,6 +149,10 @@ class DataCache {
     authenticateUser(theEmail, thePassword) {
         return this.users.authenticate(theEmail, thePassword);
     }
+
+    getPasswordByUserId(theUserId) {
+        return this.users.getPasswordByUserId(theUserId);
+    }
 }
 
 const dataCache = new DataCache();

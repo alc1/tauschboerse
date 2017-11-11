@@ -11,6 +11,7 @@ async function update(theUserId, theUser, theCredentials) {
         const userDetails = {
             email: theUser.email,
             name: theUser.name,
+            registration: new Date(theUser.registration)
         };
         const isAboutToChangePassword = !!theCredentials.currentPassword || !!theCredentials.newPassword || !!theCredentials.passwordConfirmation;
         if (isAboutToChangePassword) {
@@ -23,7 +24,8 @@ async function update(theUserId, theUser, theCredentials) {
                 user: {
                     userId: theUserId,
                     email: theUser.email,
-                    name: theUser.name
+                    name: theUser.name,
+                    registration: theUser.registration
                 }
             };
         }

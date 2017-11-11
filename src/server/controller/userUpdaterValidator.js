@@ -42,8 +42,15 @@ async function validate(theUserId, theUser, theCredentials) {
         };
     }
 
+    let password;
+    if (useDataCache) {
+        password = dataCache.getPasswordByUserId(theUserId);
+    }
+    else {
+        password = user.password;
+    }
     const isAboutToChangePassword = !!theCredentials.currentPassword || !!theCredentials.newPassword || !!theCredentials.passwordConfirmation;
-    const passwordCheckError = checkPassword(isAboutToChangePassword, theCredentials, user);
+    const passwordCheckError = checkPassword(isAboutToChangePassword, theCredentials, password);
     if (passwordCheckError) {
         return {
             success: false,
@@ -90,8 +97,8 @@ function checkUser(theUser) {
     return null;
 }
 
-function checkPassword(isAboutToChangePassword, theCredentials, theUser) {
-    if (isAboutToChangePassword && !bcrypt.compareSync(theCredentials.currentPassword, theUser.password)) {// TODO ALC: theUser.password is null in cache mode!
+function checkPassword(isAboutToChangePassword, theCredentials, thePassword) {
+    if (isAboutToChangePassword && !bcrypt.compareSync(theCredentials.currentPassword, thePassword)) {
         return {
             status: 401,
             errors: {

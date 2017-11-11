@@ -21,10 +21,10 @@ function resetData(dataCache) {
         { user1Id: 0, user2Id: 1}
     ];
     const users = [
-        {email: 'christian.albiez@hsr.ch', name: 'Christian Albiez', currentPassword: 'christian', registration: new Date()},
-        {email: 'stephen.atchison@hsr.ch', name: 'Stephen Atchison', currentPassword: 'stephen', registration: new Date()},
-        {email: 'max@mustermann.com', name: 'Max Mustermann', currentPassword: 'max', registration: new Date()},
-        {email: 'jamesbond007@agent.com', name: 'James Bond', currentPassword: 'james', registration: new Date()}
+        {email: 'christian.albiez@hsr.ch', name: 'Christian Albiez', newPassword: 'christian', registration: new Date()},
+        {email: 'stephen.atchison@hsr.ch', name: 'Stephen Atchison', newPassword: 'stephen', registration: new Date()},
+        {email: 'max@mustermann.com', name: 'Max Mustermann', newPassword: 'max', registration: new Date()},
+        {email: 'jamesbond007@agent.com', name: 'James Bond', newPassword: 'james', registration: new Date()}
     ];
 
     function insertUsers() {

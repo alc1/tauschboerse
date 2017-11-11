@@ -36,10 +36,8 @@ class UserDetailsPage extends React.Component {
     };
 
     componentDidMount() {
-        this.setState({
-            name: this.props.user.name,
-            email: this.props.user.email
-        });
+        const { name, email } = this.props.user;
+        this.setState({ name, email });
     }
 
     onChange = (theEvent) => {
@@ -70,8 +68,9 @@ class UserDetailsPage extends React.Component {
         theEvent.preventDefault();
         this.setState({ loading: true });
         const { email, name, currentPassword, newPassword, passwordConfirmation } = this.state;
-        const user = new User({ email, name });
-        user._id = this.props.user._id;
+        const { _id, registration } = this.props.user;
+        const user = new User({ email, name, registration });
+        user._id = _id;
         const credentials = new Credentials({ currentPassword, newPassword, passwordConfirmation });
         const validation = userDetailsValidator.validate(user, credentials);
         if (validation.isValid) {
