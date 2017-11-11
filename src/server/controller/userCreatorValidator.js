@@ -6,8 +6,8 @@ const usersStore = require('../services/usersStorage');
 const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
 
-async function validate(theUser, theCredentials) {
-    const validationError = checkCredentials(theUser, theCredentials);
+async function validate(theUser) {
+    const validationError = checkCredentials(theUser);
     if (validationError) {
         return {
             success: false,
@@ -38,8 +38,8 @@ async function validate(theUser, theCredentials) {
     };
 }
 
-function checkCredentials(theUser, theCredentials) {
-    const validation = registrationValidator.validate(theUser, theCredentials);
+function checkCredentials(theUser) {
+    const validation = registrationValidator.validate(theUser);
     if (!validation.isValid) {
         return {
             status: 400,

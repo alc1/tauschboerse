@@ -5,17 +5,17 @@ const userUpdaterValidator = require('./userUpdaterValidator');
 const usersStore = require('../services/usersStorage');
 const bcrypt = require('bcrypt');
 
-async function update(theUserId, theUser, theCredentials) {
-    const validation = await userUpdaterValidator.validate(theUserId, theUser, theCredentials);
+async function update(theUserId, theUser) {
+    const validation = await userUpdaterValidator.validate(theUserId, theUser);
     if (validation.success) {
         const userDetails = {
             email: theUser.email,
             name: theUser.name,
             registration: new Date(theUser.registration)
         };
-        const isAboutToChangePassword = !!theCredentials.currentPassword || !!theCredentials.newPassword || !!theCredentials.passwordConfirmation;
+        const isAboutToChangePassword = !!theUser.currentPassword || !!theUser.newPassword || !!theUser.passwordConfirmation;
         if (isAboutToChangePassword) {
-            userDetails.password = bcrypt.hashSync(theCredentials.newPassword, 10);
+            userDetails.password = bcrypt.hashSync(theUser.newPassword, 10);
         }
         const numUpdated = await usersStore.updateUser(theUserId, userDetails);
         if (numUpdated === 1) {

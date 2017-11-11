@@ -14,7 +14,6 @@ import { getUser } from '../selectors/user';
 import userDetailsValidator from '../../shared/validations/userDetails';
 
 import User from '../../shared/businessobjects/User';
-import Credentials from '../../shared/businessobjects/Credentials';
 
 class UserDetailsPage extends React.Component {
 
@@ -69,12 +68,11 @@ class UserDetailsPage extends React.Component {
         this.setState({ loading: true });
         const { email, name, currentPassword, newPassword, passwordConfirmation } = this.state;
         const { _id, registration } = this.props.user;
-        const user = new User({ email, name, registration });
+        const user = new User({ email, name, registration, currentPassword, newPassword, passwordConfirmation });
         user._id = _id;
-        const credentials = new Credentials({ currentPassword, newPassword, passwordConfirmation });
-        const validation = userDetailsValidator.validate(user, credentials);
+        const validation = userDetailsValidator.validate(user);
         if (validation.isValid) {
-            this.props.updateUser(user, credentials)
+            this.props.updateUser(user)
                 .catch((err) => this.setState({
                     errors: err.response.data.errors,
                     loading: false

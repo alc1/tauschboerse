@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
 
-async function validate(theUserId, theUser, theCredentials) {
+async function validate(theUserId, theUser) {
     if (theUserId !== theUser._id) {
         return {
             status: 400,
@@ -17,7 +17,7 @@ async function validate(theUserId, theUser, theCredentials) {
         };
     }
 
-    const validationError = checkCredentials(theUser, theCredentials);
+    const validationError = checkCredentials(theUser);
     if (validationError) {
         return {
             success: false,
@@ -49,8 +49,8 @@ async function validate(theUserId, theUser, theCredentials) {
     else {
         password = user.password;
     }
-    const isAboutToChangePassword = !!theCredentials.currentPassword || !!theCredentials.newPassword || !!theCredentials.passwordConfirmation;
-    const passwordCheckError = checkPassword(isAboutToChangePassword, theCredentials, password);
+    const isAboutToChangePassword = !!theUser.currentPassword || !!theUser.newPassword || !!theUser.passwordConfirmation;
+    const passwordCheckError = checkPassword(isAboutToChangePassword, theUser, password);
     if (passwordCheckError) {
         return {
             success: false,
@@ -74,8 +74,8 @@ async function validate(theUserId, theUser, theCredentials) {
     };
 }
 
-function checkCredentials(theUser, theCredentials) {
-    const validation = userDetailsValidator.validate(theUser, theCredentials);
+function checkCredentials(theUser) {
+    const validation = userDetailsValidator.validate(theUser);
     if (!validation.isValid) {
         return {
             status: 400,
@@ -97,8 +97,8 @@ function checkUser(theUser) {
     return null;
 }
 
-function checkPassword(isAboutToChangePassword, theCredentials, thePassword) {
-    if (isAboutToChangePassword && !bcrypt.compareSync(theCredentials.currentPassword, thePassword)) {
+function checkPassword(isAboutToChangePassword, theUser, thePassword) {
+    if (isAboutToChangePassword && !bcrypt.compareSync(theUser.currentPassword, thePassword)) {
         return {
             status: 401,
             errors: {

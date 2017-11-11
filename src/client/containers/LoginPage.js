@@ -13,7 +13,6 @@ import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import LoginForm from '../components/LoginForm';
 
 import User from '../../shared/businessobjects/User';
-import Credentials from '../../shared/businessobjects/Credentials';
 
 class LoginPage extends React.Component {
 
@@ -40,9 +39,8 @@ class LoginPage extends React.Component {
             loading: true
         });
         const { email, currentPassword } = this.state;
-        const user = new User({ email });
-        const credentials = new Credentials({ currentPassword });
-        this.props.login(user, credentials)
+        const user = new User({ email, currentPassword });
+        this.props.login(user)
             .then((res) => {
                 const { from } = this.props.location.state || { from: { pathname: '/' } };
                 this.props.history.replace(from);
