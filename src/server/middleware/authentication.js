@@ -9,6 +9,9 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const usersStore = require('../services/usersStorage');
 
+const useDataCache = require('../useDataCache').useDataCache;
+const dataCache = require('../services/DataCache').dataCache;
+
 module.exports = (req, res, next) => {
     let token;
     const authorizationHeader = req.headers['authorization'];
@@ -22,7 +25,13 @@ module.exports = (req, res, next) => {
                 res.status(401).json({ error: 'Unauthorized (authentication failed)!' });
             }
             else {
-                const user = await usersStore.getUserById(decoded._id);
+                let user;
+                if (useDataCache) {
+                    user = dataCache.getUserById(decoded._id);
+                } else {
+                    user = await usersStore.getUserById(decoded._id);
+                }
+
                 if (user) {
                     req.user = user;
                     next();
