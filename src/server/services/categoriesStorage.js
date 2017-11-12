@@ -1,8 +1,6 @@
 'use strict';
 
-const Datastore = require('nedb');
 const dataFiles = require('./dataFiles');
-
 const db = dataFiles.dbCategories;
 
 const storageUtils = require('../utils/storageUtils');
@@ -46,9 +44,18 @@ function getCategory(theCategoryId) {
     });
 }
 
+function createCategory(theCategory) {
+    return new Promise((resolve, reject) => {
+        db.insert(theCategory, (err, newDoc) => {
+            storageUtils.handlePromiseResult(resolve, newDoc, reject, err);
+        });
+    });
+}
+
 module.exports = {
     getAllCategories,
     getCategories,
     getCategory,
+    createCategory,
     insertTestData
 };

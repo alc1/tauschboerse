@@ -17,7 +17,7 @@ class CategoryCache {
                     reject(err);
                 } else {
                     console.log('categories loaded');
-                    this.categories = recs.map(r => this.toLogicalRecord(r));
+                    this.categories = recs.map(rec => CategoryCache.toLogicalRecord(rec));
                     resolve(this);
                 }
             }).bind(this));
@@ -53,35 +53,35 @@ class CategoryCache {
         return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
     }
 
-    save(category) {
-        let rec;
+    save(theCategory) {
+        let foundLogicalCategory;
         let saveOp;
 
-        if (category.hasOwnProperty('_id')) {
-            rec = this.find(category._id);
+        if (theCategory.hasOwnProperty('_id')) {
+            foundLogicalCategory = this.findById(theCategory._id);
         }
 
-        if (!rec) {
+        if (!foundLogicalCategory) {
             saveOp = (function(resolve, reject) {
-                db.insert(CategoryCache.toPhysicalRecord(category), (function(err, newRec) {
+                db.insert(CategoryCache.toPhysicalRecord(theCategory), (function(err, newRec) {
                     if (err) {
                         reject(err);
                     } else {
-                        let newCategory = this.toLogicalRecord(newRec);
+                        let newCategory = CategoryCache.toLogicalRecord(newRec);
                         this.categories.push(newCategory);
-                        category._id = newCategory._id;
+                        theCategory._id = newCategory._id;
                         resolve(newCategory);
                     }
                 }).bind(this));
             });
         } else {
             saveOp = (function(resolve, reject) {
-                if (rec.update(category)) {
-                    db.update({_id: rec._id}, CategoryCache.toPhysicalRecord(rec), {}, function(err, newRec) {
-                        resolve(rec);
+                if (foundLogicalCategory.update(theCategory)) {
+                    db.update({_id: foundLogicalCategory._id}, CategoryCache.toPhysicalRecord(foundLogicalCategory), {}, function(err, newRec) {
+                        resolve(foundLogicalCategory);
                     });
                 } else {
-                    resolve(rec);
+                    resolve(foundLogicalCategory);
                 }
             });
         }
@@ -89,9 +89,9 @@ class CategoryCache {
         return new Promise(saveOp.bind(this));
     }
 
-    delete(id) {
+    deleteById(theCategoryId) {
         let deleteOp = function(resolve, reject) {
-            let category = this.find(id);
+            let category = this.findById(theCategoryId);
             if (category) {
                 this.categories.remove(category);
                 db.remove({ _id: category._id }, function(err, numRemoved) {
@@ -105,8 +105,12 @@ class CategoryCache {
         return new Promise(deleteOp.bind(this));
     }
 
-    find(id) {
-        return this.categories.find(cat => cat._id === id);
+    findById(theCategoryId) {
+        return this.categories.find(category => category._id === theCategoryId);
+    }
+
+    findByName(theCategoryName) {
+        return this.categories.find(category => category.name === theCategoryName);
     }
 
     findAll() {
@@ -122,22 +126,23 @@ class CategoryCache {
         return category;
     }
 
-    static toPhysicalRecord(category) {
-        let rec = {};
+    static toPhysicalRecord(theCategory) {
+        let physicalRecord = {};
 
-        if (category.hasOwnProperty('_id')) {
-            rec._id = category._id;
+        if (theCategory.hasOwnProperty('_id')) {
+            physicalRecord._id = theCategory._id;
         }
 
-        rec.name = category.name;
+        physicalRecord.name = theCategory.name;
 
-        return rec;
+        return physicalRecord;
     }
 
-    toLogicalRecord(rec) {
+    static toLogicalRecord(thePhysicalRecord) {
         let category = new Category(null);
-        category._id = rec._id;
-        category.name = rec.name;
+
+        category._id = thePhysicalRecord._id;
+        category.name = thePhysicalRecord.name;
 
         return category;
     }

@@ -7,7 +7,6 @@ class ArticleCache {
     constructor(users, categories) {
         this.users = users;
         this.categories = categories;
-
         this.articles = [];
     }
 
@@ -51,25 +50,25 @@ class ArticleCache {
         return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
     }
 
-    save(article) {
-        let rec;
+    save(theArticle) {
+        let foundLogicalArticle;
         let saveOp;
 
         // retrieve article from cache if possible
-        if (article.hasOwnProperty('_id')) {
-            rec = this.findById(article._id);
+        if (theArticle.hasOwnProperty('_id')) {
+            foundLogicalArticle = this.findById(theArticle._id);
         }
 
-        if (!rec) {
+        if (!foundLogicalArticle) {
             // if article wasn't found insert it
             saveOp = function(resolve, reject) {
-                db.insert(ArticleCache.toPhysicalRecord(article), (function(err, newRec){
+                db.insert(ArticleCache.toPhysicalRecord(theArticle), (function(err, newRec){
                     if (err) {
                         reject(err);
                     } else {
                         let newArticle = this.toLogicalRecord(newRec);
                         this.articles.push(newArticle);
-                        article._id = newArticle._id;
+                        theArticle._id = newArticle._id;
                         resolve(newArticle);
                     }
                 }).bind(this))
@@ -77,12 +76,12 @@ class ArticleCache {
         } else {
             // article was found - update it
             saveOp = function(resolve, reject) {
-                if (rec.update(article)) {
-                    db.update({ _id: rec._id }, ArticleCache.toPhysicalRecord(rec), {}, function(err, numAffected) {
-                        err ? reject(err) : resolve(rec);
+                if (foundLogicalArticle.update(theArticle)) {
+                    db.update({ _id: foundLogicalArticle._id }, ArticleCache.toPhysicalRecord(foundLogicalArticle), {}, function(err, numAffected) {
+                        err ? reject(err) : resolve(foundLogicalArticle);
                     });
                 } else {
-                    resolve(rec);
+                    resolve(foundLogicalArticle);
                 }
             };
         }
@@ -102,7 +101,7 @@ class ArticleCache {
         return this.articles.filter(article => article.owner._id === theOwnerId);
     }
 
-    prepare(obj, user) {
+    prepare(obj, theOwner) {
         let article = new Article(obj);
         if (obj.hasOwnProperty('_id')) {
             article._id = obj._id;
@@ -110,12 +109,12 @@ class ArticleCache {
 
         // each article must have an owner
         if (!article.owner) {
-            article.owner = user;
+            article.owner = theOwner;
         }
 
         // normalize category array
         if (article.categories.length > 0) {
-            article.categories = article.categories.map(category => this.categories.find(category._id));
+            article.categories = article.categories.map(category => this.categories.findById(category._id));
             article.sortCategories();
         }
 
@@ -123,33 +122,34 @@ class ArticleCache {
     }
 
     static toPhysicalRecord(article) {
-        let rec = {};
+        let physicalRecord = {};
 
         if (article.hasOwnProperty('_id')) {
-            rec._id = article._id;
+            physicalRecord._id = article._id;
         }
 
-        rec.ownerId = article.owner._id;
-        rec.title = article.title;
-        rec.description = article.description;
-        rec.created = article.created;
-        rec.status = article.status;
-        rec.photos = article.photos.slice();
-        rec.categoryIds = article.categories.map(category => category._id);
+        physicalRecord.ownerId = article.owner._id;
+        physicalRecord.title = article.title;
+        physicalRecord.description = article.description;
+        physicalRecord.created = new Date(article.created);
+        physicalRecord.status = article.status;
+        physicalRecord.photos = article.photos.slice();
+        physicalRecord.categoryIds = article.categories.map(category => category._id);
 
-        return rec;
+        return physicalRecord;
     }
 
-    toLogicalRecord(rec) {
+    toLogicalRecord(thePhysicalRecord) {
         let article = new Article(null);
-        article._id = rec._id;
-        article.owner = this.users.findById(rec.ownerId);
-        article.title = rec.title;
-        article.description = rec.description;
-        article.created = rec.created;
-        article.status = rec.status;
-        article.photos = rec.photos ? rec.photos.slice() : [];
-        article.categories = rec.categoryIds ? rec.categoryIds.map(id => this.categories.find(id)) : [];
+
+        article._id = thePhysicalRecord._id;
+        article.owner = this.users.findById(thePhysicalRecord.ownerId);
+        article.title = thePhysicalRecord.title;
+        article.description = thePhysicalRecord.description;
+        article.created = thePhysicalRecord.created;
+        article.status = thePhysicalRecord.status;
+        article.photos = thePhysicalRecord.photos ? thePhysicalRecord.photos.slice() : [];
+        article.categories = thePhysicalRecord.categoryIds ? thePhysicalRecord.categoryIds.map(id => this.categories.findById(id)) : [];
         article.sortCategories();
 
         return article;

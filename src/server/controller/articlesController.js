@@ -29,7 +29,7 @@ async function getArticlesByOwner(req, res) {
 async function getArticleById(req, res) {
     if (useDataCache) {
         const { articleId } = req.params;
-        res.json({ article: dataCache.getArticleById(articleId) || {} });
+        res.json({ article: dataCache.getArticleById(articleId) || null });
     }
     else {
         const { articleId } = req.params;
@@ -37,7 +37,7 @@ async function getArticleById(req, res) {
         if (article) {
             await fetchArticleDetails(article);
         }
-        res.json({article: article || {}});
+        res.json({ article: article || null });
     }
 }
 
@@ -65,16 +65,22 @@ function addCategoriesToArticle(theArticle, theCategories) {
 async function createArticle(req, res) {
     if (useDataCache) {
         const { article } = req.body;
-
-        let preparedArticle = dataCache.prepareArticle(article, req.user);
-        dataCache.saveArticle(preparedArticle).then(
-            article => res.json({ article: article })
-        );
+        await createNewCategories(article);
+        const preparedArticle = dataCache.prepareArticle(article, req.user);
+        dataCache.saveArticle(preparedArticle)
+            .then(article => res.json({ article: article }))
+            .catch(() => res.status(500).json({
+                errors: {
+                    title: 'Unbekannter Server-Fehler',
+                    description: 'Unbekannter Server-Fehler',
+                    categories: 'Unbekannter Server-Fehler'
+                }
+            }));
     }
     else {
         const { article } = req.body;
         article.owner = req.user;
-
+        await createNewCategories(article);
         const result = await articleCreator.create(ArticleCache.toPhysicalRecord(article));
         if (result.success) {
             await fetchArticleDetails(result.article);
@@ -90,17 +96,23 @@ async function updateArticle(req, res) {
     if (useDataCache) {
         const { articleId } = req.params;
         const { article } = req.body;
-
-        let preparedArticle = dataCache.prepareArticle(article, req.user);
-        dataCache.saveArticle(preparedArticle).then(
-            article => res.json({ article: article })
-        );
+        await createNewCategories(article);
+        const preparedArticle = dataCache.prepareArticle(article, req.user);
+        dataCache.saveArticle(preparedArticle)
+            .then(article => res.json({ article: article }))
+            .catch(() => res.status(500).json({
+                errors: {
+                    title: 'Unbekannter Server-Fehler',
+                    description: 'Unbekannter Server-Fehler',
+                    categories: 'Unbekannter Server-Fehler'
+                }
+            }));
     }
     else {
         const { articleId } = req.params;
         const { article } = req.body;
         article.owner = req.user;
-
+        await createNewCategories(article);
         const result = await articleUpdater.update(articleId, ArticleCache.toPhysicalRecord(article));
         if (result.success) {
             await getArticleById(req, res);
@@ -108,6 +120,27 @@ async function updateArticle(req, res) {
         else {
             res.status(result.status).json({ errors: result.errors });
         }
+    }
+}
+
+async function createNewCategories(theArticle) {
+    if (useDataCache) {
+        const existingCategories = theArticle.categories.filter(category => category.hasOwnProperty('_id'));
+        const newCategories = theArticle.categories.filter(category => !category.hasOwnProperty('_id'));
+        const allSaveRequests = newCategories.map(category => {
+            const preparedCategory = dataCache.prepareCategory(category);
+            return dataCache.saveCategory(preparedCategory);
+        });
+        const createdCategories = await Promise.all(allSaveRequests);
+        theArticle.categories = [...existingCategories, ...createdCategories];
+
+    }
+    else {
+        const existingCategories = theArticle.categories.filter(category => category.hasOwnProperty('_id'));
+        const newCategories = theArticle.categories.filter(category => !category.hasOwnProperty('_id'));
+        const allSaveRequests = newCategories.map(category => categoriesStore.createCategory(category));
+        const createdCategories = await Promise.all(allSaveRequests);
+        theArticle.categories = [...existingCategories, ...createdCategories];
     }
 }
 

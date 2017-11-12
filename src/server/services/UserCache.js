@@ -14,11 +14,10 @@ class UserCache {
         let load = function(resolve, reject) {
             console.log('Loading users...');
             db.find({}, (function(err, recs) {
-                this.users = recs;
-                this.users.forEach(user => {
-                    this.passwords.set(user._id, user.password);
-                    delete user.password;
+                recs.forEach(rec => {
+                    this.passwords.set(rec._id, rec.password);
                 });
+                this.users = recs.map(rec => UserCache.toLogicalRecord(rec));
                 console.log('users loaded');
                 resolve(this);
             }).bind(this));
