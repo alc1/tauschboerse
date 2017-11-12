@@ -12,7 +12,11 @@ async function validate(theUserId, theUser) {
         return {
             status: 400,
             errors: {
-                email: 'Benutzer-ID ungültig'
+                email: 'Benutzer-ID ungültig',
+                name: 'Benutzer-ID ungültig',
+                currentPassword: 'Benutzer-ID ungültig',
+                newPassword: 'Benutzer-ID ungültig',
+                passwordConfirmation: 'Benutzer-ID ungültig'
             }
         };
     }

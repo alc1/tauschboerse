@@ -5,7 +5,9 @@ const categoriesStore = require('../services/categoriesStorage');
 const usersStore = require('../services/usersStorage');
 
 const articleCreator = require('./articleCreator');
+const articleCreatorValidator = require('./articleCreatorValidator');
 const articleUpdater = require('./articleUpdater');
+const articleUpdaterValidator = require('./articleUpdaterValidator');
 
 const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
@@ -41,41 +43,26 @@ async function getArticleById(req, res) {
     }
 }
 
-async function fetchArticleDetails(theArticle) {
-    const user = await usersStore.getUserById(theArticle.ownerId);
-    addUserDetailsToArticle(theArticle, user);
-
-    const categories = await categoriesStore.getCategories(theArticle.categoryIds);
-    addCategoriesToArticle(theArticle, categories);
-}
-
-function addUserDetailsToArticle(theArticle, theUser) {
-    delete theArticle.ownerId;
-    theArticle.owner = {
-        _id: theUser._id,
-        name : theUser.name
-    };
-}
-
-function addCategoriesToArticle(theArticle, theCategories) {
-    delete theArticle.categoryIds;
-    theArticle.categories = theCategories;
-}
-
 async function createArticle(req, res) {
     if (useDataCache) {
         const { article } = req.body;
-        await createNewCategories(article);
-        const preparedArticle = dataCache.prepareArticle(article, req.user);
-        dataCache.saveArticle(preparedArticle)
-            .then(article => res.json({ article: article }))
-            .catch(() => res.status(500).json({
-                errors: {
-                    title: 'Unbekannter Server-Fehler',
-                    description: 'Unbekannter Server-Fehler',
-                    categories: 'Unbekannter Server-Fehler'
-                }
-            }));
+        const validation = await articleCreatorValidator.validate(article);
+        if (validation.success) {
+            await createNewCategories(article);
+            const preparedArticle = dataCache.prepareArticle(article, req.user);
+            dataCache.saveArticle(preparedArticle)
+                .then(article => res.json({article: article}))
+                .catch(() => res.status(500).json({
+                    errors: {
+                        title: 'Unbekannter Server-Fehler',
+                        description: 'Unbekannter Server-Fehler',
+                        categories: 'Unbekannter Server-Fehler'
+                    }
+                }));
+        }
+        else {
+            res.status(validation.status).json({ errors: validation.errors });
+        }
     }
     else {
         const { article } = req.body;
@@ -96,17 +83,23 @@ async function updateArticle(req, res) {
     if (useDataCache) {
         const { articleId } = req.params;
         const { article } = req.body;
-        await createNewCategories(article);
-        const preparedArticle = dataCache.prepareArticle(article, req.user);
-        dataCache.saveArticle(preparedArticle)
-            .then(article => res.json({ article: article }))
-            .catch(() => res.status(500).json({
-                errors: {
-                    title: 'Unbekannter Server-Fehler',
-                    description: 'Unbekannter Server-Fehler',
-                    categories: 'Unbekannter Server-Fehler'
-                }
-            }));
+        const validation = await articleUpdaterValidator.validate(articleId, article);
+        if (validation.success) {
+            await createNewCategories(article);
+            const preparedArticle = dataCache.prepareArticle(article, req.user);
+            dataCache.saveArticle(preparedArticle)
+                .then(article => res.json({ article: article }))
+                .catch(() => res.status(500).json({
+                    errors: {
+                        title: 'Unbekannter Server-Fehler',
+                        description: 'Unbekannter Server-Fehler',
+                        categories: 'Unbekannter Server-Fehler'
+                    }
+                }));
+        }
+        else {
+            res.status(validation.status).json({ errors: validation.errors });
+        }
     }
     else {
         const { articleId } = req.params;
@@ -142,6 +135,27 @@ async function createNewCategories(theArticle) {
         const createdCategories = await Promise.all(allSaveRequests);
         theArticle.categories = [...existingCategories, ...createdCategories];
     }
+}
+
+async function fetchArticleDetails(theArticle) {
+    const user = await usersStore.getUserById(theArticle.ownerId);
+    addUserDetailsToArticle(theArticle, user);
+
+    const categories = await categoriesStore.getCategories(theArticle.categoryIds);
+    addCategoriesToArticle(theArticle, categories);
+}
+
+function addUserDetailsToArticle(theArticle, theUser) {
+    delete theArticle.ownerId;
+    theArticle.owner = {
+        _id: theUser._id,
+        name : theUser.name
+    };
+}
+
+function addCategoriesToArticle(theArticle, theCategories) {
+    delete theArticle.categoryIds;
+    theArticle.categories = theCategories;
 }
 
 module.exports = {
