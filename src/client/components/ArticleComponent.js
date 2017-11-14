@@ -21,11 +21,12 @@ class ArticleComponent extends React.Component {
     render() {
         const { article, actions } = this.props;
         const { title, description, owner, categories, created } = article;
+        const name = (owner) ? owner.name : '';
         const categoryNames = (categories) ? categories.map(category => category.name).join(', ') : '';
         return (
             <div className="article-card">
                 <Card>
-                    <CardHeader title={`Von: ${owner.name}`} subtitle={`Erstellt am: ${moment(created).format('DD.MM.YYYY HH:mm:ss')}`} avatar={<Avatar>{owner.name.substr(0, 1)}</Avatar>}/>
+                    <CardHeader title={`Von: ${name}`} subtitle={`Erstellt am: ${moment(created).format('DD.MM.YYYY HH:mm:ss')}`} avatar={<Avatar>{name.substr(0, 1)}</Avatar>}/>
                     <CardMedia overlay={<CardTitle title={title} subtitle={categoryNames} />}>
                         <img src={NoPicture} alt=""/>
                     </CardMedia>

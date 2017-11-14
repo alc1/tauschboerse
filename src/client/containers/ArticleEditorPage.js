@@ -52,7 +52,7 @@ class ArticleEditorPage extends React.Component {
                         loading: false
                     });
                 })
-                .catch((err) => this.setState({loading: false}));
+                .catch((err) => this.setState({ loading: false }));
         }
         else {
             this.setState({ loading: false });
@@ -87,7 +87,7 @@ class ArticleEditorPage extends React.Component {
         const { user, article } = this.props;
         const { title, description, categories } = this.state;
         const { articleId } = this.props.match.params;
-        let articleToSave = new Article({ ...article, title, description, categories });
+        let articleToSave = new Article({ title, description, categories });
         const validation = articleDetailsValidator.validate(articleToSave);
         if (validation.isValid) {
             let articleRequest;
@@ -100,10 +100,12 @@ class ArticleEditorPage extends React.Component {
             }
             articleRequest.then((res) => {
                 this.props.history.replace(`/article/${res.article._id}`);
-            }).catch((err) => this.setState({
-                errors: err.response.data.errors,
-                loading: false
-            }));
+            }).catch((err) => {
+                this.setState({
+                    errors: err.response.data.errors,
+                    loading: false
+                });
+            });
         }
         else {
             this.setState({
