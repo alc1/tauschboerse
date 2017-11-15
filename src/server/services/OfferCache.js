@@ -125,6 +125,7 @@ class OfferCache {
         rec.transactionId = offer.transaction._id;
         rec.senderId = offer.sneder._id;
         rec.receiverId = offer.reveiver._id;
+        rec.articleIds = offer.articles.map(article => article._id);
 
         return rec;
     }
@@ -136,7 +137,8 @@ class OfferCache {
         offer.transaction = this.transactions.find(rec.transactionId);
         offer.sender = this.users.find(rec.senderId);
         offer.receiver = this.users.find(rec.receiverId);
-
+        offer.articles = rec.articleIds ? rec.articleIds.map(id => this.articles.findById(id)) : [];
+        
         return offer;
     }
 
