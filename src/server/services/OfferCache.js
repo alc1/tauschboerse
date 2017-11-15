@@ -28,7 +28,7 @@ class OfferCache {
     }
 
     clear() {
-        let clearOp = function(resolve, reject) {
+        let clearOp = (function(resolve, reject) {
             console.log('Clearing offers...');
             this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
@@ -40,18 +40,18 @@ class OfferCache {
                     resolve(numRemoved);
                 }
             }).bind(this));
-        };
+        }).bind(this);
 
-        let compactOp = function(resolve, reject) {
+        let compactOp = (function(resolve, reject) {
             console.log('Compacting offers datafile...');
             this.db.on('compaction.done', () => {
                 console.log('Offers datafile compacted');
                 resolve(null);
             });
             this.db.persistence.compactDatafile();
-        };
+        }).bind(this);
 
-        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
+        return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
     save(offer) {
@@ -63,7 +63,7 @@ class OfferCache {
         }
 
         if (!rec) {
-            saveOp = (function(resolve, reject) {
+            saveOp = function(resolve, reject) {
                 this.db.insert(OfferCache.toPhysicalRecord(offer), (function(err, newRec) {
                     if (err) {
                         reject(err);
@@ -73,9 +73,9 @@ class OfferCache {
                         resolve(newOffer);
                     }
                 }).bind(this));
-            });
+            };
         } else {
-            saveOp = (function(resolve, reject) {
+            saveOp = function(resolve, reject) {
                 if (rec.update(offer)) {
                     this.db.update({_id: rec._id}, OfferCache.toPhysicalRecord(rec), {}, function(err, newRec) {
                         resolve(rec);
@@ -83,14 +83,14 @@ class OfferCache {
                 } else {
                     resolve(rec);
                 }
-            });
+            };
         }
 
         return new Promise(saveOp.bind(this));
     }
 
     delete(id) {
-        deleteOp = function(resolve, reject) {
+        deleteOp = (function(resolve, reject) {
             let offer = this.find(id);
             if (offer) {
                 this.offers.remove(offer);
@@ -100,9 +100,9 @@ class OfferCache {
             } else {
                 resolve(true);
             }
-        }
+        }).bind(this);
         
-        return new Promise(deleteOp.bind(this));
+        return new Promise(deleteOp);
     }
 
     prepare(obj, user) {

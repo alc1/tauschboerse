@@ -11,20 +11,20 @@ class ArticleCache {
     }
 
     init() {
-        let load = function(resolve, reject) {
+        let load = (function(resolve, reject) {
             console.log('Loading articles...');
             this.db.find({}, (function(err, recs) {
                 this.articles = recs.map(rec => this.toLogicalRecord(rec));
                 console.log('articles loaded');
                 resolve(this);
             }).bind(this));
-        };
+        }).bind(this);
 
-        return new Promise(load.bind(this));
+        return new Promise(load);
     }
 
     clear() {
-        let clearOp = function(resolve, reject) {
+        let clearOp = (function(resolve, reject) {
             console.log('Clearing articles...');
             this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
@@ -36,18 +36,18 @@ class ArticleCache {
                     resolve(this);
                 }
             }).bind(this));
-        };
+        }).bind(this);
 
-        let compactOp = function(resolve, reject) {
+        let compactOp = (function(resolve, reject) {
             console.log('Compacting articles datafile...');
             this.db.on('compaction.done', () => {
                 console.log('Articles datafile compacted');
                 resolve(null);
             });
             this.db.persistence.compactDatafile();
-        };
+        }).bind(this);
 
-        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
+        return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
     save(theArticle) {
@@ -61,7 +61,7 @@ class ArticleCache {
 
         if (!foundLogicalArticle) {
             // if article wasn't found insert it
-            saveOp = function(resolve, reject) {
+            saveOp = (function(resolve, reject) {
                 this.db.insert(ArticleCache.toPhysicalRecord(theArticle), (function(err, newRec){
                     if (err) {
                         reject(err);
@@ -72,10 +72,10 @@ class ArticleCache {
                         resolve(newArticle);
                     }
                 }).bind(this))
-            };
+            }).bind(this);
         } else {
             // article was found - update it
-            saveOp = function(resolve, reject) {
+            saveOp = (function(resolve, reject) {
                 if (foundLogicalArticle.update(theArticle)) {
                     this.db.update({ _id: foundLogicalArticle._id }, ArticleCache.toPhysicalRecord(foundLogicalArticle), {}, function(err, numAffected) {
                         err ? reject(err) : resolve(foundLogicalArticle);
@@ -83,10 +83,10 @@ class ArticleCache {
                 } else {
                     resolve(foundLogicalArticle);
                 }
-            };
+            }).bind(this);
         }
 
-        return new Promise(saveOp.bind(this));
+        return new Promise(saveOp);
     }
 
     findAll() {

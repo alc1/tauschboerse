@@ -9,7 +9,7 @@ class TransactionCache {
     }
 
     init() {
-        let load = function(resolve, reject) {
+        let load = (function(resolve, reject) {
             console.log('Loading transactions...');
             this.db.find({}, (function(err, recs) {
                 if (err) {
@@ -21,13 +21,13 @@ class TransactionCache {
                     resolve(recs);
                 }
             }).bind(this));
-        };
+        }).bind(this);
         
-        return new Promise(load.bind(this));
+        return new Promise(load);
     }
 
     clear() {
-        let clearOp = function(resolve, reject) {
+        let clearOp = (function(resolve, reject) {
             console.log('Clearing transactions...');
             this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
@@ -39,18 +39,18 @@ class TransactionCache {
                     resolve(numRemoved);
                 }
             }).bind(this));
-        };
+        }).bind(this);
 
-        let compactOp = function(resolve, reject) {
+        let compactOp = (function(resolve, reject) {
             console.log('Compacting transactions datafile...');
             this.db.on('compaction.done', () => {
                 console.log('Transactions datafile compacted');
                 resolve(null);
             });
             this.db.persistence.compactDatafile();
-        };
+        }).bind(this);
 
-        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
+        return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
     save(transaction) {
@@ -72,7 +72,7 @@ class TransactionCache {
                         resolve(newTransaction);
                     }
                 }).bind(this));
-            });
+            }).bind(this);
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(transaction)) {
@@ -82,14 +82,14 @@ class TransactionCache {
                 } else {
                     resolve(rec);
                 }
-            });
+            }).bind(this);
         }
 
-        return new Promise(saveOp.bind(this));
+        return new Promise(saveOp);
     }
 
     delete(id) {
-        deleteOp = function(resolve, reject) {
+        deleteOp = (function(resolve, reject) {
             let transaction = this.find(id);
             if (transaction) {
                 this.transactions.remove(transaction);
@@ -99,9 +99,9 @@ class TransactionCache {
             } else {
                 resolve(true);
             }
-        }
+        }).bind(this);
         
-        return new Promise(deleteOp.bind(this));
+        return new Promise(deleteOp);
     }
 
     prepare(obj, user) {

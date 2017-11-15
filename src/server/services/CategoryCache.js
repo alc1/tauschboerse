@@ -9,7 +9,7 @@ class CategoryCache {
     }
 
     init() {
-        let load = function(resolve, reject) {
+        let load = (function(resolve, reject) {
             console.log('Loading categories...');
             this.db.find({}, (function(err, recs) {
                 if (err) {
@@ -21,13 +21,13 @@ class CategoryCache {
                     resolve(this);
                 }
             }).bind(this));
-        };
+        }).bind(this);
                     
-        return new Promise(load.bind(this));
+        return new Promise(load);
     }
 
     clear() {
-        let clearOp = function(resolve, reject) {
+        let clearOp = (function(resolve, reject) {
             console.log('Clearing categories...');
             this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
@@ -39,18 +39,18 @@ class CategoryCache {
                     resolve(numRemoved);
                 }
             }).bind(this));
-        };
+        }).bind(this);
 
-        let compactOp = function(resolve, reject) {
+        let compactOp = (function(resolve, reject) {
             console.log('Compacting categories datafile...');
             this.db.once('compaction.done', () => {
                 console.log('Categories datafile compacted');
                 resolve(null);
             });
             this.db.persistence.compactDatafile();
-        };
+        }).bind(this);
 
-        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
+        return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
     save(theCategory) {
@@ -73,7 +73,7 @@ class CategoryCache {
                         resolve(newCategory);
                     }
                 }).bind(this));
-            });
+            }).bind(this);
         } else {
             saveOp = (function(resolve, reject) {
                 if (foundLogicalCategory.update(theCategory)) {
@@ -83,14 +83,14 @@ class CategoryCache {
                 } else {
                     resolve(foundLogicalCategory);
                 }
-            });
+            }).bind(this);
         }
 
-        return new Promise(saveOp.bind(this));
+        return new Promise(saveOp);
     }
 
     deleteById(theCategoryId) {
-        let deleteOp = function(resolve, reject) {
+        let deleteOp = (function(resolve, reject) {
             let category = this.findById(theCategoryId);
             if (category) {
                 this.categories.remove(category);
@@ -100,9 +100,9 @@ class CategoryCache {
             } else {
                 resolve(true);
             }
-        };
+        }).bind(this);
 
-        return new Promise(deleteOp.bind(this));
+        return new Promise(deleteOp);
     }
 
     findById(theCategoryId) {

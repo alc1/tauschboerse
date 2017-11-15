@@ -11,7 +11,7 @@ class UserCache {
     }
 
     init() {
-        let load = function(resolve, reject) {
+        let load = (function(resolve, reject) {
             console.log('Loading users...');
             this.db.find({}, (function(err, recs) {
                 recs.forEach(rec => {
@@ -21,13 +21,13 @@ class UserCache {
                 console.log('users loaded');
                 resolve(this);
             }).bind(this));
-        };
+        }).bind(this);
 
-        return new Promise(load.bind(this));
+        return new Promise(load);
     }
 
     clear() {
-        let clearOp = function(resolve, reject) {
+        let clearOp = (function(resolve, reject) {
             console.log('Clearing users...');
             this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
@@ -40,18 +40,18 @@ class UserCache {
                     resolve(numRemoved);
                 }
             }).bind(this));
-        };
+        }).bind(this);
 
-        let compactOp = function(resolve, reject) {
+        let compactOp = (function(resolve, reject) {
             console.log('Compacting users datafile...');
             this.db.once('compaction.done', () => {
                 console.log('Users datafile compacted');
                 resolve(null);
             });
             this.db.persistence.compactDatafile();
-        };
+        }).bind(this);
 
-        return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
+        return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
     prepare(obj) {
@@ -89,7 +89,7 @@ class UserCache {
                     theUser._id = newUser._id;
                     resolve(newUser);
                 }).bind(this));
-            });
+            }).bind(this);
         } else {
             saveOp = (function(resolve, reject) {
                 if (foundLogicalUser.update(theUser)) {
@@ -107,10 +107,10 @@ class UserCache {
                 } else {
                     resolve(foundLogicalUser);
                 }
-            });
+            }).bind(this);
         }
 
-        return new Promise(saveOp.bind(this));
+        return new Promise(saveOp);
     }
 
     authenticate(theEmail, thePassword) {
