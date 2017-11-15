@@ -8,7 +8,7 @@ import { getUser } from '../selectors/user';
 class HomePage extends React.Component {
 
     static propTypes = {
-        user: PropTypes.object.isRequired
+        user: PropTypes.object
     };
 
     render() {

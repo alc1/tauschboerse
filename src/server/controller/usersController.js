@@ -36,8 +36,8 @@ async function getUserById(req, res) {
 
 async function login(req, res) {
     if (useDataCache) {
-        const { user, credentials } = req.body;
-        const passwordToCheck = (req.isNewUser) ? credentials.newPassword: credentials.currentPassword;
+        const { user } = req.body;
+        const passwordToCheck = (req.isNewUser) ? user.newPassword: user.currentPassword;
         const acceptedUser = dataCache.authenticateUser(user.email, passwordToCheck);
         if (acceptedUser) {
             res.json({ token: createToken(acceptedUser._id, acceptedUser.name, acceptedUser.email, acceptedUser.registration) });
@@ -53,9 +53,9 @@ async function login(req, res) {
         }
     }
     else {
-        const { user, credentials } = req.body;
+        const { user } = req.body;
         const foundUser = await usersStore.getUserByEmail(user.email);
-        const passwordToCheck = (req.isNewUser) ? credentials.newPassword: credentials.currentPassword;
+        const passwordToCheck = (req.isNewUser) ? user.newPassword: user.currentPassword;
         if (foundUser && bcrypt.compareSync(passwordToCheck, foundUser.password)) {
             res.json({ token: createToken(foundUser._id, foundUser.name, foundUser.email, foundUser.registration) });
         }
@@ -73,34 +73,32 @@ async function login(req, res) {
 
 async function createUser(req, res) {
     if (useDataCache) {
-        const { user, credentials } = req.body;
-        const userObject = {
-            _id: user._id,
-            email: user.email,
-            name: user.name,
-            registration: user.registration,
-            currentPassword: credentials.currentPassword,
-            newPassword: credentials.newPassword,
-            passwordConfirmation: credentials.passwordConfirmation
-        };
-
-        const validation = await userCreatorValidator.validate(user, credentials);
+        const { user } = req.body;
+        const validation = await userCreatorValidator.validate(user);
         if (validation.success) {
-            let preparedUser = dataCache.prepareUser(userObject);
-            dataCache.saveUser(preparedUser).then(
-                user => {
+            const preparedUser = dataCache.prepareUser(user);
+            dataCache.saveUser(preparedUser)
+                .then(user => {
                     req.isNewUser = true;
                     return login(req, res);
-                }
-            );
+                })
+                .catch(() => res.status(500).json({
+                    errors: {
+                        email: 'Unbekannter Server-Fehler',
+                        name: 'Unbekannter Server-Fehler',
+                        currentPassword: 'Unbekannter Server-Fehler',
+                        newPassword: 'Unbekannter Server-Fehler',
+                        passwordConfirmation: 'Unbekannter Server-Fehler'
+                    }
+                }));
         }
         else {
             res.status(validation.status).json({ errors: validation.errors });
         }
     }
     else {
-        const { user, credentials } = req.body;
-        const result = await userCreator.create(user, credentials);
+        const { user } = req.body;
+        const result = await userCreator.create(user);
         if (result.success) {
             req.isNewUser = true;
             await login(req, res);
@@ -114,23 +112,21 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
     if (useDataCache) {
         const { userId } = req.params;
-        const { user, credentials } = req.body;
-        const userObject = {
-            _id: user._id,
-            email: user.email,
-            name: user.name,
-            registration: user.registration,
-            currentPassword: credentials.currentPassword,
-            newPassword: credentials.newPassword,
-            passwordConfirmation: credentials.passwordConfirmation
-        };
-
-        const validation = await userUpdaterValidator.validate(userId, user, credentials);
+        const { user } = req.body;
+        const validation = await userUpdaterValidator.validate(userId, user);
         if (validation.success) {
-            let preparedUser = dataCache.prepareUser(userObject);
-            dataCache.saveUser(preparedUser).then(
-                user => res.json({ token: createToken(user._id, user.name, user.email, user.registration) })
-            );
+            const preparedUser = dataCache.prepareUser(user);
+            dataCache.saveUser(preparedUser)
+                .then(user => res.json({ token: createToken(user._id, user.name, user.email, user.registration) }))
+                .catch(() => res.status(500).json({
+                    errors: {
+                        email: 'Unbekannter Server-Fehler',
+                        name: 'Unbekannter Server-Fehler',
+                        currentPassword: 'Unbekannter Server-Fehler',
+                        newPassword: 'Unbekannter Server-Fehler',
+                        passwordConfirmation: 'Unbekannter Server-Fehler'
+                    }
+                }));
         }
         else {
             res.status(validation.status).json({ errors: validation.errors });
@@ -138,8 +134,8 @@ async function updateUser(req, res) {
     }
     else {
         const { userId } = req.params;
-        const { user, credentials } = req.body;
-        const result = await userUpdater.update(userId, user, credentials);
+        const { user } = req.body;
+        const result = await userUpdater.update(userId, user);
         if (result.success) {
             res.json({ token: createToken(result.user.userId, result.user.name, result.user.email, result.user.registration) });
         }
@@ -150,7 +146,7 @@ async function updateUser(req, res) {
 }
 
 function createToken(theUserId, theName, theEmail, theRegistrationDate) {
-    console.log(`Create token for user ID [${theUserId}], name [${theName}], email [${theEmail}], email [${theRegistrationDate}]`);
+    console.log(`Create token for user ID [${theUserId}], name [${theName}], email [${theEmail}], registration [${theRegistrationDate}]`);
     return jwt.sign({
         _id: theUserId,
         name: theName,

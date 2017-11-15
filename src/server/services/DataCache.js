@@ -46,8 +46,8 @@ class DataCache {
      * Article
      */
 
-    prepareArticle(obj, user) {
-        return this.articles.prepare(obj, user);
+    prepareArticle(obj, theOwner) {
+        return this.articles.prepare(obj, theOwner);
     }
 
     getAllArticles() {

@@ -1,16 +1,31 @@
 'use strict';
 
+const categoriesStore = require('../services/categoriesStorage');
+
+const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
 
-function getAllCategories(req, res) {
-    const categories = dataCache.getCategories();
-    res.json({ categories : categories || [] });
+async function getAllCategories(req, res) {
+    if (useDataCache) {
+        const categories = dataCache.getCategories();
+        res.json({ categories : categories || [] });
+    }
+    else {
+        const categories = await categoriesStore.getAllCategories();
+        res.json({ categories : categories || [] });
+    }
 }
 
-function getCategory(req, res) {
+async function getCategory(req, res) {
     const { categoryId } = req.params;
-    const category = dataCache.getCategory(categoryId);
-    res.json({ category : category || null });
+    if (useDataCache) {
+        const category = dataCache.getCategory(categoryId);
+        res.json({ category : category || null });
+    }
+    else {
+        const category = await categoriesStore.getCategory(categoryId);
+        res.json({ category : category || null });
+    }
 }
 
 function addCategory(req, res) {

@@ -14,10 +14,10 @@ class UserCache {
         let load = function(resolve, reject) {
             console.log('Loading users...');
             db.find({}, (function(err, recs) {
-                this.users = recs;
-                this.users.forEach(user => {
-                    delete user.password;
+                recs.forEach(rec => {
+                    this.passwords.set(rec._id, rec.password);
                 });
+                this.users = recs.map(rec => UserCache.toLogicalRecord(rec));
                 console.log('users loaded');
                 resolve(this);
             }).bind(this));
@@ -36,6 +36,7 @@ class UserCache {
                 } else {
                     console.log('Users have been cleared');
                     this.users = [];
+                    this.passwords = new Map();
                     resolve(numRemoved);
                 }
             }).bind(this));
@@ -73,42 +74,42 @@ class UserCache {
         return this.users.find(user => user.email === theEmail);
     }
 
-    save(user) {
-        let rec;
+    save(theUser) {
+        let foundLogicalUser;
         let saveOp;
 
-        if (user.hasOwnProperty('_id')) {
-            rec = this.findById(user._id);
+        if (theUser.hasOwnProperty('_id')) {
+            foundLogicalUser = this.findById(theUser._id);
         }
 
-        if (!rec) {
+        if (!foundLogicalUser) {
             saveOp = (function(resolve, reject) {
-                let userToSave = UserCache.toPhysicalRecord(user);
-                userToSave.password = bcrypt.hashSync(user.newPassword, 10);
+                let userToSave = UserCache.toPhysicalRecord(theUser);
+                userToSave.password = bcrypt.hashSync(theUser.newPassword, 10);
                 db.insert(userToSave, (function(err, savedUser) {
-                    const newUser = this.toLogicalRecord(savedUser);
+                    const newUser = UserCache.toLogicalRecord(savedUser);
                     this.users.push(newUser);
                     this.passwords.set(savedUser._id, savedUser.password);
-                    user._id = newUser._id;
+                    theUser._id = newUser._id;
                     resolve(newUser);
                 }).bind(this));
             });
         } else {
             saveOp = (function(resolve, reject) {
-                if (rec.update(user)) {
-                    let userToSave = UserCache.toPhysicalRecord(rec);
-                    userToSave.password = (user.newPassword) ? bcrypt.hashSync(user.newPassword, 10) : this.getPasswordByUserId(rec._id);
-                    db.update({ _id: rec._id }, userToSave, {}, (function(err, numAffected) {
+                if (foundLogicalUser.update(theUser)) {
+                    let userToSave = UserCache.toPhysicalRecord(foundLogicalUser);
+                    userToSave.password = (theUser.newPassword) ? bcrypt.hashSync(theUser.newPassword, 10) : this.getPasswordByUserId(foundLogicalUser._id);
+                    db.update({ _id: foundLogicalUser._id }, userToSave, {}, (function(err, numAffected) {
                         if (err) {
                             reject(err);
                         }
                         else {
-                            this.passwords.set(rec._id, userToSave.password);
-                            resolve(rec);
+                            this.passwords.set(foundLogicalUser._id, userToSave.password);
+                            resolve(foundLogicalUser);
                         }
                     }).bind(this));
                 } else {
-                    resolve(rec);
+                    resolve(foundLogicalUser);
                 }
             });
         }
@@ -131,29 +132,28 @@ class UserCache {
         return this.passwords.get(theUserId);
     }
 
-    static toPhysicalRecord(user) {
-        let rec = {};
+    static toPhysicalRecord(theUser) {
+        let physicalRecord = {};
 
-        if (user.hasOwnProperty('_id')) {
-            rec._id = user._id;
+        if (theUser.hasOwnProperty('_id')) {
+            physicalRecord._id = theUser._id;
         }
 
-        rec.email = user.email;
-        rec.name = user.name;
-        rec.registration = new Date(user.registration);
+        physicalRecord.email = theUser.email;
+        physicalRecord.name = theUser.name;
+        physicalRecord.registration = new Date(theUser.registration);
 
-        return rec;
+        return physicalRecord;
     }
 
-    toLogicalRecord(rec) {
+    static toLogicalRecord(thePhysicalRecord) {
         let user = new User(null);
 
-        user._id = rec._id;
-        user.email = rec.email;
-        user.name = rec.name;
-        user.registration = rec.registration;
+        user._id = thePhysicalRecord._id;
+        user.email = thePhysicalRecord.email;
+        user.name = thePhysicalRecord.name;
+        user.registration = thePhysicalRecord.registration;
 
-        delete user.password;
         delete user.currentPassword;
         delete user.newPassword;
         delete user.passwordConfirmation;

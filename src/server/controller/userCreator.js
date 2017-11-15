@@ -4,10 +4,10 @@ const userCreatorValidator = require('./userCreatorValidator');
 
 const usersStore = require('../services/usersStorage');
 
-async function create(theUser, theCredentials) {
-    const validation = await userCreatorValidator.validate(theUser, theCredentials);
+async function create(theUser) {
+    const validation = await userCreatorValidator.validate(theUser);
     if (validation.success) {
-        const createdUser = await usersStore.createUser(theUser, theCredentials);
+        const createdUser = await usersStore.createUser(theUser);
         if (!createdUser) {
             const error = 'Benutzer konnte nicht erstellt werden';
             return {

@@ -13,7 +13,6 @@ import { createUser } from '../actions/user';
 import registrationValidator from '../../shared/validations/registration';
 
 import User from '../../shared/businessobjects/User';
-import Credentials from '../../shared/businessobjects/Credentials';
 
 class RegistrationPage extends React.Component {
 
@@ -39,11 +38,10 @@ class RegistrationPage extends React.Component {
         theEvent.preventDefault();
         this.setState({ loading: true });
         const { email, name, newPassword, passwordConfirmation } = this.state;
-        const user = new User({ email, name });
-        const credentials = new Credentials({ newPassword, passwordConfirmation });
-        const validation = registrationValidator.validate(user, credentials);
+        const user = new User({ email, name, newPassword, passwordConfirmation });
+        const validation = registrationValidator.validate(user);
         if (validation.isValid) {
-            this.props.createUser(user, credentials)
+            this.props.createUser(user)
                 .then(res => {
                     this.props.history.replace('/');
                 })

@@ -33,38 +33,21 @@ class Article {
     }
 
     update(obj) {
-        utils.updateValue(this, 'title', obj);
-        utils.updateValue(this, 'description', obj);
-        utils.updateValue(this, 'categories', obj);
-        utils.updateValue(this, 'photos', obj);
-        utils.updateValue(this, 'owner', obj);
-        utils.updateValue(this, 'created', obj);
-        utils.updateValue(this, 'status', obj);
-        return true;
+        let modified = false;
 
-        // TODO:
-        // This pattern does not work since as soon as a property has been updated,
-        // the following properties will not be updated because 'modified' is already true
-        // and the rest of the will not be executed.
-        /*let modified = false;
+        modified = utils.updateValue(this, 'title', obj) || modified;
+        modified = utils.updateValue(this, 'description', obj) || modified;
+        modified = utils.updateValue(this, 'categories', obj) || modified;
+        modified = utils.updateValue(this, 'photos', obj) || modified;
+        modified = utils.updateValue(this, 'owner', obj) || modified;
+        modified = utils.updateValue(this, 'created', obj) || modified;
+        modified = utils.updateValue(this, 'status', obj) || modified;
 
-        modified = modified || utils.updateValue(this, 'title', obj);
-        modified = modified || utils.updateValue(this, 'description', obj);
-        modified = modified || utils.updateValue(this, 'categories', obj);
-        modified = modified || utils.updateValue(this, 'photos', obj);
-        modified = modified || utils.updateValue(this, 'owner', obj);
-        modified = modified || utils.updateValue(this, 'created', obj);
-        modified = modified || utils.updateValue(this, 'status', obj);
-
-        return modified;*/
-    }
-
-    canSave() {
-        return (this.title != null);
+        return modified;
     }
 
     sortCategories() {
-        this.categories.sort((a, b) => a._id.localeCompare(b._id));
+        this.categories.sort((category1, category2) => category1.name.localeCompare(category2.name));
     }
 }
 

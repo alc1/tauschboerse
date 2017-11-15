@@ -5,17 +5,17 @@ class User {
         if (obj) {
             utils.setValue(this, 'email', obj, null);
             utils.setValue(this, 'name', obj, null);
+            utils.setValue(this, 'registration', obj, new Date());
             utils.setValue(this, 'currentPassword', obj, null);
             utils.setValue(this, 'newPassword', obj, null);
             utils.setValue(this, 'passwordConfirmation', obj, null);
-            utils.setValue(this, 'registration', obj, new Date());
         } else {
             this.email = null;
             this.name = null;
+            this.registration = new Date();
             this.currentPassword = null;
             this.newPassword = null;
             this.passwordConfirmation = null;
-            this.registration = new Date();
         }
     }
 
@@ -27,10 +27,6 @@ class User {
         modified = utils.updateValue(this, 'registration', obj, null) || modified;
 
         return modified;
-    }
-
-    canSave() {
-        return (this.email != null) && (this.name != null);
     }
 }
 

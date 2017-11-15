@@ -44,11 +44,11 @@ function getUserByEmail(theEmail) {
     });
 }
 
-function createUser(theUser, theCredentials) {
+function createUser(theUser) {
     const user = {
         email: theUser.email,
         name: theUser.name,
-        password: bcrypt.hashSync(theCredentials.newPassword, 10),
+        password: bcrypt.hashSync(theUser.newPassword, 10),
         registration: new Date()
     };
     return new Promise((resolve, reject) => {
