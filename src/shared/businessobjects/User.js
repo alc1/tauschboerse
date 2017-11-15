@@ -9,6 +9,8 @@ class User {
             utils.setValue(this, 'currentPassword', obj, null);
             utils.setValue(this, 'newPassword', obj, null);
             utils.setValue(this, 'passwordConfirmation', obj, null);
+
+            utils.transferId(obj, this);
         } else {
             this.email = null;
             this.name = null;

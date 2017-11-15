@@ -5,6 +5,8 @@ class Transaction {
         if (obj) {
             utils.setValue(this, 'user1', obj, null);
             utils.setValue(this, 'user2', obj, null);
+
+            utils.transferId(obj, this);
         } else {
             this.user1 = null;
             this.user2 = null;

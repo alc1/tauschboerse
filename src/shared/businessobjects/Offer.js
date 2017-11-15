@@ -7,6 +7,8 @@ class Offer {
             utils.setValue(this, 'sender', obj, null);
             utils.setValue(this, 'receiver', obj, null);
             utils.setValue(this, 'articles', obj, []);
+
+            utils.transferId(obj, this);
         } else {
             this.transaction = null;
             this.sender = null;

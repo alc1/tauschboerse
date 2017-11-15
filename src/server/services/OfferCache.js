@@ -106,12 +106,7 @@ class OfferCache {
     }
 
     prepare(obj, user) {
-        let offer = new Offer(obj);
-        if (obj.hasOwnProperty('_id')) {
-            offer._id = obj._id;
-        }
-
-        return offer;
+        return new Offer(obj);
     }
 
     static toPhysicalRecord(offer) {

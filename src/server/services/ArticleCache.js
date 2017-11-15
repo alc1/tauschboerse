@@ -103,9 +103,6 @@ class ArticleCache {
 
     prepare(obj, theOwner) {
         let article = new Article(obj);
-        if (obj.hasOwnProperty('_id')) {
-            article._id = obj._id;
-        }
 
         // each article must have an owner
         if (!article.owner) {

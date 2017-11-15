@@ -49,8 +49,17 @@ function updateValue(obj, propertyName, valueObj) {
     return modified;
 }
 
+function transferId(source, target) {
+    if (source) {
+        if (source.hasOwnProperty('_id')) {
+            target._id = source._id;
+        }
+    }
+}
+
 module.exports = {
     getValue,
     setValue,
-    updateValue
+    updateValue,
+    transferId
 };

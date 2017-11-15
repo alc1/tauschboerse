@@ -21,6 +21,8 @@ class Article {
             utils.setValue(this, 'owner', obj, null);
             utils.setValue(this, 'created', obj, new Date());
             utils.setValue(this, 'status', obj, STATUS_FREE);
+
+            utils.transferId(obj, this);
         } else {
             this.title = null;
             this.description = null;

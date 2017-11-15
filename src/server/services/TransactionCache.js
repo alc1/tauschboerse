@@ -105,12 +105,7 @@ class TransactionCache {
     }
 
     prepare(obj, user) {
-        let transaction = new Transaction(obj);
-        if (obj.hasOwnProperty('_id')) {
-            transaction._id = obj._id;
-        }
-
-        return transaction;
+        return new Transaction(obj);
     }
 
     static toPhysicalRecord(transaction) {

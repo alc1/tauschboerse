@@ -55,11 +55,7 @@ class UserCache {
     }
 
     prepare(obj) {
-        let user = new User(obj);
-        if (obj.hasOwnProperty('_id')) {
-            user._id = obj._id;
-        }
-        return user;
+        return new User(obj);
     }
 
     findAll() {

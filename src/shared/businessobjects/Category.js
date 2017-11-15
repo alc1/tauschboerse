@@ -4,6 +4,7 @@ class Category {
     constructor(obj) {
         if (obj) {
             utils.setValue(this, 'name', obj, null);
+            utils.transferId(obj, this);
         } else {
             this.name = null;
         }
