@@ -1,17 +1,17 @@
 'use strict';
 
 const Category = require('../../shared/businessobjects/Category');
-const db = require('./dataFiles').dbCategories;
 
 class CategoryCache {
-    constructor() {
+    constructor(db) {
+        this.db = db;
         this.categories = [];
     }
 
     init() {
         let load = function(resolve, reject) {
             console.log('Loading categories...');
-            db.find({}, (function(err, recs) {
+            this.db.find({}, (function(err, recs) {
                 if (err) {
                     console.log('error loading categories');
                     reject(err);
@@ -29,7 +29,7 @@ class CategoryCache {
     clear() {
         let clearOp = function(resolve, reject) {
             console.log('Clearing categories...');
-            db.remove({}, { multi: true }, (function(err, numRemoved) {
+            this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
                     console.log('Error clearing categories: ' + err);
                     reject(err);
@@ -43,11 +43,11 @@ class CategoryCache {
 
         let compactOp = function(resolve, reject) {
             console.log('Compacting categories datafile...');
-            db.once('compaction.done', () => {
+            this.db.once('compaction.done', () => {
                 console.log('Categories datafile compacted');
                 resolve(null);
             });
-            db.persistence.compactDatafile();
+            this.db.persistence.compactDatafile();
         };
 
         return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
@@ -63,7 +63,7 @@ class CategoryCache {
 
         if (!foundLogicalCategory) {
             saveOp = (function(resolve, reject) {
-                db.insert(CategoryCache.toPhysicalRecord(theCategory), (function(err, newRec) {
+                this.db.insert(CategoryCache.toPhysicalRecord(theCategory), (function(err, newRec) {
                     if (err) {
                         reject(err);
                     } else {
@@ -77,7 +77,7 @@ class CategoryCache {
         } else {
             saveOp = (function(resolve, reject) {
                 if (foundLogicalCategory.update(theCategory)) {
-                    db.update({_id: foundLogicalCategory._id}, CategoryCache.toPhysicalRecord(foundLogicalCategory), {}, function(err, newRec) {
+                    this.db.update({_id: foundLogicalCategory._id}, CategoryCache.toPhysicalRecord(foundLogicalCategory), {}, function(err, newRec) {
                         resolve(foundLogicalCategory);
                     });
                 } else {
@@ -94,7 +94,7 @@ class CategoryCache {
             let category = this.findById(theCategoryId);
             if (category) {
                 this.categories.remove(category);
-                db.remove({ _id: category._id }, function(err, numRemoved) {
+                this.db.remove({ _id: category._id }, function(err, numRemoved) {
                     err ? reject(err) : resolve(true);
                 });
             } else {

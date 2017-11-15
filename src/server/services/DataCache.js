@@ -6,16 +6,17 @@ const OfferCache = require('./OfferCache').OfferCache;
 const TransactionCache = require('./TransactionCache').TransactionCache;
 const UserCache = require('./UserCache').UserCache;
 
+const db = require('./dataFiles');
 const resetData = require('./initData').resetData;
 
 class DataCache {
 
     constructor() {
-        this.users = new UserCache();
-        this.categories = new CategoryCache();
-        this.articles = new ArticleCache(this.users, this.categories);
-        this.transactions = new TransactionCache(this.users);
-        this.offers = new OfferCache(this.transactions, this.articles, this.users);
+        this.users = new UserCache(db.dbUsers);
+        this.categories = new CategoryCache(db.dbCategories);
+        this.articles = new ArticleCache(db.dbArticles, this.users, this.categories);
+        this.transactions = new TransactionCache(db.dbTransactions, this.users);
+        this.offers = new OfferCache(db.dbOffers, this.transactions, this.articles, this.users);
     }
 
     init() {

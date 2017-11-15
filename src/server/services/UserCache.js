@@ -2,10 +2,10 @@
 
 const User = require('../../shared/businessobjects/User');
 const bcrypt = require('bcrypt');
-const db = require('./dataFiles').dbUsers;
 
 class UserCache {
-    constructor() {
+    constructor(db) {
+        this.db = db;
         this.users = [];
         this.passwords = new Map();
     }
@@ -13,7 +13,7 @@ class UserCache {
     init() {
         let load = function(resolve, reject) {
             console.log('Loading users...');
-            db.find({}, (function(err, recs) {
+            this.db.find({}, (function(err, recs) {
                 recs.forEach(rec => {
                     this.passwords.set(rec._id, rec.password);
                 });
@@ -29,7 +29,7 @@ class UserCache {
     clear() {
         let clearOp = function(resolve, reject) {
             console.log('Clearing users...');
-            db.remove({}, { multi: true }, (function(err, numRemoved) {
+            this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
                     console.log('Error clearing users: ' + err);
                     reject(err);
@@ -44,11 +44,11 @@ class UserCache {
 
         let compactOp = function(resolve, reject) {
             console.log('Compacting users datafile...');
-            db.once('compaction.done', () => {
+            this.db.once('compaction.done', () => {
                 console.log('Users datafile compacted');
                 resolve(null);
             });
-            db.persistence.compactDatafile();
+            this.db.persistence.compactDatafile();
         };
 
         return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
@@ -86,7 +86,7 @@ class UserCache {
             saveOp = (function(resolve, reject) {
                 let userToSave = UserCache.toPhysicalRecord(theUser);
                 userToSave.password = bcrypt.hashSync(theUser.newPassword, 10);
-                db.insert(userToSave, (function(err, savedUser) {
+                this.db.insert(userToSave, (function(err, savedUser) {
                     const newUser = UserCache.toLogicalRecord(savedUser);
                     this.users.push(newUser);
                     this.passwords.set(savedUser._id, savedUser.password);
@@ -99,7 +99,7 @@ class UserCache {
                 if (foundLogicalUser.update(theUser)) {
                     let userToSave = UserCache.toPhysicalRecord(foundLogicalUser);
                     userToSave.password = (theUser.newPassword) ? bcrypt.hashSync(theUser.newPassword, 10) : this.getPasswordByUserId(foundLogicalUser._id);
-                    db.update({ _id: foundLogicalUser._id }, userToSave, {}, (function(err, numAffected) {
+                    this.db.update({ _id: foundLogicalUser._id }, userToSave, {}, (function(err, numAffected) {
                         if (err) {
                             reject(err);
                         }

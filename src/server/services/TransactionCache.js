@@ -1,9 +1,8 @@
 'use strict';
 
-const db = require('./dataFiles').dbTransactions;
-
 class TransactionCache {
-    constructor(users) {
+    constructor(db, users) {
+        this.db = db;
         this.users = users;
 
         this.transactions = [];
@@ -12,7 +11,7 @@ class TransactionCache {
     init() {
         let load = function(resolve, reject) {
             console.log('Loading transactions...');
-            db.find({}, (function(err, recs) {
+            this.db.find({}, (function(err, recs) {
                 if (err) {
                     console.log('error loading transactions');
                     reject(err);
@@ -30,7 +29,7 @@ class TransactionCache {
     clear() {
         let clearOp = function(resolve, reject) {
             console.log('Clearing transactions...');
-            db.remove({}, { multi: true }, (function(err, numRemoved) {
+            this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
                     console.log('Error clearing transactions: ' + err);
                     reject(err);
@@ -44,11 +43,11 @@ class TransactionCache {
 
         let compactOp = function(resolve, reject) {
             console.log('Compacting transactions datafile...');
-            db.on('compaction.done', () => {
+            this.db.on('compaction.done', () => {
                 console.log('Transactions datafile compacted');
                 resolve(null);
             });
-            db.persistence.compactDatafile();
+            this.db.persistence.compactDatafile();
         };
 
         return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
@@ -64,7 +63,7 @@ class TransactionCache {
 
         if (!rec) {
             saveOp = (function(resolve, reject) {
-                db.insert(TransactionCache.toPhysicalRecord(transaction), (function(err, newRec) {
+                this.db.insert(TransactionCache.toPhysicalRecord(transaction), (function(err, newRec) {
                     if (err) {
                         reject(err);
                     } else {
@@ -94,7 +93,7 @@ class TransactionCache {
             let transaction = this.find(id);
             if (transaction) {
                 this.transactions.remove(transaction);
-                db.remove({ _id: category._id }, function(err, numRemoved) {
+                this.db.remove({ _id: category._id }, function(err, numRemoved) {
                     err ? reject(err) : resolve(true);
                 });
             } else {

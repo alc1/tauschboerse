@@ -1,9 +1,8 @@
 'use strict';
 
-const db = require('./dataFiles').dbOffers;
-
 class OfferCache {
-    constructor(transactions, articles, users) {
+    constructor(db, transactions, articles, users) {
+        this.db = db;
         this.transactions = transactions;
         this.articles = articles;
         this.users = users;
@@ -14,7 +13,7 @@ class OfferCache {
     init() {
         let load = function(resolve, reject) {
             console.log('Loading offers...');
-            db.find({}, (function(err, recs) {
+            this.db.find({}, (function(err, recs) {
                 if (err) {
                     reject(err);
                 } else {
@@ -31,7 +30,7 @@ class OfferCache {
     clear() {
         let clearOp = function(resolve, reject) {
             console.log('Clearing offers...');
-            db.remove({}, { multi: true }, (function(err, numRemoved) {
+            this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
                     console.log('Error clearing offers: ' + err);
                     reject(err);
@@ -45,11 +44,11 @@ class OfferCache {
 
         let compactOp = function(resolve, reject) {
             console.log('Compacting offers datafile...');
-            db.on('compaction.done', () => {
+            this.db.on('compaction.done', () => {
                 console.log('Offers datafile compacted');
                 resolve(null);
             });
-            db.persistence.compactDatafile();
+            this.db.persistence.compactDatafile();
         };
 
         return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
@@ -65,7 +64,7 @@ class OfferCache {
 
         if (!rec) {
             saveOp = (function(resolve, reject) {
-                db.insert(OfferCache.toPhysicalRecord(offer), (function(err, newRec) {
+                this.db.insert(OfferCache.toPhysicalRecord(offer), (function(err, newRec) {
                     if (err) {
                         reject(err);
                     } else {
@@ -78,7 +77,7 @@ class OfferCache {
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(offer)) {
-                    db.update({_id: rec._id}, OfferCache.toPhysicalRecord(rec), {}, function(err, newRec) {
+                    this.db.update({_id: rec._id}, OfferCache.toPhysicalRecord(rec), {}, function(err, newRec) {
                         resolve(rec);
                     });
                 } else {
@@ -95,7 +94,7 @@ class OfferCache {
             let offer = this.find(id);
             if (offer) {
                 this.offers.remove(offer);
-                db.remove({ _id: offer._id }, function(err, numRemoved) {
+                this.db.remove({ _id: offer._id }, function(err, numRemoved) {
                     err ? reject(err) : resolve(true);
                 });
             } else {

@@ -1,10 +1,10 @@
 'use strict';
 
-const db = require('./dataFiles').dbArticles;
 const Article = require('../../shared/businessobjects/Article');
 
 class ArticleCache {
-    constructor(users, categories) {
+    constructor(db, users, categories) {
+        this.db = db;
         this.users = users;
         this.categories = categories;
         this.articles = [];
@@ -13,7 +13,7 @@ class ArticleCache {
     init() {
         let load = function(resolve, reject) {
             console.log('Loading articles...');
-            db.find({}, (function(err, recs) {
+            this.db.find({}, (function(err, recs) {
                 this.articles = recs.map(rec => this.toLogicalRecord(rec));
                 console.log('articles loaded');
                 resolve(this);
@@ -26,7 +26,7 @@ class ArticleCache {
     clear() {
         let clearOp = function(resolve, reject) {
             console.log('Clearing articles...');
-            db.remove({}, { multi: true }, (function(err, numRemoved) {
+            this.db.remove({}, { multi: true }, (function(err, numRemoved) {
                 if (err) {
                     console.log('Error clearing articles: ' + err);
                     reject(err);
@@ -40,11 +40,11 @@ class ArticleCache {
 
         let compactOp = function(resolve, reject) {
             console.log('Compacting articles datafile...');
-            db.on('compaction.done', () => {
+            this.db.on('compaction.done', () => {
                 console.log('Articles datafile compacted');
                 resolve(null);
             });
-            db.persistence.compactDatafile();
+            this.db.persistence.compactDatafile();
         };
 
         return new Promise(clearOp.bind(this)).then(() => new Promise(compactOp));
@@ -62,7 +62,7 @@ class ArticleCache {
         if (!foundLogicalArticle) {
             // if article wasn't found insert it
             saveOp = function(resolve, reject) {
-                db.insert(ArticleCache.toPhysicalRecord(theArticle), (function(err, newRec){
+                this.db.insert(ArticleCache.toPhysicalRecord(theArticle), (function(err, newRec){
                     if (err) {
                         reject(err);
                     } else {
@@ -77,7 +77,7 @@ class ArticleCache {
             // article was found - update it
             saveOp = function(resolve, reject) {
                 if (foundLogicalArticle.update(theArticle)) {
-                    db.update({ _id: foundLogicalArticle._id }, ArticleCache.toPhysicalRecord(foundLogicalArticle), {}, function(err, numAffected) {
+                    this.db.update({ _id: foundLogicalArticle._id }, ArticleCache.toPhysicalRecord(foundLogicalArticle), {}, function(err, numAffected) {
                         err ? reject(err) : resolve(foundLogicalArticle);
                     });
                 } else {
