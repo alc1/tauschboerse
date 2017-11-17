@@ -9,6 +9,7 @@ import LockOpen from 'material-ui/svg-icons/action/lock-open';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import { login } from '../actions/user';
+import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import LoginForm from '../components/LoginForm';
 
@@ -55,6 +56,7 @@ class LoginPage extends React.Component {
         const { email, currentPassword, errors, loading } = this.state;
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 <LoginForm
                     email={email}

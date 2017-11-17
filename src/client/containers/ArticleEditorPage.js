@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import Save from 'material-ui/svg-icons/content/save';
 
+import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import ArticleForm from '../components/ArticleForm';
 import { loadArticle, createArticle, updateArticle } from '../actions/article';
@@ -84,7 +85,7 @@ class ArticleEditorPage extends React.Component {
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.setState({ loading: true });
-        const { user, article } = this.props;
+        const { user } = this.props;
         const { title, description, categories } = this.state;
         const { articleId } = this.props.match.params;
         let articleToSave = new Article({ title, description, categories });
@@ -124,6 +125,7 @@ class ArticleEditorPage extends React.Component {
         }
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 {isUserPermitted ?
                     <ArticleForm

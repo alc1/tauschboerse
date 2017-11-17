@@ -6,7 +6,8 @@ import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-import LoadingIndicatorComponent from "../components/LoadingIndicatorComponent";
+import ApplicationBar from '../components/ApplicationBar';
+import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import ArticleComponent from '../components/ArticleComponent';
 import { loadUserArticles } from '../actions/user';
 import { getUserArticles, getUser } from '../selectors/user';
@@ -63,6 +64,7 @@ class UserArticlesPage extends React.Component {
         };
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 <div className="articles-list">
                     {articleComponents}

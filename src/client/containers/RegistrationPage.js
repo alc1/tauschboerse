@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
+import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import RegistrationForm from '../components/RegistrationForm';
 
@@ -62,6 +63,7 @@ class RegistrationPage extends React.Component {
         const { name, email, newPassword, passwordConfirmation, errors, loading } = this.state;
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 <RegistrationForm
                     name={name}

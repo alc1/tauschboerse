@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
-import './client/styles.css';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -11,7 +9,10 @@ import { setToken, userLoggedIn } from './client/actions/user';
 import { JWT_TOKEN_KEY } from './client/common';
 import store from './client/store/store';
 import history from './client/history/history';
+
 import App from './client/App';
+
+import './client/styles.css';
 
 const jwtToken = localStorage.getItem(JWT_TOKEN_KEY);
 if (jwtToken) {
@@ -21,9 +22,9 @@ if (jwtToken) {
 const provider = (
     <MuiThemeProvider>
         <Provider store={store}>
-            <BrowserRouter history={history}>
+            <Router history={history}>
                 <App/>
-            </BrowserRouter>
+            </Router>
         </Provider>
     </MuiThemeProvider>
 );

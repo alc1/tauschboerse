@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import Save from 'material-ui/svg-icons/content/save';
 
+import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import UserDetailsForm from '../components/UserDetailsForm';
 
@@ -90,6 +91,7 @@ class UserDetailsPage extends React.Component {
         const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, modified } = this.state;
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 <UserDetailsForm
                     name={name}
