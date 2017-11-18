@@ -1,5 +1,7 @@
 'use strict';
 
+const Transaction = require('../../shared/businessobjects/Transaction');
+
 class TransactionCache {
     constructor(db, users) {
         this.db = db;
@@ -89,11 +91,11 @@ class TransactionCache {
     }
 
     delete(id) {
-        deleteOp = (function(resolve, reject) {
+        let deleteOp = (function(resolve, reject) {
             let transaction = this.find(id);
             if (transaction) {
                 this.transactions.remove(transaction);
-                this.db.remove({ _id: category._id }, function(err, numRemoved) {
+                this.db.remove({ _id: transaction._id }, function(err, numRemoved) {
                     err ? reject(err) : resolve(true);
                 });
             } else {

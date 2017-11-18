@@ -1,5 +1,7 @@
 'use strict';
 
+const Offer = require('../../shared/businessobjects/Offer');
+
 class OfferCache {
     constructor(db, transactions, articles, users) {
         this.db = db;
@@ -90,7 +92,7 @@ class OfferCache {
     }
 
     delete(id) {
-        deleteOp = (function(resolve, reject) {
+        let deleteOp = (function(resolve, reject) {
             let offer = this.find(id);
             if (offer) {
                 this.offers.remove(offer);
