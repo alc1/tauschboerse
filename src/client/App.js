@@ -1,6 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import HomePage from './containers/HomePage';
 import MarketplacePage from './containers/MarketplacePage';
@@ -16,34 +19,32 @@ import NoMatchPage from './containers/NoMatchPage';
 import PrivateRoute from './route/PrivateRoute';
 import PublicRoute from './route/PublicRoute';
 
-import { getUser } from './selectors/user';
-import { logout } from './actions/user';
+import store from '../client/store/store';
+import history from '../client/history/history';
 
-class App extends React.Component {
+export default class App extends React.Component {
 
     render() {
         return (
-            <Switch>
-                <Route exact path="/" component={HomePage}/>
-                <Route exact path="/marketplace" component={MarketplacePage}/>
-                <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
-                <PublicRoute exact path="/registration" component={RegistrationPage}/>
-                <PublicRoute exact path="/login" component={LoginPage}/>
-                <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
-                <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
-                <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
-                <PrivateRoute exact path="/user/:userId/article" component={ArticleEditorPage}/>
-                <PrivateRoute exact path="/user/:userId/article/:articleId" component={ArticleEditorPage}/>
-                <Route component={NoMatchPage}/>
-            </Switch>
+            <MuiThemeProvider>
+                <Provider store={store}>
+                    <Router history={history}>
+                        <Switch>
+                            <Route exact path="/" component={HomePage}/>
+                            <Route exact path="/marketplace" component={MarketplacePage}/>
+                            <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
+                            <PublicRoute exact path="/registration" component={RegistrationPage}/>
+                            <PublicRoute exact path="/login" component={LoginPage}/>
+                            <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
+                            <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
+                            <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
+                            <PrivateRoute exact path="/user/:userId/article" component={ArticleEditorPage}/>
+                            <PrivateRoute exact path="/user/:userId/article/:articleId" component={ArticleEditorPage}/>
+                            <Route component={NoMatchPage}/>
+                        </Switch>
+                    </Router>
+                </Provider>
+            </MuiThemeProvider>
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        user: getUser(theState)
-    };
-}
-
-export default withRouter(connect(mapStateToProps, { logout })(App));
