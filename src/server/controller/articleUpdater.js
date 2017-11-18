@@ -12,14 +12,10 @@ async function update(theArticleId, theArticle) {
                 success: true
             };
         }
-        const error = 'Artikel konnte nicht aktualisiert werden';
         return {
             success: false,
             status: 500,
-            errors: {
-                title: error,
-                description: error
-            }
+            globalError: 'Artikel konnte nicht aktualisiert werden!'
         };
     }
     else {

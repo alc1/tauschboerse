@@ -11,13 +11,7 @@ async function validate(theUserId, theUser) {
     if (theUserId !== theUser._id) {
         return {
             status: 400,
-            errors: {
-                email: 'Benutzer-ID ungültig',
-                name: 'Benutzer-ID ungültig',
-                currentPassword: 'Benutzer-ID ungültig',
-                newPassword: 'Benutzer-ID ungültig',
-                passwordConfirmation: 'Benutzer-ID ungültig'
-            }
+            globalError: 'Benutzer-ID ist ungültig!'
         };
     }
 
@@ -104,7 +98,7 @@ function checkUser(theUser) {
 function checkPassword(isAboutToChangePassword, theUser, thePassword) {
     if (isAboutToChangePassword && !bcrypt.compareSync(theUser.currentPassword, thePassword)) {
         return {
-            status: 401,
+            status: 400,
             errors: {
                 currentPassword: 'Das bisherige Passwort ist falsch'
             }

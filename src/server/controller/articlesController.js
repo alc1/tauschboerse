@@ -31,15 +31,24 @@ async function getArticlesByOwner(req, res) {
 async function getArticleById(req, res) {
     if (useDataCache) {
         const { articleId } = req.params;
-        res.json({ article: dataCache.getArticleById(articleId) || null });
+        const article = dataCache.getArticleById(articleId);
+        if (article) {
+            res.json({ article });
+        }
+        else {
+            res.status(404).json({ globalError: `Artikel [${articleId}] nicht gefunden` });
+        }
     }
     else {
         const { articleId } = req.params;
         const article = await articlesStore.getArticleById(articleId);
         if (article) {
             await fetchArticleDetails(article);
+            res.json({ article });
         }
-        res.json({ article: article || null });
+        else {
+            res.status(404).json({ globalError: `Artikel [${articleId}] nicht gefunden` });
+        }
     }
 }
 
@@ -52,16 +61,10 @@ async function createArticle(req, res) {
             const preparedArticle = dataCache.prepareArticle(article, req.user);
             dataCache.saveArticle(preparedArticle)
                 .then(article => res.json({article: article}))
-                .catch(() => res.status(500).json({
-                    errors: {
-                        title: 'Unbekannter Server-Fehler',
-                        description: 'Unbekannter Server-Fehler',
-                        categories: 'Unbekannter Server-Fehler'
-                    }
-                }));
+                .catch(() => res.status(500).json({ globalError: 'Unbekannter Server-Fehler' }));
         }
         else {
-            res.status(validation.status).json({ errors: validation.errors });
+            res.status(validation.status).json({ errors: validation.errors, globalError: validation.globalError });
         }
     }
     else {
@@ -74,7 +77,7 @@ async function createArticle(req, res) {
             res.json({ article: result.article });
         }
         else {
-            res.status(result.status).json({ errors: result.errors });
+            res.status(result.status).json({ errors: result.errors, globalError: result.globalError });
         }
     }
 }
@@ -89,16 +92,10 @@ async function updateArticle(req, res) {
             const preparedArticle = dataCache.prepareArticle(article, req.user);
             dataCache.saveArticle(preparedArticle)
                 .then(article => res.json({ article: article }))
-                .catch(() => res.status(500).json({
-                    errors: {
-                        title: 'Unbekannter Server-Fehler',
-                        description: 'Unbekannter Server-Fehler',
-                        categories: 'Unbekannter Server-Fehler'
-                    }
-                }));
+                .catch(() => res.status(500).json({ globalError: 'Unbekannter Server-Fehler' }));
         }
         else {
-            res.status(validation.status).json({ errors: validation.errors });
+            res.status(validation.status).json({ errors: validation.errors, globalError: validation.globalError });
         }
     }
     else {
@@ -111,7 +108,7 @@ async function updateArticle(req, res) {
             await getArticleById(req, res);
         }
         else {
-            res.status(result.status).json({ errors: result.errors });
+            res.status(result.status).json({ errors: result.errors, globalError: result.globalError });
         }
     }
 }

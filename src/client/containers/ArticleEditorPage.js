@@ -8,7 +8,9 @@ import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
+import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleForm from '../components/ArticleForm';
+
 import { loadArticle, createArticle, updateArticle } from '../actions/article';
 import { getArticle } from '../selectors/article';
 import { getUser } from '../selectors/user';
@@ -103,7 +105,7 @@ class ArticleEditorPage extends React.Component {
                 this.props.history.replace(`/article/${res.article._id}`);
             }).catch((err) => {
                 this.setState({
-                    errors: err.response.data.errors,
+                    errors: err.response.data.errors || {},
                     loading: false
                 });
             });
@@ -142,6 +144,7 @@ class ArticleEditorPage extends React.Component {
                     </ArticleForm>
                     :
                     <Redirect to="/"/>}
+                <GlobalMessageComponent/>
             </div>
         );
     }

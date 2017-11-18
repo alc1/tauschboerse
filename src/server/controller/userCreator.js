@@ -9,16 +9,10 @@ async function create(theUser) {
     if (validation.success) {
         const createdUser = await usersStore.createUser(theUser);
         if (!createdUser) {
-            const error = 'Benutzer konnte nicht erstellt werden';
             return {
                 success: false,
                 status: 500,
-                errors: {
-                    name: error,
-                    email: error,
-                    newPassword: error,
-                    passwordConfirmation: error
-                }
+                globalError: 'Benutzer konnte nicht erstellt werden!'
             };
         }
         return {

@@ -8,7 +8,9 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
+import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleComponent from '../components/ArticleComponent';
+
 import { loadUserArticles } from '../actions/user';
 import { getUserArticles, getUser } from '../selectors/user';
 
@@ -72,6 +74,7 @@ class UserArticlesPage extends React.Component {
                 <FloatingActionButton style={buttonPositionStyle} onClick={this.createNewArticle.bind(this, user._id)}>
                     <ContentAdd />
                 </FloatingActionButton>
+                <GlobalMessageComponent/>
             </div>
         );
     }

@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { handleError } from './common';
+
 /*
  * Action Type Constants
  */
@@ -33,12 +35,15 @@ const articleUpdated = (theArticle) => ({
 
 export const loadArticle = (theArticleId) => dispatch =>
     axios.get(`/api/articles/${theArticleId}`)
-        .then(response => dispatch(articleFetched(response.data.article)));
+        .then(response => dispatch(articleFetched(response.data.article)))
+        .catch((err) => handleError(err, dispatch));
 
 export const createArticle = (article) => dispatch =>
     axios.post('/api/articles', { article })
-        .then(response => dispatch(articleCreated(response.data.article)));
+        .then(response => dispatch(articleCreated(response.data.article)))
+        .catch((err) => handleError(err, dispatch));
 
 export const updateArticle = (ownerId, article) => dispatch =>
     axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
-        .then(response => dispatch(articleUpdated(response.data.article)));
+        .then(response => dispatch(articleUpdated(response.data.article)))
+        .catch((err) => handleError(err, dispatch));

@@ -25,12 +25,23 @@ async function getAllUsers(req, res) {
 async function getUserById(req, res) {
     if (useDataCache) {
         const { userId } = req.params;
-        res.json({ user: dataCache.getUserById(userId) || {} });
+        const user = dataCache.getUserById(userId);
+        if (user) {
+            res.json({ user });
+        }
+        else {
+            res.status(404).json({ globalError: `Benutzer [${userId}] nicht gefunden` });
+        }
     }
     else {
         const { userId } = req.params;
         const user = await usersStore.getUserById(userId);
-        res.json({ user: user || {} });
+        if (user) {
+            res.json({ user });
+        }
+        else {
+            res.status(404).json({ globalError: `Benutzer [${userId}] nicht gefunden` });
+        }
     }
 }
 
@@ -43,7 +54,7 @@ async function login(req, res) {
             res.json({ token: createToken(acceptedUser._id, acceptedUser.name, acceptedUser.email, acceptedUser.registration) });
         }
         else {
-            res.status(401).json({
+            res.status(400).json({
                 errors: {
                     email: 'E-Mail oder Passwort unbekannt',
                     currentPassword: 'E-Mail oder Passwort unbekannt',
@@ -60,7 +71,7 @@ async function login(req, res) {
             res.json({ token: createToken(foundUser._id, foundUser.name, foundUser.email, foundUser.registration) });
         }
         else {
-            res.status(401).json({
+            res.status(400).json({
                 errors: {
                     email: 'E-Mail oder Passwort unbekannt',
                     currentPassword: 'E-Mail oder Passwort unbekannt',
@@ -78,19 +89,11 @@ async function createUser(req, res) {
         if (validation.success) {
             const preparedUser = dataCache.prepareUser(user);
             dataCache.saveUser(preparedUser)
-                .then(user => {
+                .then(() => {
                     req.isNewUser = true;
                     return login(req, res);
                 })
-                .catch(() => res.status(500).json({
-                    errors: {
-                        email: 'Unbekannter Server-Fehler',
-                        name: 'Unbekannter Server-Fehler',
-                        currentPassword: 'Unbekannter Server-Fehler',
-                        newPassword: 'Unbekannter Server-Fehler',
-                        passwordConfirmation: 'Unbekannter Server-Fehler'
-                    }
-                }));
+                .catch(() => res.status(500).json({ globalError: 'Unbekannter Server-Fehler' }));
         }
         else {
             res.status(validation.status).json({ errors: validation.errors });
@@ -104,7 +107,7 @@ async function createUser(req, res) {
             await login(req, res);
         }
         else {
-            res.status(result.status).json({ errors: result.errors });
+            res.status(result.status).json({ errors: result.errors, globalError: result.globalError });
         }
     }
 }
@@ -118,18 +121,10 @@ async function updateUser(req, res) {
             const preparedUser = dataCache.prepareUser(user);
             dataCache.saveUser(preparedUser)
                 .then(user => res.json({ token: createToken(user._id, user.name, user.email, user.registration) }))
-                .catch(() => res.status(500).json({
-                    errors: {
-                        email: 'Unbekannter Server-Fehler',
-                        name: 'Unbekannter Server-Fehler',
-                        currentPassword: 'Unbekannter Server-Fehler',
-                        newPassword: 'Unbekannter Server-Fehler',
-                        passwordConfirmation: 'Unbekannter Server-Fehler'
-                    }
-                }));
+                .catch(() => res.status(500).json({ globalError: 'Unbekannter Server-Fehler' }));
         }
         else {
-            res.status(validation.status).json({ errors: validation.errors });
+            res.status(validation.status).json({ errors: validation.errors, globalError: validation.globalError });
         }
     }
     else {
@@ -140,7 +135,7 @@ async function updateUser(req, res) {
             res.json({ token: createToken(result.user.userId, result.user.name, result.user.email, result.user.registration) });
         }
         else {
-            res.status(result.status).json({ errors: result.errors });
+            res.status(result.status).json({ errors: result.errors, globalError: result.globalError });
         }
     }
 }

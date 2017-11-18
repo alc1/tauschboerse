@@ -2,6 +2,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
 import { JWT_TOKEN_KEY } from '../common';
+import { handleError } from './common';
 
 /*
  * Action Type Constants
@@ -47,25 +48,27 @@ const userArticlesFetched = (theArticles) => ({
 
 export const login = (user) => dispatch =>
     axios.post('/api/users/auth', { user })
-        .then(response => onTokenReceived(response.data.token, dispatch, userLoggedIn));
+        .then(response => onTokenReceived(response.data.token, dispatch, userLoggedIn))
+        .catch((err) => handleError(err, dispatch));
 
 export const logout = () => dispatch => {
-    localStorage.removeItem(JWT_TOKEN_KEY);
-    delete axios.defaults.headers.common['Authorization'];
-    dispatch(userLoggedOut());
+    removeToken(dispatch);
 };
 
 export const createUser = (user) => dispatch =>
     axios.post('/api/users', { user })
-        .then(response => onTokenReceived(response.data.token, dispatch, userCreated));
+        .then(response => onTokenReceived(response.data.token, dispatch, userCreated))
+        .catch((err) => handleError(err, dispatch));
 
 export const updateUser = (user) => dispatch =>
     axios.put(`/api/users/${user._id}`, { user })
-        .then(response => onTokenReceived(response.data.token, dispatch, userUpdated));
+        .then(response => onTokenReceived(response.data.token, dispatch, userUpdated))
+        .catch((err) => handleError(err, dispatch));
 
 export const loadUserArticles = (theUserId) => dispatch =>
     axios.get(`/api/users/${theUserId}/articles`)
-        .then(response => dispatch(userArticlesFetched(response.data.articles)));
+        .then(response => dispatch(userArticlesFetched(response.data.articles)))
+        .catch((err) => handleError(err, dispatch));
 
 /*
  * Actions
@@ -80,4 +83,10 @@ export const setToken = (token, dispatch, actionCreator) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     const user = jwt.decode(token);
     dispatch(actionCreator(user));
+};
+
+export const removeToken = (dispatch) => {
+    localStorage.removeItem(JWT_TOKEN_KEY);
+    delete axios.defaults.headers.common['Authorization'];
+    dispatch(userLoggedOut());
 };

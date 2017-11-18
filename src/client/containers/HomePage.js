@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import ApplicationBar from '../components/ApplicationBar';
+import GlobalMessageComponent from '../components/GlobalMessageComponent';
 
 import { getUser } from '../selectors/user';
 
@@ -31,6 +32,7 @@ class HomePage extends React.Component {
                         Nicht angemeldet!
                     </div>
                 }
+                <GlobalMessageComponent/>
             </div>
         );
     }

@@ -12,6 +12,6 @@ module.exports = (req, res, next) => {
         next();
     }
     else {
-        res.status(403).json({ error: 'Forbidden (wrong user)!' });
+        res.status(403).json({ globalError: 'Fehlende Berechtigung für diesen Benutzer!' });
     }
 };
