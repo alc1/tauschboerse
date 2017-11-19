@@ -3,7 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+
+import ViewHeadline from 'material-ui/svg-icons/action/view-headline';
+import Edit from 'material-ui/svg-icons/editor/mode-edit';
+import Delete from 'material-ui/svg-icons/action/delete';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import ApplicationBar from '../components/ApplicationBar';
@@ -12,6 +17,7 @@ import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleComponent from '../components/ArticleComponent';
 
 import { loadUserArticles } from '../actions/user';
+import { deleteArticle } from '../actions/article';
 import { getUserArticles, getUser } from '../selectors/user';
 
 class UserArticlesPage extends React.Component {
@@ -20,6 +26,7 @@ class UserArticlesPage extends React.Component {
         articles: PropTypes.array.isRequired,
         user: PropTypes.object.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
+        deleteArticle: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -47,13 +54,18 @@ class UserArticlesPage extends React.Component {
         this.props.history.push(`/user/${theUserId}/article`);
     };
 
+    deleteArticle = (theUserId, theArticleId) => {
+        this.props.deleteArticle(theUserId, theArticleId);
+    };
+
     render() {
         const { loading } = this.state;
         const { user, articles } = this.props;
         const articleComponents = articles.map(article => {
             let actions = [];
-            actions.push(<FlatButton key={actions.length} label="Detail" onClick={this.showArticleDetails.bind(this, article._id)} primary/>);
-            actions.push(<FlatButton key={actions.length} label="Bearbeiten" onClick={this.editArticleDetails.bind(this, user._id, article._id)}/>);
+            actions.push(<RaisedButton key={actions.length} icon={<ViewHeadline/>} label="Detail" onClick={this.showArticleDetails.bind(this, article._id)} primary/>);
+            actions.push(<RaisedButton key={actions.length} icon={<Edit/>} label="Bearbeiten" onClick={this.editArticleDetails.bind(this, user._id, article._id)}/>);
+            actions.push(<FlatButton key={actions.length} icon={<Delete/>} label="Löschen" onClick={this.deleteArticle.bind(this, user._id, article._id)} secondary/>);
             return <ArticleComponent key={article._id} article={article} actions={actions}/>;
         });
         const buttonPositionStyle = {
@@ -87,4 +99,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadUserArticles })(UserArticlesPage);
+export default connect(mapStateToProps, { loadUserArticles, deleteArticle })(UserArticlesPage);

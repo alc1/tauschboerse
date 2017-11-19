@@ -20,15 +20,16 @@ class ArticleComponent extends React.Component {
 
     render() {
         const { article, actions } = this.props;
-        const { title, description, owner, categories, created } = article;
+        const { title, description, owner, categories, photos, created } = article;
         const name = (owner) ? owner.name : '';
         const categoryNames = (categories) ? categories.map(category => category.name).join(', ') : '';
+        const photoSource = (photos && photos.length > 0) ? photos[0].url : NoPicture;
         return (
             <div className="article-card">
                 <Card>
                     <CardHeader title={`Von: ${name}`} subtitle={`Erstellt am: ${moment(created).format('DD.MM.YYYY HH:mm:ss')}`} avatar={<Avatar>{name.substr(0, 1)}</Avatar>}/>
                     <CardMedia overlay={<CardTitle title={title} subtitle={categoryNames} />}>
-                        <img src={NoPicture} alt=""/>
+                        <img src={photoSource} alt=""/>
                     </CardMedia>
                     <CardText style={{whiteSpace: 'pre-wrap'}}>{description}</CardText>
                     <CardActions>{actions}</CardActions>

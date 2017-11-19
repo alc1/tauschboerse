@@ -9,6 +9,7 @@ import { handleError } from './common';
 export const ARTICLE_FETCHED = 'ARTICLE_FETCHED';
 export const ARTICLE_CREATED = 'ARTICLE_CREATED';
 export const ARTICLE_UPDATED = 'ARTICLE_UPDATED';
+export const ARTICLE_DELETED = 'ARTICLE_DELETED';
 
 /*
  * Action Creators
@@ -29,6 +30,11 @@ const articleUpdated = (theArticle) => ({
     article: theArticle
 });
 
+const articleDeleted = (theArticleId) => ({
+    type: ARTICLE_DELETED,
+    articleId: theArticleId
+});
+
 /*
  * Thunk Actions
  */
@@ -46,4 +52,9 @@ export const createArticle = (article) => dispatch =>
 export const updateArticle = (ownerId, article) => dispatch =>
     axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
         .then(response => dispatch(articleUpdated(response.data.article)))
+        .catch((err) => handleError(err, dispatch));
+
+export const deleteArticle = (ownerId, articleId) => dispatch =>
+    axios.delete(`/api/users/${ownerId}/articles/${articleId}`)
+        .then(response => dispatch(articleDeleted(response.data.articleId)))
         .catch((err) => handleError(err, dispatch));

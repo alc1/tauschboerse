@@ -6,6 +6,10 @@ import {
     USER_ARTICLES_FETCHED
 } from './../actions/user';
 
+import {
+    ARTICLE_DELETED
+} from './../actions/article';
+
 const initialState = null;
 
 export default function user(theState = initialState, theAction) {
@@ -23,6 +27,11 @@ export default function user(theState = initialState, theAction) {
             return {
                 ...theState,
                 articles: theAction.articles
+            };
+        case ARTICLE_DELETED:
+            return {
+                ...theState,
+                articles: theState.articles.filter(article => article._id !== theAction.articleId)
             };
         default:
             return theState;
