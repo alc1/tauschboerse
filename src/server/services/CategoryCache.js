@@ -1,6 +1,7 @@
 'use strict';
 
 const Category = require('../../shared/businessobjects/Category');
+const utils = require('../../shared/utils/businessUtils');
 
 class CategoryCache {
     constructor(db) {
@@ -122,12 +123,7 @@ class CategoryCache {
     }
 
     static toPhysicalRecord(theCategory) {
-        let physicalRecord = {};
-
-        if (theCategory.hasOwnProperty('_id')) {
-            physicalRecord._id = theCategory._id;
-        }
-
+        let physicalRecord = utils.transferId(theCategory, {});
         physicalRecord.name = theCategory.name;
 
         return physicalRecord;

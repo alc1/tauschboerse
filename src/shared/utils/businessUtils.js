@@ -55,6 +55,8 @@ function transferId(source, target) {
             target._id = source._id;
         }
     }
+
+    return target;
 }
 
 module.exports = {
