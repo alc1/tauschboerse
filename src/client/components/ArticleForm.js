@@ -19,7 +19,6 @@ export default class ArticleForm extends React.Component {
         onAddCategory: PropTypes.func.isRequired,
         onRemoveCategory: PropTypes.func.isRequired,
         onPhotoLoaded: PropTypes.func.isRequired,
-        onAddPhoto: PropTypes.func.isRequired,
         onRemovePhoto: PropTypes.func.isRequired
     };
 
@@ -28,7 +27,7 @@ export default class ArticleForm extends React.Component {
     }
 
     render() {
-        const { title, description, categories, photos, errors, loading, onChange, onSubmit, onAddCategory, onRemoveCategory, onPhotoLoaded, onAddPhoto, onRemovePhoto } = this.props;
+        const { title, description, categories, photos, errors, loading, onChange, onSubmit, onAddCategory, onRemoveCategory, onPhotoLoaded, onRemovePhoto } = this.props;
         const inputStyles = { width: '350px' };
         const formStyles = {
             display: 'flex',
@@ -69,7 +68,6 @@ export default class ArticleForm extends React.Component {
                 <PhotosComponent
                     photos={photos}
                     onPhotoLoaded={onPhotoLoaded}
-                    onAddPhoto={onAddPhoto}
                     onRemovePhoto={onRemovePhoto}
                     loading={loading}
                 />

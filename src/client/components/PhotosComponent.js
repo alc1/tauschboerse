@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, CardHeader, CardMedia, CardTitle, CardText, CardActions } from 'material-ui/Card';
+import { Card, CardHeader, CardMedia, CardActions } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 
-import Upload from 'material-ui-upload/Upload';
-
-import NoPicture from '../images/NoPicture.png';
+import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo';
+import Delete from 'material-ui/svg-icons/action/delete';
 
 export default class PhotosComponent extends React.Component {
 
     static propTypes = {
         photos: PropTypes.array.isRequired,
         onPhotoLoaded: PropTypes.func.isRequired,
-        onAddPhoto: PropTypes.func.isRequired,
         onRemovePhoto: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired
     };
@@ -22,13 +20,34 @@ export default class PhotosComponent extends React.Component {
         photos: []
     };
 
+    componentDidMount() {
+        this.fileInputElement.addEventListener('change', this.onInputChange);
+    }
+
+    componentWillUnmount() {
+        this.fileInputElement.removeEventListener('change', this.onInputChange);
+    }
+
+    onInputChange = (theEvent) => {
+        const fileArray = [...theEvent.target.files];
+        fileArray.forEach(file => {
+            let reader = new FileReader();
+            reader.onload = (event) => this.props.onPhotoLoaded(event, file);
+            reader.readAsDataURL(file);
+        });
+    };
+
+    onAddPhotoClicked = () => {
+        this.fileInputElement.click();
+    };
+
     render() {
         const { photos, loading } = this.props;
-        const photoComponents = photos.map((photo, index) =>
-            <CardMedia key={index}>
+        const photoComponents = photos.map((photo) =>
+            <CardMedia key={photo.fileName}>
                 <img src={photo.isNew ? photo.fileContent : photo.url} alt=""/>
                 <CardActions>
-                    <FlatButton label="Bild entfernen" onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
+                    <FlatButton label="Bild entfernen" icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
                 </CardActions>
             </CardMedia>
         );
@@ -37,8 +56,8 @@ export default class PhotosComponent extends React.Component {
                 <CardHeader title="Bilder"/>
                 {photoComponents}
                 <CardActions>
-                    <Upload label="Neues Bild" onFileLoad={this.props.onPhotoLoaded} disabled={loading} primary/>
-                    <FlatButton label="Neues Bild" onClick={this.props.onAddPhoto} disabled={loading} primary/>
+                    <input type="file" ref={element => this.fileInputElement = element} style={{ display: 'none' }} />
+                    <FlatButton label="Neues Bild hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
                 </CardActions>
             </Card>
         );

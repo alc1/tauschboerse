@@ -72,7 +72,9 @@ async function deleteArticleById(req, res) {
 async function createArticle(req, res) {
     if (useDataCache) {
         const { article } = req.body;
-        const { photos } = article;
+        const photos = article.photos.map(photo => {
+            return Object.assign({}, photo);
+        });
         const validation = await articleCreatorValidator.validate(article);
         if (validation.success) {
             await createNewCategories(article);
@@ -109,7 +111,9 @@ async function updateArticle(req, res) {
     if (useDataCache) {
         const { articleId } = req.params;
         const { article } = req.body;
-        const { photos } = article;
+        const photos = article.photos.map(photo => {
+            return Object.assign({}, photo);
+        });
         const validation = await articleUpdaterValidator.validate(articleId, article);
         if (validation.success) {
             await createNewCategories(article);

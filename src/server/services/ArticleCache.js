@@ -64,7 +64,7 @@ class ArticleCache {
         if (!foundLogicalArticle) {
             // if article wasn't found insert it
             saveOp = (function(resolve, reject) {
-                this.db.insert(ArticleCache.toPhysicalRecord(theArticle), (function(err, newRec){
+                this.db.insert(ArticleCache.toPhysicalRecord(theArticle), (function(err, newRec) {
                     if (err) {
                         reject(err);
                     } else {
@@ -133,6 +133,14 @@ class ArticleCache {
             article.sortCategories();
         }
 
+        if (article.photos.length > 0) {
+            article.photos.forEach(photo => {
+                delete photo.isNew;
+                delete photo.fileContent;
+                photo.url = `http://localhost:3001/images/article/${article._id}/${photo.fileName}`;
+            });
+        }
+
         return article;
     }
 
@@ -163,10 +171,10 @@ class ArticleCache {
         article.description = thePhysicalRecord.description;
         article.created = thePhysicalRecord.created;
         article.status = thePhysicalRecord.status;
-        article.photos = thePhysicalRecord.photos ? thePhysicalRecord.photos.map(photo => {
+        article.photos = thePhysicalRecord.photos ? thePhysicalRecord.photos.map(photoFileName => {
             return {
-                fileName: photo,
-                url: `http://localhost:3001/images/article/${article._id}/${photo}`
+                fileName: photoFileName,
+                url: `http://localhost:3001/images/article/${article._id}/${photoFileName}`
             };
         }) : [];
         article.categories = thePhysicalRecord.categoryIds ? thePhysicalRecord.categoryIds.map(id => this.categories.findById(id)) : [];

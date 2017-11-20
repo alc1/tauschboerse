@@ -102,10 +102,6 @@ class ArticleEditorPage extends React.Component {
         });
     };
 
-    onAddPhoto = () => {
-        console.log('add picture');
-    };
-
     onRemovePhoto = (thePhotoToRemove) => {
         this.setState({
             photos: this.state.photos.filter((photo) => photo.fileName !== thePhotoToRemove.fileName),
@@ -172,7 +168,6 @@ class ArticleEditorPage extends React.Component {
                         onAddCategory={this.onAddCategory}
                         onRemoveCategory={this.onRemoveCategory}
                         onPhotoLoaded={this.onPhotoLoaded}
-                        onAddPhoto={this.onAddPhoto}
                         onRemovePhoto={this.onRemovePhoto}>
                         <RaisedButton type="submit" label="Speichern" icon={<Save/>} disabled={loading || !modified} primary/>
                     </ArticleForm>
