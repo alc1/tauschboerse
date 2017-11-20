@@ -29,16 +29,10 @@ async function update(theUserId, theUser) {
                 }
             };
         }
-        const error = 'Benutzer konnte nicht aktualisiert werden';
         return {
             success: false,
             status: 500,
-            errors: {
-                name: error,
-                email: error,
-                newPassword: error,
-                passwordConfirmation: error
-            }
+            globalError: 'Benutzer konnte nicht aktualisiert werden!'
         };
     }
     else {

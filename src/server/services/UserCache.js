@@ -92,7 +92,7 @@ class UserCache {
             }).bind(this);
         } else {
             saveOp = (function(resolve, reject) {
-                if (foundLogicalUser.update(theUser)) {
+                if (foundLogicalUser.update(theUser) || theUser.newPassword) {
                     let userToSave = UserCache.toPhysicalRecord(foundLogicalUser);
                     userToSave.password = (theUser.newPassword) ? bcrypt.hashSync(theUser.newPassword, 10) : this.getPasswordByUserId(foundLogicalUser._id);
                     this.db.update({ _id: foundLogicalUser._id }, userToSave, {}, (function(err, numAffected) {

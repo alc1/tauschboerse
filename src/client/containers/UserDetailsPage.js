@@ -5,9 +5,12 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import Save from 'material-ui/svg-icons/content/save';
 
+import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
+import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import UserDetailsForm from '../components/UserDetailsForm';
 
+import { setGlobalMessage, OK_MESSAGE } from '../actions/globalMessage';
 import { updateUser } from '../actions/user';
 import { getUser } from '../selectors/user';
 
@@ -19,6 +22,7 @@ class UserDetailsPage extends React.Component {
 
     static propTypes = {
         updateUser: PropTypes.func.isRequired,
+        setGlobalMessage: PropTypes.func.isRequired,
         user: PropTypes.object.isRequired
     };
 
@@ -46,7 +50,7 @@ class UserDetailsPage extends React.Component {
         });
     };
 
-    onPasswordChangeChecked = (theEvent) => {
+    onPasswordChangeToggled = () => {
         const newChangePasswordState = !this.state.changePassword;
         this.setState({
             changePassword: newChangePasswordState,
@@ -73,10 +77,26 @@ class UserDetailsPage extends React.Component {
         const validation = userDetailsValidator.validate(user);
         if (validation.isValid) {
             this.props.updateUser(user)
-                .catch((err) => this.setState({
-                    errors: err.response.data.errors,
-                    loading: false
-                }));
+                .then(() => {
+                    if (this.state.changePassword) {
+                        this.onPasswordChangeToggled();
+                    }
+                    this.setState({
+                        errors: {},
+                        loading: false,
+                        modified: false
+                    });
+                    this.props.setGlobalMessage({
+                        messageText: 'Benutzerdaten wurden gespeichert.',
+                        messageType: OK_MESSAGE
+                    });
+                })
+                .catch((err) => {
+                    this.setState({
+                        errors: err.response.data.errors || {},
+                        loading: false
+                    })
+                });
         }
         else {
             this.setState({
@@ -90,6 +110,7 @@ class UserDetailsPage extends React.Component {
         const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, modified } = this.state;
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 <UserDetailsForm
                     name={name}
@@ -101,10 +122,11 @@ class UserDetailsPage extends React.Component {
                     errors={errors}
                     loading={loading}
                     onChange={this.onChange}
-                    onPasswordChangeChecked={this.onPasswordChangeChecked}
+                    onPasswordChangeChecked={this.onPasswordChangeToggled}
                     onSubmit={this.onSubmit}>
                     <RaisedButton type="submit" label="Speichern" icon={<Save/>} disabled={loading || !modified} primary/>
                 </UserDetailsForm>
+                <GlobalMessageComponent/>
             </div>
         );
     }
@@ -116,4 +138,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { updateUser })(UserDetailsPage);
+export default connect(mapStateToProps, { updateUser, setGlobalMessage })(UserDetailsPage);

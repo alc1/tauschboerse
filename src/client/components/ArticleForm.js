@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import InputComponent from '../components/InputComponent';
 import CategoryInputFieldContainer from '../containers/CategoryInputContainer';
+import PhotosComponent from './PhotosComponent';
 
 export default class ArticleForm extends React.Component {
 
@@ -10,12 +11,16 @@ export default class ArticleForm extends React.Component {
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         categories: PropTypes.array.isRequired,
+        photos: PropTypes.array.isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         onChange: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
         onAddCategory: PropTypes.func.isRequired,
-        onRemoveCategory: PropTypes.func.isRequired
+        onRemoveCategory: PropTypes.func.isRequired,
+        onPhotoLoaded: PropTypes.func.isRequired,
+        onAddPhoto: PropTypes.func.isRequired,
+        onRemovePhoto: PropTypes.func.isRequired
     };
 
     componentDidMount() {
@@ -23,7 +28,7 @@ export default class ArticleForm extends React.Component {
     }
 
     render() {
-        const { title, description, categories, errors, loading, onChange, onSubmit, onAddCategory, onRemoveCategory } = this.props;
+        const { title, description, categories, photos, errors, loading, onChange, onSubmit, onAddCategory, onRemoveCategory, onPhotoLoaded, onAddPhoto, onRemovePhoto } = this.props;
         const inputStyles = { width: '350px' };
         const formStyles = {
             display: 'flex',
@@ -60,6 +65,13 @@ export default class ArticleForm extends React.Component {
                     onAddCategory={onAddCategory}
                     onRemoveCategory={onRemoveCategory}
                     allowNewValues={true}
+                />
+                <PhotosComponent
+                    photos={photos}
+                    onPhotoLoaded={onPhotoLoaded}
+                    onAddPhoto={onAddPhoto}
+                    onRemovePhoto={onRemovePhoto}
+                    loading={loading}
                 />
                 <br/>
                 {this.props.children}

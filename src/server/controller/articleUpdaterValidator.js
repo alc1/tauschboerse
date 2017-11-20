@@ -6,11 +6,7 @@ function validate(theArticleId, theArticle) {
     if (theArticleId !== theArticle._id) {
         return {
             status: 400,
-            errors: {
-                title: 'Artikel-ID ungültig',
-                description: 'Artikel-ID ungültig',
-                categories: 'Artikel-ID ungültig'
-            }
+            globalError: 'Artikel-ID ist ungültig!'
         };
     }
 

@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
+import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
+import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import RegistrationForm from '../components/RegistrationForm';
 
 import { createUser } from '../actions/user';
@@ -45,10 +47,12 @@ class RegistrationPage extends React.Component {
                 .then(res => {
                     this.props.history.replace('/');
                 })
-                .catch((err) => this.setState({
-                    errors: err.response.data.errors,
-                    loading: false
-                }));
+                .catch((err) => {
+                    this.setState({
+                        errors: err.response.data.errors || {},
+                        loading: false
+                    })
+                });
         }
         else {
             this.setState({
@@ -62,6 +66,7 @@ class RegistrationPage extends React.Component {
         const { name, email, newPassword, passwordConfirmation, errors, loading } = this.state;
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 <RegistrationForm
                     name={name}
@@ -74,6 +79,7 @@ class RegistrationPage extends React.Component {
                     onSubmit={this.onSubmit}>
                     <RaisedButton type="submit" label="Registrieren" icon={<PersonAdd/>} disabled={loading} primary/>
                 </RegistrationForm>
+                <GlobalMessageComponent/>
             </div>
         );
     }

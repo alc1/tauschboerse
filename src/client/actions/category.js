@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { handleError } from './common';
+
 /*
  * Action Type Constants
  */
@@ -21,4 +23,5 @@ const categoriesFetched = (theCategories) => ({
 
 export const loadCategories = () => dispatch =>
     axios.get('/api/categories')
-        .then(response => dispatch(categoriesFetched(response.data.categories)));
+        .then(response => dispatch(categoriesFetched(response.data.categories)))
+        .catch((err) => handleError(err, dispatch));

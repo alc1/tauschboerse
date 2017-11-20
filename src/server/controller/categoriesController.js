@@ -20,11 +20,21 @@ async function getCategory(req, res) {
     const { categoryId } = req.params;
     if (useDataCache) {
         const category = dataCache.getCategory(categoryId);
-        res.json({ category : category || null });
+        if (category) {
+            res.json({ category });
+        }
+        else {
+            res.status(404).json({ globalError: `Kategorie [${categoryId}] nicht gefunden` });
+        }
     }
     else {
         const category = await categoriesStore.getCategory(categoryId);
-        res.json({ category : category || null });
+        if (category) {
+            res.json({ category });
+        }
+        else {
+            res.status(404).json({ globalError: `Kategorie [${categoryId}] nicht gefunden` });
+        }
     }
 }
 

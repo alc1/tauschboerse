@@ -67,6 +67,10 @@ class DataCache {
         return this.articles.save(theArticle);
     }
 
+    deleteArticleById(theArticleId) {
+        return this.articles.deleteById(theArticleId);
+    }
+
     //--------------------
     // category methods
     //--------------------

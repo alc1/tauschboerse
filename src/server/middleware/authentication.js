@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
     if (token) {
         jwt.verify(token, config.jwtSecret, async (err, decoded) => {
             if (err) {
-                res.status(401).json({ error: 'Unauthorized (authentication failed)!' });
+                res.status(401).json({ globalError: 'Token zur Authentifizierung ungültig! Bitte erneut anmelden.' });
             }
             else {
                 let user;
@@ -37,12 +37,12 @@ module.exports = (req, res, next) => {
                     next();
                 }
                 else {
-                    res.status(404).json({ error: 'User from token not found' });
+                    res.status(401).json({ globalError: 'Token zur Authentifizierung ungültig! Bitte erneut anmelden.' });
                 }
             }
         });
     }
     else {
-        res.status(403).json({ error: 'Forbidden (no token provided)!' });
+        res.status(403).json({ globalError: 'Kein Token zur Authentifizierung gefunden! Bitte anmelden.' });
     }
 };

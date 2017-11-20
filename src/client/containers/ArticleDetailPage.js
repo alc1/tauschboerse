@@ -2,8 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
+import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleComponent from '../components/ArticleComponent';
+
 import { loadArticle } from '../actions/article';
 import { getArticle } from '../selectors/article';
 
@@ -31,10 +34,12 @@ class ArticleDetailPage extends React.Component {
         const { article } = this.props;
         return (
             <div>
+                <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 <div className="articles-list">
                     {article && <ArticleComponent article={article}/>}
                 </div>
+                <GlobalMessageComponent/>
             </div>
         );
     }

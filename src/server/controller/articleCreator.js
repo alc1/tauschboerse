@@ -8,15 +8,10 @@ async function create(theArticle) {
     if (validation.success) {
         const createdArticle = await articlesStore.createArticle(theArticle);
         if (!createdArticle) {
-            const error = 'Artikel konnte nicht erstellt werden';
             return {
                 success: false,
                 status: 500,
-                errors: {
-                    title: error,
-                    description: error,
-                    categories: error
-                }
+                globalError: 'Artikel konnte nicht erstellt werden!'
             };
         }
         return {
