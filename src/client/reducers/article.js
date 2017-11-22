@@ -14,7 +14,7 @@ export default function article(theState = initialState, theAction) {
         case ARTICLE_UPDATED:
             return theAction.article;
         case ARTICLE_DELETED:
-            if (theState._id === theAction.articleId) {
+            if (theState && theState._id === theAction.articleId) {
                 return initialState;
             }
             return theState;
