@@ -9,6 +9,11 @@ import Delete from 'material-ui/svg-icons/action/delete';
 
 export default class PhotosComponent extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.acceptedFileTypes = ['image/gif', 'image/png', 'image/jpeg'];
+    }
+
     static propTypes = {
         photos: PropTypes.array.isRequired,
         onPhotoLoaded: PropTypes.func.isRequired,
@@ -30,11 +35,14 @@ export default class PhotosComponent extends React.Component {
 
     onInputChange = (theEvent) => {
         const fileArray = [...theEvent.target.files];
-        fileArray.forEach(file => {
-            let reader = new FileReader();
-            reader.onload = (event) => this.props.onPhotoLoaded(event, file);
-            reader.readAsDataURL(file);
-        });
+        fileArray
+            .filter(file => this.acceptedFileTypes.includes(file.type))
+            .forEach(file => {
+                let reader = new FileReader();
+                reader.onload = (event) => this.props.onPhotoLoaded(event, file);
+                reader.readAsDataURL(file);
+            });
+        this.fileInputElement.value = null;
     };
 
     onAddPhotoClicked = () => {
@@ -56,8 +64,8 @@ export default class PhotosComponent extends React.Component {
                 <CardHeader title="Bilder"/>
                 {photoComponents}
                 <CardActions>
-                    <input type="file" ref={element => this.fileInputElement = element} style={{ display: 'none' }} />
-                    <FlatButton label="Neues Bild hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
+                    <input type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple style={{ display: 'none' }}/>
+                    <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
                 </CardActions>
             </Card>
         );
