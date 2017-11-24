@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
@@ -14,6 +13,10 @@ import NavigationComponent from './NavigationComponent';
 
 import { getUser } from '../selectors/user';
 import { logout } from '../actions/user';
+
+import './ApplicationBar.css';
+
+const appbarStyles = { position: 'fixed' };
 
 class ApplicationBar extends React.Component {
 
@@ -56,13 +59,11 @@ class ApplicationBar extends React.Component {
             loginButtonBar = <FlatButton label="Login" onClick={this.onLogin}/>;
         }
 
-        const ContentPositionDiv = styled.div`
-            padding-top: 64px;
-        `;
         return (
             <div>
                 <AppBar
-                    style={{position: 'fixed'}}
+                    style={appbarStyles}
+                    className="appbar"
                     title="Tauschbörse"
                     iconElementLeft={<IconButton><Menu/></IconButton>}
                     iconElementRight={loginButtonBar}
@@ -73,7 +74,7 @@ class ApplicationBar extends React.Component {
                     onRequestChange={this.handleMenuChange}>
                     <NavigationComponent closeMenu={this.closeMenu}/>
                 </Drawer>
-                <ContentPositionDiv/>
+                <div className="appbar__content"/>
             </div>
         );
     }
