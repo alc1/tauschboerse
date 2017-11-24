@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
-import ArticleComponent from '../components/ArticleComponent';
 
 import { loadArticle } from '../actions/article';
 import { getArticle } from '../selectors/article';
+import ArticleGridList from "../components/ArticleGridList";
 
 class ArticleDetailPage extends React.Component {
 
@@ -36,9 +36,7 @@ class ArticleDetailPage extends React.Component {
             <div>
                 <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
-                <div className="articles-list">
-                    {article && <ArticleComponent article={article}/>}
-                </div>
+                {article && <ArticleGridList articles={[article]}/>}
                 <GlobalMessageComponent/>
             </div>
         );

@@ -6,11 +6,3 @@
 body {
     background: #F5F5F5;
 }
-
-.articles-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}

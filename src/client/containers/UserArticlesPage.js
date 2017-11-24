@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
@@ -14,7 +12,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
-import ArticleComponent from '../components/ArticleComponent';
+import ArticleGridList from '../components/ArticleGridList';
 
 import { loadUserArticles } from '../actions/user';
 import { deleteArticle } from '../actions/article';
@@ -48,7 +46,7 @@ class UserArticlesPage extends React.Component {
         this.props.history.push(`/article/${theArticleId}`);
     };
 
-    editArticleDetails = (theUserId, theArticleId) => {
+    editArticleDetails = (theArticleId, theUserId) => {
         this.props.history.push(`/user/${theUserId}/article/${theArticleId}`);
     };
 
@@ -56,30 +54,33 @@ class UserArticlesPage extends React.Component {
         this.props.history.push(`/user/${theUserId}/article`);
     };
 
-    deleteArticle = (theUserId, theArticleId) => {
+    deleteArticle = (theArticleId, theUserId) => {
         this.setState({ loading: true });
         this.props.deleteArticle(theUserId, theArticleId)
             .then(() => this.setState({ loading: false }))
             .catch(() => this.setState({ loading: false }));
     };
 
+    createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
+        return { label, icon, onClick, isPrimary, isSecondary, isRaised };
+    };
+
+    createArticleActions = () => {
+        let articleActions = [];
+        articleActions.push(this.createArticleAction("Ansehen", <RemoveRedEye/>, this.showArticleDetails, true, false, true));
+        articleActions.push(this.createArticleAction("Bearbeiten", <Edit/>, this.editArticleDetails, false, false, true));
+        articleActions.push(this.createArticleAction("Löschen", <Delete/>, this.deleteArticle, false, true, false));
+        return articleActions
+    };
+
     render() {
         const { loading } = this.state;
         const { user, articles } = this.props;
-        const articleComponents = articles.map(article => {
-            let actions = [];
-            actions.push(<RaisedButton key={actions.length} icon={<RemoveRedEye/>} label="Ansehen" onClick={this.showArticleDetails.bind(this, article._id)} primary/>);
-            actions.push(<RaisedButton key={actions.length} icon={<Edit/>} label="Bearbeiten" onClick={this.editArticleDetails.bind(this, user._id, article._id)}/>);
-            actions.push(<FlatButton key={actions.length} icon={<Delete/>} label="Löschen" onClick={this.deleteArticle.bind(this, user._id, article._id)} secondary/>);
-            return <ArticleComponent key={article._id} article={article} actions={actions}/>;
-        });
         return (
             <div>
                 <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
-                <div className="articles-list">
-                    {articleComponents}
-                </div>
+                <ArticleGridList articles={articles} articleActions={this.createArticleActions()}/>
                 <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle.bind(this, user._id)}>
                     <ContentAdd/>
                 </FloatingActionButton>
