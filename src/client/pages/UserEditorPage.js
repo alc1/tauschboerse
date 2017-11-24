@@ -2,20 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import RaisedButton from 'material-ui/RaisedButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
 import UserDetailsForm from '../components/UserDetailsForm';
+import UserPasswordForm from '../components/UserPasswordForm';
 
 import { setGlobalMessage, setLoading, OK_MESSAGE } from '../actions/application';
 import { updateUser } from '../actions/user';
 import { isLoading } from '../selectors/application';
 import { getUser } from '../selectors/user';
 
+import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
+
 import userDetailsValidator from '../../shared/validations/userDetails';
 
 import User from '../../shared/businessobjects/User';
+
+import './UserEditorPage.css';
 
 class UserDetailsPage extends React.Component {
 
@@ -108,20 +113,31 @@ class UserDetailsPage extends React.Component {
         return (
             <div>
                 <ApplicationBar/>
-                <UserDetailsForm
-                    name={name}
-                    email={email}
-                    changePassword={changePassword}
-                    currentPassword={currentPassword}
-                    newPassword={newPassword}
-                    passwordConfirmation={passwordConfirmation}
-                    errors={errors}
-                    loading={loading}
-                    onChange={this.onChange}
-                    onPasswordChangeChecked={this.onPasswordChangeToggled}
-                    onSubmit={this.onSubmit}>
-                    <RaisedButton type="submit" label="Speichern" icon={<Save/>} disabled={loading || !modified} primary/>
-                </UserDetailsForm>
+                <form className="user-editor__container" onSubmit={this.onSubmit}>
+                    <UserDetailsForm
+                        name={name}
+                        email={email}
+                        errors={errors}
+                        loading={loading}
+                        onChange={this.onChange}
+                        onSubmit={this.onSubmit}/>
+                    <UserPasswordForm
+                        changePassword={changePassword}
+                        currentPassword={currentPassword}
+                        newPassword={newPassword}
+                        passwordConfirmation={passwordConfirmation}
+                        errors={errors}
+                        loading={loading}
+                        onChange={this.onChange}
+                        onPasswordChangeChecked={this.onPasswordChangeToggled}
+                        onSubmit={this.onSubmit}/>
+                    <FloatingActionButton
+                        style={FLOATING_ACTION_BUTTON_POSITION_STYLE}
+                        type="submit"
+                        disabled={loading || !modified}>
+                        <Save/>
+                    </FloatingActionButton>
+                </form>
             </div>
         );
     }

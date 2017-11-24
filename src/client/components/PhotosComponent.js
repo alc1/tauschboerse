@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 
@@ -70,7 +70,6 @@ export default class PhotosComponent extends React.Component {
                             <ToolbarTitle style={toolbarTitleStyles} text="Bilder"/>
                         </ToolbarGroup>
                         <ToolbarGroup>
-                            <ToolbarSeparator/>
                             <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
                             <input className="photos-component__file-input" type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple/>
                         </ToolbarGroup>

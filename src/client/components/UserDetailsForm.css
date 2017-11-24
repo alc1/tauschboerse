@@ -1,3 +1,16 @@
+.user-details-form__container {
+    flex-grow: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.user-details-form__paper {
+    width: 100%;
+    height: 100%;
+}
+
 .user-details-form__field-container {
     display: flex;
     flex-direction: column;

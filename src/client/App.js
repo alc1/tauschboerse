@@ -8,7 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import HomePage from './pages/HomePage';
 import MarketplacePage from './pages/MarketplacePage';
 import UserArticlesPage from './pages/UserArticlesPage';
-import UserDetailsPage from './pages/UserDetailsPage';
+import UserEditorPage from './pages/UserEditorPage';
 import UserTransactionsPage from './pages/UserTransactionsPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import ArticleEditorPage from './pages/ArticleEditorPage';
@@ -39,7 +39,7 @@ export default class App extends React.Component {
                             <PublicRoute exact path="/login" component={LoginPage}/>
                             <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
                             <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
-                            <PrivateRoute exact path="/user/:userId/details" component={UserDetailsPage}/>
+                            <PrivateRoute exact path="/user/:userId/details" component={UserEditorPage}/>
                             <PrivateRoute exact path="/user/:userId/article" component={ArticleEditorPage}/>
                             <PrivateRoute exact path="/user/:userId/article/:articleId" component={ArticleEditorPage}/>
                             <Route component={NoMatchPage}/>
