@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ApplicationBar from '../components/ApplicationBar';
-import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleGridList from '../components/ArticleGridList';
 
 import { setLoading } from '../actions/application';
@@ -32,7 +31,6 @@ class ArticleDetailPage extends React.Component {
             <div>
                 <ApplicationBar/>
                 {article && <ArticleGridList articles={[article]}/>}
-                <GlobalMessageComponent/>
             </div>
         );
     }

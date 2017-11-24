@@ -6,7 +6,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
-import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import UserDetailsForm from '../components/UserDetailsForm';
 
 import { setGlobalMessage, setLoading, OK_MESSAGE } from '../actions/application';
@@ -123,7 +122,6 @@ class UserDetailsPage extends React.Component {
                     onSubmit={this.onSubmit}>
                     <RaisedButton type="submit" label="Speichern" icon={<Save/>} disabled={loading || !modified} primary/>
                 </UserDetailsForm>
-                <GlobalMessageComponent/>
             </div>
         );
     }

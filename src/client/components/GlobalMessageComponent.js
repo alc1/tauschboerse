@@ -1,23 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Snackbar from 'material-ui/Snackbar';
 
-import { getGlobalMessage } from '../selectors/application';
-import { removeGlobalMessage, goToLogin, GO_TO_LOGIN, OK_MESSAGE, ERROR_MESSAGE } from '../actions/application';
+import { GO_TO_LOGIN, OK_MESSAGE, ERROR_MESSAGE } from '../actions/application';
 
-class GlobalMessageComponent extends React.Component {
+export default class GlobalMessageComponent extends React.Component {
 
     static propTypes = {
         globalMessage: PropTypes.object.isRequired,
-        removeGlobalMessage: PropTypes.func.isRequired,
-        goToLogin: PropTypes.func.isRequired
-    };
-
-    closeSnackbar = () => {
-        this.props.removeGlobalMessage();
+        onGlobalMessageClose: PropTypes.func.isRequired,
+        goToLogin: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired
     };
 
     render() {
@@ -34,8 +28,8 @@ class GlobalMessageComponent extends React.Component {
         let action;
         if (actionType === GO_TO_LOGIN) {
             action = () => {
+                this.props.onGlobalMessageClose();
                 this.props.goToLogin(this.props.history);
-                this.closeSnackbar();
             }
         }
 
@@ -55,16 +49,8 @@ class GlobalMessageComponent extends React.Component {
                 message={messageText}
                 action={actionText}
                 onActionTouchTap={action}
-                onRequestClose={this.closeSnackbar}
+                onRequestClose={this.props.onGlobalMessageClose}
             />
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        globalMessage: getGlobalMessage(theState)
-    };
-}
-
-export default withRouter(connect(mapStateToProps, { removeGlobalMessage, goToLogin })(GlobalMessageComponent));

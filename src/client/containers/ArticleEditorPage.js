@@ -9,7 +9,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
-import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleForm from '../components/ArticleForm';
 import PhotosComponent from '../components/PhotosComponent';
 
@@ -187,7 +186,6 @@ class ArticleEditorPage extends React.Component {
                     </form>
                     :
                     <Redirect to="/"/>}
-                <GlobalMessageComponent/>
             </div>
         );
     }

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import ApplicationBar from '../components/ApplicationBar';
-import GlobalMessageComponent from '../components/GlobalMessageComponent';
 
 class UserTransactionsPage extends React.Component {
 
@@ -15,7 +14,6 @@ class UserTransactionsPage extends React.Component {
             <div>
                 <ApplicationBar/>
                 {`Transactions for user ID: ${this.props.match.params.userId}`}
-                <GlobalMessageComponent/>
             </div>
         );
     }

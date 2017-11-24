@@ -11,6 +11,7 @@ import Menu from 'material-ui/svg-icons/navigation/menu';
 
 import NavigationComponent from './NavigationComponent';
 import LoadingIndicatorContainer from '../containers/LoadingIndicatorContainer';
+import GlobalMessageContainer from '../containers/GlobalMessageContainer';
 
 import { getUser } from '../selectors/user';
 import { logout } from '../actions/user';
@@ -77,6 +78,7 @@ class ApplicationBar extends React.Component {
                 </Drawer>
                 <div className="appbar__content"/>
                 <LoadingIndicatorContainer/>
+                <GlobalMessageContainer/>
             </div>
         );
     }

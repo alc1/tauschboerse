@@ -6,7 +6,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../components/ApplicationBar';
-import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import RegistrationForm from '../components/RegistrationForm';
 
 import { setLoading } from '../actions/application';
@@ -78,7 +77,6 @@ class RegistrationPage extends React.Component {
                     onSubmit={this.onSubmit}>
                     <RaisedButton type="submit" label="Registrieren" icon={<PersonAdd/>} disabled={loading} primary/>
                 </RegistrationForm>
-                <GlobalMessageComponent/>
             </div>
         );
     }

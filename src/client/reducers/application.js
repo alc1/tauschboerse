@@ -1,7 +1,7 @@
 import {
     GLOBAL_MESSAGE_RECEIVED,
     GLOBAL_MESSAGE_REMOVED,
-    SET_LOADING
+    LOADING_STATE_RECEIVED
 } from '../actions/application';
 
 const initialState = {
@@ -26,7 +26,7 @@ export default function globalMessage(theState = initialState, theAction) {
                 ...theState,
                 globalMessage: {}
             };
-        case SET_LOADING:
+        case LOADING_STATE_RECEIVED:
             return {
                 ...theState,
                 isLoading: theAction.isLoading

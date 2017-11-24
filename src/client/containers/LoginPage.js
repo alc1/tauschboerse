@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
@@ -9,7 +8,6 @@ import LockOpen from 'material-ui/svg-icons/action/lock-open';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../components/ApplicationBar';
-import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import LoginForm from '../components/LoginForm';
 
 import { setLoading } from '../actions/application';
@@ -31,6 +29,10 @@ class LoginPage extends React.Component {
         email: '',
         currentPassword: '',
         errors: {}
+    };
+
+    goToRegistration = () => {
+        this.props.history.push('/registration');
     };
 
     onChange = (theEvent) => {
@@ -70,11 +72,8 @@ class LoginPage extends React.Component {
                     onSubmit={this.onSubmit}>
                     <RaisedButton type="submit" label="Anmelden" icon={<LockOpen/>} disabled={loading} primary/>
                     <br/>
-                    <Link to="/registration">
-                        <FlatButton label="Neues Konto erstellen" icon={<PersonAdd/>} disabled={loading} secondary/>
-                    </Link>
+                    <FlatButton label="Neues Konto erstellen" icon={<PersonAdd/>} disabled={loading} onClick={this.goToRegistration} secondary/>
                 </LoginForm>
-                <GlobalMessageComponent/>
             </div>
         );
     }

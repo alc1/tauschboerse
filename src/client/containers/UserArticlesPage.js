@@ -10,7 +10,6 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import ApplicationBar from '../components/ApplicationBar';
-import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleGridList from '../components/ArticleGridList';
 
 import { setLoading } from '../actions/application';
@@ -79,7 +78,6 @@ class UserArticlesPage extends React.Component {
                 <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle.bind(this, user._id)}>
                     <ContentAdd/>
                 </FloatingActionButton>
-                <GlobalMessageComponent/>
             </div>
         );
     }
