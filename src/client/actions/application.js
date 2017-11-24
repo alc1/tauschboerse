@@ -7,6 +7,8 @@ import { removeToken } from './user';
 export const GLOBAL_MESSAGE_RECEIVED = 'GLOBAL_MESSAGE_RECEIVED';
 export const GLOBAL_MESSAGE_REMOVED = 'GLOBAL_MESSAGE_REMOVED';
 
+export const SET_LOADING = 'SET_LOADING';
+
 /*
  * Global Message Types
  */
@@ -30,8 +32,12 @@ export const globalMessageReceived = (theGlobalMessage) => ({
 });
 
 const globalMessageRemoved = () => ({
-    type: GLOBAL_MESSAGE_REMOVED,
-    globalMessage: {}
+    type: GLOBAL_MESSAGE_REMOVED
+});
+
+const loadingStateReceived = (isLoading) => ({
+    type: SET_LOADING,
+    isLoading: isLoading
 });
 
 /*
@@ -43,6 +49,9 @@ export const setGlobalMessage = (theGlobalMessage) => dispatch =>
 
 export const removeGlobalMessage = () => dispatch =>
     dispatch(globalMessageRemoved());
+
+export const setLoading = (isLoading) => dispatch =>
+    dispatch(loadingStateReceived(isLoading));
 
 /*
  * Follow-up Actions from within the global message snackbar

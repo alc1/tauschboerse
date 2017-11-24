@@ -10,10 +10,10 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import ApplicationBar from '../components/ApplicationBar';
-import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleGridList from '../components/ArticleGridList';
 
+import { setLoading } from '../actions/application';
 import { loadUserArticles } from '../actions/user';
 import { deleteArticle } from '../actions/article';
 import { getUserArticles, getUser } from '../selectors/user';
@@ -27,19 +27,16 @@ class UserArticlesPage extends React.Component {
         user: PropTypes.object.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         deleteArticle: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
-    state = {
-        loading: false
-    };
-
     componentDidMount() {
-        this.setState({ loading: true });
+        this.props.setLoading(true);
         const { userId } = this.props.match.params;
         this.props.loadUserArticles(userId)
-            .then(() => this.setState({ loading: false }))
-            .catch(() => this.setState({ loading: false }));
+            .then(() => this.props.setLoading(false))
+            .catch(() => this.props.setLoading(false));
     }
 
     showArticleDetails = (theArticleId) => {
@@ -55,10 +52,10 @@ class UserArticlesPage extends React.Component {
     };
 
     deleteArticle = (theArticleId, theUserId) => {
-        this.setState({ loading: true });
+        this.props.setLoading(true);
         this.props.deleteArticle(theUserId, theArticleId)
-            .then(() => this.setState({ loading: false }))
-            .catch(() => this.setState({ loading: false }));
+            .then(() => this.props.setLoading(false))
+            .catch(() => this.props.setLoading(false));
     };
 
     createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
@@ -74,12 +71,10 @@ class UserArticlesPage extends React.Component {
     };
 
     render() {
-        const { loading } = this.state;
         const { user, articles } = this.props;
         return (
             <div>
                 <ApplicationBar/>
-                <LoadingIndicatorComponent loading={loading}/>
                 <ArticleGridList articles={articles} articleActions={this.createArticleActions()}/>
                 <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle.bind(this, user._id)}>
                     <ContentAdd/>
@@ -97,4 +92,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadUserArticles, deleteArticle })(UserArticlesPage);
+export default connect(mapStateToProps, { loadUserArticles, deleteArticle, setLoading })(UserArticlesPage);

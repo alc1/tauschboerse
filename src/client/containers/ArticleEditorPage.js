@@ -9,12 +9,13 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
-import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleForm from '../components/ArticleForm';
 import PhotosComponent from '../components/PhotosComponent';
 
+import { setLoading } from '../actions/application';
 import { loadArticle, createArticle, updateArticle } from '../actions/article';
+import { isLoading } from '../selectors/application';
 import { getArticle } from '../selectors/article';
 import { getUser } from '../selectors/user';
 
@@ -31,9 +32,11 @@ class ArticleEditorPage extends React.Component {
     static propTypes = {
         article: PropTypes.object,
         user: PropTypes.object.isRequired,
+        loading: PropTypes.bool.isRequired,
         loadArticle: PropTypes.func.isRequired,
         createArticle: PropTypes.func.isRequired,
         updateArticle: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -45,16 +48,16 @@ class ArticleEditorPage extends React.Component {
         created: {},
         owner: {},
         errors: {},
-        loading: false,
         modified: false
     };
 
     componentDidMount() {
-        this.setState({ loading: true });
+        this.props.setLoading(true);
         const { articleId } = this.props.match.params;
         if (articleId) {
             this.props.loadArticle(articleId)
                 .then(() => {
+                    this.props.setLoading(false);
                     const { article } = this.props;
                     this.setState({
                         title: article ? article.title : this.state.title,
@@ -62,14 +65,13 @@ class ArticleEditorPage extends React.Component {
                         categories: article ? article.categories : this.state.categories,
                         photos: article ? article.photos : this.state.photos,
                         created: article ? article.created : this.state.created,
-                        owner: article ? article.owner : this.state.owner,
-                        loading: false
+                        owner: article ? article.owner : this.state.owner
                     });
                 })
-                .catch((err) => this.setState({ loading: false }));
+                .catch(() => this.props.setLoading(false));
         }
         else {
-            this.setState({ loading: false });
+            this.props.setLoading(false);
         }
     }
 
@@ -116,7 +118,7 @@ class ArticleEditorPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.setState({ loading: true });
+        this.props.setLoading(true);
         const { user } = this.props;
         const { title, description, categories, photos, created } = this.state;
         const { articleId } = this.props.match.params;
@@ -133,25 +135,22 @@ class ArticleEditorPage extends React.Component {
                 articleRequest = this.props.createArticle(articleToSave);
             }
             articleRequest.then(() => {
+                this.props.setLoading(false);
                 this.props.history.goBack();
             }).catch((err) => {
-                this.setState({
-                    errors: err.response.data.errors || {},
-                    loading: false
-                });
+                this.props.setLoading(false);
+                this.setState({ errors: err.response.data.errors || {} });
             });
         }
         else {
-            this.setState({
-                errors: validation.errors,
-                loading: false
-            });
+            this.props.setLoading(false);
+            this.setState({ errors: validation.errors });
         }
     };
 
     render() {
-        const { user } = this.props;
-        const { title, description, categories, photos, owner, errors, loading, modified } = this.state;
+        const { user, loading } = this.props;
+        const { title, description, categories, photos, owner, errors, modified } = this.state;
         let isUserPermitted = true;
         if (owner._id && owner._id !== user._id) {
             isUserPermitted = false;
@@ -159,7 +158,6 @@ class ArticleEditorPage extends React.Component {
         return (
             <div>
                 <ApplicationBar/>
-                <LoadingIndicatorComponent loading={loading}/>
                 {isUserPermitted ?
                     <form className="article-editor__container" onSubmit={this.onSubmit}>
                         <ArticleForm
@@ -198,8 +196,9 @@ class ArticleEditorPage extends React.Component {
 function mapStateToProps(theState) {
     return {
         article: getArticle(theState),
-        user: getUser(theState)
+        user: getUser(theState),
+        loading: isLoading(theState)
     };
 }
 
-export default connect(mapStateToProps, { loadArticle, createArticle, updateArticle })(ArticleEditorPage);
+export default connect(mapStateToProps, { loadArticle, createArticle, updateArticle, setLoading })(ArticleEditorPage);

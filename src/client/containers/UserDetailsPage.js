@@ -6,12 +6,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
-import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import UserDetailsForm from '../components/UserDetailsForm';
 
-import { setGlobalMessage, OK_MESSAGE } from '../actions/globalMessage';
+import { setGlobalMessage, setLoading, OK_MESSAGE } from '../actions/application';
 import { updateUser } from '../actions/user';
+import { isLoading } from '../selectors/application';
 import { getUser } from '../selectors/user';
 
 import userDetailsValidator from '../../shared/validations/userDetails';
@@ -23,7 +23,9 @@ class UserDetailsPage extends React.Component {
     static propTypes = {
         updateUser: PropTypes.func.isRequired,
         setGlobalMessage: PropTypes.func.isRequired,
-        user: PropTypes.object.isRequired
+        setLoading: PropTypes.func.isRequired,
+        user: PropTypes.object.isRequired,
+        loading: PropTypes.bool.isRequired
     };
 
     state = {
@@ -34,7 +36,6 @@ class UserDetailsPage extends React.Component {
         passwordConfirmation: '',
         changePassword: false,
         errors: {},
-        loading: false,
         modified: false
     };
 
@@ -69,7 +70,7 @@ class UserDetailsPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.setState({ loading: true });
+        this.props.setLoading(true);
         const { email, name, currentPassword, newPassword, passwordConfirmation } = this.state;
         const { _id, registration } = this.props.user;
         const user = new User({ email, name, registration, currentPassword, newPassword, passwordConfirmation });
@@ -78,12 +79,12 @@ class UserDetailsPage extends React.Component {
         if (validation.isValid) {
             this.props.updateUser(user)
                 .then(() => {
+                    this.props.setLoading(false);
                     if (this.state.changePassword) {
                         this.onPasswordChangeToggled();
                     }
                     this.setState({
                         errors: {},
-                        loading: false,
                         modified: false
                     });
                     this.props.setGlobalMessage({
@@ -92,26 +93,22 @@ class UserDetailsPage extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    this.setState({
-                        errors: err.response.data.errors || {},
-                        loading: false
-                    })
+                    this.props.setLoading(false);
+                    this.setState({ errors: err.response.data.errors || {} })
                 });
         }
         else {
-            this.setState({
-                errors: validation.errors,
-                loading: false
-            });
+            this.props.setLoading(false);
+            this.setState({ errors: validation.errors });
         }
     };
 
     render() {
-        const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, modified } = this.state;
+        const { loading } = this.props;
+        const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, modified } = this.state;
         return (
             <div>
                 <ApplicationBar/>
-                <LoadingIndicatorComponent loading={loading}/>
                 <UserDetailsForm
                     name={name}
                     email={email}
@@ -134,8 +131,9 @@ class UserDetailsPage extends React.Component {
 
 function mapStateToProps(theState) {
     return {
-        user: getUser(theState)
+        user: getUser(theState),
+        loading: isLoading(theState)
     };
 }
 
-export default connect(mapStateToProps, { updateUser, setGlobalMessage })(UserDetailsPage);
+export default connect(mapStateToProps, { updateUser, setGlobalMessage, setLoading })(UserDetailsPage);

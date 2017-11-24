@@ -6,11 +6,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../components/ApplicationBar';
-import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import RegistrationForm from '../components/RegistrationForm';
 
+import { setLoading } from '../actions/application';
 import { createUser } from '../actions/user';
+import { isLoading } from '../selectors/application';
 
 import registrationValidator from '../../shared/validations/registration';
 
@@ -20,6 +21,8 @@ class RegistrationPage extends React.Component {
 
     static propTypes = {
         createUser: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired,
+        loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -28,8 +31,7 @@ class RegistrationPage extends React.Component {
         email: '',
         newPassword: '',
         passwordConfirmation: '',
-        errors: {},
-        loading: false
+        errors: {}
     };
 
     onChange = (theEvent) => {
@@ -38,36 +40,33 @@ class RegistrationPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.setState({ loading: true });
+        this.props.setLoading(true);
         const { email, name, newPassword, passwordConfirmation } = this.state;
         const user = new User({ email, name, newPassword, passwordConfirmation });
         const validation = registrationValidator.validate(user);
         if (validation.isValid) {
             this.props.createUser(user)
-                .then(res => {
+                .then(() => {
+                    this.props.setLoading(false);
                     this.props.history.replace('/');
                 })
                 .catch((err) => {
-                    this.setState({
-                        errors: err.response.data.errors || {},
-                        loading: false
-                    })
+                    this.props.setLoading(false);
+                    this.setState({ errors: err.response.data.errors || {} })
                 });
         }
         else {
-            this.setState({
-                errors: validation.errors,
-                loading: false
-            });
+            this.props.setLoading(false);
+            this.setState({ errors: validation.errors });
         }
     };
 
     render() {
-        const { name, email, newPassword, passwordConfirmation, errors, loading } = this.state;
+        const { loading } = this.props;
+        const { name, email, newPassword, passwordConfirmation, errors } = this.state;
         return (
             <div>
                 <ApplicationBar/>
-                <LoadingIndicatorComponent loading={loading}/>
                 <RegistrationForm
                     name={name}
                     email={email}
@@ -85,4 +84,10 @@ class RegistrationPage extends React.Component {
     }
 }
 
-export default connect(null, { createUser })(RegistrationPage);
+function mapStateToProps(theState) {
+    return {
+        loading: isLoading(theState)
+    };
+}
+
+export default connect(mapStateToProps, { createUser, setLoading })(RegistrationPage);

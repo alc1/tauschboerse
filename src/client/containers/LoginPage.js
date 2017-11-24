@@ -9,11 +9,12 @@ import LockOpen from 'material-ui/svg-icons/action/lock-open';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../components/ApplicationBar';
-import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import LoginForm from '../components/LoginForm';
 
+import { setLoading } from '../actions/application';
 import { login } from '../actions/user';
+import { isLoading } from '../selectors/application';
 
 import User from '../../shared/businessobjects/User';
 
@@ -21,14 +22,15 @@ class LoginPage extends React.Component {
 
     static propTypes = {
         login: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired,
+        loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
     };
 
     state = {
         email: '',
         currentPassword: '',
-        errors: {},
-        loading: false
+        errors: {}
     };
 
     onChange = (theEvent) => {
@@ -37,31 +39,28 @@ class LoginPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.setState({
-            errors: {},
-            loading: true
-        });
+        this.props.setLoading(true);
+        this.setState({ errors: {} });
         const { email, currentPassword } = this.state;
         const user = new User({ email, currentPassword });
         this.props.login(user)
             .then(() => {
+                this.props.setLoading(false);
                 const { from } = this.props.location.state || { from: { pathname: '/' } };
                 this.props.history.replace(from);
             })
             .catch((err) => {
-                this.setState({
-                    errors: err.response.data.errors || {},
-                    loading: false
-                })
+                this.props.setLoading(false);
+                this.setState({ errors: err.response.data.errors || {} })
             });
     };
 
     render() {
-        const { email, currentPassword, errors, loading } = this.state;
+        const { loading } = this.props;
+        const { email, currentPassword, errors } = this.state;
         return (
             <div>
                 <ApplicationBar/>
-                <LoadingIndicatorComponent loading={loading}/>
                 <LoginForm
                     email={email}
                     currentPassword={currentPassword}
@@ -81,4 +80,10 @@ class LoginPage extends React.Component {
     }
 }
 
-export default connect(null, { login })(LoginPage);
+function mapStateToProps(theState) {
+    return {
+        loading: isLoading(theState)
+    };
+}
+
+export default connect(mapStateToProps, { login, setLoading })(LoginPage);

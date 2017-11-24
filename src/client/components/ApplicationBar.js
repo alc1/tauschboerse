@@ -10,6 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import Menu from 'material-ui/svg-icons/navigation/menu';
 
 import NavigationComponent from './NavigationComponent';
+import LoadingIndicatorContainer from '../containers/LoadingIndicatorContainer';
 
 import { getUser } from '../selectors/user';
 import { logout } from '../actions/user';
@@ -75,6 +76,7 @@ class ApplicationBar extends React.Component {
                     <NavigationComponent closeMenu={this.closeMenu}/>
                 </Drawer>
                 <div className="appbar__content"/>
+                <LoadingIndicatorContainer/>
             </div>
         );
     }

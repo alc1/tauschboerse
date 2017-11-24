@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 
+import applicationReducer from './application';
 import userReducer from './user';
 import articleReducer from './article';
 import categoryReducer from './category';
-import globalMessageReducer from './globalMessage';
 
 export default combineReducers({
+    application: applicationReducer,
     user: userReducer,
     article: articleReducer,
-    categories: categoryReducer,
-    globalMessage: globalMessageReducer
+    categories: categoryReducer
 });

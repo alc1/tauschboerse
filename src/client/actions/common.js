@@ -1,4 +1,4 @@
-import { globalMessageReceived, ERROR_MESSAGE, GO_TO_LOGIN } from './globalMessage';
+import { globalMessageReceived, ERROR_MESSAGE, GO_TO_LOGIN } from './application';
 
 export const handleError = (error, dispatch) => {
     if (error.response.status === 401 || error.response.status === 403) {

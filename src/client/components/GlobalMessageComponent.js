@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 import Snackbar from 'material-ui/Snackbar';
 
-import { getGlobalMessage } from '../selectors/globalMessage';
-import { removeGlobalMessage, goToLogin, GO_TO_LOGIN, OK_MESSAGE, ERROR_MESSAGE } from '../actions/globalMessage';
+import { getGlobalMessage } from '../selectors/application';
+import { removeGlobalMessage, goToLogin, GO_TO_LOGIN, OK_MESSAGE, ERROR_MESSAGE } from '../actions/application';
 
 class GlobalMessageComponent extends React.Component {
 

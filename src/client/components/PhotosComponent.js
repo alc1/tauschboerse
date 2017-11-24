@@ -70,7 +70,7 @@ export default class PhotosComponent extends React.Component {
                     </ToolbarGroup>
                     <ToolbarGroup>
                         <ToolbarSeparator/>
-                        <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} primary/>
+                        <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
                         <input className="photos-component__file-input" type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple/>
                     </ToolbarGroup>
                 </Toolbar>
