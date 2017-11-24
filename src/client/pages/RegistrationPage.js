@@ -16,6 +16,8 @@ import registrationValidator from '../../shared/validations/registration';
 
 import User from '../../shared/businessobjects/User';
 
+import './RegistrationPage.css';
+
 class RegistrationPage extends React.Component {
 
     static propTypes = {
@@ -75,7 +77,11 @@ class RegistrationPage extends React.Component {
                     loading={loading}
                     onChange={this.onChange}
                     onSubmit={this.onSubmit}>
-                    <RaisedButton type="submit" label="Registrieren" icon={<PersonAdd/>} disabled={loading} primary/>
+                    <div className="registration-page__buttonbar">
+                        <div className="registration-page__button">
+                            <RaisedButton type="submit" label="Registrieren" icon={<PersonAdd/>} disabled={loading} primary/>
+                        </div>
+                    </div>
                 </RegistrationForm>
             </div>
         );

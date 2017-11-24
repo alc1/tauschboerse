@@ -1,0 +1,10 @@
+.registration-page__buttonbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.registration-page__button {
+    margin: 10px;
+}

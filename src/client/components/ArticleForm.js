@@ -9,6 +9,8 @@ import CategoryInputFieldContainer from '../containers/CategoryInputContainer';
 
 import './ArticleForm.css';
 
+const toolbarTitleStyle = { color: 'black' };
+
 export default class ArticleForm extends React.Component {
 
     static propTypes = {
@@ -29,41 +31,43 @@ export default class ArticleForm extends React.Component {
     render() {
         const { title, description, categories, errors, loading, onChange, onAddCategory, onRemoveCategory } = this.props;
         return (
-            <Paper style={{margin: '10px', width: '100%', height: '100%'}}>
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle style={{color: 'black'}} text="Artikeldetails"/>
-                    </ToolbarGroup>
-                </Toolbar>
-                <div className="article-form__field-container">
-                    <InputComponent
-                        inputRef={inputElement => this.firstInputElement = inputElement}
-                        error={errors.title}
-                        label="Titel"
-                        onChange={onChange}
-                        value={title}
-                        field="title"
-                        disabled={loading}
-                    />
-                    <InputComponent
-                        error={errors.description}
-                        label="Beschreibung"
-                        onChange={onChange}
-                        value={description}
-                        field="description"
-                        multiLine={true}
-                        disabled={loading}
-                    />
-                    <CategoryInputFieldContainer
-                        categories={categories}
-                        errors={errors}
-                        loading={loading}
-                        onAddCategory={onAddCategory}
-                        onRemoveCategory={onRemoveCategory}
-                        allowNewValues={true}
-                    />
-                </div>
-            </Paper>
+            <div className="article-form__container">
+                <Paper className="article-form__paper">
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyle} text="Artikeldetails"/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    <div className="article-form__field-container">
+                        <InputComponent
+                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            error={errors.title}
+                            label="Titel"
+                            onChange={onChange}
+                            value={title}
+                            field="title"
+                            disabled={loading}
+                        />
+                        <InputComponent
+                            error={errors.description}
+                            label="Beschreibung"
+                            onChange={onChange}
+                            value={description}
+                            field="description"
+                            multiLine={true}
+                            disabled={loading}
+                        />
+                        <CategoryInputFieldContainer
+                            categories={categories}
+                            errors={errors}
+                            loading={loading}
+                            onAddCategory={onAddCategory}
+                            onRemoveCategory={onRemoveCategory}
+                            allowNewValues={true}
+                        />
+                    </div>
+                </Paper>
+            </div>
         );
     }
 }

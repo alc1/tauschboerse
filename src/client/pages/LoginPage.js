@@ -16,6 +16,8 @@ import { isLoading } from '../selectors/application';
 
 import User from '../../shared/businessobjects/User';
 
+import './LoginPage.css';
+
 class LoginPage extends React.Component {
 
     static propTypes = {
@@ -70,9 +72,14 @@ class LoginPage extends React.Component {
                     loading={loading}
                     onChange={this.onChange}
                     onSubmit={this.onSubmit}>
-                    <RaisedButton type="submit" label="Anmelden" icon={<LockOpen/>} disabled={loading} primary/>
-                    <br/>
-                    <FlatButton label="Neues Konto erstellen" icon={<PersonAdd/>} disabled={loading} onClick={this.goToRegistration} secondary/>
+                    <div className="login-page__buttonbar">
+                        <div className="login-page__button">
+                            <RaisedButton type="submit" label="Anmelden" icon={<LockOpen/>} disabled={loading} primary/>
+                        </div>
+                        <div className="login-page__button">
+                            <FlatButton label="Neues Konto erstellen" icon={<PersonAdd/>} disabled={loading} onClick={this.goToRegistration} secondary/>
+                        </div>
+                    </div>
                 </LoginForm>
             </div>
         );

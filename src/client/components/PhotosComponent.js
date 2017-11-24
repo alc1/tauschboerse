@@ -58,24 +58,26 @@ export default class PhotosComponent extends React.Component {
         const { photos, loading } = this.props;
         const photoComponents = photos.map((photo) =>
             <div key={photo.fileName}>
-                <img src={photo.isNew ? photo.fileContent : photo.url} alt=""/>
+                <img src={photo.isNew ? photo.fileContent : photo.url} alt={photo.fileName}/>
                 <FlatButton label="Bild entfernen" icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
             </div>
         );
         return (
-            <Paper style={{margin: '10px', width: '100%', height: '100%'}}>
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle style={toolbarTitleStyles} text="Bilder"/>
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        <ToolbarSeparator/>
-                        <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
-                        <input className="photos-component__file-input" type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple/>
-                    </ToolbarGroup>
-                </Toolbar>
-                {photoComponents}
-            </Paper>
+            <div className="photos-component__container">
+                <Paper className="photos-component__paper">
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyles} text="Bilder"/>
+                        </ToolbarGroup>
+                        <ToolbarGroup>
+                            <ToolbarSeparator/>
+                            <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
+                            <input className="photos-component__file-input" type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    {photoComponents}
+                </Paper>
+            </div>
         );
     }
 }

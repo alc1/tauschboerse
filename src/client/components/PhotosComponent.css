@@ -1,3 +1,16 @@
+.photos-component__container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.photos-component__paper {
+    width: 100%;
+    height: 100%;
+}
+
 .photos-component__file-input {
     display: none;
 }
