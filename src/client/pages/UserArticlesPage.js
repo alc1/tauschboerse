@@ -11,6 +11,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import ApplicationBar from '../components/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList';
+import DeleteArticleDialog from '../components/DeleteArticleDialog';
 
 import { setLoading } from '../actions/application';
 import { loadUserArticles } from '../actions/user';
@@ -30,6 +31,11 @@ class UserArticlesPage extends React.Component {
         history: PropTypes.object.isRequired
     };
 
+    state = {
+        isDeleteDialogOpen: false,
+        articleToDelete: null
+    };
+
     componentDidMount() {
         this.props.setLoading(true);
         const { userId } = this.props.match.params;
@@ -38,21 +44,36 @@ class UserArticlesPage extends React.Component {
             .catch(() => this.props.setLoading(false));
     }
 
-    showArticleDetails = (theArticleId) => {
-        this.props.history.push(`/article/${theArticleId}`);
+    showArticleDetails = (theArticle) => {
+        this.props.history.push(`/article/${theArticle._id}`);
     };
 
-    editArticleDetails = (theArticleId, theUserId) => {
-        this.props.history.push(`/user/${theUserId}/article/${theArticleId}`);
+    editArticleDetails = (theArticle) => {
+        this.props.history.push(`/user/${theArticle.owner._id}/article/${theArticle._id}`);
     };
 
     createNewArticle = (theUserId) => {
         this.props.history.push(`/user/${theUserId}/article`);
     };
 
-    deleteArticle = (theArticleId, theUserId) => {
+    showDeleteConfirmationDialog = (theArticle) => {
+        this.setState({
+            isDeleteDialogOpen: true,
+            articleToDelete: theArticle
+        });
+    };
+
+    closeDeleteDialog = () => {
+        this.setState({
+            isDeleteDialogOpen: false,
+            articleToDelete: null
+        });
+    };
+
+    deleteArticle = (theArticle) => {
+        this.closeDeleteDialog();
         this.props.setLoading(true);
-        this.props.deleteArticle(theUserId, theArticleId)
+        this.props.deleteArticle(theArticle.owner._id, theArticle._id)
             .then(() => this.props.setLoading(false))
             .catch(() => this.props.setLoading(false));
     };
@@ -65,12 +86,14 @@ class UserArticlesPage extends React.Component {
         let articleActions = [];
         articleActions.push(this.createArticleAction("Ansehen", <RemoveRedEye/>, this.showArticleDetails, true, false, true));
         articleActions.push(this.createArticleAction("Bearbeiten", <Edit/>, this.editArticleDetails, false, false, true));
-        articleActions.push(this.createArticleAction("Löschen", <Delete/>, this.deleteArticle, false, true, false));
-        return articleActions
+        articleActions.push(this.createArticleAction("Löschen", <Delete/>, this.showDeleteConfirmationDialog, false, true, false));
+        return articleActions;
     };
 
     render() {
         const { user, articles } = this.props;
+        const { isDeleteDialogOpen, articleToDelete } = this.state;
+        const articleTitle = articleToDelete ? articleToDelete.title : '';
         return (
             <div>
                 <ApplicationBar/>
@@ -78,6 +101,11 @@ class UserArticlesPage extends React.Component {
                 <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle.bind(this, user._id)}>
                     <ContentAdd/>
                 </FloatingActionButton>
+                <DeleteArticleDialog
+                    open={isDeleteDialogOpen}
+                    deleteAction={this.deleteArticle.bind(this, articleToDelete)}
+                    cancelAction={this.closeDeleteDialog}
+                    articleTitle={articleTitle}/>
             </div>
         );
     }

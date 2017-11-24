@@ -23,10 +23,10 @@ export default class ArticleGridList extends React.Component {
         const isPrimary = theAction.isPrimary;
         const isSecondary = theAction.isSecondary;
         if (theAction.isRaised) {
-            return (<RaisedButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theArticle._id, theArticle.owner._id)} primary={isPrimary} secondary={isSecondary}/>);
+            return (<RaisedButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theArticle)} primary={isPrimary} secondary={isSecondary}/>);
         }
         else {
-            return (<FlatButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theArticle._id, theArticle.owner._id)} primary={isPrimary} secondary={isSecondary}/>);
+            return (<FlatButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theArticle)} primary={isPrimary} secondary={isSecondary}/>);
         }
     };
 
