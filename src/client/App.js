@@ -22,6 +22,8 @@ import PublicRoute from './route/PublicRoute';
 import store from '../client/store/store';
 import history from '../client/history/history';
 
+import './App.css';
+
 export default class App extends React.Component {
 
     render() {

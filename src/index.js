@@ -7,8 +7,6 @@ import store from './client/store/store';
 
 import App from './client/App';
 
-import './client/styles.css';
-
 const jwtToken = localStorage.getItem(JWT_TOKEN_KEY);
 if (jwtToken) {
     setToken(jwtToken, store.dispatch, userLoggedIn);
