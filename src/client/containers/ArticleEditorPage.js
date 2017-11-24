@@ -5,21 +5,26 @@ import PropTypes from 'prop-types';
 
 import uuid from 'uuid';
 
-import RaisedButton from 'material-ui/RaisedButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
 import LoadingIndicatorComponent from '../components/LoadingIndicatorComponent';
 import GlobalMessageComponent from '../components/GlobalMessageComponent';
 import ArticleForm from '../components/ArticleForm';
+import PhotosComponent from '../components/PhotosComponent';
 
 import { loadArticle, createArticle, updateArticle } from '../actions/article';
 import { getArticle } from '../selectors/article';
 import { getUser } from '../selectors/user';
 
+import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
+
 import articleDetailsValidator from '../../shared/validations/articleDetails';
 
 import Article from '../../shared/businessobjects/Article';
+
+import './ArticleEditorPage.css';
 
 class ArticleEditorPage extends React.Component {
 
@@ -49,7 +54,7 @@ class ArticleEditorPage extends React.Component {
         const { articleId } = this.props.match.params;
         if (articleId) {
             this.props.loadArticle(articleId)
-                .then((res) => {
+                .then(() => {
                     const { article } = this.props;
                     this.setState({
                         title: article ? article.title : this.state.title,
@@ -156,21 +161,32 @@ class ArticleEditorPage extends React.Component {
                 <ApplicationBar/>
                 <LoadingIndicatorComponent loading={loading}/>
                 {isUserPermitted ?
-                    <ArticleForm
-                        title={title}
-                        description={description}
-                        categories={categories}
-                        photos={photos}
-                        errors={errors}
-                        loading={loading}
-                        onChange={this.onChange}
-                        onSubmit={this.onSubmit}
-                        onAddCategory={this.onAddCategory}
-                        onRemoveCategory={this.onRemoveCategory}
-                        onPhotoLoaded={this.onPhotoLoaded}
-                        onRemovePhoto={this.onRemovePhoto}>
-                        <RaisedButton type="submit" label="Speichern" icon={<Save/>} disabled={loading || !modified} primary/>
-                    </ArticleForm>
+                    <form className="article-editor__container" onSubmit={this.onSubmit}>
+                        <ArticleForm
+                            title={title}
+                            description={description}
+                            categories={categories}
+                            photos={photos}
+                            errors={errors}
+                            loading={loading}
+                            onChange={this.onChange}
+                            onSubmit={this.onSubmit}
+                            onAddCategory={this.onAddCategory}
+                            onRemoveCategory={this.onRemoveCategory}
+                            onPhotoLoaded={this.onPhotoLoaded}
+                            onRemovePhoto={this.onRemovePhoto}/>
+                        <PhotosComponent
+                            photos={photos}
+                            onPhotoLoaded={this.onPhotoLoaded}
+                            onRemovePhoto={this.onRemovePhoto}
+                            loading={loading}/>
+                        <FloatingActionButton
+                            style={FLOATING_ACTION_BUTTON_POSITION_STYLE}
+                            type="submit"
+                            disabled={loading || !modified}>
+                            <Save/>
+                        </FloatingActionButton>
+                    </form>
                     :
                     <Redirect to="/"/>}
                 <GlobalMessageComponent/>

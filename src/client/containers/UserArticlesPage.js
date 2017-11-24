@@ -6,7 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
-import ViewHeadline from 'material-ui/svg-icons/action/view-headline';
+import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 import Delete from 'material-ui/svg-icons/action/delete';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -19,6 +19,8 @@ import ArticleComponent from '../components/ArticleComponent';
 import { loadUserArticles } from '../actions/user';
 import { deleteArticle } from '../actions/article';
 import { getUserArticles, getUser } from '../selectors/user';
+
+import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 
 class UserArticlesPage extends React.Component {
 
@@ -66,19 +68,11 @@ class UserArticlesPage extends React.Component {
         const { user, articles } = this.props;
         const articleComponents = articles.map(article => {
             let actions = [];
-            actions.push(<RaisedButton key={actions.length} icon={<ViewHeadline/>} label="Detail" onClick={this.showArticleDetails.bind(this, article._id)} primary/>);
+            actions.push(<RaisedButton key={actions.length} icon={<RemoveRedEye/>} label="Ansehen" onClick={this.showArticleDetails.bind(this, article._id)} primary/>);
             actions.push(<RaisedButton key={actions.length} icon={<Edit/>} label="Bearbeiten" onClick={this.editArticleDetails.bind(this, user._id, article._id)}/>);
             actions.push(<FlatButton key={actions.length} icon={<Delete/>} label="Löschen" onClick={this.deleteArticle.bind(this, user._id, article._id)} secondary/>);
             return <ArticleComponent key={article._id} article={article} actions={actions}/>;
         });
-        const buttonPositionStyle = {
-            margin: 0,
-            top: 'auto',
-            right: 20,
-            bottom: 20,
-            left: 'auto',
-            position: 'fixed',
-        };
         return (
             <div>
                 <ApplicationBar/>
@@ -86,8 +80,8 @@ class UserArticlesPage extends React.Component {
                 <div className="articles-list">
                     {articleComponents}
                 </div>
-                <FloatingActionButton style={buttonPositionStyle} onClick={this.createNewArticle.bind(this, user._id)}>
-                    <ContentAdd />
+                <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle.bind(this, user._id)}>
+                    <ContentAdd/>
                 </FloatingActionButton>
                 <GlobalMessageComponent/>
             </div>

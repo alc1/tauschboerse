@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, CardHeader, CardMedia, CardActions } from 'material-ui/Card';
+import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
+import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 
 import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo';
 import Delete from 'material-ui/svg-icons/action/delete';
+
+import './PhotosComponent.css';
+
+const toolbarTitleStyles = { color: 'black' };
 
 export default class PhotosComponent extends React.Component {
 
@@ -52,22 +57,25 @@ export default class PhotosComponent extends React.Component {
     render() {
         const { photos, loading } = this.props;
         const photoComponents = photos.map((photo) =>
-            <CardMedia key={photo.fileName}>
+            <div key={photo.fileName}>
                 <img src={photo.isNew ? photo.fileContent : photo.url} alt=""/>
-                <CardActions>
-                    <FlatButton label="Bild entfernen" icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
-                </CardActions>
-            </CardMedia>
+                <FlatButton label="Bild entfernen" icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
+            </div>
         );
         return (
-            <Card>
-                <CardHeader title="Bilder"/>
+            <Paper style={{margin: '10px', width: '100%', height: '100%'}}>
+                <Toolbar>
+                    <ToolbarGroup>
+                        <ToolbarTitle style={toolbarTitleStyles} text="Bilder"/>
+                    </ToolbarGroup>
+                    <ToolbarGroup>
+                        <ToolbarSeparator/>
+                        <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} primary/>
+                        <input className="photos-component__file-input" type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple/>
+                    </ToolbarGroup>
+                </Toolbar>
                 {photoComponents}
-                <CardActions>
-                    <input type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple style={{ display: 'none' }}/>
-                    <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
-                </CardActions>
-            </Card>
+            </Paper>
         );
     }
 }

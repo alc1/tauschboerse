@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import InputComponent from '../components/InputComponent';
 
+import './LoginForm.css';
+
 export default class LoginForm extends React.Component {
 
     static propTypes = {
@@ -20,17 +22,10 @@ export default class LoginForm extends React.Component {
 
     render() {
         const { email, currentPassword, errors, loading, onChange, onSubmit } = this.props;
-        const inputStyles = { width: '350px' };
-        const formStyles = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        };
         return (
-            <form style={formStyles} onSubmit={onSubmit}>
+            <form className="login-form__field-container" onSubmit={onSubmit}>
                 <InputComponent
                     inputRef={inputElement => this.firstInputElement = inputElement}
-                    style={inputStyles}
                     error={errors.email}
                     label="E-Mail"
                     onChange={onChange}
@@ -39,7 +34,6 @@ export default class LoginForm extends React.Component {
                     disabled={loading}
                 />
                 <InputComponent
-                    style={inputStyles}
                     error={errors.currentPassword}
                     label="Passwort"
                     onChange={onChange}

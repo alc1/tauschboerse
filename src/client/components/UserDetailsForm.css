@@ -1,0 +1,5 @@
+.user-details-form__field-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

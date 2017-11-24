@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 
+const styles = { width: '90%' };
+
 export default class InputComponent extends React.Component {
 
     static propTypes = {
@@ -18,26 +20,25 @@ export default class InputComponent extends React.Component {
     static defaultProps = {
         type: 'text',
         multiLine: false,
-        disabled: false
+        disabled: false,
+        errors: {}
     };
 
     render() {
         return (
-            <div>
-                <TextField
-                    ref={this.props.inputRef}
-                    style={this.props.style}
-                    hintText={this.props.label}
-                    floatingLabelText={this.props.label}
-                    errorText={this.props.error}
-                    onChange={this.props.onChange}
-                    value={this.props.value}
-                    type={this.props.type}
-                    multiLine={this.props.multiLine}
-                    name={this.props.field}
-                    disabled={this.props.disabled}
-                />
-            </div>
+            <TextField
+                ref={this.props.inputRef}
+                style={styles}
+                hintText={this.props.label}
+                floatingLabelText={this.props.label}
+                errorText={this.props.error}
+                onChange={this.props.onChange}
+                value={this.props.value}
+                type={this.props.type}
+                multiLine={this.props.multiLine}
+                name={this.props.field}
+                disabled={this.props.disabled}
+            />
         );
     }
 }

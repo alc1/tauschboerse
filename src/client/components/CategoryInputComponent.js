@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import ChipInput from 'material-ui-chip-input';
 
+const styles = { width: '90%' };
+
 export default class CategoryInputFieldComponent extends React.Component {
 
     static propTypes = {
@@ -16,10 +18,9 @@ export default class CategoryInputFieldComponent extends React.Component {
 
     render() {
         const { categories, availableCategories, errors, loading, onAddCategory, onRemoveCategory } = this.props;
-        const inputStyles = { width: '350px' };
         return (
             <ChipInput
-                style={inputStyles}
+                style={styles}
                 errorText={errors.categories}
                 hintText="Kategorien"
                 floatingLabelText="Kategorien"

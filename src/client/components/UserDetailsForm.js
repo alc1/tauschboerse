@@ -5,6 +5,10 @@ import Checkbox from 'material-ui/Checkbox';
 
 import InputComponent from '../components/InputComponent';
 
+import './UserDetailsForm.css';
+
+const passwordCheckboxStyles = { width: '90%' };
+
 export default class UserDetailsForm extends React.Component {
 
     static propTypes = {
@@ -27,17 +31,10 @@ export default class UserDetailsForm extends React.Component {
 
     render() {
         const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
-        const inputStyles = { width: '350px' };
-        const formStyles = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        };
         return (
-            <form style={formStyles} onSubmit={onSubmit}>
+            <form className="user-details-form__field-container" onSubmit={onSubmit}>
                 <InputComponent
                     inputRef={inputElement => this.firstInputElement = inputElement}
-                    style={inputStyles}
                     error={errors.name}
                     label="Name"
                     onChange={onChange}
@@ -46,7 +43,6 @@ export default class UserDetailsForm extends React.Component {
                     disabled={loading}
                 />
                 <InputComponent
-                    style={inputStyles}
                     error={errors.email}
                     label="E-Mail"
                     onChange={onChange}
@@ -56,13 +52,12 @@ export default class UserDetailsForm extends React.Component {
                 />
                 <br/>
                 <Checkbox
-                    style={inputStyles}
+                    style={passwordCheckboxStyles}
                     label="Passwort ändern"
                     checked={changePassword}
                     onCheck={onPasswordChangeChecked}
                 />
                 {changePassword && <InputComponent
-                    style={inputStyles}
                     error={errors.currentPassword}
                     label="Bisheriges Passwort"
                     onChange={onChange}
@@ -72,7 +67,6 @@ export default class UserDetailsForm extends React.Component {
                     disabled={loading}
                 />}
                 {changePassword && <InputComponent
-                    style={inputStyles}
                     error={errors.newPassword}
                     label="Neues Passwort"
                     onChange={onChange}
@@ -82,7 +76,6 @@ export default class UserDetailsForm extends React.Component {
                     disabled={loading}
                 />}
                 {changePassword && <InputComponent
-                    style={inputStyles}
                     error={errors.passwordConfirmation}
                     label="Neues Passwort bestätigen"
                     onChange={onChange}
