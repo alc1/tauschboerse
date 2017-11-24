@@ -5,19 +5,19 @@ import { Provider } from 'react-redux';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import HomePage from './containers/HomePage';
-import MarketplacePage from './containers/MarketplacePage';
-import UserArticlesPage from './containers/UserArticlesPage';
-import UserDetailsPage from './containers/UserDetailsPage';
-import UserTransactionsPage from './containers/UserTransactionsPage';
-import ArticleDetailPage from './containers/ArticleDetailPage';
-import ArticleEditorPage from './containers/ArticleEditorPage';
-import RegistrationPage from './containers/RegistrationPage';
-import LoginPage from './containers/LoginPage';
-import NoMatchPage from './containers/NoMatchPage';
+import HomePage from './pages/HomePage';
+import MarketplacePage from './pages/MarketplacePage';
+import UserArticlesPage from './pages/UserArticlesPage';
+import UserDetailsPage from './pages/UserDetailsPage';
+import UserTransactionsPage from './pages/UserTransactionsPage';
+import ArticleDetailPage from './pages/ArticleDetailPage';
+import ArticleEditorPage from './pages/ArticleEditorPage';
+import RegistrationPage from './pages/RegistrationPage';
+import LoginPage from './pages/LoginPage';
+import NoMatchPage from './pages/NoMatchPage';
 
-import PrivateRoute from './route/PrivateRoute';
-import PublicRoute from './route/PublicRoute';
+import PrivateRoute from './routes/PrivateRoute';
+import PublicRoute from './routes/PublicRoute';
 
 import store from '../client/store/store';
 import history from '../client/history/history';
