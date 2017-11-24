@@ -13,7 +13,7 @@ import CompareArrows from 'material-ui/svg-icons/action/compare-arrows';
 import AccountCircle from 'material-ui/svg-icons/action/account-circle';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import LockOpen from 'material-ui/svg-icons/action/lock-open';
-import FirstPage from 'material-ui/svg-icons/navigation/first-page';
+import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
 
 import { getUser } from '../selectors/user';
 import { logout } from '../actions/user';
@@ -56,8 +56,8 @@ class NavigationComponent extends React.Component {
                 {user && <MenuItem primaryText="Artikel" leftIcon={<List/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
                 {user && <MenuItem primaryText="Profil" leftIcon={<AccountCircle/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
                 {user && <Divider/>}
-                {user && <MenuItem primaryText="Logout" leftIcon={<FirstPage/>} onClick={this.onLogout}/>}
-                {!user && <MenuItem primaryText="Login" leftIcon={<LockOpen/>} onClick={this.openMenuItem.bind(this, '/login')}/>}
+                {user && <MenuItem primaryText="Abmelden" leftIcon={<ExitToApp/>} onClick={this.onLogout}/>}
+                {!user && <MenuItem primaryText="Anmelden" leftIcon={<LockOpen/>} onClick={this.openMenuItem.bind(this, '/login')}/>}
                 {!user && <MenuItem primaryText="Registrieren" leftIcon={<PersonAdd/>} onClick={this.openMenuItem.bind(this, '/registration')}/>}
             </Menu>
         );

@@ -127,8 +127,8 @@ class ArticleEditorPage extends React.Component {
             else {
                 articleRequest = this.props.createArticle(articleToSave);
             }
-            articleRequest.then((res) => {
-                this.props.history.replace(`/article/${res.article._id}`);
+            articleRequest.then(() => {
+                this.props.history.goBack();
             }).catch((err) => {
                 this.setState({
                     errors: err.response.data.errors || {},

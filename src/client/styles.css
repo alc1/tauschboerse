@@ -3,20 +3,14 @@
     padding: 0;
 }
 
+body {
+    background: #F5F5F5;
+}
+
 .articles-list {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
-}
-
-.article-card {
-    margin: 10px;
-    max-width: 450px;
-    min-width: 250px;
-}
-
-.article-card:hover {
-    box-shadow: 0 6px 20px 0 gray;
 }

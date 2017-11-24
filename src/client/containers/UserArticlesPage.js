@@ -38,8 +38,8 @@ class UserArticlesPage extends React.Component {
         this.setState({ loading: true });
         const { userId } = this.props.match.params;
         this.props.loadUserArticles(userId)
-            .then((res) => this.setState({ loading: false }))
-            .catch((err) => this.setState({ loading: false }));
+            .then(() => this.setState({ loading: false }))
+            .catch(() => this.setState({ loading: false }));
     }
 
     showArticleDetails = (theArticleId) => {
@@ -55,7 +55,10 @@ class UserArticlesPage extends React.Component {
     };
 
     deleteArticle = (theUserId, theArticleId) => {
-        this.props.deleteArticle(theUserId, theArticleId);
+        this.setState({ loading: true });
+        this.props.deleteArticle(theUserId, theArticleId)
+            .then(() => this.setState({ loading: false }))
+            .catch(() => this.setState({ loading: false }));
     };
 
     render() {
