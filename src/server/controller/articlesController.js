@@ -172,7 +172,7 @@ function isInPhotos(thePhotos, theFileName) {
 }
 
 function savePhotos(theArticleId, thePhotos) {
-    const directory = path.join('./../../public/images/article', theArticleId);
+    const directory = path.join(getOrCreateArticleImagesRootDirectory(), theArticleId);
     // Directory already exists, check if there are photos to delete
     if (fs.existsSync(directory)) {
         const files = fs.readdirSync(directory);
@@ -193,7 +193,7 @@ function savePhotos(theArticleId, thePhotos) {
 }
 
 function deletePhotos(theArticleId) {
-    const directory = path.join('./../../public/images/article', theArticleId);
+    const directory = path.join(getOrCreateArticleImagesRootDirectory(), theArticleId);
     if (fs.existsSync(directory)) {
         const files = fs.readdirSync(directory);
         files.forEach(file => {
@@ -201,6 +201,18 @@ function deletePhotos(theArticleId) {
         });
         fs.rmdirSync(directory);
     }
+}
+
+function getOrCreateArticleImagesRootDirectory() {
+    const imagesDirectory = './../../public/images';
+    if (!fs.existsSync(imagesDirectory)) {
+        fs.mkdirSync(imagesDirectory);
+    }
+    const articleImagesDirectory = path.join(imagesDirectory, 'article');
+    if (!fs.existsSync(articleImagesDirectory)) {
+        fs.mkdirSync(articleImagesDirectory);
+    }
+    return articleImagesDirectory;
 }
 
 async function fetchArticleDetails(theArticle) {
