@@ -22,9 +22,9 @@ export default class PhotosComponent extends React.Component {
 
     static propTypes = {
         photos: PropTypes.array.isRequired,
-        onPhotoLoaded: PropTypes.func.isRequired,
-        onRemovePhoto: PropTypes.func.isRequired,
-        loading: PropTypes.bool.isRequired
+        loading: PropTypes.bool.isRequired,
+        onPhotoLoaded: PropTypes.func,
+        onRemovePhoto: PropTypes.func
     };
 
     static defaultProps = {
@@ -37,11 +37,15 @@ export default class PhotosComponent extends React.Component {
     };
 
     componentDidMount() {
-        this.fileInputElement.addEventListener('change', this.onInputChange);
+        if (this.props.onPhotoLoaded) {
+            this.fileInputElement.addEventListener('change', this.onInputChange);
+        }
     }
 
     componentWillUnmount() {
-        this.fileInputElement.removeEventListener('change', this.onInputChange);
+        if (this.props.onPhotoLoaded) {
+            this.fileInputElement.removeEventListener('change', this.onInputChange);
+        }
     }
 
     onInputChange = (theEvent) => {
@@ -82,7 +86,7 @@ export default class PhotosComponent extends React.Component {
                     src={photo.isNew ? photo.fileContent : photo.url}
                     alt={photo.fileName}
                     onClick={this.onOpenPhoto.bind(this, index)}/>
-                <FlatButton icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
+                {this.props.onRemovePhoto && <FlatButton label="Entfernen" icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>}
             </div>
         );
         const lightboxImages = photos.map((photo) => photo.isNew ? photo.fileContent : photo.url);
@@ -95,7 +99,7 @@ export default class PhotosComponent extends React.Component {
                             <ToolbarTitle style={toolbarTitleStyles} text="Bilder"/>
                         </ToolbarGroup>
                         <ToolbarGroup>
-                            <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>
+                            {this.props.onPhotoLoaded && <FlatButton label="Neue Bilder hinzufügen" icon={<AddAPhoto/>} onClick={this.onAddPhotoClicked} disabled={loading} primary/>}
                             <input className="photos-component__file-input" type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple/>
                         </ToolbarGroup>
                     </Toolbar>

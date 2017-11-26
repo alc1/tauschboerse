@@ -17,11 +17,15 @@ export default class ArticleForm extends React.Component {
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         categories: PropTypes.array.isRequired,
-        errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
-        onChange: PropTypes.func.isRequired,
-        onAddCategory: PropTypes.func.isRequired,
-        onRemoveCategory: PropTypes.func.isRequired
+        errors: PropTypes.object,
+        onChange: PropTypes.func,
+        onAddCategory: PropTypes.func,
+        onRemoveCategory: PropTypes.func
+    };
+
+    static defaultProps = {
+        errors: {}
     };
 
     componentDidMount() {

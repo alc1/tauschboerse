@@ -14,10 +14,10 @@ class CategoryInputFieldContainer extends React.Component {
         availableCategories: PropTypes.array.isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
-        onAddCategory: PropTypes.func.isRequired,
-        onRemoveCategory: PropTypes.func.isRequired,
         loadCategories: PropTypes.func.isRequired,
-        allowNewValues: PropTypes.bool.isRequired
+        allowNewValues: PropTypes.bool.isRequired,
+        onAddCategory: PropTypes.func,
+        onRemoveCategory: PropTypes.func
     };
 
     static defaultProps = {
@@ -41,14 +41,14 @@ class CategoryInputFieldContainer extends React.Component {
     };
 
     render() {
-        const { categories, availableCategories, errors, loading, onRemoveCategory } = this.props;
+        const { categories, availableCategories, errors, loading, onAddCategory, onRemoveCategory } = this.props;
         return (
             <CategoryInputFieldComponent
                 categories={categories}
                 availableCategories={availableCategories}
                 errors={errors}
                 loading={loading}
-                onAddCategory={this.onAddCategory}
+                onAddCategory={onAddCategory ? this.onAddCategory : undefined}
                 onRemoveCategory={onRemoveCategory}/>
         );
     }

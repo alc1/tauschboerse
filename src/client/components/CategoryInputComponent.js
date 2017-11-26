@@ -12,12 +12,13 @@ export default class CategoryInputFieldComponent extends React.Component {
         availableCategories: PropTypes.array.isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
-        onAddCategory: PropTypes.func.isRequired,
-        onRemoveCategory: PropTypes.func.isRequired
+        onAddCategory: PropTypes.func,
+        onRemoveCategory: PropTypes.func
     };
 
     render() {
         const { categories, availableCategories, errors, loading, onAddCategory, onRemoveCategory } = this.props;
+        const isDisplayOnly = !(!!onAddCategory);
         return (
             <ChipInput
                 className="input-component"
@@ -27,9 +28,9 @@ export default class CategoryInputFieldComponent extends React.Component {
                 floatingLabelText="Kategorien"
                 name="categories"
                 value={categories.map(category => category.name)}
-                onRequestAdd={(categoryName) => onAddCategory(categoryName)}
-                onRequestDelete={(categoryName) => onRemoveCategory(categoryName)}
-                disabled={loading}
+                onRequestAdd={(categoryName) => onAddCategory && onAddCategory(categoryName)}
+                onRequestDelete={(categoryName) => onRemoveCategory && onRemoveCategory(categoryName)}
+                disabled={isDisplayOnly || loading}
                 filter={(searchText, categoryName) => (categoryName.indexOf(searchText) !== -1)}
                 dataSource={availableCategories.map(category => category.name)}
             />
