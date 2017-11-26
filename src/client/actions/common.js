@@ -9,7 +9,7 @@ export const handleError = (error, dispatch) => {
             actionType: GO_TO_LOGIN
         }));
     }
-    else if (error.response.status === 404) {
+    else if (error.response.status === 404 || error.response.status === 413) {
         dispatch(globalMessageReceived({
             messageText: getErrorMessage(error),
             messageType: ERROR_MESSAGE
