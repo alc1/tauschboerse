@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Lightbox from 'react-image-lightbox';
 
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
@@ -30,6 +31,11 @@ export default class PhotosComponent extends React.Component {
         photos: []
     };
 
+    state = {
+        isPhotoLightboxOpen: false,
+        photoIndex: 0
+    };
+
     componentDidMount() {
         this.fileInputElement.addEventListener('change', this.onInputChange);
     }
@@ -54,14 +60,33 @@ export default class PhotosComponent extends React.Component {
         this.fileInputElement.click();
     };
 
+    onOpenPhoto = (index) => {
+        this.setState({
+            isPhotoLightboxOpen: true,
+            photoIndex: index
+        });
+    };
+
+    onClosePhoto = () => {
+        this.setState({ isPhotoLightboxOpen: false });
+    };
+
     render() {
         const { photos, loading } = this.props;
-        const photoComponents = photos.map((photo) =>
-            <div key={photo.fileName}>
-                <img src={photo.isNew ? photo.fileContent : photo.url} alt={photo.fileName}/>
-                <FlatButton label="Bild entfernen" icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
+        const { isPhotoLightboxOpen, photoIndex } = this.state;
+
+        const photoWrappers = photos.map((photo, index) =>
+            <div className="photos-component__image-wrapper" key={photo.fileName}>
+                <img
+                    className="photos-component__image"
+                    src={photo.isNew ? photo.fileContent : photo.url}
+                    alt={photo.fileName}
+                    onClick={this.onOpenPhoto.bind(this, index)}/>
+                <FlatButton icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>
             </div>
         );
+        const lightboxImages = photos.map((photo) => photo.isNew ? photo.fileContent : photo.url);
+
         return (
             <div className="photos-component__container">
                 <Paper className="photos-component__paper">
@@ -74,7 +99,23 @@ export default class PhotosComponent extends React.Component {
                             <input className="photos-component__file-input" type="file" ref={element => this.fileInputElement = element} accept="image/*" multiple/>
                         </ToolbarGroup>
                     </Toolbar>
-                    {photoComponents}
+                    <div className="photos-component__images-container">
+                        {photoWrappers}
+                    </div>
+                    {isPhotoLightboxOpen && lightboxImages.length > 0 &&
+                        <Lightbox
+                            mainSrc={lightboxImages[photoIndex]}
+                            nextSrc={lightboxImages[(photoIndex + 1) % lightboxImages.length]}
+                            prevSrc={lightboxImages[(photoIndex + lightboxImages.length - 1) % lightboxImages.length]}
+                            onCloseRequest={this.onClosePhoto}
+                            onMovePrevRequest={() => this.setState({
+                                photoIndex: (photoIndex + lightboxImages.length - 1) % lightboxImages.length,
+                            })}
+                            onMoveNextRequest={() => this.setState({
+                                photoIndex: (photoIndex + 1) % lightboxImages.length,
+                            })}
+                        />
+                    }
                 </Paper>
             </div>
         );

@@ -1,5 +1,3 @@
-'use strict';
-
 function getValue(obj, propertyName, defaultValue) {
     return (typeof obj[propertyName] === 'undefined') ? defaultValue : obj[propertyName];
 }

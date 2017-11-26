@@ -1,9 +1,14 @@
 .article-form__container {
-    flex-grow: 1.5;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 10px;
+}
+
+@media (min-width: 750px) {
+    .article-form__container {
+        width: 100vw;
+    }
 }
 
 .article-form__paper {

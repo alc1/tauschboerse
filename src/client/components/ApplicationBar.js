@@ -18,7 +18,10 @@ import { logout } from '../actions/user';
 
 import './ApplicationBar.css';
 
-const appbarStyles = { position: 'fixed' };
+const appbarStyles = {
+    position: 'fixed',
+    zIndex: 10
+};
 
 class ApplicationBar extends React.Component {
 
