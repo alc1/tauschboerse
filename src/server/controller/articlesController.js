@@ -204,7 +204,7 @@ function deletePhotos(theArticleId) {
 }
 
 function getOrCreateArticleImagesRootDirectory() {
-    const imagesDirectory = './../../public/images';
+    const imagesDirectory = path.join(__dirname, './../../../public/images');
     if (!fs.existsSync(imagesDirectory)) {
         fs.mkdirSync(imagesDirectory);
     }
