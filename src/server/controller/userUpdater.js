@@ -3,7 +3,7 @@
 const userUpdaterValidator = require('./userUpdaterValidator');
 
 const usersStore = require('../services/usersStorage');
-const bcrypt = require('bcrypt');
+const encryptionUtils = require('../utils/encryptionUtils');
 
 async function update(theUserId, theUser) {
     const validation = await userUpdaterValidator.validate(theUserId, theUser);
@@ -15,7 +15,7 @@ async function update(theUserId, theUser) {
         };
         const isAboutToChangePassword = !!theUser.currentPassword || !!theUser.newPassword || !!theUser.passwordConfirmation;
         if (isAboutToChangePassword) {
-            userDetails.password = bcrypt.hashSync(theUser.newPassword, 10);
+            userDetails.password = encryptionUtils.encrypt(theUser.newPassword);
         }
         const numUpdated = await usersStore.updateUser(theUserId, userDetails);
         if (numUpdated === 1) {

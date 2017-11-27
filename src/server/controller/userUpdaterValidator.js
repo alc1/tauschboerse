@@ -2,7 +2,7 @@
 
 const userDetailsValidator = require('../../shared/validations/userDetails');
 const usersStore = require('../services/usersStorage');
-const bcrypt = require('bcrypt');
+const encryptionUtils = require('../utils/encryptionUtils');
 
 const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
@@ -96,7 +96,7 @@ function checkUser(theUser) {
 }
 
 function checkPassword(isAboutToChangePassword, theUser, thePassword) {
-    if (isAboutToChangePassword && !bcrypt.compareSync(theUser.currentPassword, thePassword)) {
+    if (isAboutToChangePassword && !encryptionUtils.compare(theUser.currentPassword, thePassword)) {
         return {
             status: 400,
             errors: {

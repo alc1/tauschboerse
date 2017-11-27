@@ -1,13 +1,14 @@
 'use strict';
 
+const jwt = require('jsonwebtoken');
+
 const usersStore = require('../services/usersStorage');
 const userCreator = require('./userCreator');
 const userCreatorValidator = require('./userCreatorValidator');
 const userUpdater = require('./userUpdater');
 const userUpdaterValidator = require('./userUpdaterValidator');
 const config = require('../config');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const encryptionUtils = require('../utils/encryptionUtils');
 
 const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
@@ -67,7 +68,7 @@ async function login(req, res) {
         const { user } = req.body;
         const foundUser = await usersStore.getUserByEmail(user.email);
         const passwordToCheck = (req.isNewUser) ? user.newPassword: user.currentPassword;
-        if (foundUser && bcrypt.compareSync(passwordToCheck, foundUser.password)) {
+        if (foundUser && encryptionUtils.compare(passwordToCheck, foundUser.password)) {
             res.json({ token: createToken(foundUser._id, foundUser.name, foundUser.email, foundUser.registration) });
         }
         else {

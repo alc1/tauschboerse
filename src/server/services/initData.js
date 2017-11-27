@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-
 function resetData(dataCache) {
     const articles = [
         {ownerId: 0, title: 'Tisch', description: 'Antiker Tisch aus dem Jahr 1900', photos: [], categoryIds: [0]},
