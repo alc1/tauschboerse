@@ -3,7 +3,7 @@
 const http = require('http');
 const path = require('path');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
+const env = require('node-env-file');
 const express = require('express');
 const app = express();
 const articlesRoutes = require('./routes/articlesRoutes');
@@ -19,7 +19,7 @@ function startServer(port) {
     });
 }
 
-dotenv.config();
+env(path.join(__dirname, 'config.env'));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
