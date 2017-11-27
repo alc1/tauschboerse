@@ -14,10 +14,13 @@ const toolbarTitleStyle = { color: 'black' };
 export default class ArticleForm extends React.Component {
 
     static propTypes = {
+        isDisplayMode: PropTypes.bool.isRequired,
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         categories: PropTypes.array.isRequired,
         loading: PropTypes.bool.isRequired,
+        owner: PropTypes.string,
+        created: PropTypes.string,
         errors: PropTypes.object,
         onChange: PropTypes.func,
         onAddCategory: PropTypes.func,
@@ -33,7 +36,7 @@ export default class ArticleForm extends React.Component {
     }
 
     render() {
-        const { title, description, categories, errors, loading, onChange, onAddCategory, onRemoveCategory } = this.props;
+        const { isDisplayMode, title, description, categories, owner, created, errors, loading, onChange, onAddCategory, onRemoveCategory } = this.props;
         return (
             <div className="article-form__container">
                 <Paper className="article-form__paper">
@@ -44,6 +47,7 @@ export default class ArticleForm extends React.Component {
                     </Toolbar>
                     <div className="article-form__field-container">
                         <InputComponent
+                            isDisplayMode={isDisplayMode}
                             inputRef={inputElement => this.firstInputElement = inputElement}
                             error={errors.title}
                             label="Titel"
@@ -53,6 +57,7 @@ export default class ArticleForm extends React.Component {
                             disabled={loading}
                         />
                         <InputComponent
+                            isDisplayMode={isDisplayMode}
                             error={errors.description}
                             label="Beschreibung"
                             onChange={onChange}
@@ -62,6 +67,7 @@ export default class ArticleForm extends React.Component {
                             disabled={loading}
                         />
                         <CategoryInputFieldContainer
+                            isDisplayMode={isDisplayMode}
                             categories={categories}
                             errors={errors}
                             loading={loading}
@@ -69,6 +75,20 @@ export default class ArticleForm extends React.Component {
                             onRemoveCategory={onRemoveCategory}
                             allowNewValues={true}
                         />
+                        {isDisplayMode && <InputComponent
+                            isDisplayMode={isDisplayMode}
+                            label="Besitzer"
+                            value={owner}
+                            field="owner"
+                            disabled={loading}
+                        />}
+                        {isDisplayMode && <InputComponent
+                            isDisplayMode={isDisplayMode}
+                            label="Erstellt am"
+                            value={created}
+                            field="created"
+                            disabled={loading}
+                        />}
                     </div>
                 </Paper>
             </div>

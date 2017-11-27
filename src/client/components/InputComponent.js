@@ -8,6 +8,7 @@ const displayInputStyles = { color: 'black' };
 export default class InputComponent extends React.Component {
 
     static propTypes = {
+        isDisplayMode: PropTypes.bool.isRequired,
         field: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
@@ -19,6 +20,7 @@ export default class InputComponent extends React.Component {
     };
 
     static defaultProps = {
+        isDisplayMode: false,
         type: 'text',
         disabled: false,
         multiLine: false,
@@ -26,17 +28,16 @@ export default class InputComponent extends React.Component {
     };
 
     render() {
-        const { inputRef, label, error, onChange, value, type, multiLine, field, disabled } = this.props;
-        const isDisplayOnly = !(!!onChange);
-        if (isDisplayOnly) {
+        const { isDisplayMode, inputRef, label, error, onChange, value, type, multiLine, field, disabled } = this.props;
+        if (isDisplayMode) {
             styles.color = 'black';
         }
         return (
             <TextField
                 className="input-component"
                 style={styles}
-                inputStyle={isDisplayOnly ? displayInputStyles : undefined}
-                textareaStyle={isDisplayOnly ? displayInputStyles : undefined}
+                inputStyle={isDisplayMode ? displayInputStyles : undefined}
+                textareaStyle={isDisplayMode ? displayInputStyles : undefined}
                 ref={inputRef}
                 hintText={label}
                 floatingLabelText={label}
@@ -46,7 +47,7 @@ export default class InputComponent extends React.Component {
                 type={type}
                 multiLine={multiLine}
                 name={field}
-                disabled={isDisplayOnly || disabled}
+                disabled={isDisplayMode || disabled}
             />
         );
     }

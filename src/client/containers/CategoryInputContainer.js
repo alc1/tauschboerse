@@ -10,6 +10,7 @@ import { getCategories } from '../selectors/category';
 class CategoryInputFieldContainer extends React.Component {
 
     static propTypes = {
+        isDisplayMode: PropTypes.bool.isRequired,
         categories: PropTypes.array.isRequired,
         availableCategories: PropTypes.array.isRequired,
         errors: PropTypes.object.isRequired,
@@ -41,9 +42,10 @@ class CategoryInputFieldContainer extends React.Component {
     };
 
     render() {
-        const { categories, availableCategories, errors, loading, onAddCategory, onRemoveCategory } = this.props;
+        const { isDisplayMode, categories, availableCategories, errors, loading, onAddCategory, onRemoveCategory } = this.props;
         return (
             <CategoryInputFieldComponent
+                isDisplayMode={isDisplayMode}
                 categories={categories}
                 availableCategories={availableCategories}
                 errors={errors}

@@ -8,6 +8,7 @@ const styles = { width: '90%' };
 export default class CategoryInputFieldComponent extends React.Component {
 
     static propTypes = {
+        isDisplayMode: PropTypes.bool.isRequired,
         categories: PropTypes.array.isRequired,
         availableCategories: PropTypes.array.isRequired,
         errors: PropTypes.object.isRequired,
@@ -16,9 +17,12 @@ export default class CategoryInputFieldComponent extends React.Component {
         onRemoveCategory: PropTypes.func
     };
 
+    static defaultProps = {
+        isDisplayMode: false
+    };
+
     render() {
-        const { categories, availableCategories, errors, loading, onAddCategory, onRemoveCategory } = this.props;
-        const isDisplayOnly = !(!!onAddCategory);
+        const { isDisplayMode, categories, availableCategories, errors, loading, onAddCategory, onRemoveCategory } = this.props;
         return (
             <ChipInput
                 className="input-component"
@@ -28,9 +32,9 @@ export default class CategoryInputFieldComponent extends React.Component {
                 floatingLabelText="Kategorien"
                 name="categories"
                 value={categories.map(category => category.name)}
-                onRequestAdd={(categoryName) => onAddCategory && onAddCategory(categoryName)}
-                onRequestDelete={(categoryName) => onRemoveCategory && onRemoveCategory(categoryName)}
-                disabled={isDisplayOnly || loading}
+                onRequestAdd={(categoryName) => !isDisplayMode && onAddCategory && onAddCategory(categoryName)}
+                onRequestDelete={(!isDisplayMode && onRemoveCategory) ? ((categoryName) => onRemoveCategory(categoryName)) : undefined}
+                disabled={isDisplayMode || loading}
                 filter={(searchText, categoryName) => (categoryName.indexOf(searchText) !== -1)}
                 dataSource={availableCategories.map(category => category.name)}
             />

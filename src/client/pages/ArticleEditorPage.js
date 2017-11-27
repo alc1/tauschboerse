@@ -28,6 +28,11 @@ import './ArticleEditorPage.css';
 
 class ArticleEditorPage extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.isDisplayMode = false;
+    }
+
     static propTypes = {
         article: PropTypes.object,
         user: PropTypes.object.isRequired,
@@ -160,6 +165,7 @@ class ArticleEditorPage extends React.Component {
                 {isUserPermitted ?
                     <form className="article-editor__container" onSubmit={this.onSubmit}>
                         <ArticleForm
+                            isDisplayMode={this.isDisplayMode}
                             title={title}
                             description={description}
                             categories={categories}
@@ -173,6 +179,7 @@ class ArticleEditorPage extends React.Component {
                             onPhotoLoaded={this.onPhotoLoaded}
                             onRemovePhoto={this.onRemovePhoto}/>
                         <PhotosComponent
+                            isDisplayMode={this.isDisplayMode}
                             photos={photos}
                             onPhotoLoaded={this.onPhotoLoaded}
                             onRemovePhoto={this.onRemovePhoto}
