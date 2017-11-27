@@ -7,7 +7,6 @@ const userCreator = require('./userCreator');
 const userCreatorValidator = require('./userCreatorValidator');
 const userUpdater = require('./userUpdater');
 const userUpdaterValidator = require('./userUpdaterValidator');
-const config = require('../config');
 const encryptionUtils = require('../utils/encryptionUtils');
 
 const useDataCache = require('../useDataCache').useDataCache;
@@ -148,7 +147,7 @@ function createToken(theUserId, theName, theEmail, theRegistrationDate) {
         name: theName,
         email: theEmail,
         registration: theRegistrationDate
-    }, config.jwtSecret, { expiresIn: '1h' });
+    }, process.env.JWT_KEY, { expiresIn: '1h' });
 }
 
 module.exports = {

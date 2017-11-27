@@ -1,13 +1,13 @@
 'use strict';
 
-const encryptionService = require('bcrypt');
+const encryptionService = require('crypto');
 
 function encrypt(thePlainText) {
-    return encryptionService.hashSync(thePlainText, 10);
+    return encryptionService.createHmac('sha256', process.env.ENCRYPTION_KEY).update(thePlainText).digest('hex');
 }
 
 function compare(thePlainText, theEncryptedText) {
-    return encryptionService.compareSync(thePlainText, theEncryptedText);
+    return encrypt(thePlainText) === theEncryptedText;
 }
 
 module.exports = {

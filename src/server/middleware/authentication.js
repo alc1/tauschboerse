@@ -6,7 +6,6 @@
 
 const jwt = require('jsonwebtoken');
 
-const config = require('../config');
 const usersStore = require('../services/usersStorage');
 
 const useDataCache = require('../useDataCache').useDataCache;
@@ -20,7 +19,7 @@ module.exports = (req, res, next) => {
     }
 
     if (token) {
-        jwt.verify(token, config.jwtSecret, async (err, decoded) => {
+        jwt.verify(token, process.env.JWT_KEY, async (err, decoded) => {
             if (err) {
                 res.status(401).json({ globalError: 'Token zur Authentifizierung ungültig! Bitte erneut anmelden.' });
             }

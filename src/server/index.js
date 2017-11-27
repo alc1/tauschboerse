@@ -3,6 +3,7 @@
 const http = require('http');
 const path = require('path');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 const express = require('express');
 const app = express();
 const articlesRoutes = require('./routes/articlesRoutes');
@@ -17,6 +18,8 @@ function startServer(port) {
         console.log(`Exchange Application API Server is ready on http://localhost:${server.address().port}! Waiting for requests...`);
     });
 }
+
+dotenv.config();
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
