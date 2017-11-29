@@ -49,6 +49,7 @@ class ArticleEditorPage extends React.Component {
         description: '',
         categories: [],
         photos: [],
+        status: '',
         created: {},
         owner: {},
         errors: {},
@@ -68,6 +69,7 @@ class ArticleEditorPage extends React.Component {
                         description: article ? article.description : this.state.description,
                         categories: article ? article.categories : this.state.categories,
                         photos: article ? article.photos : this.state.photos,
+                        status: article ? article.status : this.state.status,
                         created: article ? article.created : this.state.created,
                         owner: article ? article.owner : this.state.owner
                     });
@@ -154,7 +156,7 @@ class ArticleEditorPage extends React.Component {
 
     render() {
         const { user, loading } = this.props;
-        const { title, description, categories, photos, owner, errors, modified } = this.state;
+        const { title, description, categories, photos, status, owner, errors, modified } = this.state;
         let isUserPermitted = true;
         if (owner._id && owner._id !== user._id) {
             isUserPermitted = false;
@@ -169,6 +171,7 @@ class ArticleEditorPage extends React.Component {
                             title={title}
                             description={description}
                             categories={categories}
+                            status={status}
                             photos={photos}
                             errors={errors}
                             loading={loading}

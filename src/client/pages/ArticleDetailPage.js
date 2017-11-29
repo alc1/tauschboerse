@@ -40,7 +40,7 @@ class ArticleDetailPage extends React.Component {
 
     render() {
         const { article, loading } = this.props;
-        let title = '', description = '', categories = [], photos = [], owner = '', created = '';
+        let title = '', description = '', categories = [], photos = [], owner = '', created = '', status = '';
         if (article) {
             title = article ? article.title : title;
             description = article ? article.description : description;
@@ -48,6 +48,7 @@ class ArticleDetailPage extends React.Component {
             photos = article ? article.photos : photos;
             owner = article ? (article.owner ? article.owner.name : owner) : owner;
             created = article ? moment(article.created).format('DD.MM.YYYY | HH:mm') : created;
+            status = article ? article.status : status;
         }
 
         return (
@@ -59,6 +60,7 @@ class ArticleDetailPage extends React.Component {
                         title={title}
                         description={description}
                         categories={categories}
+                        status={status}
                         photos={photos}
                         owner={owner}
                         created={created}

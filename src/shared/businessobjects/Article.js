@@ -1,6 +1,6 @@
 const utils = require('../utils/businessUtils');
 
-const STATUS_FREE = 'FREE';
+const ArticleStatus = require('./ArticleStatus');
 
 class Article {
     constructor(obj) {
@@ -20,7 +20,7 @@ class Article {
 
             utils.setValue(this, 'owner', obj, null);
             utils.setValue(this, 'created', obj, new Date());
-            utils.setValue(this, 'status', obj, STATUS_FREE);
+            utils.setValue(this, 'status', obj, ArticleStatus.STATUS_FREE);
 
             utils.transferId(obj, this);
         } else {
@@ -30,7 +30,7 @@ class Article {
             this.photos = [];
             this.owner = null;
             this.created = new Date();
-            this.status = STATUS_FREE;
+            this.status = ArticleStatus.STATUS_FREE;
         }
     }
 

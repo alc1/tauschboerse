@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 
-import InputComponent from '../components/InputComponent';
+import ArticleStatusComponent from './ArticleStatusTag';
+import InputComponent from './InputComponent';
 import CategoryInputFieldContainer from '../containers/CategoryInputContainer';
 
 import './ArticleForm.css';
@@ -18,6 +19,7 @@ export default class ArticleForm extends React.Component {
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         categories: PropTypes.array.isRequired,
+        status: PropTypes.string.isRequired,
         loading: PropTypes.bool.isRequired,
         owner: PropTypes.string,
         created: PropTypes.string,
@@ -36,7 +38,7 @@ export default class ArticleForm extends React.Component {
     }
 
     render() {
-        const { isDisplayMode, title, description, categories, owner, created, errors, loading, onChange, onAddCategory, onRemoveCategory } = this.props;
+        const { isDisplayMode, title, description, categories, status, owner, created, errors, loading, onChange, onAddCategory, onRemoveCategory } = this.props;
         return (
             <div className="article-form__container">
                 <Paper className="article-form__paper">
@@ -46,6 +48,7 @@ export default class ArticleForm extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="article-form__field-container">
+                        <ArticleStatusComponent status={status}/>
                         <InputComponent
                             isDisplayMode={isDisplayMode}
                             inputRef={inputElement => this.firstInputElement = inputElement}
