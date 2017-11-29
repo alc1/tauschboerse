@@ -5,10 +5,11 @@ import moment from 'moment';
 import { Card, CardMedia, CardTitle, CardText, CardActions } from 'material-ui/Card';
 
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 
 import ArticleStatusComponent from './ArticleStatusTag';
 import AvatarTag from './AvatarTag';
-import NoPhotoComponent from './NoPhotoComponent';
+import PhotoPlaceholder from './PhotoPlaceholder';
 
 import './ArticleComponent.css';
 
@@ -33,13 +34,13 @@ class ArticleComponent extends React.Component {
             <div className="article-card">
                 <Card>
                     <div className="article-card__header">
-                        <AvatarTag text={name}/>
+                        <AvatarTag text={name} icon={<AccountIcon/>}/>
                         <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>
                         <ArticleStatusComponent status={status}/>
                     </div>
                     <CardMedia overlay={<CardTitle title={title} subtitle={categoryNames}/>}>
                         <div className="article-card__image-container">
-                            {photoSource ? <img className="article-card__image" src={photoSource} alt={title}/> : <NoPhotoComponent/>}
+                            {photoSource ? <img className="article-card__image" src={photoSource} alt={title}/> : <PhotoPlaceholder width={300} height={300}/>}
                         </div>
                     </CardMedia>
                     <CardText className="article-card__text">{description}</CardText>

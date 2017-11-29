@@ -9,6 +9,8 @@ import FlatButton from 'material-ui/FlatButton';
 import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo';
 import Delete from 'material-ui/svg-icons/action/delete';
 
+import PhotoPlaceholder from './PhotoPlaceholder';
+
 import './PhotosComponent.css';
 
 const toolbarTitleStyles = { color: 'black' };
@@ -79,6 +81,7 @@ export default class PhotosComponent extends React.Component {
     render() {
         const { photos, loading } = this.props;
         const { isPhotoLightboxOpen, photoIndex } = this.state;
+        const hasPhotos = photos && photos.length > 0;
 
         const photoWrappers = photos.map((photo, index) =>
             <div className="photos-component__image-wrapper" key={photo.fileName}>
@@ -105,7 +108,7 @@ export default class PhotosComponent extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="photos-component__images-container">
-                        {photoWrappers}
+                        {hasPhotos ? photoWrappers : <PhotoPlaceholder width={100} height={100}/>}
                     </div>
                     {isPhotoLightboxOpen && lightboxImages.length > 0 &&
                         <Lightbox
