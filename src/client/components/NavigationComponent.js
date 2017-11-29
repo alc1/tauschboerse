@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Menu from 'material-ui/Menu';
@@ -17,15 +15,13 @@ import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
 
 import UserInfo from './UserInfo';
 
-import { getUser } from '../selectors/user';
-import { logout } from '../actions/user';
-
-class NavigationComponent extends React.Component {
+export default class NavigationComponent extends React.Component {
 
     static propTypes = {
         closeMenu: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
-        logout: PropTypes.func.isRequired
+        logout: PropTypes.func.isRequired,
+        user: PropTypes.object
     };
 
     openMenuItem = (theLink) => {
@@ -70,11 +66,3 @@ class NavigationComponent extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        user: getUser(theState)
-    };
-}
-
-export default withRouter(connect(mapStateToProps, { logout })(NavigationComponent));
