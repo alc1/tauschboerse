@@ -109,6 +109,7 @@ class UserDetailsPage extends React.Component {
 
     render() {
         const { loading } = this.props;
+        const { registration } = this.props.user;
         const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, modified } = this.state;
         return (
             <div>
@@ -117,6 +118,7 @@ class UserDetailsPage extends React.Component {
                     <UserDetailsForm
                         name={name}
                         email={email}
+                        registration={registration}
                         errors={errors}
                         loading={loading}
                         onChange={this.onChange}
