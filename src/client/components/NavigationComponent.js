@@ -15,6 +15,8 @@ import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import LockOpen from 'material-ui/svg-icons/action/lock-open';
 import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
 
+import UserInfo from './UserInfo';
+
 import { getUser } from '../selectors/user';
 import { logout } from '../actions/user';
 
@@ -48,18 +50,23 @@ class NavigationComponent extends React.Component {
             userDetailsLink = `/user/${user._id}/details`;
         }
         return (
-            <Menu>
-                <MenuItem primaryText="Home" leftIcon={<Home/>} onClick={this.openMenuItem.bind(this, '/')}/>
-                <MenuItem primaryText="Marktplatz" leftIcon={<Business/>} onClick={this.openMenuItem.bind(this, '/marketplace')}/>
-                <Divider/>
-                {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<CompareArrows/>} onClick={this.openMenuItem.bind(this, userTransactionsLink)}/>}
-                {user && <MenuItem primaryText="Artikel" leftIcon={<List/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
-                {user && <MenuItem primaryText="Profil" leftIcon={<AccountCircle/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
-                {user && <Divider/>}
-                {user && <MenuItem primaryText="Abmelden" leftIcon={<ExitToApp/>} onClick={this.onLogout}/>}
-                {!user && <MenuItem primaryText="Anmelden" leftIcon={<LockOpen/>} onClick={this.openMenuItem.bind(this, '/login')}/>}
-                {!user && <MenuItem primaryText="Registrieren" leftIcon={<PersonAdd/>} onClick={this.openMenuItem.bind(this, '/registration')}/>}
-            </Menu>
+            <div>
+                <UserInfo width={100} height={100} user={user}/>
+                <Menu autoWidth={false} width={300}>
+                    <Divider/>
+                    {!user && <MenuItem primaryText="Anmelden" leftIcon={<LockOpen/>} onClick={this.openMenuItem.bind(this, '/login')}/>}
+                    {!user && <MenuItem primaryText="Registrieren" leftIcon={<PersonAdd/>} onClick={this.openMenuItem.bind(this, '/registration')}/>}
+                    {!user && <Divider/>}
+                    <MenuItem primaryText="Home" leftIcon={<Home/>} onClick={this.openMenuItem.bind(this, '/')}/>
+                    <MenuItem primaryText="Marktplatz" leftIcon={<Business/>} onClick={this.openMenuItem.bind(this, '/marketplace')}/>
+                    {user && <Divider/>}
+                    {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<CompareArrows/>} onClick={this.openMenuItem.bind(this, userTransactionsLink)}/>}
+                    {user && <MenuItem primaryText="Meine Artikel" leftIcon={<List/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
+                    {user && <MenuItem primaryText="Mein Konto" leftIcon={<AccountCircle/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
+                    {user && <Divider/>}
+                    {user && <MenuItem primaryText="Abmelden" leftIcon={<ExitToApp/>} onClick={this.onLogout}/>}
+                </Menu>
+            </div>
         );
     }
 }

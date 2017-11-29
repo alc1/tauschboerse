@@ -1,0 +1,11 @@
+.user-info__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-info__container__text {
+    color: #C3C3C3;
+    margin: 10px;
+}

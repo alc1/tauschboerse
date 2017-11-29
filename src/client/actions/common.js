@@ -5,7 +5,7 @@ export const handleError = (error, dispatch) => {
         dispatch(globalMessageReceived({
             messageText: getErrorMessage(error),
             messageType: ERROR_MESSAGE,
-            actionText: 'Zum Login',
+            actionText: 'Login',
             actionType: GO_TO_LOGIN
         }));
     }
