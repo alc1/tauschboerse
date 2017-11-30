@@ -137,7 +137,7 @@ class ArticleCache {
             article.photos.forEach(photo => {
                 delete photo.isNew;
                 delete photo.fileContent;
-                photo.url = `http://localhost:3001/images/article/${article._id}/${photo.fileName}`;
+                photo.url = `http://${process.env.API_HOST_NAME}:3001/images/article/${article._id}/${photo.fileName}`;
             });
         }
 
@@ -174,7 +174,7 @@ class ArticleCache {
         article.photos = thePhysicalRecord.photos ? thePhysicalRecord.photos.map(photoFileName => {
             return {
                 fileName: photoFileName,
-                url: `http://localhost:3001/images/article/${article._id}/${photoFileName}`
+                url: `http://${process.env.API_HOST_NAME}:3001/images/article/${article._id}/${photoFileName}`
             };
         }) : [];
         article.categories = thePhysicalRecord.categoryIds ? thePhysicalRecord.categoryIds.map(id => this.categories.findById(id)) : [];
