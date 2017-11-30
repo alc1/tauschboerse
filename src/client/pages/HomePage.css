@@ -1,0 +1,28 @@
+.homepage__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: space-around;
+}
+
+.homepage__image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+
+.homepage__title {
+    color: #555555;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+.homepage__text {
+    color: #555555;
+    text-align: center;
+    font-size: 2em;
+    margin: 10px;
+}
