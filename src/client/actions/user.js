@@ -1,6 +1,7 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
+import { globalMessageReceived, OK_MESSAGE } from './application';
 import { JWT_TOKEN_KEY } from '../common';
 import { handleError } from './common';
 
@@ -89,4 +90,8 @@ export const removeToken = (dispatch) => {
     localStorage.removeItem(JWT_TOKEN_KEY);
     delete axios.defaults.headers.common['Authorization'];
     dispatch(userLoggedOut());
+    dispatch(globalMessageReceived({
+        messageText: 'Erfolgreich abgemeldet.',
+        messageType: OK_MESSAGE
+    }));
 };
