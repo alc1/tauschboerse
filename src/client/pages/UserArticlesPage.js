@@ -16,6 +16,7 @@ import DeleteArticleDialog from '../components/DeleteArticleDialog';
 import { setLoading } from '../actions/application';
 import { loadUserArticles } from '../actions/user';
 import { deleteArticle } from '../actions/article';
+import { isLoading } from '../selectors/application';
 import { getUserArticles, getUser } from '../selectors/user';
 
 import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
@@ -28,6 +29,7 @@ class UserArticlesPage extends React.Component {
         loadUserArticles: PropTypes.func.isRequired,
         deleteArticle: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
+        loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -91,13 +93,13 @@ class UserArticlesPage extends React.Component {
     };
 
     render() {
-        const { user, articles } = this.props;
+        const { user, articles, loading } = this.props;
         const { isDeleteDialogOpen, articleToDelete } = this.state;
         const articleTitle = articleToDelete ? articleToDelete.title : '';
         return (
             <div>
                 <ApplicationBar/>
-                <ArticleGridList articles={articles} articleActions={this.createArticleActions()}/>
+                <ArticleGridList articles={articles} articleActions={this.createArticleActions()} loading={loading}/>
                 <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle.bind(this, user._id)}>
                     <ContentAdd/>
                 </FloatingActionButton>
@@ -114,7 +116,8 @@ class UserArticlesPage extends React.Component {
 function mapStateToProps(theState) {
     return {
         articles: getUserArticles(theState),
-        user: getUser(theState)
+        user: getUser(theState),
+        loading: isLoading(theState)
     };
 }
 

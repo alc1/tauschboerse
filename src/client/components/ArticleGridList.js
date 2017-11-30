@@ -13,7 +13,8 @@ export default class ArticleGridList extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
-        articleActions: PropTypes.array.isRequired
+        articleActions: PropTypes.array.isRequired,
+        loading: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -38,12 +39,12 @@ export default class ArticleGridList extends React.Component {
     };
 
     render() {
-        const { articles, articleActions } = this.props;
+        const { articles, articleActions, loading } = this.props;
         const hasArticles = articles && articles.length > 0;
         const articleComponents = articles.map(article => <ArticleComponent key={article._id} article={article} actions={this.createActionButtons(article, articleActions)}/>);
         return (
             <div className="article-grid-list">
-                {hasArticles ? articleComponents : <ArticlePlaceholder width={300} height={300}/>}
+                {hasArticles ? articleComponents : <ArticlePlaceholder width={300} height={300} loading={loading}/>}
             </div>
         );
     }
