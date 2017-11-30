@@ -7,7 +7,7 @@ import Divider from 'material-ui/Divider';
 import Home from 'material-ui/svg-icons/action/home';
 import Business from 'material-ui/svg-icons/communication/business';
 import List from 'material-ui/svg-icons/action/list';
-import CompareArrows from 'material-ui/svg-icons/action/compare-arrows';
+import SwapIcon from 'material-ui/svg-icons/action/swap-horiz';
 import AccountCircle from 'material-ui/svg-icons/action/account-circle';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import LockOpen from 'material-ui/svg-icons/action/lock-open';
@@ -56,7 +56,7 @@ export default class NavigationComponent extends React.Component {
                     <MenuItem primaryText="Home" leftIcon={<Home/>} onClick={this.openMenuItem.bind(this, '/')}/>
                     <MenuItem primaryText="Marktplatz" leftIcon={<Business/>} onClick={this.openMenuItem.bind(this, '/marketplace')}/>
                     {user && <Divider/>}
-                    {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<CompareArrows/>} onClick={this.openMenuItem.bind(this, userTransactionsLink)}/>}
+                    {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.openMenuItem.bind(this, userTransactionsLink)}/>}
                     {user && <MenuItem primaryText="Meine Artikel" leftIcon={<List/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
                     {user && <MenuItem primaryText="Mein Konto" leftIcon={<AccountCircle/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
                     {user && <Divider/>}
