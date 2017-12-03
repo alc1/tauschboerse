@@ -23,6 +23,10 @@ export default class ArticleSearchInputComponent extends React.Component {
         text: this.props.text
     };
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({ text: nextProps.text });
+    }
+        
     onChange = (text) => {
         this.setState({
             text: text

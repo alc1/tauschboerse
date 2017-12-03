@@ -7,6 +7,7 @@ import { handleError } from './common';
  */
 
 export const ARTICLES_FOUND = 'ARTICLES_FOUND';
+export const LAST_SEARCH_CLEARED = 'LAST_SEARCH_CLEARED';
 
 /*
  * Action Creators
@@ -19,12 +20,15 @@ const articlesFound = (theSearchText, theArticles, theVersion) => ({
     version: theVersion
 });
 
+const lastSearchCleared = () => ({
+    type: LAST_SEARCH_CLEARED
+});
+
 /*
  * Thunk Actions
  */
 
-export const findArticles = (theSearchText, theVersion) => dispatch =>
-{
+export const findArticles = (theSearchText, theVersion) => dispatch => {
     let versionCheckPromise = new Promise((resolve, reject) => {
         if (theVersion) {
             axios.get('/api/articles/version')
@@ -56,3 +60,7 @@ export const findArticles = (theSearchText, theVersion) => dispatch =>
         })
         .catch((err) => handleError(err));
 };
+
+export const clearLastSearch = () => dispatch => {
+    dispatch(lastSearchCleared());
+}

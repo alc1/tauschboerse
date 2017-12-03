@@ -33,7 +33,7 @@ export default class App extends React.Component {
                     <Router history={history}>
                         <Switch>
                             <Route exact path="/" component={HomePage}/>
-                            <Route exact path="/marketplace" component={MarketplacePage}/>
+                            <Route path="/marketplace" component={MarketplacePage}/>
                             <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
                             <PublicRoute exact path="/registration" component={RegistrationPage}/>
                             <PublicRoute exact path="/login" component={LoginPage}/>
