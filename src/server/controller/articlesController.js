@@ -146,6 +146,13 @@ async function updateArticle(req, res) {
     }
 }
 
+function findArticles(req, res) {
+    res.json({
+        articles: dataCache.getAllArticles(),
+        version: 0
+    });
+}
+
 async function createNewCategories(theArticle) {
     if (useDataCache) {
         const existingCategories = theArticle.categories.filter(category => category.hasOwnProperty('_id'));
@@ -241,5 +248,6 @@ module.exports = {
     getArticleById,
     deleteArticleById,
     createArticle,
-    updateArticle
+    updateArticle,
+    findArticles,
 };
