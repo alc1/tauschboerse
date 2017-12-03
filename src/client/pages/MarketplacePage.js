@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import queryString from "query-string";
 
+import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+import Edit from 'material-ui/svg-icons/editor/mode-edit';
+
 import ApplicationBar from '../components/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList';
 import ArticleSearchInputComponent from '../components/ArticleSearchInputComponent';
@@ -33,8 +36,8 @@ class MarketplacePage extends React.Component {
 
     state = {
         searchText: '',
-        myArticles: [],
-        notMyArticles: []
+        userArticles: [],
+        notUserArticles: []
     };
 
     getSearchText(location) {
@@ -93,18 +96,18 @@ class MarketplacePage extends React.Component {
         //
         if (nextProps.lastSearch) {
             if ((!this.props.lastSearch) || (nextProps.lastSearch !== this.props.lastSearch)) {
-                let myArticles, notMyArticles;
+                let userArticles, notUserArticles;
                 if (this.props.user) {
-                    myArticles = nextProps.lastSearch.articles.filter(a => a.owner._id === this.props.user._id);
-                    notMyArticles = nextProps.lastSearch.articles.filter(a => a.owner._id !== this.props.user._id);
+                    userArticles = nextProps.lastSearch.articles.filter(a => a.owner._id === this.props.user._id);
+                    notUserArticles = nextProps.lastSearch.articles.filter(a => a.owner._id !== this.props.user._id);
                 } else {
-                    myArticles = [];
-                    notMyArticles = nextProps.lastSearch.articles;
+                    userArticles = [];
+                    notUserArticles = nextProps.lastSearch.articles;
                 }
-                this.setState({ myArticles: myArticles, notMyArticles: notMyArticles });
+                this.setState({ userArticles: userArticles, notUserArticles: notUserArticles });
             }
         } else {
-            this.setState({ myArticles: [], notMyArticles: [] });
+            this.setState({ userArticles: [], notUserArticles: [] });
         }
     }
 
@@ -117,8 +120,24 @@ class MarketplacePage extends React.Component {
         }
     };
 
-    buildActionList = () => {
-        return [];
+    editArticleDetails = () => {
+
+    };
+
+    showArticleDetails = () => {
+
+    };
+
+    createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
+        return { label, icon, onClick, isPrimary, isSecondary, isRaised };
+    };
+
+    buildActionList = (forUserArticles) => {
+        return forUserArticles ? [
+            this.createArticleAction("Bearbeiten", <Edit/>, this.editArticleDetails, false, false, true)
+        ] : [
+            this.createArticleAction("Ansehen", <RemoveRedEye/>, this.showArticleDetails, false, false, true)
+        ];
     };
 
     render() {
@@ -128,8 +147,8 @@ class MarketplacePage extends React.Component {
             <div>
                 <ApplicationBar/>
                 <ArticleSearchInputComponent text={this.state.searchText} onSearch={this.onSearch} />
-                <ArticleGridList articles={this.state.notMyArticles} articleActions={this.buildActionList(false)} loading={this.props.loading} />
-                {(this.state.myArticles.length > 0) && <ArticleGridList articles={this.state.myArticles} articleActions={this.buildActionList(true)} loading={this.props.loading} />}
+                <ArticleGridList articles={this.state.notUserArticles} articleActions={this.buildActionList(false)} loading={this.props.loading} />
+                {(this.state.userArticles.length > 0) && <ArticleGridList articles={this.state.userArticles} articleActions={this.buildActionList(true)} loading={this.props.loading} />}
             </div>
         );
     }
