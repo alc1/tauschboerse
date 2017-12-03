@@ -77,6 +77,7 @@ export const loadUserArticles = (theUserId) => dispatch =>
 
 const onTokenReceived = (token, dispatch, actionCreator) => {
     localStorage.setItem(JWT_TOKEN_KEY, token);
+    sessionStorage.setItem(JWT_TOKEN_KEY, token);
     setToken(token, dispatch, actionCreator);
 };
 
@@ -88,6 +89,7 @@ export const setToken = (token, dispatch, actionCreator) => {
 
 export const removeToken = (dispatch) => {
     localStorage.removeItem(JWT_TOKEN_KEY);
+    sessionStorage.removeItem(JWT_TOKEN_KEY);
     delete axios.defaults.headers.common['Authorization'];
     dispatch(userLoggedOut());
     dispatch(globalMessageReceived({

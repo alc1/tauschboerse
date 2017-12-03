@@ -7,7 +7,16 @@ import store from './client/store/store';
 
 import App from './client/App';
 
-const jwtToken = localStorage.getItem(JWT_TOKEN_KEY);
+function readJwtToken() {
+    let jwtToken = sessionStorage.getItem(JWT_TOKEN_KEY);
+    if (!jwtToken) {
+        jwtToken = localStorage.getItem(JWT_TOKEN_KEY);
+    }
+
+    return jwtToken;
+}
+
+const jwtToken = readJwtToken();
 if (jwtToken) {
     setToken(jwtToken, store.dispatch, userLoggedIn);
 }
