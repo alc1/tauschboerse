@@ -139,6 +139,4 @@ class CategoryCache {
     }
 }
 
-module.exports = {
-    CategoryCache
-};
+module.exports = CategoryCache;

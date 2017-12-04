@@ -3,7 +3,8 @@ import {
     USER_LOGGED_OUT,
     USER_CREATED,
     USER_UPDATED,
-    USER_ARTICLES_FETCHED
+    USER_ARTICLES_FETCHED,
+    USER_TRADES_FETCHED
 } from './../actions/user';
 
 import {
@@ -27,6 +28,11 @@ export default function user(theState = initialState, theAction) {
             return {
                 ...theState,
                 articles: theAction.articles
+            };
+        case USER_TRADES_FETCHED:
+            return {
+                ...theState,
+                trades: theAction.trades
             };
         case ARTICLE_DELETED:
             return {

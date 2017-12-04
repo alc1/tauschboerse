@@ -1,5 +1,5 @@
 const Datastore = require('nedb');
-const ArticleCache = require('./ArticleCache').ArticleCache;
+const ArticleCache = require('./ArticleCache');
 const Article = require('../../shared/businessobjects/Article');
 
 function initializeCache(initCache, generateTestData) {

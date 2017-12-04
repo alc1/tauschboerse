@@ -13,9 +13,9 @@ function resetData(dataCache) {
         {name: 'Kindersachen'}
     ];
     const offers = [
-        { transactionId: 0, senderId: 0, receiverId: 1}
+        { tradeId: 0, senderId: 0, receiverId: 1, articleIds: [1, 3] }
     ];
-    const transactions = [
+    const trades = [
         { user1Id: 0, user2Id: 1}
     ];
     const users = [
@@ -64,31 +64,44 @@ function resetData(dataCache) {
         }));
     }
 
-    function insertTransactions() {
-        console.log('inserting transactions...');
+    function insertTrades() {
+        console.log('inserting trades...');
 
-        for(let i = 0, ii = transactions.length; i < ii; i++) {
-            let transaction = transactions[i];
-            transaction.user1Id = users[transaction.user1Id]._id;
-            transaction.user2Id = users[transaction.user2Id]._id;
-            transactions[i] = dataCache.prepareTransaction(transaction);
+        for(let i = 0, ii = trades.length; i < ii; i++) {
+            let trade = trades[i];
+            trade.user1 = users[trade.user1Id];
+            trade.user2 = users[trade.user2Id];
+            trades[i] = dataCache.prepareTrade(trade);
         }
 
-        return Promise.all(transactions.map(transaction => {
-            return dataCache.saveTransaction(transaction);
+        return Promise.all(trades.map(trade => {
+            return dataCache.saveTrade(trade);
         }));
     }
 
     function insertOffers() {
         console.log('inserting offers...');
+
+        for(let i = 0, ii = offers.length; i < ii; i++) {
+            let offer = offers[i];
+            offer.trade = trades[offer.tradeId];
+            offer.sender = users[offer.senderId];
+            offer.receiver = users[offer.receiverId];
+            offer.articles = offer.articleIds.map(id => articles[id]);
+            offers[i] = dataCache.prepareOffer(offer);
+        }
+
+        return Promise.all(offers.map(offer => {
+            return dataCache.saveOffer(offer);
+        }));
     }
 
     return dataCache.clear()
         .then(() => insertUsers())
         .then(() => insertCategories())
         .then(() => insertArticles())
-//        .then(() => insertTransactions())
-//        .then(() => insertOffers())
+        .then(() => insertTrades())
+        .then(() => insertOffers())
     ;
 }
 

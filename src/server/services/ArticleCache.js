@@ -184,6 +184,4 @@ class ArticleCache {
     }
 }
 
-module.exports = {
-    ArticleCache
-};
+module.exports = ArticleCache;

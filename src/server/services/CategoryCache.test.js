@@ -1,5 +1,5 @@
 const Datastore = require('nedb');
-const CategoryCache = require('./CategoryCache').CategoryCache;
+const CategoryCache = require('./CategoryCache');
 const Category = require('../../shared/businessobjects/Category');
 
 function initializeCategoryCache(initCache, generateTestData) {

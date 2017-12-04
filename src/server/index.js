@@ -9,6 +9,7 @@ const app = express();
 const articlesRoutes = require('./routes/articlesRoutes');
 const categoriesRoutes = require('./routes/categoriesRoutes');
 const usersRoutes = require('./routes/usersRoutes');
+const tradesRoutes = require('./routes/tradesRoutes');
 const initDataCache = require('./services/DataCache').initDataCache;
 
 function startServer(port) {
@@ -34,6 +35,7 @@ app.use(bodyParser.json({limit: '10mb'}));
 app.use('/', express.static(path.join(__dirname, './../../public')));
 app.use('/api/articles', articlesRoutes);
 app.use('/api/categories', categoriesRoutes);
+app.use('/api/trades', tradesRoutes);
 app.use('/api/users', usersRoutes);
 
 const useDataCache = require('./useDataCache').useDataCache;

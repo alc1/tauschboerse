@@ -37,11 +37,11 @@ export default class NavigationComponent extends React.Component {
 
     render() {
         const { user } = this.props;
-        let userTransactionsLink = '/';
+        let userTradesLink = '/';
         let userArticlesLink = '/';
         let userDetailsLink = '/';
         if (user) {
-            userTransactionsLink = `/user/${user._id}/transactions`;
+            userTradesLink = `/user/${user._id}/trades`;
             userArticlesLink = `/user/${user._id}/articles`;
             userDetailsLink = `/user/${user._id}/details`;
         }
@@ -56,7 +56,7 @@ export default class NavigationComponent extends React.Component {
                     <MenuItem primaryText="Home" leftIcon={<Home/>} onClick={this.openMenuItem.bind(this, '/')}/>
                     <MenuItem primaryText="Marktplatz" leftIcon={<Business/>} onClick={this.openMenuItem.bind(this, '/marketplace')}/>
                     {user && <Divider/>}
-                    {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.openMenuItem.bind(this, userTransactionsLink)}/>}
+                    {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.openMenuItem.bind(this, userTradesLink)}/>}
                     {user && <MenuItem primaryText="Meine Artikel" leftIcon={<List/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
                     {user && <MenuItem primaryText="Mein Konto" leftIcon={<AccountCircle/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
                     {user && <Divider/>}

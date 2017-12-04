@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage';
 import MarketplacePage from './pages/MarketplacePage';
 import UserArticlesPage from './pages/UserArticlesPage';
 import UserEditorPage from './pages/UserEditorPage';
-import UserTransactionsPage from './pages/UserTransactionsPage';
+import UserTradesPage from './pages/UserTradesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import ArticleEditorPage from './pages/ArticleEditorPage';
 import RegistrationPage from './pages/RegistrationPage';
@@ -37,7 +37,7 @@ export default class App extends React.Component {
                             <Route exact path="/article/:articleId" component={ArticleDetailPage}/>
                             <PublicRoute exact path="/registration" component={RegistrationPage}/>
                             <PublicRoute exact path="/login" component={LoginPage}/>
-                            <PrivateRoute exact path="/user/:userId/transactions" component={UserTransactionsPage}/>
+                            <PrivateRoute exact path="/user/:userId/trades" component={UserTradesPage}/>
                             <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
                             <PrivateRoute exact path="/user/:userId/details" component={UserEditorPage}/>
                             <PrivateRoute exact path="/user/:userId/article" component={ArticleEditorPage}/>

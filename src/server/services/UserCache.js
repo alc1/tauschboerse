@@ -158,6 +158,4 @@ class UserCache {
     }
 }
 
-module.exports = {
-    UserCache
-};
+module.exports = UserCache;

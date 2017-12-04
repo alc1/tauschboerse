@@ -1,6 +1,6 @@
 const utils = require('../utils/businessUtils');
 
-class Transaction {
+class Trade {
     constructor(obj) {
         if (obj) {
             utils.setValue(this, 'user1', obj, null);
@@ -27,4 +27,4 @@ class Transaction {
     }
 }
 
-module.exports = Transaction;
+module.exports = Trade;

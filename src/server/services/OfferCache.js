@@ -3,9 +3,9 @@
 const Offer = require('../../shared/businessobjects/Offer');
 
 class OfferCache {
-    constructor(db, transactions, articles, users) {
+    constructor(db, trades, articles, users) {
         this.db = db;
-        this.transactions = transactions;
+        this.trades = trades;
         this.articles = articles;
         this.users = users;
 
@@ -118,9 +118,9 @@ class OfferCache {
             rec._id = offer._id;
         }
 
-        rec.transactionId = offer.transaction._id;
-        rec.senderId = offer.sneder._id;
-        rec.receiverId = offer.reveiver._id;
+        rec.tradeId = offer.trade._id;
+        rec.senderId = offer.sender._id;
+        rec.receiverId = offer.receiver._id;
         rec.articleIds = offer.articles.map(article => article._id);
 
         return rec;
@@ -130,9 +130,9 @@ class OfferCache {
         let offer = new Offer(null);
         offer._id = rec._id;
 
-        offer.transaction = this.transactions.find(rec.transactionId);
-        offer.sender = this.users.find(rec.senderId);
-        offer.receiver = this.users.find(rec.receiverId);
+        offer.trade = this.trades.find(rec.tradeId);
+        offer.sender = this.users.findById(rec.senderId);
+        offer.receiver = this.users.findById(rec.receiverId);
         offer.articles = rec.articleIds ? rec.articleIds.map(id => this.articles.findById(id)) : [];
         
         return offer;
@@ -143,6 +143,4 @@ class OfferCache {
     }
 }
 
-module.exports = {
-    OfferCache
-};
+module.exports = OfferCache;
