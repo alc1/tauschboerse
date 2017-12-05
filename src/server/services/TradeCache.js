@@ -8,6 +8,7 @@ class TradeCache {
         this.users = users;
 
         this.trades = [];
+        this.versionstamp = 0;
     }
 
     init() {
@@ -19,7 +20,8 @@ class TradeCache {
                     reject(err);
                 } else {
                     this.trades = recs.map(rec => this.toLogicalRecord(rec));
-                    console.log('trades loaded');
+                    this.versionstamp = recs.reduce((maxVersionstamp, trade) => trade.versionstamp > maxVersionstamp ? trade.versionstamp : maxVersionstamp, 0);
+                    console.log(`trades loaded: ${this.trades.length} entries`);
                     resolve(recs);
                 }
             }).bind(this));
@@ -65,7 +67,7 @@ class TradeCache {
 
         if (!rec) {
             saveOp = (function(resolve, reject) {
-                this.db.insert(TradeCache.toPhysicalRecord(trade), (function(err, newRec) {
+                this.db.insert(this.toPhysicalRecord(trade), (function(err, newRec) {
                     if (err) {
                         reject(err);
                     } else {
@@ -78,7 +80,7 @@ class TradeCache {
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(trade)) {
-                    db.update({_id: rec._id}, TradeCache.toPhysicalRecord(rec), {}, function(err, newRec) {
+                    db.update({_id: rec._id}, this.toPhysicalRecord(rec), {}, function(err, newRec) {
                         resolve(rec);
                     });
                 } else {
@@ -110,7 +112,11 @@ class TradeCache {
         return new Trade(obj);
     }
 
-    static toPhysicalRecord(trade) {
+    getNextVersionstamp() {
+        return ++this.versionstamp;
+    }
+
+    toPhysicalRecord(trade) {
         let rec = {};
 
         if (trade.hasOwnProperty('_id')) {
@@ -119,7 +125,12 @@ class TradeCache {
 
         rec.user1Id = trade.user1 ? trade.user1._id : null;
         rec.user2Id = trade.user2 ? trade.user2._id : null;
+        rec.state = trade.state;
+        rec.createDate = trade.createDate;
+        rec.offers = trade.offers;
         
+        rec.versionstamp = this.getNextVersionstamp();
+
         return rec;
     }
 
@@ -129,6 +140,8 @@ class TradeCache {
 
         trade.user1 = this.users.findById(rec.user1Id);
         trade.user2 = this.users.findById(rec.user2Id);
+
+        trade.versionstamp = rec.versionstamp;
 
         return trade;
     }

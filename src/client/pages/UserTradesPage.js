@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ApplicationBar from '../components/ApplicationBar';
-import TradesList from '../components/TradesList';
+import TradeGridList from '../components/TradeGridList';
+import TradeModel from '../models/TradeModel';
 
 import { loadUserTrades } from '../actions/user';
 import { setLoading } from '../actions/application';
@@ -35,21 +36,26 @@ class UserTradesPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.trades && (!this.props.trades || (this.props.trades !== nextProps.trades))) {
-            let activeTrades = nextProps.trades.filter(trade => !trade.isFinished);
-            let finishedTrades = nextProps.trades.filter(trade => trade.isFinished);
-            this.setState({ activeTrades: activeTrades, finishedTrades: finishedTrades });
+        if (nextProps.trades) {
+            if (!this.props.trades || (this.props.trades !== nextProps.trades)) {
+                let trades = nextProps.trades.map(trade => new TradeModel(trade));
+                let activeTrades = trades.filter(trade => !trade.isFinished);
+                let finishedTrades = trades.filter(trade => trade.isFinished);
+                this.setState({ activeTrades: activeTrades, finishedTrades: finishedTrades });
+            }
         } else {
             this.setState({ activeTrades: [], finishedTrades: [] });
         }
     }
 
     render() {
+        const { loading } = this.props;
+
         return (
             <div>
                 <ApplicationBar/>
-                <TradesList trades={this.state.activeTrades} />
-                <TradesList trades={this.state.finishedTrades} />
+                <TradeGridList trades={this.state.activeTrades} loading={loading} />
+                <TradeGridList trades={this.state.finishedTrades} loading={loading} />
             </div>
         );
     }

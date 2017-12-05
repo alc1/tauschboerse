@@ -10,7 +10,6 @@ export default class TradesList extends React.Component {
 
     static propTypes = {
         trades: PropTypes.array.isRequired,
-        loading: PropTypes.bool.isRequired
     };
 
     // static defaultProps = {
@@ -30,6 +29,7 @@ export default class TradesList extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
+                        {tradeRows}
                     </tbody>
                 </table>
             </div>
