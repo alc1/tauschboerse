@@ -5,6 +5,6 @@
 'use strict';
 
 module.exports = {
-    useDataCache: false,
+    useDataCache: true,
     resetData: false
 };
