@@ -3,7 +3,11 @@ function getValue(obj, propertyName, defaultValue) {
 }
 
 function setValue(obj, propertyName, valueObj, defaultValue) {
-    obj[propertyName] = getValue(valueObj, propertyName, defaultValue);
+    let value = getValue(valueObj, propertyName, defaultValue);
+    if (typeof value !== 'undefined') {
+        obj[propertyName] = value;
+    }
+    
     return obj;
 }
 
