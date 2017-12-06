@@ -1,5 +1,5 @@
 export const getUserArticles = (theState) => {
-    return theState.user ? theState.user.articles || [] : [];
+    return theState.user ? (theState.user.articles && theState.user.articles.sort((article1, article2) => article1.title.localeCompare(article2.title))) || [] : [];
 };
 
 export const getUserTrades = (theState) => {
