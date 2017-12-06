@@ -1,19 +1,18 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import uuid from 'uuid';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Save from 'material-ui/svg-icons/content/save';
+import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../components/ApplicationBar';
+import ArticlePlaceholder from '../components/ArticlePlaceholder';
 import ArticleForm from '../components/ArticleForm';
 import PhotosComponent from '../components/PhotosComponent';
 
-import { setLoading } from '../actions/application';
-import { loadArticle, createArticle, updateArticle } from '../actions/article';
+import { setLoading, setGlobalMessage, OK_MESSAGE } from '../actions/application';
+import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../actions/article';
 import { isLoading } from '../selectors/application';
 import { getArticle } from '../selectors/article';
 import { getUser } from '../selectors/user';
@@ -30,7 +29,7 @@ class ArticleEditorPage extends React.Component {
 
     constructor(props) {
         super(props);
-        this.isDisplayMode = false;
+        this.articleFound = true;
     }
 
     static propTypes = {
@@ -40,6 +39,7 @@ class ArticleEditorPage extends React.Component {
         loadArticle: PropTypes.func.isRequired,
         createArticle: PropTypes.func.isRequired,
         updateArticle: PropTypes.func.isRequired,
+        removeSelectedArticle: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
@@ -49,37 +49,54 @@ class ArticleEditorPage extends React.Component {
         description: '',
         categories: [],
         photos: [],
-        status: '',
-        created: {},
-        owner: {},
+        status: null,
+        created: null,
+        owner: null,
         errors: {},
         modified: false
     };
 
     componentDidMount() {
-        this.props.setLoading(true);
         const { articleId } = this.props.match.params;
         if (articleId) {
+            this.props.setLoading(true);
             this.props.loadArticle(articleId)
                 .then(() => {
                     this.props.setLoading(false);
-                    const { article } = this.props;
-                    this.setState({
-                        title: article ? article.title : this.state.title,
-                        description: article ? article.description : this.state.description,
-                        categories: article ? article.categories : this.state.categories,
-                        photos: article ? article.photos : this.state.photos,
-                        status: article ? article.status : this.state.status,
-                        created: article ? article.created : this.state.created,
-                        owner: article ? article.owner : this.state.owner
-                    });
+                    this.updateArticleInState(this.props);
                 })
-                .catch(() => this.props.setLoading(false));
-        }
-        else {
-            this.props.setLoading(false);
+                .catch(() => {
+                    this.articleFound = false;
+                    this.props.setLoading(false);
+                });
         }
     }
+
+    componentWillReceiveProps(nextProps) {
+        this.updateArticleInState(nextProps);
+    }
+
+    componentWillUnmount() {
+        this.props.removeSelectedArticle();
+    }
+
+    updateArticleInState = (props) => {
+        const wasNotLoading = this.props.loading === false;
+        const isNowLoading = props.loading === true;
+        if (wasNotLoading && isNowLoading) {
+            return;
+        }
+        const { article } = props;
+        this.setState({
+            title: article ? article.title : this.state.title,
+            description: article ? article.description : this.state.description,
+            categories: article ? article.categories : this.state.categories,
+            photos: article ? article.photos : this.state.photos,
+            status: article ? article.status : this.state.status,
+            created: article ? article.created : this.state.created,
+            owner: article ? article.owner : this.state.owner
+        });
+    };
 
     onChange = (theEvent) => {
         this.setState({
@@ -131,18 +148,26 @@ class ArticleEditorPage extends React.Component {
         let articleToSave = new Article({ title, description, categories, photos });
         const validation = articleDetailsValidator.validate(articleToSave);
         if (validation.isValid) {
-            let articleRequest;
+            let articleSaveRequest;
             if (articleId) {
                 articleToSave._id = articleId;
                 articleToSave.created = created;
-                articleRequest = this.props.updateArticle(user._id, articleToSave);
+                articleSaveRequest = this.props.updateArticle(user._id, articleToSave);
             }
             else {
-                articleRequest = this.props.createArticle(articleToSave);
+                articleSaveRequest = this.props.createArticle(articleToSave);
             }
-            articleRequest.then(() => {
+            articleSaveRequest.then((res) => {
                 this.props.setLoading(false);
-                this.props.history.goBack();
+                this.props.setGlobalMessage({
+                    messageText: 'Artikel wurde gespeichert.',
+                    messageType: OK_MESSAGE
+                });
+                this.setState({
+                    errors: {},
+                    modified: false
+                });
+                this.props.history.replace(`/article/${res.article._id}`);
             }).catch((err) => {
                 this.props.setLoading(false);
                 this.setState({ errors: err.response.data.errors || {} });
@@ -156,23 +181,19 @@ class ArticleEditorPage extends React.Component {
 
     render() {
         const { user, loading } = this.props;
-        const { title, description, categories, photos, status, owner, errors, modified } = this.state;
-        let isUserPermitted = true;
-        if (owner._id && owner._id !== user._id) {
-            isUserPermitted = false;
+        const { title, description, categories, photos, status, created, owner, errors, modified } = this.state;
+        let isEditAllowed = true;
+        if (owner && owner._id && owner._id !== user._id) {
+            isEditAllowed = false;
         }
         return (
             <div>
                 <ApplicationBar/>
-                {isUserPermitted ?
+                {this.articleFound ?
                     <form className="article-editor__container" onSubmit={this.onSubmit}>
                         <ArticleForm
-                            isDisplayMode={this.isDisplayMode}
-                            title={title}
-                            description={description}
-                            categories={categories}
-                            status={status}
-                            photos={photos}
+                            isDisplayMode={!isEditAllowed}
+                            article={{title, description, categories, photos, status, created, owner}}
                             errors={errors}
                             loading={loading}
                             onChange={this.onChange}
@@ -182,20 +203,21 @@ class ArticleEditorPage extends React.Component {
                             onPhotoLoaded={this.onPhotoLoaded}
                             onRemovePhoto={this.onRemovePhoto}/>
                         <PhotosComponent
-                            isDisplayMode={this.isDisplayMode}
+                            isDisplayMode={!isEditAllowed}
                             photos={photos}
                             onPhotoLoaded={this.onPhotoLoaded}
                             onRemovePhoto={this.onRemovePhoto}
                             loading={loading}/>
-                        <FloatingActionButton
+                        {isEditAllowed && <FloatingActionButton
                             style={FLOATING_ACTION_BUTTON_POSITION_STYLE}
                             type="submit"
                             disabled={loading || !modified}>
-                            <Save/>
-                        </FloatingActionButton>
+                            <SaveIcon/>
+                        </FloatingActionButton>}
                     </form>
                     :
-                    <Redirect to="/"/>}
+                    <ArticlePlaceholder width={300} height={300} loading={loading}/>
+                }
             </div>
         );
     }
@@ -209,4 +231,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadArticle, createArticle, updateArticle, setLoading })(ArticleEditorPage);
+export default connect(mapStateToProps, { loadArticle, createArticle, updateArticle, removeSelectedArticle, setLoading, setGlobalMessage })(ArticleEditorPage);

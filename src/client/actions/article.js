@@ -10,6 +10,7 @@ export const ARTICLE_FETCHED = 'ARTICLE_FETCHED';
 export const ARTICLE_CREATED = 'ARTICLE_CREATED';
 export const ARTICLE_UPDATED = 'ARTICLE_UPDATED';
 export const ARTICLE_DELETED = 'ARTICLE_DELETED';
+export const REMOVE_SELECTED_ARTICLE = 'REMOVE_SELECTED_ARTICLE';
 
 /*
  * Action Creators
@@ -35,6 +36,10 @@ const articleDeleted = (theArticleId) => ({
     articleId: theArticleId
 });
 
+const selectedArticleRemoved = () => ({
+    type: REMOVE_SELECTED_ARTICLE
+});
+
 /*
  * Thunk Actions
  */
@@ -58,3 +63,7 @@ export const deleteArticle = (ownerId, articleId) => dispatch =>
     axios.delete(`/api/users/${ownerId}/articles/${articleId}`)
         .then(response => dispatch(articleDeleted(response.data.articleId)))
         .catch((err) => handleError(err, dispatch));
+
+export const removeSelectedArticle = () => dispatch => {
+    dispatch(selectedArticleRemoved());
+};

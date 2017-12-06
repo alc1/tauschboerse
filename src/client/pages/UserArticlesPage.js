@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
-import Edit from 'material-ui/svg-icons/editor/mode-edit';
-import Delete from 'material-ui/svg-icons/action/delete';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import PlusIcon from 'material-ui/svg-icons/content/add';
 
 import ApplicationBar from '../components/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList';
@@ -46,16 +45,12 @@ class UserArticlesPage extends React.Component {
             .catch(() => this.props.setLoading(false));
     }
 
-    showArticleDetails = (theArticle) => {
+    editArticleDetails = (theArticle) => {
         this.props.history.push(`/article/${theArticle._id}`);
     };
 
-    editArticleDetails = (theArticle) => {
-        this.props.history.push(`/user/${theArticle.owner._id}/article/${theArticle._id}`);
-    };
-
-    createNewArticle = (theUserId) => {
-        this.props.history.push(`/user/${theUserId}/article`);
+    createNewArticle = () => {
+        this.props.history.push('/article');
     };
 
     showDeleteConfirmationDialog = (theArticle) => {
@@ -85,23 +80,22 @@ class UserArticlesPage extends React.Component {
     };
 
     createArticleActions = () => {
-        let articleActions = [];
-        articleActions.push(this.createArticleAction("Ansehen", <RemoveRedEye/>, this.showArticleDetails, true, false, true));
-        articleActions.push(this.createArticleAction("Bearbeiten", <Edit/>, this.editArticleDetails, false, false, true));
-        articleActions.push(this.createArticleAction("Löschen", <Delete/>, this.showDeleteConfirmationDialog, false, true, false));
-        return articleActions;
+        return [
+            this.createArticleAction("Bearbeiten", <EditIcon/>, this.editArticleDetails, true, false, true),
+            this.createArticleAction("Löschen", <DeleteIcon/>, this.showDeleteConfirmationDialog, false, true, false)
+        ];
     };
 
     render() {
-        const { user, articles, loading } = this.props;
+        const { articles, loading } = this.props;
         const { isDeleteDialogOpen, articleToDelete } = this.state;
         const articleTitle = articleToDelete ? articleToDelete.title : '';
         return (
             <div>
                 <ApplicationBar/>
                 <ArticleGridList articles={articles} articleActions={this.createArticleActions()} loading={loading}/>
-                <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle.bind(this, user._id)}>
-                    <ContentAdd/>
+                <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle}>
+                    <PlusIcon/>
                 </FloatingActionButton>
                 <DeleteArticleDialog
                     open={isDeleteDialogOpen}

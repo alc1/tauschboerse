@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import Paper from 'material-ui/Paper';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 
+import AvatarTag from './AvatarTag';
 import ArticleStatusComponent from './ArticleStatusTag';
 import InputComponent from './InputComponent';
 import CategoryInputFieldContainer from '../containers/CategoryInputContainer';
@@ -16,13 +20,8 @@ export default class ArticleForm extends React.Component {
 
     static propTypes = {
         isDisplayMode: PropTypes.bool.isRequired,
-        title: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        categories: PropTypes.array.isRequired,
-        status: PropTypes.string.isRequired,
+        article: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
-        owner: PropTypes.string,
-        created: PropTypes.string,
         errors: PropTypes.object,
         onChange: PropTypes.func,
         onAddCategory: PropTypes.func,
@@ -38,7 +37,16 @@ export default class ArticleForm extends React.Component {
     }
 
     render() {
-        const { isDisplayMode, title, description, categories, status, owner, created, errors, loading, onChange, onAddCategory, onRemoveCategory } = this.props;
+        const { isDisplayMode, article, errors, loading, onChange, onAddCategory, onRemoveCategory } = this.props;
+        let title = '', description = '', categories = [], status = null, owner = null, created = null;
+        if (article) {
+            title = article.title ? article.title : title;
+            description = article.description ? article.description : description;
+            categories = article.categories ? article.categories : categories;
+            status = article.status ? article.status : status;
+            owner = article.owner ? article.owner.name : owner;
+            created = article.created ? moment(article.created).format('DD.MM.YYYY | HH:mm') : created;
+        }
         return (
             <div className="article-form__container">
                 <Paper className="article-form__paper">
@@ -48,7 +56,9 @@ export default class ArticleForm extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="article-form__field-container">
-                        <ArticleStatusComponent status={status}/>
+                        {owner && <AvatarTag text={owner} icon={<AccountIcon/>}/>}
+                        {created && <AvatarTag text={created} icon={<EditIcon/>}/>}
+                        {status && <ArticleStatusComponent status={status}/>}
                         <InputComponent
                             isDisplayMode={isDisplayMode}
                             inputRef={inputElement => this.firstInputElement = inputElement}
@@ -78,20 +88,6 @@ export default class ArticleForm extends React.Component {
                             onRemoveCategory={onRemoveCategory}
                             allowNewValues={true}
                         />
-                        {isDisplayMode && <InputComponent
-                            isDisplayMode={isDisplayMode}
-                            label="Besitzer"
-                            value={owner}
-                            field="owner"
-                            disabled={loading}
-                        />}
-                        {isDisplayMode && <InputComponent
-                            isDisplayMode={isDisplayMode}
-                            label="Erstellt am"
-                            value={created}
-                            field="created"
-                            disabled={loading}
-                        />}
                     </div>
                 </Paper>
             </div>

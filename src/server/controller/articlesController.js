@@ -121,7 +121,7 @@ async function updateArticle(req, res) {
             const savedArticle = await dataCache.saveArticle(preparedArticle);
             if (savedArticle) {
                 savePhotos(savedArticle._id, photos);
-                res.json({ article: article });
+                res.json({ article: savedArticle });
             }
             else {
                 res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
