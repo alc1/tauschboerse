@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import MarketplaceIcon from 'material-ui/svg-icons/communication/business';
+import ListIcon from 'material-ui/svg-icons/action/list';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import NewAccountIcon from 'material-ui/svg-icons/social/person-add';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
@@ -66,6 +67,7 @@ class HomePage extends React.Component {
                     <RaisedButton style={buttonStyle} label="Marktplatz durchstöbern" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')} primary/>
                     {!user && <RaisedButton style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>}
                     {!user && <FlatButton style={buttonStyle} label="Neues Konto erstellen" icon={<NewAccountIcon/>} onClick={this.goTo.bind(this, '/registration')} secondary/>}
+                    {user && <RaisedButton style={buttonStyle} label="Meine Artikel anzeigen" icon={<ListIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/articles`)} primary/>}
                     {user && <RaisedButton style={buttonStyle} label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>}
                 </div>
             </div>
