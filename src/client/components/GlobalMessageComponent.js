@@ -51,6 +51,7 @@ class GlobalMessageComponent extends React.Component {
                 action={actionText}
                 onActionTouchTap={action}
                 onRequestClose={this.props.onGlobalMessageClose}
+                autoHideDuration={messageType === OK_MESSAGE ? 2000 : 0}
             />
         );
     }
