@@ -5,7 +5,7 @@ import ChipInput from 'material-ui-chip-input';
 
 const styles = { width: '90%' };
 
-export default class CategoryInputFieldComponent extends React.Component {
+export default class CategoryInputField extends React.Component {
 
     static propTypes = {
         isDisplayMode: PropTypes.bool.isRequired,
@@ -13,21 +13,34 @@ export default class CategoryInputFieldComponent extends React.Component {
         availableCategories: PropTypes.array.isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
+        loadCategories: PropTypes.func.isRequired,
+        allowNewValues: PropTypes.bool.isRequired,
         onAddCategory: PropTypes.func,
         onRemoveCategory: PropTypes.func
     };
 
     static defaultProps = {
-        isDisplayMode: false
+        isDisplayMode: false,
+        allowNewValues: true
     };
 
+    componentDidMount() {
+        this.props.loadCategories();
+    }
+
     onAddCategory = (theCategoryName, event) => {
-        if (!this.props.isDisplayMode && this.props.onAddCategory) {
+        if (theCategoryName && !this.props.isDisplayMode && this.props.onAddCategory) {
             if (event && event.relatedTarget && this.isCategoryName(event.relatedTarget.textContent)) {
                 return;
             }
             if (!this.isAlreadyAdded(theCategoryName)) {
-                this.props.onAddCategory(theCategoryName);
+                let foundCategory = this.props.availableCategories.find(category => category.name === theCategoryName);
+                if (foundCategory) {
+                    this.props.onAddCategory(foundCategory);
+                }
+                else if (this.props.allowNewValues) {
+                    this.props.onAddCategory({ name: theCategoryName });
+                }
             }
         }
     };

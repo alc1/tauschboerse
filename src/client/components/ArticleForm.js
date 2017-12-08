@@ -10,7 +10,7 @@ import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import AvatarTag from './AvatarTag';
 import ArticleStatusComponent from './ArticleStatusTag';
 import InputComponent from './InputComponent';
-import CategoryInputFieldContainer from '../containers/CategoryInputContainer';
+import CategoryInputField from '../containers/CategoryInputField';
 
 import './ArticleForm.css';
 
@@ -79,7 +79,7 @@ export default class ArticleForm extends React.Component {
                             multiLine={true}
                             disabled={loading}
                         />
-                        <CategoryInputFieldContainer
+                        <CategoryInputField
                             isDisplayMode={isDisplayMode}
                             categories={categories}
                             errors={errors}
