@@ -1,13 +1,14 @@
 const utils = require('../utils/businessUtils');
 
-const TradeStatus = require('./TradeStatus');
+const TradeState = require('./TradeState');
+const Offer = require('./Offer');
 
 class Trade {
     constructor(obj) {
         if (obj) {
             utils.setValue(this, 'user1', obj, null);
             utils.setValue(this, 'user2', obj, null);
-            utils.setValue(this, 'state', obj, TradeStatus.TRADE_STATUS_INIT);
+            utils.setValue(this, 'state', obj, TradeState.TRADE_STATE_INIT);
             utils.setValue(this, 'createDate', obj, new Date());
             utils.setValue(this, 'versionstamp', obj, undefined);
             utils.setValue(this, 'offers', obj, []);
@@ -16,10 +17,29 @@ class Trade {
         } else {
             this.user1 = null;
             this.user2 = null;
-            this.state = TradeStatus.TRADE_STATUS_INIT;
+            this.state = TradeState.TRADE_STATE_INIT;
             this.createDate = new Date();
             this.offers = [];
         }
+    }
+
+    get currentOffer() {
+        return this.offers[0];
+    }
+
+    addOffer(sender, articles) {
+        let offer = new Offer();
+        offer.Trade = this;
+        offer.sender = sender;
+        offer.articles = articles;
+
+        this.offers.unshift(offer);
+
+        return offer;
+    }
+
+    setArticles(articles) {
+        this.currentOffer.articles = articles;
     }
 
     update(obj) {

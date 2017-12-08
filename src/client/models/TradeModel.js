@@ -1,4 +1,4 @@
-const TradeStatus = require('../../shared/businessobjects/TradeStatus');
+const TradeState = require('../../shared/businessobjects/TradeState');
 
 class TradeModel {
     constructor (trade) {
@@ -6,7 +6,7 @@ class TradeModel {
     }
 
     get isFinished() {
-        return (this.trade.state === TradeStatus.TRADE_STATUS_COMPLETED) || (this.trade.state === TradeStatus.TRADE_STATUS_CANCELED);
+        return (this.trade.state === TradeState.TRADE_STATE_COMPLETED) || (this.trade.state === TradeState.TRADE_STATE_CANCELED);
     }
 
     get _id() {

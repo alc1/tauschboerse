@@ -59,6 +59,10 @@ class DataCache {
         return this.articles.findById(theArticleId);
     }
 
+    getArticlesById(theArticleIds) {
+        return theArticleIds.map(id => getArticleById(id));
+    }
+
     getArticlesByOwner(theOwnerId) {
         return this.articles.findByOwner(theOwnerId);
     }
