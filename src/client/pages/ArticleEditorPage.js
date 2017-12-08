@@ -6,7 +6,7 @@ import uuid from 'uuid';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
-import ApplicationBar from '../components/ApplicationBar';
+import ApplicationBar from '../containers/ApplicationBar';
 import ArticlePlaceholder from '../components/ArticlePlaceholder';
 import ArticleForm from '../components/ArticleForm';
 import PhotosComponent from '../components/PhotosComponent';

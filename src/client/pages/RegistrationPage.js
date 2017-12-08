@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
-import ApplicationBar from '../components/ApplicationBar';
+import ApplicationBar from '../containers/ApplicationBar';
 import RegistrationForm from '../components/RegistrationForm';
 
 import { setLoading } from '../actions/application';

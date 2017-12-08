@@ -6,7 +6,7 @@ import queryString from "query-string";
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 
-import ApplicationBar from '../components/ApplicationBar';
+import ApplicationBar from '../containers/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList';
 import ArticleSearchInputComponent from '../components/ArticleSearchInputComponent';
 

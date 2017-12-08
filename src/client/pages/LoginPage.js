@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import LockOpen from 'material-ui/svg-icons/action/lock-open';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 
-import ApplicationBar from '../components/ApplicationBar';
+import ApplicationBar from '../containers/ApplicationBar';
 import LoginForm from '../components/LoginForm';
 
 import { setLoading } from '../actions/application';

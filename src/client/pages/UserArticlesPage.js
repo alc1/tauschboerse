@@ -8,7 +8,7 @@ import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import PlusIcon from 'material-ui/svg-icons/content/add';
 
-import ApplicationBar from '../components/ApplicationBar';
+import ApplicationBar from '../containers/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList';
 import DeleteArticleDialog from '../components/DeleteArticleDialog';
 

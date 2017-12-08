@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Save from 'material-ui/svg-icons/content/save';
 
-import ApplicationBar from '../components/ApplicationBar';
+import ApplicationBar from '../containers/ApplicationBar';
 import UserDetailsForm from '../components/UserDetailsForm';
 import UserPasswordForm from '../components/UserPasswordForm';
 

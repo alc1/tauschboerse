@@ -12,7 +12,7 @@ import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import NewAccountIcon from 'material-ui/svg-icons/social/person-add';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 
-import ApplicationBar from '../components/ApplicationBar';
+import ApplicationBar from '../containers/ApplicationBar';
 import Swap from '../images/Swap';
 import Camera from '../images/Camera';
 import Flower from '../images/Flower';

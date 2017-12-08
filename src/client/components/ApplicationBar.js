@@ -1,20 +1,15 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
-import Menu from 'material-ui/svg-icons/navigation/menu';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 
 import Navigation from '../containers/Navigation';
 import LoadingIndicator from '../containers/LoadingIndicator';
 import GlobalMessage from '../containers/GlobalMessage';
-
-import { getUser } from '../selectors/user';
-import { logout } from '../actions/user';
 
 import './ApplicationBar.css';
 
@@ -23,11 +18,12 @@ const appbarStyles = {
     zIndex: 10
 };
 
-class ApplicationBar extends React.Component {
+export default class ApplicationBar extends React.Component {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
-        logout: PropTypes.func.isRequired
+        logout: PropTypes.func.isRequired,
+        user: PropTypes.object
     };
 
     state = {
@@ -70,7 +66,7 @@ class ApplicationBar extends React.Component {
                     style={appbarStyles}
                     className="appbar"
                     title="Tauschbörse"
-                    iconElementLeft={<IconButton><Menu/></IconButton>}
+                    iconElementLeft={<IconButton><MenuIcon/></IconButton>}
                     iconElementRight={loginButtonBar}
                     onLeftIconButtonTouchTap={this.toggleMenu}/>
                 <Drawer
@@ -86,11 +82,3 @@ class ApplicationBar extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        user: getUser(theState)
-    };
-}
-
-export default withRouter(connect(mapStateToProps, { logout })(ApplicationBar));
