@@ -39,8 +39,8 @@ export default class App extends React.Component {
                             <Route exact path="/trade/:tradeId" component={TradeDetailPage}/>
                             <PublicRoute exact path="/registration" component={RegistrationPage}/>
                             <PublicRoute exact path="/login" component={LoginPage}/>
+                            <PrivateRoute path="/user/:userId/articles" component={UserArticlesPage}/>
                             <PrivateRoute exact path="/user/:userId/trades" component={UserTradesPage}/>
-                            <PrivateRoute exact path="/user/:userId/articles" component={UserArticlesPage}/>
                             <PrivateRoute exact path="/user/:userId/details" component={UserEditorPage}/>
                             <Route component={NoMatchPage}/>
                         </Switch>
