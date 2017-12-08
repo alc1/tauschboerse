@@ -9,7 +9,7 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import Menu from 'material-ui/svg-icons/navigation/menu';
 
-import NavigationContainer from '../containers/NavigationContainer';
+import Navigation from '../containers/Navigation';
 import LoadingIndicator from '../containers/LoadingIndicator';
 import GlobalMessage from '../containers/GlobalMessage';
 
@@ -77,7 +77,7 @@ class ApplicationBar extends React.Component {
                     docked={false}
                     open={this.state.isMenuOpen}
                     onRequestChange={this.handleMenuChange}>
-                    <NavigationContainer closeMenu={this.closeMenu}/>
+                    <Navigation closeMenu={this.closeMenu}/>
                 </Drawer>
                 <div className="appbar__content"/>
                 <LoadingIndicator/>
