@@ -6,13 +6,14 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import { GO_TO_LOGIN, OK_MESSAGE, ERROR_MESSAGE } from '../actions/application';
 
-class GlobalMessageComponent extends React.Component {
+class GlobalMessage extends React.Component {
 
     static propTypes = {
         globalMessage: PropTypes.object.isRequired,
-        onGlobalMessageClose: PropTypes.func.isRequired,
+        removeGlobalMessage: PropTypes.func.isRequired,
         goToLogin: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired
+        history: PropTypes.object.isRequired,
+        muiTheme: PropTypes.object.isRequired
     };
 
     render() {
@@ -29,7 +30,7 @@ class GlobalMessageComponent extends React.Component {
         let action;
         if (actionType === GO_TO_LOGIN) {
             action = () => {
-                this.props.onGlobalMessageClose();
+                this.props.removeGlobalMessage();
                 this.props.goToLogin(this.props.history);
             }
         }
@@ -50,11 +51,11 @@ class GlobalMessageComponent extends React.Component {
                 message={messageText}
                 action={actionText}
                 onActionTouchTap={action}
-                onRequestClose={this.props.onGlobalMessageClose}
+                onRequestClose={this.props.removeGlobalMessage}
                 autoHideDuration={messageType === OK_MESSAGE ? 2000 : 0}
             />
         );
     }
 }
 
-export default muiThemeable()(GlobalMessageComponent);
+export default muiThemeable()(GlobalMessage);
