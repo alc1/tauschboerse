@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 import Snackbar from 'material-ui/Snackbar';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import { orange500 } from 'material-ui/styles/colors';
 
-import { GO_TO_LOGIN, OK_MESSAGE, ERROR_MESSAGE } from '../actions/application';
+import { GO_TO_LOGIN, OK_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE } from '../actions/application';
 
 class GlobalMessage extends React.Component {
 
@@ -38,6 +39,9 @@ class GlobalMessage extends React.Component {
         let borderColor = 'black';
         if (messageType === OK_MESSAGE) {
             borderColor = this.props.muiTheme.palette.primary1Color;
+        }
+        else if (messageType === WARNING_MESSAGE) {
+            borderColor = orange500;
         }
         else if (messageType === ERROR_MESSAGE) {
             borderColor = this.props.muiTheme.palette.accent1Color;
