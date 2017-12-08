@@ -81,20 +81,16 @@ class ArticleEditorPage extends React.Component {
     }
 
     updateArticleInState = (props) => {
-        const wasNotLoading = this.props.loading === false;
-        const isNowLoading = props.loading === true;
-        if (wasNotLoading && isNowLoading) {
-            return;
-        }
         const { article } = props;
+        const { modified, title, description, categories, photos, status, created, owner } = this.state;
         this.setState({
-            title: article ? article.title : this.state.title,
-            description: article ? article.description : this.state.description,
-            categories: article ? article.categories : this.state.categories,
-            photos: article ? article.photos : this.state.photos,
-            status: article ? article.status : this.state.status,
-            created: article ? article.created : this.state.created,
-            owner: article ? article.owner : this.state.owner
+            title: article && !modified ? article.title : title,
+            description: article && !modified ? article.description : description,
+            categories: article && !modified ? article.categories : categories,
+            photos: article && !modified ? article.photos : photos,
+            status: article && !modified ? article.status : status,
+            created: article && !modified ? article.created : created,
+            owner: article && !modified ? article.owner : owner
         });
     };
 
@@ -167,7 +163,9 @@ class ArticleEditorPage extends React.Component {
                     errors: {},
                     modified: false
                 });
-                this.props.history.replace(`/article/${res.article._id}`);
+                if (!articleId) {
+                    this.props.history.replace(`/article/${res.article._id}`);
+                }
             }).catch((err) => {
                 this.props.setLoading(false);
                 this.setState({ errors: err.response.data.errors || {} });
