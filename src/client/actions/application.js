@@ -14,6 +14,7 @@ export const LOADING_STATE_RECEIVED = 'LOADING_STATE_RECEIVED';
  */
 
 export const OK_MESSAGE = 'OK_MESSAGE';
+export const WARNING_MESSAGE = 'WARNING_MESSAGE';
 export const ERROR_MESSAGE = 'ERROR_MESSAGE';
 
 /*
