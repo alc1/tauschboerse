@@ -28,9 +28,9 @@ function addTrade(req, res) {
             trade.user2 = null;
         }
         dataCache.saveTrade(trade);
-        req.json(trade);
+        res.json(trade);
     } else {
-        req.sendStatus(400);
+        res.sendStatus(400);
     }
 }
 
@@ -90,9 +90,9 @@ function setTradeArticles(req, res) {
     }
 
     if (requestStatus === 200) {
-        req.json(trade);
+        res.json(trade);
     } else {
-        req.sendStatus(requestStatus);
+        res.sendStatus(requestStatus);
     }
 }
 
@@ -157,9 +157,9 @@ function setTradeState(req, res) {
     }
 
     if (requestStatus === 200) {
-        req.json(trade);
+        res.json(trade);
     } else {
-        req.sendStatus(requestStatus);
+        res.sendStatus(requestStatus);
     }
 }
 

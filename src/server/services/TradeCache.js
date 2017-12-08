@@ -73,6 +73,7 @@ class TradeCache {
                     } else {
                         let newTrade = this.toLogicalRecord(newRec);
                         this.trades.push(newTrade);
+                        trade._id = newTrade._id;
                         resolve(newTrade);
                     }
                 }).bind(this));
@@ -127,7 +128,7 @@ class TradeCache {
         rec.user2Id = trade.user2 ? trade.user2._id : null;
         rec.state = trade.state;
         rec.createDate = trade.createDate;
-        rec.offers = trade.offers;
+        rec.offers = trade.offers.map(offer => ({ senderId: offer.sender._id, createDate: offer.createDate, state: offer.state, articleIds: offer.articles.map(article => article._id) }));
         
         rec.versionstamp = this.getNextVersionstamp();
 

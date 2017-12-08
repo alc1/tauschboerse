@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import queryString from "query-string";
+import axios from 'axios';
+
+import { handleError } from '../actions/common';
 
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
@@ -10,9 +13,9 @@ import ApplicationBar from '../containers/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList';
 import ArticleSearchInputComponent from '../components/ArticleSearchInputComponent';
 
-import { findArticles, clearLastSearch } from '../actions/marketplace';
+import { findArticles, clearLastSearch, createTrade } from '../actions/marketplace';
 import { setLoading } from '../actions/application';
-import { getLastSearch } from '../selectors/marketplace';
+import { getLastSearch, getTrade } from '../selectors/marketplace';
 import { getUser } from '../selectors/user';
 import { isLoading } from '../selectors/application';
 
@@ -28,7 +31,9 @@ class MarketplacePage extends React.Component {
         lastSearch: PropTypes.object,
         user: PropTypes.object.isRequired,
         findArticles: PropTypes.func.isRequired,
+        trade: PropTypes.object,
         clearLastSearch: PropTypes.func.isRequired,
+        createTrade: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
@@ -120,8 +125,8 @@ class MarketplacePage extends React.Component {
         }
     };
 
-    editArticleDetails = () => {
-
+    startTrade = (theArticle) => {
+        this.props.createTrade(theArticle);
     };
 
     showArticleDetails = () => {
@@ -134,9 +139,9 @@ class MarketplacePage extends React.Component {
 
     buildActionList = (forUserArticles) => {
         return forUserArticles ? [
-            this.createArticleAction("Bearbeiten", <Edit/>, this.editArticleDetails, false, false, true)
-        ] : [
             this.createArticleAction("Ansehen", <RemoveRedEye/>, this.showArticleDetails, false, false, true)
+        ] : [
+            this.createArticleAction("Tauschen", <Edit/>, this.startTrade, false, false, true)
         ];
     };
 
@@ -158,8 +163,9 @@ function mapStateToProps(theState) {
     return {
         lastSearch: getLastSearch(theState),
         user: getUser(theState),
-        loading: isLoading(theState)
+        loading: isLoading(theState),
+        trade: getTrade(theState)
     };
 }
 
-export default connect(mapStateToProps, { findArticles, clearLastSearch, setLoading })(MarketplacePage);
+export default connect(mapStateToProps, { findArticles, clearLastSearch, createTrade, setLoading })(MarketplacePage);

@@ -29,7 +29,6 @@ class Trade {
 
     addOffer(sender, articles) {
         let offer = new Offer();
-        offer.Trade = this;
         offer.sender = sender;
         offer.articles = articles;
 

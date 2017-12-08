@@ -8,6 +8,7 @@ import { handleError } from './common';
 
 export const ARTICLES_FOUND = 'ARTICLES_FOUND';
 export const LAST_SEARCH_CLEARED = 'LAST_SEARCH_CLEARED';
+export const TRADE_CREATED = 'TRADE_CREATED';
 
 /*
  * Action Creators
@@ -22,6 +23,11 @@ const articlesFound = (theSearchText, theArticles, theVersion) => ({
 
 const lastSearchCleared = () => ({
     type: LAST_SEARCH_CLEARED
+});
+
+const tradeCreated = (theTrade) => ({
+    type: TRADE_CREATED,
+    trade: theTrade
 });
 
 /*
@@ -63,4 +69,10 @@ export const findArticles = (theSearchText, theVersion) => dispatch => {
 
 export const clearLastSearch = () => dispatch => {
     dispatch(lastSearchCleared());
+}
+
+export const createTrade = (theArticle) => dispatch => {
+    axios.post('/api/trades/', { articleIds: [theArticle._id] })
+        .then(response => dispatch(tradeCreated(response.data)))
+        .catch(err => handleError(err, dispatch));
 }

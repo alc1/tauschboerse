@@ -2,7 +2,7 @@
 
 const ArticleCache = require('./ArticleCache');
 const CategoryCache = require('./CategoryCache');
-const OfferCache = require('./OfferCache');
+//const OfferCache = require('./OfferCache');
 const TradeCache = require('./TradeCache');
 const UserCache = require('./UserCache');
 
@@ -16,7 +16,7 @@ class DataCache {
         this.categories = new CategoryCache(db.dbCategories);
         this.articles = new ArticleCache(db.dbArticles, this.users, this.categories);
         this.trades = new TradeCache(db.dbTrades, this.users);
-        this.offers = new OfferCache(db.dbOffers, this.trades, this.articles, this.users);
+//        this.offers = new OfferCache(db.dbOffers, this.trades, this.articles, this.users);
     }
 
     init() {
@@ -30,17 +30,23 @@ class DataCache {
             .then (
                 () => this.trades.init()
             )
-            .then(
-                () => this.offers.init()
-            );
+            // .then(
+            //     () => this.offers.init()
+            // )
+            ;
     }
 
     clear() {
-        return this.offers.clear()
-            .then(() => this.trades.clear())
+        return this.trades.clear()
             .then(() => this.articles.clear())
             .then(() => this.categories.clear())
             .then(() => this.users.clear());
+
+        // return this.offers.clear()
+        //     .then(() => this.trades.clear())
+        //     .then(() => this.articles.clear())
+        //     .then(() => this.categories.clear())
+        //     .then(() => this.users.clear());
     }
 
     /*
@@ -60,7 +66,7 @@ class DataCache {
     }
 
     getArticlesById(theArticleIds) {
-        return theArticleIds.map(id => getArticleById(id));
+        return theArticleIds.map(id => this.getArticleById(id));
     }
 
     getArticlesByOwner(theOwnerId) {
@@ -97,17 +103,17 @@ class DataCache {
     //--------------------
     // offer methods
     //--------------------
-    prepareOffer(obj) {
-        return this.offers.prepare(obj);
-    }
+    // prepareOffer(obj) {
+    //     return this.offers.prepare(obj);
+    // }
 
-    saveOffer(offer) {
-        return this.offers.save(offer);
-    }
+    // saveOffer(offer) {
+    //     return this.offers.save(offer);
+    // }
 
-    deleteOffer(offerId) {
-        return this.offers.delete(offerId);
-    }
+    // deleteOffer(offerId) {
+    //     return this.offers.delete(offerId);
+    // }
 
     //--------------------
     // trade methods
