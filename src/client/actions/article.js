@@ -16,27 +16,27 @@ export const REMOVE_SELECTED_ARTICLE = 'REMOVE_SELECTED_ARTICLE';
  * Action Creators
  */
 
-const articleFetched = (theArticle) => ({
+export const articleFetched = (theArticle) => ({
     type: ARTICLE_FETCHED,
     article: theArticle
 });
 
-const articleCreated = (theArticle) => ({
+export const articleCreated = (theArticle) => ({
     type: ARTICLE_CREATED,
     article: theArticle
 });
 
-const articleUpdated = (theArticle) => ({
+export const articleUpdated = (theArticle) => ({
     type: ARTICLE_UPDATED,
     article: theArticle
 });
 
-const articleDeleted = (theArticleId) => ({
+export const articleDeleted = (theArticleId) => ({
     type: ARTICLE_DELETED,
     articleId: theArticleId
 });
 
-const selectedArticleRemoved = () => ({
+export const selectedArticleRemoved = () => ({
     type: REMOVE_SELECTED_ARTICLE
 });
 
