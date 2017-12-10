@@ -8,7 +8,7 @@ const OFFER_STATE_INVALIDATED = 'INVALIDATED';
 function getDescription(theState) {
     switch (theState) {
         case OFFER_STATE_INIT:
-            return 'Der Vorschlag wird ausgeaerbeitet';
+            return 'Der Vorschlag wird ausgearbeitet';
         case OFFER_STATE_REQUESTED:
             return 'Der aktuelle Vorschlag wurde angeboten';
         case OFFER_STATE_ACCEPTED:
@@ -20,7 +20,7 @@ function getDescription(theState) {
         case OFFER_STATE_INVALIDATED:
             return 'Der Vorschlag wurde annulliert';
         default:
-            return theStatus;
+            return theState;
     }
 }
 

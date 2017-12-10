@@ -12,8 +12,12 @@ import SwapIcon from 'material-ui/svg-icons/action/swap-horiz';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 import { cyan500, blue500, orange900, deepOrangeA700 } from 'material-ui/styles/colors';
 
+import Info from '../images/Info';
+
 import ArticleStatus from '../../shared/businessobjects/ArticleStatus';
 import TradeState from '../../shared/businessobjects/TradeState';
+// import Trade from '../../shared/businessobjects/Trade';
+// import OfferState from '../../shared/businessobjects/OfferState';
 
 import './Dashboard.css';
 
@@ -51,6 +55,9 @@ class Dashboard extends React.Component {
     render() {
         const { user, articles, trades } = this.props;
         const { fontFamily } = this.props.muiTheme;
+        const { accent1Color } = this.props.muiTheme.palette;
+
+        const countIncomingRequests = 3; // TODO: Count incoming requests: trades.map(trade => new Trade(trade)).map(trade => trade.currentOffer()).reduce((sum, offer) => offer.state === OfferState.OFFER_STATE_REQUESTED ? sum + 1 : sum, 0);
 
         const countArticlesFree = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_FREE ? sum + 1 : sum, 0);
         const countArticlesInNegotiation = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALING ? sum + 1 : sum, 0);
@@ -69,10 +76,10 @@ class Dashboard extends React.Component {
         ];
         if (countArticlesAll > 0) {
             articlesData = [
-                {name: 'Frei', value: countArticlesFree, fill: cyan500},
-                {name: 'In Verhandlung', value: countArticlesInNegotiation, fill: blue500},
-                {name: 'Bereits gehandelt', value: countArticlesDealed, fill: orange900},
-                {name: 'Gelöscht', value: countArticlesDeleted, fill: deepOrangeA700}
+                { name: 'Frei', value: countArticlesFree, fill: cyan500 },
+                { name: 'In Verhandlung', value: countArticlesInNegotiation, fill: blue500 },
+                { name: 'Bereits gehandelt', value: countArticlesDealed, fill: orange900 },
+                { name: 'Gelöscht', value: countArticlesDeleted, fill: deepOrangeA700 }
             ];
         }
 
@@ -90,7 +97,11 @@ class Dashboard extends React.Component {
 
         return (
             <div className="dashboard__container">
-                <span className="dashboard__text" style={{ fontFamily: fontFamily }}>Hallo {user.name}</span>
+                {countIncomingRequests > 0 ? (
+                    <span className="dashboard__text" style={{ fontFamily: fontFamily }}><Info width={25} height={25} fill={accent1Color}/>Hallo {user.name}, Du hast eingehende Tauschanfragen<Info width={25} height={25} fill={accent1Color}/></span>
+                ) : (
+                    <span className="dashboard__text" style={{ fontFamily: fontFamily }}>Hallo {user.name}</span>
+                )}
                 <RaisedButton style={buttonStyle} label="Marktplatz durchstöbern" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')} primary/>
                 <RaisedButton style={buttonStyle} label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>
                 <div className="dashboard__charts-container">
@@ -105,7 +116,7 @@ class Dashboard extends React.Component {
                                 </ToolbarGroup>
                             </Toolbar>
                             <PieChart width={450} height={400}>
-                                <Pie isAnimationActive={false} dataKey="value" data={articlesData} innerRadius={20} outerRadius={120} label={countArticlesAll > 0}/>
+                                <Pie isAnimationActive={true} dataKey="value" data={articlesData} innerRadius={20} outerRadius={120} label={countArticlesAll > 0}/>
                                 {countArticlesAll > 0 && <Tooltip/>}
                                 <Legend/>
                             </PieChart>
@@ -122,7 +133,7 @@ class Dashboard extends React.Component {
                                 </ToolbarGroup>
                             </Toolbar>
                             <PieChart width={450} height={400}>
-                                <Pie isAnimationActive={false} dataKey="value" data={tradesData} innerRadius={20} outerRadius={120} label={countTradesAll > 0}/>
+                                <Pie isAnimationActive={true} dataKey="value" data={tradesData} innerRadius={20} outerRadius={120} label={countTradesAll > 0}/>
                                 {countTradesAll > 0 && <Tooltip/>}
                                 <Legend/>
                             </PieChart>
