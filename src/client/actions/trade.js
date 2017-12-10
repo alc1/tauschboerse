@@ -28,7 +28,7 @@ const tradeSaved = (theTrade) => ({
  */
 
 export const loadTrade = (theTradeId) => dispatch => {
-    axios.get(`/api/trades/${theTradeId}`)
+    return axios.get(`/api/trades/${theTradeId}`)
         .then(response => dispatch(tradeFetched(response.data.trade)))
         .catch(err => handleError(err, dispatch));
 }
