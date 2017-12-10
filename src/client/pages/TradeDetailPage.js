@@ -14,7 +14,7 @@ import { isLoading } from '../selectors/application';
 class TradeDetailPage extends React.Component {
 
     static propTypes = {
-        trade: PropTypes.object.isRequired,
+        trade: PropTypes.object,
         user: PropTypes.object.isRequired,
         loadTrade: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,

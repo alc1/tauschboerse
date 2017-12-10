@@ -24,10 +24,10 @@ export default class TradeGridList extends React.Component {
         const isPrimary = theAction.isPrimary;
         const isSecondary = theAction.isSecondary;
         if (theAction.isRaised) {
-            return (<RaisedButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={((trade) => {theAction.onClick(trade)}).bind(this, theTrade)} primary={isPrimary} secondary={isSecondary}/>);
+            return (<RaisedButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theTrade)} primary={isPrimary} secondary={isSecondary}/>);
         }
         else {
-            return (<FlatButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={((trade) => {theAction.onClick(trade)}).bind(this, theTrade)} primary={isPrimary} secondary={isSecondary}/>);
+            return (<FlatButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theTrade)} primary={isPrimary} secondary={isSecondary}/>);
         }
     };
 

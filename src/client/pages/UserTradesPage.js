@@ -50,12 +50,12 @@ class UserTradesPage extends React.Component {
         }
     }
 
-    showTradeDetails(theTrade) {
+    showTradeDetails = (theTrade) => {
         this.props.history.push(`/trade/${theTrade._id}`);
-    }
+    };
 
     createTradeAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
-        return { label, icon, onClick: onClick.bind(this), isPrimary, isSecondary, isRaised };
+        return { label, icon, onClick, isPrimary, isSecondary, isRaised };
     };
 
     buildActionList = () => {
