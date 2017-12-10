@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ApplicationBar from '../containers/ApplicationBar';
-//import TradesList from '../components/TradesList';
+import TradeDetail from '../components/TradeDetail';
 
 import { loadTrade } from '../actions/trade';
 import { setLoading } from '../actions/application';
@@ -44,6 +44,7 @@ class TradeDetailPage extends React.Component {
         return (
             <div>
                 <ApplicationBar/>
+                <TradeDetail trade={this.props.trade} user={this.props.user} />
             </div>
         );
     }

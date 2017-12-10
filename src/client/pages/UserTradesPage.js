@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+
 import ApplicationBar from '../containers/ApplicationBar';
 import TradeGridList from '../components/TradeGridList';
 import TradeModel from '../models/TradeModel';
@@ -48,14 +50,28 @@ class UserTradesPage extends React.Component {
         }
     }
 
+    showTradeDetails(theTrade) {
+        this.props.history.push(`/trade/${theTrade._id}`);
+    }
+
+    createTradeAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
+        return { label, icon, onClick: onClick.bind(this), isPrimary, isSecondary, isRaised };
+    };
+
+    buildActionList = () => {
+        return [
+            this.createTradeAction("Ansehen", <RemoveRedEye/>, this.showTradeDetails, false, false, true)
+        ];
+    };
+
     render() {
         const { loading } = this.props;
 
         return (
             <div>
                 <ApplicationBar/>
-                <TradeGridList trades={this.state.activeTrades} loading={loading} />
-                <TradeGridList trades={this.state.finishedTrades} loading={loading} />
+                <TradeGridList trades={this.state.activeTrades} loading={loading} actions={this.buildActionList()}  />
+                <TradeGridList trades={this.state.finishedTrades} loading={loading} actions={this.buildActionList()} />
             </div>
         );
     }

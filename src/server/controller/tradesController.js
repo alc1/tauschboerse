@@ -27,8 +27,9 @@ function addTrade(req, res) {
         } else {
             trade.user2 = null;
         }
-        dataCache.saveTrade(trade);
-        res.json(trade);
+        dataCache.saveTrade(trade)
+            .then((newTrade) => { res.json(newTrade); })
+            .catch((err) => { res.sendStatus(500).json(err); });
     } else {
         res.sendStatus(400);
     }

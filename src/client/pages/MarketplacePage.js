@@ -114,6 +114,11 @@ class MarketplacePage extends React.Component {
         } else {
             this.setState({ userArticles: [], notUserArticles: [] });
         }
+
+        //
+        if (nextProps.trade && (nextProps.trade !== this.props.trade)) {
+            this.props.history.push(`/trade/${nextProps.trade._id}`);
+        }
     }
 
     onSearch = (theSearchText) => {
@@ -129,7 +134,7 @@ class MarketplacePage extends React.Component {
         this.props.createTrade(theArticle);
     };
 
-    showArticleDetails = () => {
+    showArticleDetails = (theArticle) => {
 
     };
 

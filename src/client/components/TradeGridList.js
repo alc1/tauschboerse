@@ -12,22 +12,22 @@ export default class TradeGridList extends React.Component {
 
     static propTypes = {
         trades: PropTypes.array.isRequired,
-        tradeActions: PropTypes.array.isRequired,
+        actions: PropTypes.array.isRequired,
         loading: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
-        tradeActions: []
+        actions: []
     };
 
-    createActionButton = (theAction, theArticle, theIndex) => {
+    createActionButton = (theAction, theTrade, theIndex) => {
         const isPrimary = theAction.isPrimary;
         const isSecondary = theAction.isSecondary;
         if (theAction.isRaised) {
-            return (<RaisedButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theArticle)} primary={isPrimary} secondary={isSecondary}/>);
+            return (<RaisedButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={((trade) => {theAction.onClick(trade)}).bind(this, theTrade)} primary={isPrimary} secondary={isSecondary}/>);
         }
         else {
-            return (<FlatButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={theAction.onClick.bind(this, theArticle)} primary={isPrimary} secondary={isSecondary}/>);
+            return (<FlatButton key={theIndex} icon={theAction.icon} label={theAction.label} onClick={((trade) => {theAction.onClick(trade)}).bind(this, theTrade)} primary={isPrimary} secondary={isSecondary}/>);
         }
     };
 
@@ -38,9 +38,9 @@ export default class TradeGridList extends React.Component {
     };
 
     render() {
-        const { trades, tradeActions, loading } = this.props;
+        const { trades, actions, loading } = this.props;
         const hasTrades = trades && trades.length > 0;
-        const tradeComponents = trades.map(trade => <TradeComponent key={trade._id} trade={trade} actions={this.createActionButtons(trade, tradeActions)}/>);
+        const tradeComponents = trades.map(trade => <TradeComponent key={trade._id} trade={trade} actions={this.createActionButtons(trade, actions)}/>);
         return (
             <div className="trade-grid-list">
                 {hasTrades ? tradeComponents : <div>keine Tauschgescäfte</div>}

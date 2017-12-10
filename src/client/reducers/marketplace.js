@@ -2,7 +2,7 @@ import {
     ARTICLES_FOUND, LAST_SEARCH_CLEARED, TRADE_CREATED
 } from './../actions/marketplace';
 
-const initialState = null;
+const initialState = {};
 
 export default function marketplace(theState = initialState, theAction) {
     switch (theAction.type) {

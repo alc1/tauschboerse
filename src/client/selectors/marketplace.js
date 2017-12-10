@@ -1,7 +1,7 @@
 export const getLastSearch = (theState) => {
-    return (theState.marketplace) ? theState.marketplace.lastSearch : null;
+    return theState.marketplace.lastSearch;
 };
 
 export const getTrade = (theState) => {
-    return (theState.marketplace) ? theState.marketplace.trade : null;
+    return theState.marketplace.trade;
 };
