@@ -64,7 +64,7 @@ export const findArticles = (theSearchText, theVersion) => dispatch => {
                 return null;
             }
         })
-        .catch((err) => handleError(err));
+        .catch((err) => handleError(err, dispatch));
 };
 
 export const clearLastSearch = () => dispatch => {
@@ -72,7 +72,7 @@ export const clearLastSearch = () => dispatch => {
 }
 
 export const createTrade = (theArticle) => dispatch => {
-    axios.post('/api/trades/', { articleIds: [theArticle._id] })
+    axios.post('/api/trades', { articleIds: [theArticle._id] })
         .then(response => dispatch(tradeCreated(response.data)))
         .catch(err => handleError(err, dispatch));
 }
