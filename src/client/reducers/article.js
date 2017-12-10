@@ -6,7 +6,7 @@ import {
     REMOVE_SELECTED_ARTICLE
 } from './../actions/article';
 
-const initialState = null;
+export const initialState = null;
 
 export default function article(theState = initialState, theAction) {
     switch (theAction.type) {

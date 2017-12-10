@@ -12,7 +12,7 @@ export const CATEGORIES_FETCHED = 'CATEGORIES_FETCHED';
  * Action Creators
  */
 
-const categoriesFetched = (theCategories) => ({
+export const categoriesFetched = (theCategories) => ({
     type: CATEGORIES_FETCHED,
     categories: theCategories
 });

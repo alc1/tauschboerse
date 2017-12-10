@@ -2,7 +2,7 @@ import {
     CATEGORIES_FETCHED
 } from './../actions/category';
 
-const initialState = [];
+export const initialState = [];
 
 export default function category(theState = initialState, theAction) {
     switch (theAction.type) {

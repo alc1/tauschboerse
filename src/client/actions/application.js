@@ -6,7 +6,6 @@ import { removeToken } from './user';
 
 export const GLOBAL_MESSAGE_RECEIVED = 'GLOBAL_MESSAGE_RECEIVED';
 export const GLOBAL_MESSAGE_REMOVED = 'GLOBAL_MESSAGE_REMOVED';
-
 export const LOADING_STATE_RECEIVED = 'LOADING_STATE_RECEIVED';
 
 /*
@@ -32,11 +31,11 @@ export const globalMessageReceived = (theGlobalMessage) => ({
     globalMessage: theGlobalMessage
 });
 
-const globalMessageRemoved = () => ({
+export const globalMessageRemoved = () => ({
     type: GLOBAL_MESSAGE_REMOVED
 });
 
-const loadingStateReceived = (isLoading) => ({
+export const loadingStateReceived = (isLoading) => ({
     type: LOADING_STATE_RECEIVED,
     isLoading: isLoading
 });
