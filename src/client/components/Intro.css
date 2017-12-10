@@ -1,11 +1,11 @@
-.homepage__container {
+.intro__container {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
 }
 
-.homepage__image-container {
+.intro__image-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -14,7 +14,7 @@
     margin: 10px;
 }
 
-.homepage__images-group {
+.intro__images-group {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -23,20 +23,13 @@
     margin: 10px;
 }
 
-.homepage__title {
+.intro__title {
     color: #555555;
     text-align: center;
     font-size: 2.5em;
 }
 
-.homepage__text {
-    color: #555555;
-    text-align: center;
-    font-size: 2em;
-    margin: 10px;
-}
-
-.homepage__swap-image {
+.intro__swap-image {
     fill: #00bcd4;
     width: 225px;
     height: 225px;
@@ -45,21 +38,21 @@
     animation-iteration-count: infinite;
 }
 
-.homepage__image1 {
+.intro__image1 {
     fill: #b2ebf2;
     animation-duration: 2000ms;
     animation-delay: 1000ms;
     animation-iteration-count: infinite;
 }
 
-.homepage__image2 {
+.intro__image2 {
     fill: #80deea;
     animation-duration: 2000ms;
     animation-delay: 1000ms;
     animation-iteration-count: infinite;
 }
 
-.homepage__image3 {
+.intro__image3 {
     fill: #4dd0e1;
     animation-duration: 2000ms;
     animation-delay: 1000ms;
@@ -67,20 +60,20 @@
 }
 
 @media (min-width: 1000px) {
-    .homepage__swap-image {
+    .intro__swap-image {
         animation-name: image-rotation-horizontal;
     }
-    .homepage__image1 {
+    .intro__image1 {
         width: 75px;
         height: 75px;
         animation-name: small-image-effect-horizontal;
     }
-    .homepage__image2 {
+    .intro__image2 {
         width: 100px;
         height: 100px;
         animation-name: medium-image-effect-horizontal;
     }
-    .homepage__image3 {
+    .intro__image3 {
         width: 125px;
         height: 125px;
         animation-name: big-image-effect-horizontal;
@@ -88,11 +81,11 @@
 }
 
 @media (max-width: 1000px) {
-    .homepage__swap-image {
+    .intro__swap-image {
         transform: rotate(-90deg);
         animation-name: image-rotation-vertical;
     }
-    .homepage__image-container {
+    .intro__image-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -100,19 +93,19 @@
         flex-wrap: wrap;
         margin: 10px;
     }
-    .homepage__image1 {
+    .intro__image1 {
         width: 75px;
         height: 75px;
         fill: #80deea;
         animation-name: small-image-effect-vertical;
     }
-    .homepage__image2 {
+    .intro__image2 {
         width: 75px;
         height: 75px;
         fill: #80deea;
         animation-name: medium-image-effect-vertical;
     }
-    .homepage__image3 {
+    .intro__image3 {
         width: 75px;
         height: 75px;
         fill: #80deea;
