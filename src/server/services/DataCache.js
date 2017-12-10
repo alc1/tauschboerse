@@ -2,7 +2,6 @@
 
 const ArticleCache = require('./ArticleCache');
 const CategoryCache = require('./CategoryCache');
-//const OfferCache = require('./OfferCache');
 const TradeCache = require('./TradeCache');
 const UserCache = require('./UserCache');
 
@@ -16,7 +15,6 @@ class DataCache {
         this.categories = new CategoryCache(db.dbCategories);
         this.articles = new ArticleCache(db.dbArticles, this.users, this.categories);
         this.trades = new TradeCache(db.dbTrades, this.users);
-//        this.offers = new OfferCache(db.dbOffers, this.trades, this.articles, this.users);
     }
 
     init() {
@@ -41,12 +39,6 @@ class DataCache {
             .then(() => this.articles.clear())
             .then(() => this.categories.clear())
             .then(() => this.users.clear());
-
-        // return this.offers.clear()
-        //     .then(() => this.trades.clear())
-        //     .then(() => this.articles.clear())
-        //     .then(() => this.categories.clear())
-        //     .then(() => this.users.clear());
     }
 
     /*
@@ -99,21 +91,6 @@ class DataCache {
     deleteCategory(categoryId) {
         return this.categories.delete(categoryId);
     }
-    
-    //--------------------
-    // offer methods
-    //--------------------
-    // prepareOffer(obj) {
-    //     return this.offers.prepare(obj);
-    // }
-
-    // saveOffer(offer) {
-    //     return this.offers.save(offer);
-    // }
-
-    // deleteOffer(offerId) {
-    //     return this.offers.delete(offerId);
-    // }
 
     //--------------------
     // trade methods
@@ -179,7 +156,6 @@ const dataCache = new DataCache();
 function initDataCache(reset) {
     console.log('Initialising data cache...');
 
-    //dataCache = new DataCache();
     let promise = dataCache.init();
 
     if (reset) {
