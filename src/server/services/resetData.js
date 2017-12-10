@@ -15,11 +15,8 @@ function resetData(dataCache) {
         {name: 'Sport'},
         {name: 'Kindersachen'}
     ];
-    // const offers = [
-    //     { tradeId: 0, senderId: 0, receiverId: 1, articleIds: [1, 3] }
-    // ];
     const trades = [
-        { user1Id: 0, user2Id: 1, state: TradeState.TRADE_STATE_INIT, offers: [{ senderId: 0, state: OfferState.OFFER_STATE_INIT, articleIds: [0, 3] }] }
+        { user1Id: 1, user2Id: 0, state: TradeState.TRADE_STATE_INIT, offers: [{ senderId: 0, state: OfferState.OFFER_STATE_INIT, articleIds: [0, 3] }] }
     ];
     const users = [
         {email: 'calbiez@hsr.ch', name: 'Christian Albiez', newPassword: 'c', registration: new Date()},
@@ -83,30 +80,11 @@ function resetData(dataCache) {
         }));
     }
 
-    // function insertOffers() {
-    //     console.log('inserting offers...');
-
-    //     for(let i = 0, ii = offers.length; i < ii; i++) {
-    //         let offer = offers[i];
-    //         offer.trade = trades[offer.tradeId];
-    //         offer.sender = users[offer.senderId];
-    //         offer.receiver = users[offer.receiverId];
-    //         offer.articles = offer.articleIds.map(id => articles[id]);
-    //         offers[i] = dataCache.prepareOffer(offer);
-    //     }
-
-    //     return Promise.all(offers.map(offer => {
-    //         return dataCache.saveOffer(offer);
-    //     }));
-    // }
-
     return dataCache.clear()
         .then(() => insertUsers())
         .then(() => insertCategories())
         .then(() => insertArticles())
-        .then(() => insertTrades())
-//        .then(() => insertOffers())
-    ;
+        .then(() => insertTrades());
 }
 
-module.exports = { resetData };
+module.exports = resetData;

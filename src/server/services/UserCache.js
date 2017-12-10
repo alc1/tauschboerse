@@ -18,7 +18,7 @@ class UserCache {
                     this.passwords.set(rec._id, rec.password);
                 });
                 this.users = recs.map(rec => UserCache.toLogicalRecord(rec));
-                console.log('users loaded');
+                console.log(`users loaded: ${this.users.length} entries`);
                 resolve(this);
             }).bind(this));
         }).bind(this);

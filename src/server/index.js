@@ -39,10 +39,9 @@ app.use('/api/trades', tradesRoutes);
 app.use('/api/users', usersRoutes);
 
 const useDataCache = require('./useDataCache').useDataCache;
-const resetData = require('./useDataCache').resetData;
 
 if (useDataCache) {
-    initDataCache(resetData)
+    initDataCache(false)
         .then(() => {
             console.log('Data Cache initialised');
             startServer(3001);

@@ -52,7 +52,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "start-server": "node ./src/server/index.js"
+    "start-server": "node ./src/server/index.js",
+    "reset-data": "node ./src/server/resetData.js"
   },
   "proxy": "http://localhost:3001"
 }

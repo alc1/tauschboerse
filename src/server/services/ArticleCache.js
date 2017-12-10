@@ -17,7 +17,7 @@ class ArticleCache {
             console.log('Loading articles...');
             this.db.find({}, (function(err, recs) {
                 this.articles = recs.map(rec => this.toLogicalRecord(rec));
-                console.log('articles loaded');
+                console.log(`articles loaded: ${this.articles.length} entries`);
                 resolve(this);
             }).bind(this));
         }).bind(this);

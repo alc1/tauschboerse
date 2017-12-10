@@ -7,7 +7,7 @@ const TradeCache = require('./TradeCache');
 const UserCache = require('./UserCache');
 
 const db = require('./dataFiles');
-const resetData = require('./initData').resetData;
+const resetData = require('./resetData');
 
 class DataCache {
 
