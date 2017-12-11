@@ -1,11 +1,13 @@
 'use strict';
 
 const Trade = require('../../shared/businessobjects/Trade');
+const Offer = require('../../shared/businessobjects/Offer');
 
 class TradeCache {
-    constructor(db, users) {
+    constructor(db, users, articles) {
         this.db = db;
         this.users = users;
+        this.articles = articles;
 
         this.trades = [];
         this.versionstamp = 0;
@@ -135,12 +137,30 @@ class TradeCache {
         return rec;
     }
 
+    toLogicalOfferRecord(rec) {
+        let offer = new Offer(null);
+
+        offer.sender = this.users.findById(rec.senderId);
+
+        offer.createDate = rec.createDate;
+        offer.state = rec.state;
+
+        offer.articles = rec.articleIds.map(id => this.articles.findById(id));
+
+        return offer;
+    }
+
     toLogicalRecord(rec) {
         let trade = new Trade(null);
         trade._id = rec._id;
 
         trade.user1 = this.users.findById(rec.user1Id);
         trade.user2 = this.users.findById(rec.user2Id);
+
+        trade.state = rec.state;
+        trade.createDate = rec.createDate;
+
+        trade.offers = rec.offers.map(offer => this.toLogicalOfferRecord(offer));
 
         trade.versionstamp = rec.versionstamp;
 

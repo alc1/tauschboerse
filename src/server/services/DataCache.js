@@ -14,7 +14,7 @@ class DataCache {
         this.users = new UserCache(db.dbUsers);
         this.categories = new CategoryCache(db.dbCategories);
         this.articles = new ArticleCache(db.dbArticles, this.users, this.categories);
-        this.trades = new TradeCache(db.dbTrades, this.users);
+        this.trades = new TradeCache(db.dbTrades, this.users, this.articles);
     }
 
     init() {
