@@ -11,7 +11,7 @@ import {
     ARTICLE_DELETED
 } from './../actions/article';
 
-const initialState = null;
+export const initialState = null;
 
 export default function user(theState = initialState, theAction) {
     switch (theAction.type) {
@@ -23,7 +23,7 @@ export default function user(theState = initialState, theAction) {
                 user: theAction.user
             };
         case USER_LOGGED_OUT:
-            return {};
+            return initialState;
         case USER_ARTICLES_FETCHED:
             return {
                 ...theState,
@@ -35,6 +35,9 @@ export default function user(theState = initialState, theAction) {
                 trades: theAction.trades
             };
         case ARTICLE_DELETED:
+            if (theState === initialState) {
+                return initialState;
+            }
             return {
                 ...theState,
                 articles: theState.articles.filter(article => article._id !== theAction.articleId)

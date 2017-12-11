@@ -25,26 +25,26 @@ export const userLoggedIn = (theUser) => ({
     user: theUser
 });
 
-const userLoggedOut = () => ({
+export const userLoggedOut = () => ({
     type: USER_LOGGED_OUT
 });
 
-const userCreated = (theUser) => ({
+export const userCreated = (theUser) => ({
     type: USER_CREATED,
     user: theUser
 });
 
-const userUpdated = (theUser) => ({
+export const userUpdated = (theUser) => ({
     type: USER_UPDATED,
     user: theUser
 });
 
-const userArticlesFetched = (theArticles) => ({
+export const userArticlesFetched = (theArticles) => ({
     type: USER_ARTICLES_FETCHED,
     articles: theArticles
 });
 
-const userTradesFetched = (theTrades) => ({
+export const userTradesFetched = (theTrades) => ({
     type: USER_TRADES_FETCHED,
     trades: theTrades
 });

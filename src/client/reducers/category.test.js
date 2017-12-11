@@ -29,12 +29,12 @@ const createCategoriesGroup2 = () => {
 describe('Category Reducer', () => {
 
     describe(`Test action ${CATEGORIES_FETCHED}`, () => {
-        test(`Putting fetched categories to initial store. Expectation: New state should contain the fetched categories now.`, () => {
+        test(`Putting fetched categories to initial store. Expectation: New state should now contain the fetched categories.`, () => {
             const categoriesGroup1 = createCategoriesGroup1();
             const newState = articleReducer(initialState, categoriesFetched(categoriesGroup1));
             expect(newState).toEqual(categoriesGroup1);
         });
-        test(`Putting fetched categories to store which is not in initial state. Expectation: New state should contain the fetched categories now.`, () => {
+        test(`Putting fetched categories to store which is not in initial state. Expectation: New state should now contain the fetched categories.`, () => {
             const categoriesGroup1 = createCategoriesGroup1();
             const categoriesGroup2 = createCategoriesGroup2();
             const newState = articleReducer(categoriesGroup1, categoriesFetched(categoriesGroup2));
