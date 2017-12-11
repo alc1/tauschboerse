@@ -2,9 +2,11 @@ const Datastore = require('nedb');
 const CategoryCache = require('./CategoryCache').CategoryCache;
 const Category = require('../../shared/businessobjects/Category');
 
+var categoryCache;
+
 function initializeCategoryCache(initCache, generateTestData) {
     let db = new Datastore();
-    let generateDataPromise = new Promise((resolve, rejcet) => {
+    let generateDataPromise = new Promise((resolve, reject) => {
         if (generateTestData) {
             let insertRec = function(name) {
                 return new Promise(function(resolve, reject) {
@@ -23,7 +25,7 @@ function initializeCategoryCache(initCache, generateTestData) {
             resolve(true);
         }
     });
-    let categoryCache = new CategoryCache(db);
+    categoryCache = new CategoryCache(db);
     let initCachePromise = new Promise((resolve, reject) => {
         if (initCache) {
             categoryCache.init().then(() => resolve(true)).catch((err) => reject(err));
@@ -32,7 +34,7 @@ function initializeCategoryCache(initCache, generateTestData) {
         }
     });
 
-    return generateDataPromise.then(() => initCachePromise());
+    return generateDataPromise.then(() => initCachePromise);
 }
 
 describe('CategoryCache: prepare method', () => {
@@ -124,11 +126,16 @@ describe('CategoryCache: init', () => {
 });
 
 describe('CategoryCache: CRUD', () => {
-    let categoryCache = initializeCategoryCache(true, false);
+    beforeEach(() => initializeCategoryCache(true, false));
 
     // get record count
 
     // add record
+    test('', done => {
+        expect.assertions(1);
+        let category = categoryCache.prepare({name: 'test'});
+        return categoryCache.save(category).then(data => expect(data._id).toBeDefined());
+    })
 
     // get record count
 
