@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import TradeDetail from '../components/TradeDetail';
+import TradeModel from '../models/TradeModel';
 
 import { loadTrade } from '../actions/trade';
 import { setLoading } from '../actions/application';
@@ -12,6 +13,10 @@ import { getUser } from '../selectors/user';
 import { isLoading } from '../selectors/application';
 
 class TradeDetailPage extends React.Component {
+
+    state = {
+        trade: null
+    };
 
     static propTypes = {
         trade: PropTypes.object,
@@ -30,21 +35,20 @@ class TradeDetailPage extends React.Component {
             .catch(() => this.props.setLoading(false));
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.trades && (!this.props.trades || (this.props.trades !== nextProps.trades))) {
-    //         let activeTrades = nextProps.trades.filter(trade => !trade.isFinished);
-    //         let finishedTrades = nextProps.trades.filter(trade => trade.isFinished);
-    //         this.setState({ activeTrades: activeTrades, finishedTrades: finishedTrades });
-    //     } else {
-    //         this.setState({ activeTrades: [], finishedTrades: [] });
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.trade && (!this.props.trade || (this.props.trade !== nextProps.trade))) {
+            this.setState({ trade: new TradeModel(nextProps.trade, this.props.user) });
+        } else {
+            this.setState({ trades: null });
+        }
+    }
 
     render() {
+        let content = !this.props.trade ? <div></div> : <TradeDetail trade={this.state.trade} user={this.props.user} />;
         return (
             <div>
                 <ApplicationBar/>
-                <TradeDetail trade={this.props.trade} user={this.props.user} />
+                {content}
             </div>
         );
     }

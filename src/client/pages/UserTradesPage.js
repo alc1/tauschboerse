@@ -40,7 +40,7 @@ class UserTradesPage extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.trades) {
             if (!this.props.trades || (this.props.trades !== nextProps.trades)) {
-                let trades = nextProps.trades.map(trade => new TradeModel(trade));
+                let trades = nextProps.trades.map(trade => new TradeModel(trade, this.props.user));
                 let activeTrades = trades.filter(trade => !trade.isFinished);
                 let finishedTrades = trades.filter(trade => trade.isFinished);
                 this.setState({ activeTrades: activeTrades, finishedTrades: finishedTrades });

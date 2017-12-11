@@ -171,7 +171,7 @@ function getTradesByUser(req, res) {
         .filter(trade => ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1 === req.user)) || (trade.state !== TradeState.TRADE_STATE_INIT))
         // offers that haven't been made yet are only visible to the sender
         .map(trade => {
-            if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && trade.offers.some(offer => offer.state === OfferState.OFFER_STATE_INIT)) {
+            if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && trade.offers.some(offer => (offer.state === OfferState.OFFER_STATE_INIT) && (offer.sender !== req.user))) {
                 return makeShallowCopy(trade).offers.filter(offer => (offer.state !== OfferState.INIT) || (offer.sender === req.user));
             } else {
                 return trade;
