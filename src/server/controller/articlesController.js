@@ -121,7 +121,7 @@ async function updateArticle(req, res) {
             const savedArticle = await dataCache.saveArticle(preparedArticle);
             if (savedArticle) {
                 savePhotos(savedArticle._id, photos);
-                res.json({ article: article });
+                res.json({ article: savedArticle });
             }
             else {
                 res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
@@ -144,6 +144,13 @@ async function updateArticle(req, res) {
             res.status(result.status).json({ errors: result.errors, globalError: result.globalError });
         }
     }
+}
+
+function findArticles(req, res) {
+    res.json({
+        articles: dataCache.getAllArticles(),
+        version: 0
+    });
 }
 
 async function createNewCategories(theArticle) {
@@ -172,7 +179,7 @@ function isInPhotos(thePhotos, theFileName) {
 }
 
 function savePhotos(theArticleId, thePhotos) {
-    const directory = path.join('./../../public/images/article', theArticleId);
+    const directory = path.join(getOrCreateArticleImagesRootDirectory(), theArticleId);
     // Directory already exists, check if there are photos to delete
     if (fs.existsSync(directory)) {
         const files = fs.readdirSync(directory);
@@ -193,7 +200,7 @@ function savePhotos(theArticleId, thePhotos) {
 }
 
 function deletePhotos(theArticleId) {
-    const directory = path.join('./../../public/images/article', theArticleId);
+    const directory = path.join(getOrCreateArticleImagesRootDirectory(), theArticleId);
     if (fs.existsSync(directory)) {
         const files = fs.readdirSync(directory);
         files.forEach(file => {
@@ -201,6 +208,18 @@ function deletePhotos(theArticleId) {
         });
         fs.rmdirSync(directory);
     }
+}
+
+function getOrCreateArticleImagesRootDirectory() {
+    const imagesDirectory = path.join(__dirname, './../../../public/images');
+    if (!fs.existsSync(imagesDirectory)) {
+        fs.mkdirSync(imagesDirectory);
+    }
+    const articleImagesDirectory = path.join(imagesDirectory, 'article');
+    if (!fs.existsSync(articleImagesDirectory)) {
+        fs.mkdirSync(articleImagesDirectory);
+    }
+    return articleImagesDirectory;
 }
 
 async function fetchArticleDetails(theArticle) {
@@ -229,5 +248,6 @@ module.exports = {
     getArticleById,
     deleteArticleById,
     createArticle,
-    updateArticle
+    updateArticle,
+    findArticles,
 };

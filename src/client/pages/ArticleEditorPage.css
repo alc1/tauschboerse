@@ -1,0 +1,14 @@
+.article-editor__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: stretch;
+}
+
+@media (max-width: 750px) {
+    .article-editor__container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

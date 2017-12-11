@@ -1,7 +1,7 @@
 'use strict';
 
 const User = require('../../shared/businessobjects/User');
-const bcrypt = require('bcrypt');
+const encryptionUtils = require('../utils/encryptionUtils');
 
 class UserCache {
     constructor(db) {
@@ -18,7 +18,7 @@ class UserCache {
                     this.passwords.set(rec._id, rec.password);
                 });
                 this.users = recs.map(rec => UserCache.toLogicalRecord(rec));
-                console.log('users loaded');
+                console.log(`users loaded: ${this.users.length} entries`);
                 resolve(this);
             }).bind(this));
         }).bind(this);
@@ -81,7 +81,7 @@ class UserCache {
         if (!foundLogicalUser) {
             saveOp = (function(resolve, reject) {
                 let userToSave = UserCache.toPhysicalRecord(theUser);
-                userToSave.password = bcrypt.hashSync(theUser.newPassword, 10);
+                userToSave.password = encryptionUtils.encrypt(theUser.newPassword);
                 this.db.insert(userToSave, (function(err, savedUser) {
                     const newUser = UserCache.toLogicalRecord(savedUser);
                     this.users.push(newUser);
@@ -94,7 +94,7 @@ class UserCache {
             saveOp = (function(resolve, reject) {
                 if (foundLogicalUser.update(theUser) || theUser.newPassword) {
                     let userToSave = UserCache.toPhysicalRecord(foundLogicalUser);
-                    userToSave.password = (theUser.newPassword) ? bcrypt.hashSync(theUser.newPassword, 10) : this.getPasswordByUserId(foundLogicalUser._id);
+                    userToSave.password = (theUser.newPassword) ? encryptionUtils.encrypt(theUser.newPassword) : this.getPasswordByUserId(foundLogicalUser._id);
                     this.db.update({ _id: foundLogicalUser._id }, userToSave, {}, (function(err, numAffected) {
                         if (err) {
                             reject(err);
@@ -117,7 +117,7 @@ class UserCache {
         const user = this.findByEmail(theEmail);
         if (user) {
             const password = this.getPasswordByUserId(user._id);
-            if (password && bcrypt.compareSync(thePassword, password)) {
+            if (password && encryptionUtils.compare(thePassword, password)) {
                 return user;
             }
         }
@@ -158,6 +158,4 @@ class UserCache {
     }
 }
 
-module.exports = {
-    UserCache
-};
+module.exports = UserCache;

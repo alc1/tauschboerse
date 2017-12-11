@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Paper from 'material-ui/Paper';
+
 import InputComponent from '../components/InputComponent';
+
+import './LoginForm.css';
 
 export default class LoginForm extends React.Component {
 
@@ -20,37 +24,32 @@ export default class LoginForm extends React.Component {
 
     render() {
         const { email, currentPassword, errors, loading, onChange, onSubmit } = this.props;
-        const inputStyles = { width: '350px' };
-        const formStyles = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        };
         return (
-            <form style={formStyles} onSubmit={onSubmit}>
-                <InputComponent
-                    inputRef={inputElement => this.firstInputElement = inputElement}
-                    style={inputStyles}
-                    error={errors.email}
-                    label="E-Mail"
-                    onChange={onChange}
-                    value={email}
-                    field="email"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.currentPassword}
-                    label="Passwort"
-                    onChange={onChange}
-                    value={currentPassword}
-                    field="currentPassword"
-                    type="password"
-                    disabled={loading}
-                />
-                <br/>
-                {this.props.children}
-            </form>
+            <div className="login-form__container">
+                <Paper className="login-form__paper">
+                    <form className="login-form__field-container" onSubmit={onSubmit}>
+                        <InputComponent
+                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            error={errors.email}
+                            label="E-Mail"
+                            onChange={onChange}
+                            value={email}
+                            field="email"
+                            disabled={loading}
+                        />
+                        <InputComponent
+                            error={errors.currentPassword}
+                            label="Passwort"
+                            onChange={onChange}
+                            value={currentPassword}
+                            field="currentPassword"
+                            type="password"
+                            disabled={loading}
+                        />
+                        {this.props.children}
+                    </form>
+                </Paper>
+            </div>
         );
     }
 }

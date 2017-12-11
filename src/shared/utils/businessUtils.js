@@ -1,11 +1,13 @@
-'use strict';
-
 function getValue(obj, propertyName, defaultValue) {
     return (typeof obj[propertyName] === 'undefined') ? defaultValue : obj[propertyName];
 }
 
 function setValue(obj, propertyName, valueObj, defaultValue) {
-    obj[propertyName] = getValue(valueObj, propertyName, defaultValue);
+    let value = getValue(valueObj, propertyName, defaultValue);
+    if (typeof value !== 'undefined') {
+        obj[propertyName] = value;
+    }
+    
     return obj;
 }
 

@@ -17,7 +17,7 @@ class ArticleCache {
             console.log('Loading articles...');
             this.db.find({}, (function(err, recs) {
                 this.articles = recs.map(rec => this.toLogicalRecord(rec));
-                console.log('articles loaded');
+                console.log(`articles loaded: ${this.articles.length} entries`);
                 resolve(this);
             }).bind(this));
         }).bind(this);
@@ -137,7 +137,7 @@ class ArticleCache {
             article.photos.forEach(photo => {
                 delete photo.isNew;
                 delete photo.fileContent;
-                photo.url = `http://localhost:3001/images/article/${article._id}/${photo.fileName}`;
+                photo.url = `/images/article/${article._id}/${photo.fileName}`;
             });
         }
 
@@ -174,7 +174,7 @@ class ArticleCache {
         article.photos = thePhysicalRecord.photos ? thePhysicalRecord.photos.map(photoFileName => {
             return {
                 fileName: photoFileName,
-                url: `http://localhost:3001/images/article/${article._id}/${photoFileName}`
+                url: `/images/article/${article._id}/${photoFileName}`
             };
         }) : [];
         article.categories = thePhysicalRecord.categoryIds ? thePhysicalRecord.categoryIds.map(id => this.categories.findById(id)) : [];
@@ -184,6 +184,4 @@ class ArticleCache {
     }
 }
 
-module.exports = {
-    ArticleCache
-};
+module.exports = ArticleCache;

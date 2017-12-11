@@ -1,0 +1,23 @@
+.article-form__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+@media (min-width: 750px) {
+    .article-form__container {
+        width: 100vw;
+    }
+}
+
+.article-form__paper {
+    width: 100%;
+    height: 100%;
+}
+
+.article-form__field-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -1,23 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
-import Checkbox from 'material-ui/Checkbox';
+import Paper from 'material-ui/Paper';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
+import AccountCircle from 'material-ui/svg-icons/action/account-circle';
 
 import InputComponent from '../components/InputComponent';
+
+import './UserDetailsForm.css';
+import AvatarTag from "./AvatarTag";
+
+const toolbarTitleStyle = { color: 'black' };
 
 export default class UserDetailsForm extends React.Component {
 
     static propTypes = {
         name: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
-        currentPassword: PropTypes.string.isRequired,
-        newPassword: PropTypes.string.isRequired,
-        passwordConfirmation: PropTypes.string.isRequired,
-        changePassword: PropTypes.bool.isRequired,
+        registration: PropTypes.string.isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         onChange: PropTypes.func.isRequired,
-        onPasswordChangeChecked: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired
     };
 
@@ -26,74 +30,37 @@ export default class UserDetailsForm extends React.Component {
     }
 
     render() {
-        const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
-        const inputStyles = { width: '350px' };
-        const formStyles = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        };
+        const { name, email, registration, errors, loading, onChange, onSubmit } = this.props;
         return (
-            <form style={formStyles} onSubmit={onSubmit}>
-                <InputComponent
-                    inputRef={inputElement => this.firstInputElement = inputElement}
-                    style={inputStyles}
-                    error={errors.name}
-                    label="Name"
-                    onChange={onChange}
-                    value={name}
-                    field="name"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.email}
-                    label="E-Mail"
-                    onChange={onChange}
-                    value={email}
-                    field="email"
-                    disabled={loading}
-                />
-                <br/>
-                <Checkbox
-                    style={inputStyles}
-                    label="Passwort ändern"
-                    checked={changePassword}
-                    onCheck={onPasswordChangeChecked}
-                />
-                {changePassword && <InputComponent
-                    style={inputStyles}
-                    error={errors.currentPassword}
-                    label="Bisheriges Passwort"
-                    onChange={onChange}
-                    value={currentPassword}
-                    field="currentPassword"
-                    type="password"
-                    disabled={loading}
-                />}
-                {changePassword && <InputComponent
-                    style={inputStyles}
-                    error={errors.newPassword}
-                    label="Neues Passwort"
-                    onChange={onChange}
-                    value={newPassword}
-                    field="newPassword"
-                    type="password"
-                    disabled={loading}
-                />}
-                {changePassword && <InputComponent
-                    style={inputStyles}
-                    error={errors.passwordConfirmation}
-                    label="Neues Passwort bestätigen"
-                    onChange={onChange}
-                    value={passwordConfirmation}
-                    field="passwordConfirmation"
-                    type="password"
-                    disabled={loading}
-                />}
-                <br/>
-                {this.props.children}
-            </form>
+            <div className="user-details-form__container">
+                <Paper className="user-details-form__paper">
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyle} text="Benutzerdetails"/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    <div className="user-details-form__field-container" onSubmit={onSubmit}>
+                        <AvatarTag text={`Mitglied seit ${moment(registration).format('DD.MM.YYYY | HH:mm')}`} icon={<AccountCircle/>}/>
+                        <InputComponent
+                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            error={errors.name}
+                            label="Name"
+                            onChange={onChange}
+                            value={name}
+                            field="name"
+                            disabled={loading}
+                        />
+                        <InputComponent
+                            error={errors.email}
+                            label="E-Mail"
+                            onChange={onChange}
+                            value={email}
+                            field="email"
+                            disabled={loading}
+                        />
+                    </div>
+                </Paper>
+            </div>
         );
     }
 }

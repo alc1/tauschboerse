@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Paper from 'material-ui/Paper';
+
 import InputComponent from '../components/InputComponent';
+
+import './RegistrationForm.css';
 
 export default class UserDetailsForm extends React.Component {
 
@@ -22,56 +26,49 @@ export default class UserDetailsForm extends React.Component {
 
     render() {
         const { name, email, newPassword, passwordConfirmation, errors, loading, onChange, onSubmit } = this.props;
-        const inputStyles = { width: '350px' };
-        const formStyles = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        };
         return (
-            <form style={formStyles} onSubmit={onSubmit}>
-                <InputComponent
-                    inputRef={inputElement => this.firstInputElement = inputElement}
-                    style={inputStyles}
-                    error={errors.name}
-                    label="Name"
-                    onChange={onChange}
-                    value={name}
-                    field="name"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.email}
-                    label="E-Mail"
-                    onChange={onChange}
-                    value={email}
-                    field="email"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.newPassword}
-                    label="Passwort"
-                    onChange={onChange}
-                    value={newPassword}
-                    field="newPassword"
-                    type="password"
-                    disabled={loading}
-                />
-                <InputComponent
-                    style={inputStyles}
-                    error={errors.passwordConfirmation}
-                    label="Passwort bestätigen"
-                    onChange={onChange}
-                    value={passwordConfirmation}
-                    field="passwordConfirmation"
-                    type="password"
-                    disabled={loading}
-                />
-                <br/>
-                {this.props.children}
-            </form>
+            <div className="registration-form__container">
+                <Paper className="registration-form__paper">
+                    <form className="registration-form__field-container" onSubmit={onSubmit}>
+                        <InputComponent
+                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            error={errors.name}
+                            label="Name"
+                            onChange={onChange}
+                            value={name}
+                            field="name"
+                            disabled={loading}
+                        />
+                        <InputComponent
+                            error={errors.email}
+                            label="E-Mail"
+                            onChange={onChange}
+                            value={email}
+                            field="email"
+                            disabled={loading}
+                        />
+                        <InputComponent
+                            error={errors.newPassword}
+                            label="Passwort"
+                            onChange={onChange}
+                            value={newPassword}
+                            field="newPassword"
+                            type="password"
+                            disabled={loading}
+                        />
+                        <InputComponent
+                            error={errors.passwordConfirmation}
+                            label="Passwort bestätigen"
+                            onChange={onChange}
+                            value={passwordConfirmation}
+                            field="passwordConfirmation"
+                            type="password"
+                            disabled={loading}
+                        />
+                        {this.props.children}
+                    </form>
+                </Paper>
+            </div>
         );
     }
 }

@@ -1,0 +1,203 @@
+.intro__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.intro__image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 10px;
+}
+
+.intro__images-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin: 10px;
+}
+
+.intro__title {
+    color: #555555;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+.intro__swap-image {
+    fill: #00bcd4;
+    width: 225px;
+    height: 225px;
+    animation-duration: 2000ms;
+    animation-delay: 1000ms;
+    animation-iteration-count: infinite;
+}
+
+.intro__image1 {
+    fill: #b2ebf2;
+    animation-duration: 2000ms;
+    animation-delay: 1000ms;
+    animation-iteration-count: infinite;
+}
+
+.intro__image2 {
+    fill: #80deea;
+    animation-duration: 2000ms;
+    animation-delay: 1000ms;
+    animation-iteration-count: infinite;
+}
+
+.intro__image3 {
+    fill: #4dd0e1;
+    animation-duration: 2000ms;
+    animation-delay: 1000ms;
+    animation-iteration-count: infinite;
+}
+
+@media (min-width: 1000px) {
+    .intro__swap-image {
+        animation-name: image-rotation-horizontal;
+    }
+    .intro__image1 {
+        width: 75px;
+        height: 75px;
+        animation-name: small-image-effect-horizontal;
+    }
+    .intro__image2 {
+        width: 100px;
+        height: 100px;
+        animation-name: medium-image-effect-horizontal;
+    }
+    .intro__image3 {
+        width: 125px;
+        height: 125px;
+        animation-name: big-image-effect-horizontal;
+    }
+}
+
+@media (max-width: 1000px) {
+    .intro__swap-image {
+        transform: rotate(-90deg);
+        animation-name: image-rotation-vertical;
+    }
+    .intro__image-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 10px;
+    }
+    .intro__image1 {
+        width: 75px;
+        height: 75px;
+        fill: #80deea;
+        animation-name: small-image-effect-vertical;
+    }
+    .intro__image2 {
+        width: 75px;
+        height: 75px;
+        fill: #80deea;
+        animation-name: medium-image-effect-vertical;
+    }
+    .intro__image3 {
+        width: 75px;
+        height: 75px;
+        fill: #80deea;
+        animation-name: big-image-effect-vertical;
+    }
+}
+
+@keyframes small-image-effect-horizontal {
+    25% {
+        /*width: 85px;*/
+        /*height: 85px;*/
+        /*transform: translateY(-2em);*/
+        transform: scale(1.2, 1.2);
+        fill: #80deea;
+    }
+}
+
+@keyframes medium-image-effect-horizontal {
+    25% {
+        /*width: 100px;*/
+        /*height: 100px;*/
+        fill: #80deea;
+    }
+    50% {
+        /*width: 110px;*/
+        /*height: 110px;*/
+        /*transform: translateY(-2em);*/
+        transform: scale(1.2, 1.2);
+        fill: #4dd0e1;
+    }
+}
+
+@keyframes big-image-effect-horizontal {
+    50% {
+        /*width: 125px;*/
+        /*height: 125px;*/
+        fill: #4dd0e1;
+    }
+    75% {
+        /*width: 135px;*/
+        /*height: 135px;*/
+        /*transform: translateY(-2em);*/
+        transform: scale(1.2, 1.2);
+        fill: #26c6da;
+    }
+}
+
+@keyframes small-image-effect-vertical {
+    25% {
+        transform: scale(1.2, 1.2);
+        fill: #00bcd4;
+    }
+}
+
+@keyframes medium-image-effect-vertical {
+    25% {
+        fill: #80deea;
+    }
+    50% {
+        transform: scale(1.2, 1.2);
+        fill: #00bcd4;
+    }
+}
+
+@keyframes big-image-effect-vertical {
+    50% {
+        fill: #4dd0e1;
+    }
+    75% {
+        transform: scale(1.2, 1.2);
+        fill: #00bcd4;
+    }
+}
+
+@keyframes image-rotation-horizontal {
+    75% {
+        transform: rotate(0deg);
+        /*transform: rotateY(0deg);*/
+    }
+    100% {
+        transform: rotate(180deg);
+        /*transform: rotateY(360deg);*/
+    }
+}
+
+@keyframes image-rotation-vertical {
+    75% {
+        transform: rotate(0deg) rotate(-90deg);
+        /*transform: rotateX(0deg) rotate(-90deg);*/
+    }
+    100% {
+        transform: rotate(-270deg);
+        /*transform: rotateX(360deg) rotate(-90deg);*/
+    }
+}

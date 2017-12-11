@@ -3,14 +3,15 @@ import {
     USER_LOGGED_OUT,
     USER_CREATED,
     USER_UPDATED,
-    USER_ARTICLES_FETCHED
+    USER_ARTICLES_FETCHED,
+    USER_TRADES_FETCHED
 } from './../actions/user';
 
 import {
     ARTICLE_DELETED
 } from './../actions/article';
 
-const initialState = null;
+export const initialState = null;
 
 export default function user(theState = initialState, theAction) {
     switch (theAction.type) {
@@ -22,13 +23,21 @@ export default function user(theState = initialState, theAction) {
                 user: theAction.user
             };
         case USER_LOGGED_OUT:
-            return {};
+            return initialState;
         case USER_ARTICLES_FETCHED:
             return {
                 ...theState,
                 articles: theAction.articles
             };
+        case USER_TRADES_FETCHED:
+            return {
+                ...theState,
+                trades: theAction.trades
+            };
         case ARTICLE_DELETED:
+            if (theState === initialState) {
+                return initialState;
+            }
             return {
                 ...theState,
                 articles: theState.articles.filter(article => article._id !== theAction.articleId)

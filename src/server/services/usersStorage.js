@@ -1,7 +1,6 @@
 'use strict';
 
-const bcrypt = require('bcrypt');
-const Datastore = require('nedb');
+const encryptionUtils = require('../utils/encryptionUtils');
 const dataFiles = require('./dataFiles');
 
 const db = dataFiles.dbUsers;
@@ -10,8 +9,8 @@ const storageUtils = require('../utils/storageUtils');
 
 function insertTestData() {
     const users = [
-        {email: 'max@mustermann.com', name: 'Max Mustermann', password: bcrypt.hashSync('max', 10), registration: new Date()},
-        {email: 'jamesbond007@agent.com', name: 'James Bond', password: bcrypt.hashSync('james', 10), registration: new Date()}
+        {email: 'max@mustermann.com', name: 'Max Mustermann', password: encryptionUtils.encrypt('max'), registration: new Date()},
+        {email: 'jamesbond007@agent.com', name: 'James Bond', password: encryptionUtils.encrypt('james'), registration: new Date()}
     ];
     return new Promise((resolve, reject) => {
         db.insert(users, (err, newDocs) => {
@@ -48,7 +47,7 @@ function createUser(theUser) {
     const user = {
         email: theUser.email,
         name: theUser.name,
-        password: bcrypt.hashSync(theUser.newPassword, 10),
+        password: encryptionUtils.encrypt(theUser.newPassword),
         registration: new Date()
     };
     return new Promise((resolve, reject) => {

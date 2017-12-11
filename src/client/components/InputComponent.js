@@ -2,42 +2,53 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 
+const styles = { width: '90%' };
+const displayInputStyles = { color: 'black' };
+
 export default class InputComponent extends React.Component {
 
     static propTypes = {
+        isDisplayMode: PropTypes.bool.isRequired,
         field: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
-        multiLine: PropTypes.bool.isRequired,
-        onChange: PropTypes.func.isRequired,
-        disabled: PropTypes.bool.isRequired,
+        disabled: PropTypes.bool,
+        multiLine: PropTypes.bool,
+        onChange: PropTypes.func,
         error: PropTypes.string
     };
 
     static defaultProps = {
+        isDisplayMode: false,
         type: 'text',
+        disabled: false,
         multiLine: false,
-        disabled: false
+        errors: {}
     };
 
     render() {
+        const { isDisplayMode, inputRef, label, error, onChange, value, type, multiLine, field, disabled } = this.props;
+        if (isDisplayMode) {
+            styles.color = 'black';
+        }
         return (
-            <div>
-                <TextField
-                    ref={this.props.inputRef}
-                    style={this.props.style}
-                    hintText={this.props.label}
-                    floatingLabelText={this.props.label}
-                    errorText={this.props.error}
-                    onChange={this.props.onChange}
-                    value={this.props.value}
-                    type={this.props.type}
-                    multiLine={this.props.multiLine}
-                    name={this.props.field}
-                    disabled={this.props.disabled}
-                />
-            </div>
+            <TextField
+                className="input-component"
+                style={styles}
+                inputStyle={isDisplayMode ? displayInputStyles : undefined}
+                textareaStyle={isDisplayMode ? displayInputStyles : undefined}
+                ref={inputRef}
+                hintText={label}
+                floatingLabelText={label}
+                errorText={error}
+                onChange={onChange}
+                value={value}
+                type={type}
+                multiLine={multiLine}
+                name={field}
+                disabled={isDisplayMode || disabled}
+            />
         );
     }
 }

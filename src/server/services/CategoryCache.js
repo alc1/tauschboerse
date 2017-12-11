@@ -17,8 +17,8 @@ class CategoryCache {
                     console.log('error loading categories');
                     reject(err);
                 } else {
-                    console.log('categories loaded');
                     this.categories = recs.map(rec => CategoryCache.toLogicalRecord(rec));
+                    console.log(`categories loaded: ${this.categories.length} entries`);
                     resolve(this);
                 }
             }).bind(this));
@@ -139,6 +139,4 @@ class CategoryCache {
     }
 }
 
-module.exports = {
-    CategoryCache
-};
+module.exports = CategoryCache;

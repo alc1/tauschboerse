@@ -1,0 +1,10 @@
+.login-page__buttonbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.login-page__button {
+    margin: 10px;
+}

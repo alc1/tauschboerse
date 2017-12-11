@@ -3,7 +3,7 @@
 const router = require('express').Router();
 const articlesController = require('../controller/articlesController');
 const usersController = require('../controller/usersController');
-const transactionsController = require('../controller/transactionsController');
+const tradesController = require('../controller/tradesController');
 const authenticationMiddleware = require('../middleware/authentication');
 const userMiddleware = require('../middleware/user');
 
@@ -14,7 +14,7 @@ router.put('/:userId', [authenticationMiddleware, userMiddleware], usersControll
 router.get('/:userId/articles', authenticationMiddleware, articlesController.getArticlesByOwner);
 router.put('/:userId/articles/:articleId', [authenticationMiddleware, userMiddleware], articlesController.updateArticle);
 router.delete('/:userId/articles/:articleId', [authenticationMiddleware, userMiddleware], articlesController.deleteArticleById);
-router.get('/:userId/transactions', authenticationMiddleware, transactionsController.getUserTransactions);
+router.get('/:userId/trades', authenticationMiddleware, tradesController.getTradesByUser);
 router.post('/auth', usersController.login);
 
 module.exports = router;

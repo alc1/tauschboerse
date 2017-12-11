@@ -1,13 +1,12 @@
 'use strict';
 
-const ArticleCache = require('./ArticleCache').ArticleCache;
-const CategoryCache = require('./CategoryCache').CategoryCache;
-const OfferCache = require('./OfferCache').OfferCache;
-const TransactionCache = require('./TransactionCache').TransactionCache;
-const UserCache = require('./UserCache').UserCache;
+const ArticleCache = require('./ArticleCache');
+const CategoryCache = require('./CategoryCache');
+const TradeCache = require('./TradeCache');
+const UserCache = require('./UserCache');
 
 const db = require('./dataFiles');
-const resetData = require('./initData').resetData;
+const resetData = require('./resetData');
 
 class DataCache {
 
@@ -15,8 +14,7 @@ class DataCache {
         this.users = new UserCache(db.dbUsers);
         this.categories = new CategoryCache(db.dbCategories);
         this.articles = new ArticleCache(db.dbArticles, this.users, this.categories);
-        this.transactions = new TransactionCache(db.dbTransactions, this.users);
-        this.offers = new OfferCache(db.dbOffers, this.transactions, this.articles, this.users);
+        this.trades = new TradeCache(db.dbTrades, this.users, this.articles);
     }
 
     init() {
@@ -28,16 +26,16 @@ class DataCache {
                 () => this.articles.init()
             )
             .then (
-                () => this.transactions.init()
+                () => this.trades.init()
             )
-            .then(
-                () => this.offers.init()
-            );
+            // .then(
+            //     () => this.offers.init()
+            // )
+            ;
     }
 
     clear() {
-        return this.offers.clear()
-            .then(() => this.transactions.clear())
+        return this.trades.clear()
             .then(() => this.articles.clear())
             .then(() => this.categories.clear())
             .then(() => this.users.clear());
@@ -57,6 +55,10 @@ class DataCache {
 
     getArticleById(theArticleId) {
         return this.articles.findById(theArticleId);
+    }
+
+    getArticlesById(theArticleIds) {
+        return theArticleIds.map(id => this.getArticleById(id));
     }
 
     getArticlesByOwner(theOwnerId) {
@@ -89,43 +91,32 @@ class DataCache {
     deleteCategory(categoryId) {
         return this.categories.delete(categoryId);
     }
-    
-    //--------------------
-    // offer methods
-    //--------------------
-    prepareOffer(obj) {
-        return this.offers.prepare(obj);
-    }
-
-    saveOffer(offer) {
-        return this.offers.save(offer);
-    }
-
-    deleteOffer(offerId) {
-        return this.offers.delete(offerId);
-    }
 
     //--------------------
-    // transaction methods
+    // trade methods
     //--------------------
-    prepareTransaction(obj) {
-        return this.transactions.prepare(obj);
+    prepareTrade(obj) {
+        return this.trades.prepare(obj);
     }
 
-    getUserTransactions(userId) {
-        return this.transactions.findByUserId(userId);
+    getAllTrades() {
+        return this.trades.findAll();
     }
 
-    getTransaction(id) {
-        return this.transactions.find(id);
+    getTradesByUser(theUserId) {
+        return this.trades.findByUserId(theUserId);
     }
 
-    saveTransaction(transaction) {
-        // TODO
+    getTrade(id) {
+        return this.trades.find(id);
     }
 
-    deleteTransaction(transactionId) {
-        return this.transactions.delete(transactionId);
+    saveTrade(trade) {
+        return this.trades.save(trade);
+    }
+
+    deleteTrade(tradeId) {
+        return this.trades.delete(tradeId);
     }
 
     /*
@@ -165,7 +156,6 @@ const dataCache = new DataCache();
 function initDataCache(reset) {
     console.log('Initialising data cache...');
 
-    //dataCache = new DataCache();
     let promise = dataCache.init();
 
     if (reset) {

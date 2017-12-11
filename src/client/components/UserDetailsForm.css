@@ -1,0 +1,23 @@
+.user-details-form__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+@media (min-width: 750px) {
+    .user-details-form__container {
+        width: 100vw;
+    }
+}
+
+.user-details-form__paper {
+    width: 100%;
+    height: 100%;
+}
+
+.user-details-form__field-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

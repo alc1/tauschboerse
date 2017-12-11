@@ -1,25 +1,29 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
-import Menu from 'material-ui/svg-icons/navigation/menu';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 
-import NavigationComponent from './NavigationComponent';
+import Navigation from '../containers/Navigation';
+import LoadingIndicator from '../containers/LoadingIndicator';
+import GlobalMessage from '../containers/GlobalMessage';
 
-import { getUser } from '../selectors/user';
-import { logout } from '../actions/user';
+import './ApplicationBar.css';
 
-class ApplicationBar extends React.Component {
+const appbarStyles = {
+    position: 'fixed',
+    zIndex: 10
+};
+
+export default class ApplicationBar extends React.Component {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
-        logout: PropTypes.func.isRequired
+        logout: PropTypes.func.isRequired,
+        user: PropTypes.object
     };
 
     state = {
@@ -56,33 +60,25 @@ class ApplicationBar extends React.Component {
             loginButtonBar = <FlatButton label="Login" onClick={this.onLogin}/>;
         }
 
-        const ContentPositionDiv = styled.div`
-            padding-top: 64px;
-        `;
         return (
             <div>
                 <AppBar
-                    style={{position: 'fixed'}}
+                    style={appbarStyles}
+                    className="appbar"
                     title="Tauschbörse"
-                    iconElementLeft={<IconButton><Menu/></IconButton>}
+                    iconElementLeft={<IconButton><MenuIcon/></IconButton>}
                     iconElementRight={loginButtonBar}
                     onLeftIconButtonTouchTap={this.toggleMenu}/>
                 <Drawer
                     docked={false}
                     open={this.state.isMenuOpen}
                     onRequestChange={this.handleMenuChange}>
-                    <NavigationComponent closeMenu={this.closeMenu}/>
+                    <Navigation closeMenu={this.closeMenu}/>
                 </Drawer>
-                <ContentPositionDiv/>
+                <div className="appbar__content"/>
+                <LoadingIndicator/>
+                <GlobalMessage/>
             </div>
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        user: getUser(theState)
-    };
-}
-
-export default withRouter(connect(mapStateToProps, { logout })(ApplicationBar));
