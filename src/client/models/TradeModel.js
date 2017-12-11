@@ -5,6 +5,9 @@ class TradeModel {
     constructor (trade, user) {
         this.trade = trade;
         this.user = user;
+
+        this._userArticles = null;
+        this._tradePartnerArticles = null;
     }
 
     get _id() {
@@ -40,36 +43,57 @@ class TradeModel {
     }
 
     get canSubmitOffer() {
-        return ((this.trade.state === TradeState.TRADE_STATE_INIT) && (this.currentOffer.sender === this.user))
-            || ((this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (this.currentOffer.sender === this.user));
+        return ((this.trade.state === TradeState.TRADE_STATE_INIT) && this.isUserSender)
+            || ((this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && this.hasCounteroffer && this.isUserReceiver);
     }
 
     get tradePartner() {
-        return (this.trade.user1 === this.user) ? this.trade.user2 : this.trade.user1;
+        return this.isUser(this.trade.user1) ? this.trade.user2 : this.trade.user1;
     }
 
     get canWithdrawOffer() {
-        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (this.currentOffer.sender === this.user);
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserSender;
     }
 
     get canMakeCounteroffer() {
-        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (this.currentOffer.sender !== this.user);
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
     }
 
     get canAcceptOffer() {
-        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (this.currentOffer.sender !== this.user);
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
     }
 
     get canDeclineOffer() {
-        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (this.currentOffer.sender !== this.user);
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
     }
 
     get isUserSender() {
-        return this.currentOffer.sender === this.user;
+        return this.isUser(this.currentOffer.sender);
     }
 
     get isUserReceiver() {
-        return this.currentOffer.sender !== this.user;
+        return !this.isUser(this.currentOffer.sender);
+    }
+
+    get tradePartnerArticles() {
+        this.prepareArticleLists();
+        return this._tradePartnerArticles;
+    }
+
+    get userArticles() {
+        this.prepareArticleLists();
+        return this._userArticles;
+    }
+
+    prepareArticleLists() {
+        if (!this._userArticles) {
+            this._userArticles = this.currentOffer.articles.filter(article => this.isUser(article.owner));
+            this._tradePartnerArticles = this.currentOffer.articles.filter(article => !this.isUser(article.owner));
+        }
+    }
+
+    isUser(user) {
+        return user._id === this.user._id;
     }
 }
 
