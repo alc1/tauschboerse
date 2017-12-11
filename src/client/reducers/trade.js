@@ -3,7 +3,7 @@ import {
     TRADE_SAVED
 } from './../actions/trade';
 
-const initialState = {};
+export const initialState = {};
 
 export default function trade(theState = initialState, theAction) {
     switch (theAction.type) {
