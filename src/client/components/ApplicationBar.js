@@ -68,7 +68,7 @@ export default class ApplicationBar extends React.Component {
                     title="Tauschbörse"
                     iconElementLeft={<IconButton><MenuIcon/></IconButton>}
                     iconElementRight={loginButtonBar}
-                    onLeftIconButtonTouchTap={this.toggleMenu}/>
+                    onLeftIconButtonClick={this.toggleMenu}/>
                 <Drawer
                     docked={false}
                     open={this.state.isMenuOpen}

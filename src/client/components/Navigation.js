@@ -14,7 +14,7 @@ import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 
-import UserInfo from './UserInfo';
+import UserInfo from '../containers/UserInfo';
 
 export default class Navigation extends React.Component {
 

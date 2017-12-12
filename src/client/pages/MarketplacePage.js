@@ -29,7 +29,7 @@ class MarketplacePage extends React.Component {
 
     static propTypes = {
         lastSearch: PropTypes.object,
-        user: PropTypes.object.isRequired,
+        user: PropTypes.object,
         findArticles: PropTypes.func.isRequired,
         trade: PropTypes.object,
         clearLastSearch: PropTypes.func.isRequired,

@@ -54,7 +54,7 @@ class GlobalMessage extends React.Component {
                 open={openSnackbar}
                 message={messageText}
                 action={actionText}
-                onActionTouchTap={action}
+                onActionClick={action}
                 onRequestClose={this.props.removeGlobalMessage}
                 autoHideDuration={messageType === OK_MESSAGE ? 2000 : 0}
             />

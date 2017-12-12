@@ -1,19 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import muiThemeable from 'material-ui/styles/muiThemeable';
-
 import Account from '../images/Account';
 import Info from '../images/Info';
 
 import './UserInfo.css';
 
-class UserInfo extends React.Component {
+export default class UserInfo extends React.Component {
 
     static propTypes = {
         width: PropTypes.number.isRequired,
         height: PropTypes.number.isRequired,
-        user: PropTypes.object
+        muiTheme: PropTypes.shape({
+            palette: PropTypes.shape({
+                primary1Color: PropTypes.string.isRequired
+            }).isRequired,
+        }).isRequired,
+        user: PropTypes.shape({
+            name: PropTypes.string.isRequired
+        })
     };
 
     render() {
@@ -30,5 +35,3 @@ class UserInfo extends React.Component {
         );
     }
 }
-
-export default muiThemeable()(UserInfo);

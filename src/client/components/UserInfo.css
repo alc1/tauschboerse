@@ -5,7 +5,7 @@
     align-items: center;
 }
 
-.user-info__container__text {
-    color: #C3C3C3;
-    margin: 10px;
+.user-info__text {
+    text-align: center;
+    margin: 5px;
 }
