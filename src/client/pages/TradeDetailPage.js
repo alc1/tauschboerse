@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import ApplicationBar from '../containers/ApplicationBar';
 import TradeDetail from '../components/TradeDetail';
 import TradeModel from '../models/TradeModel';
+import TradeAction from '../models/TradeAction';
 
-import { loadTrade } from '../actions/trade';
+import { acceptTrade, declineTrade, loadTrade, submitTrade } from '../actions/trade';
 import { setLoading } from '../actions/application';
 import { getTrade } from '../selectors/trade';
 import { getUser } from '../selectors/user';
@@ -43,8 +44,28 @@ class TradeDetailPage extends React.Component {
         }
     }
 
+    doTradeAction = (theAction) => {
+        switch(theAction) {
+            case TradeAction.TRADE_ACTION_ACCEPT:
+                this.props.acceptTrade(this.props.trade);
+                break;
+            case TradeAction.TRADE_ACTION_DECLINE:
+                this.props.declineTrade(this.props.trade);
+                break;
+            case TradeAction.TRADE_ACTION_MAKE_COUNTEROFFER:
+                break;
+            case TradeAction.TRADE_ACTION_SUBMIT:
+                this.props.submitTrade(this.props.trade);
+                break;
+            case TradeAction.TRADE_ACTION_WITHDRAW:
+                break;
+            default:
+                break;
+        }
+    };
+
     render() {
-        let content = !this.props.trade ? <div></div> : <TradeDetail trade={this.state.trade} user={this.props.user} />;
+        let content = !this.props.trade ? <div></div> : <TradeDetail trade={this.state.trade} user={this.props.user} onAction={this.doTradeAction} />;
         return (
             <div>
                 <ApplicationBar/>
@@ -62,4 +83,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadTrade, setLoading })(TradeDetailPage);
+export default connect(mapStateToProps, { loadTrade, setLoading, submitTrade, acceptTrade, declineTrade })(TradeDetailPage);

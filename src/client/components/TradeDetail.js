@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+import TradeAction from '../models/TradeAction';
 import ArticleList from './ArticleList';
 
 import './TradeDetail.css';
@@ -11,15 +12,16 @@ class TradeDetail extends React.Component {
     static propTypes = {
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
+        onAction: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         trade: null
     };
 
-    // constructor(props) {
-    //     super(props);
-    // }
+    doAction(theAction) {
+        this.props.onAction(theAction);
+    }
 
     generateContentForNewTrade() {
         return (
@@ -33,7 +35,7 @@ class TradeDetail extends React.Component {
                     <ArticleList articles={this.props.trade.userArticles} />
                 </section>
                 <section>
-                    <div><button type="button">Angebot machen</button></div>
+                    <div><button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_SUBMIT)}>Angebot machen</button></div>
                 </section>
             </div>
         );
@@ -52,7 +54,7 @@ class TradeDetail extends React.Component {
                 </section>
                 <section>
                     <div>{this.props.trade.tradePartner.name} hat sich noch nicht entschieden</div>
-                    <div><button type="button">Angebot zurückziehen</button></div>
+                    <div><button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_WITHDRAW)}>Angebot zurückziehen</button></div>
                 </section>
             </div>
         );
@@ -71,9 +73,9 @@ class TradeDetail extends React.Component {
                 </section>
                 <section>
                     <div>
-                        <button type="button">Angebot annehmen</button>
-                        <button type="button">Angebot ablehnen</button>
-                        <button type="button">Gegenangebot machen</button>
+                        <button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_ACCEPT)}>Angebot annehmen</button>
+                        <button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_DECLINE)}>Angebot ablehnen</button>
+                        <button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_MAKE_COUNTEROFFER)}>Gegenangebot machen</button>
                     </div>
                 </section>
             </div>

@@ -10,7 +10,7 @@ export default class ArticleList extends React.Component {
     };
 
     generateArticleList() {
-        let rows = this.props.articles.map(article => <tr><td>{article.title}</td><td>{article.description}</td></tr>);
+        let rows = this.props.articles.map(article => <tr key={article._id}><td>{article.title}</td><td>{article.description}</td></tr>);
         return (
             <table>
                 <tbody>
