@@ -65,11 +65,10 @@ class TradeDetailPage extends React.Component {
     };
 
     render() {
-        let content = !this.props.trade ? <div></div> : <TradeDetail trade={this.state.trade} user={this.props.user} onAction={this.doTradeAction} />;
         return (
             <div>
                 <ApplicationBar/>
-                {content}
+                {this.state.trade && <TradeDetail trade={this.state.trade} user={this.props.user} onAction={this.doTradeAction} />}
             </div>
         );
     }

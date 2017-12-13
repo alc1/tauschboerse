@@ -10,7 +10,7 @@ import './TradeDetail.css';
 class TradeDetail extends React.Component {
 
     static propTypes = {
-        trade: PropTypes.object,
+        trade: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
         onAction: PropTypes.func.isRequired
     };
