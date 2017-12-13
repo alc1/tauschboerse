@@ -11,9 +11,9 @@ import ArticleStatusComponent from './ArticleStatusTag';
 import AvatarTag from './AvatarTag';
 import PhotoPlaceholder from './PhotoPlaceholder';
 
-import './ArticleComponent.css';
+import './ArticleCard.css';
 
-class ArticleComponent extends React.Component {
+export default class ArticleCard extends React.Component {
 
     static propTypes = {
         article: PropTypes.object.isRequired,
@@ -50,5 +50,3 @@ class ArticleComponent extends React.Component {
         );
     }
 }
-
-export default ArticleComponent;
