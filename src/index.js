@@ -6,6 +6,7 @@ import { JWT_TOKEN_KEY } from './client/common';
 import store from './client/store/store';
 
 import App from './client/App';
+import registerServiceWorker from './client/registerServiceWorker';
 
 function readJwtToken() {
     let jwtToken = sessionStorage.getItem(JWT_TOKEN_KEY);
@@ -22,3 +23,5 @@ if (jwtToken) {
 }
 
 ReactDOM.render(<App/>, document.getElementById('root'));
+
+registerServiceWorker();
