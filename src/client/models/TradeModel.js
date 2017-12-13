@@ -6,6 +6,10 @@ class TradeModel {
         this.trade = trade;
         this.user = user;
 
+        // these two fields are fields and not properties / getters for optimisation/acceleration purposes
+        this.hasCounteroffer = (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.trade.offers.length > 1) && (this.trade.offers[0].state === OfferState.OFFER_STATE_INIT);
+        this.currentOffer = this.trade.offers[this.hasCounteroffer ? 1 : 0];
+
         this._userArticles = null;
         this._tradePartnerArticles = null;
     }
@@ -22,16 +26,16 @@ class TradeModel {
         return (this.trade.state === TradeState.TRADE_STATE_INIT) && (this.currentOffer.state === OfferState.OFFER_STATE_INIT);
     }
 
+    get isOpen() {
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION);
+    }
+
     get hasMadeCurrentOffer() {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserSender;
     }
 
-    get hasCounteroffer() {
-        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.trade.offers.length > 1) && (this.trade.offers[0].state === OfferState.OFFER_STATE_INIT);
-    }
-
-    get currentOffer() {
-        return this.trade.offers[this.hasCounteroffer ? 1 : 0];
+    get hasReceivedCurrentOfer() {
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
     }
 
     get counterOffer() {

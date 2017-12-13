@@ -15,8 +15,7 @@ import Info from '../images/Info';
 
 import ArticleStatus from '../../shared/businessobjects/ArticleStatus';
 import TradeState from '../../shared/businessobjects/TradeState';
-// import Trade from '../../shared/businessobjects/Trade';
-// import OfferState from '../../shared/businessobjects/OfferState';
+import TradesModel from '../models/TradesModel';
 
 import './Dashboard.css';
 
@@ -53,7 +52,7 @@ export default class Dashboard extends React.Component {
     };
 
     render() {
-        const { user, articles, trades, loading } = this.props;
+        const { user, articles, loading } = this.props;
         const { fontFamily } = this.props.muiTheme;
         const { accent1Color } = this.props.muiTheme.palette;
 
@@ -65,11 +64,7 @@ export default class Dashboard extends React.Component {
         const countArticlesDeleted = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DELETED ? sum + 1 : sum, 0);
         const countArticlesAll = countArticlesFree + countArticlesInNegotiation + countArticlesDealed + countArticlesDeleted;
 
-        const countTradesInit = trades.reduce((sum, trade) => trade.state === TradeState.TRADE_STATE_INIT ? sum + 1 : sum, 0);
-        const countTradesInNegotiation = trades.reduce((sum, trade) => trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION ? sum + 1 : sum, 0);
-        const countTradesCompleted = trades.reduce((sum, trade) => trade.state === TradeState.TRADE_STATE_COMPLETED ? sum + 1 : sum, 0);
-        const countTradesCanceled = trades.reduce((sum, trade) => trade.state === TradeState.TRADE_STATE_CANCELED ? sum + 1 : sum, 0);
-        const countTradesAll = countTradesInit + countTradesInNegotiation + countTradesCompleted + countTradesCanceled;
+        let trades = new TradesModel(this.props.trades, user);
 
         const articlesData = [
             { name: 'Frei', value: countArticlesFree, fill: cyan500 },
@@ -78,10 +73,10 @@ export default class Dashboard extends React.Component {
             { name: 'Gelöscht', value: countArticlesDeleted, fill: deepOrangeA700 }
         ];
         const tradesData = [
-            { name: 'In Vorbereitung', value: countTradesInit, fill: cyan500 },
-            { name: 'In Verhandlung', value: countTradesInNegotiation, fill: blue500 },
-            { name: 'Erfolgreich abgeschlossen', value: countTradesCompleted, fill: orange900 },
-            { name: 'Abgebrochen', value: countTradesCanceled, fill: deepOrangeA700 }
+            { name: 'In Vorbereitung', value: trades.newTrades.length, fill: cyan500 },
+            { name: 'In Verhandlung', value: trades.openTrades.length, fill: blue500 },
+            { name: 'Erfolgreich abgeschlossen', value: trades.completedTrades.length, fill: orange900 },
+            { name: 'Abgebrochen', value: trades.canceledTrades.length, fill: deepOrangeA700 }
         ];
 
         return (
@@ -119,13 +114,13 @@ export default class Dashboard extends React.Component {
                         <Paper className="dashboard__charts-paper">
                             <Toolbar style={toolbarStyle}>
                                 <ToolbarGroup>
-                                    <ToolbarTitle style={toolbarTitleStyle} text={`Tauschgeschäfte (${countTradesAll})`}/>
+                                    <ToolbarTitle style={toolbarTitleStyle} text={`Tauschgeschäfte (${trades.count})`}/>
                                 </ToolbarGroup>
                                 <ToolbarGroup>
                                     <RaisedButton style={buttonStyle} label="Anzeigen" icon={<ShowIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/trades`)} primary/>
                                 </ToolbarGroup>
                             </Toolbar>
-                            {countTradesAll > 0 ? (
+                            {trades.count > 0 ? (
                                 <PieChart width={450} height={400}>
                                     <Pie dataKey="value" data={tradesData} innerRadius={20} outerRadius={120} isAnimationActive label/>
                                     <Tooltip/>
