@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import Dashboard from '../containers/Dashboard';
-import Intro from '../components/Intro';
+import Intro from '../containers/Intro';
 
 import { getUser } from '../selectors/user';
 

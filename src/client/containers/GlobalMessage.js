@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import muiThemeable from 'material-ui/styles/muiThemeable';
+
 import GlobalMessage from '../components/GlobalMessage';
 
 import { removeGlobalMessage, goToLogin } from '../actions/application';
@@ -12,4 +14,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, { removeGlobalMessage, goToLogin })(GlobalMessage));
+export default withRouter(connect(mapStateToProps, { removeGlobalMessage, goToLogin })(muiThemeable()(GlobalMessage)));

@@ -10,4 +10,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, null)(LoadingIndicator);
+export default connect(mapStateToProps)(LoadingIndicator);

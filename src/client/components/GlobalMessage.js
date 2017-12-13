@@ -2,19 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Snackbar from 'material-ui/Snackbar';
-import muiThemeable from 'material-ui/styles/muiThemeable';
 import { orange500 } from 'material-ui/styles/colors';
 
 import { GO_TO_LOGIN, OK_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE } from '../actions/application';
 
-class GlobalMessage extends React.Component {
+export default class GlobalMessage extends React.Component {
 
     static propTypes = {
         globalMessage: PropTypes.object.isRequired,
         removeGlobalMessage: PropTypes.func.isRequired,
         goToLogin: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
-        muiTheme: PropTypes.object.isRequired
+        muiTheme: PropTypes.shape({
+            palette: PropTypes.shape({
+                primary1Color: PropTypes.string.isRequired,
+                accent1Color: PropTypes.string.isRequired,
+            }).isRequired
+        }).isRequired
     };
 
     render() {
@@ -61,5 +65,3 @@ class GlobalMessage extends React.Component {
         );
     }
 }
-
-export default muiThemeable()(GlobalMessage);

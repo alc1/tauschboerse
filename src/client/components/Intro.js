@@ -1,11 +1,9 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import muiThemeable from 'material-ui/styles/muiThemeable';
 import MarketplaceIcon from 'material-ui/svg-icons/communication/business';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import NewAccountIcon from 'material-ui/svg-icons/social/person-add';
@@ -23,10 +21,13 @@ import './Intro.css';
 const buttonStyle = { margin: '10px' };
 const swapCircleStyle = { margin: '10px' };
 
-class Intro extends React.Component {
+export default class Intro extends React.Component {
 
     static propTypes = {
-        history: PropTypes.object.isRequired
+        history: PropTypes.object.isRequired,
+        muiTheme: PropTypes.shape({
+            fontFamily: PropTypes.string.isRequired
+        }).isRequired
     };
 
     goTo = (thePath) => {
@@ -60,5 +61,3 @@ class Intro extends React.Component {
         );
     }
 }
-
-export default muiThemeable()(withRouter(Intro));
