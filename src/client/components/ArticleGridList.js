@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import ArticleComponent from './ArticleComponent';
-import ArticlePlaceholder from './ArticlePlaceholder';
+import Placeholder from '../containers/Placeholder';
 
 import './ArticleGridList.css';
 
@@ -44,7 +44,7 @@ export default class ArticleGridList extends React.Component {
         const articleComponents = articles.map(article => <ArticleComponent key={article._id} article={article} actions={this.createActionButtons(article, articleActions)}/>);
         return (
             <div className="article-grid-list">
-                {hasArticles ? articleComponents : <ArticlePlaceholder width={300} height={300} loading={loading}/>}
+                {hasArticles ? articleComponents : <Placeholder width={300} height={300} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>}
             </div>
         );
     }

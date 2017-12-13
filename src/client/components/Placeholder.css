@@ -1,11 +1,12 @@
-.article-placeholder__container {
+.placeholder__container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.article-placeholder__text {
+.placeholder__text {
+    text-align: center;
     font-size: 2em;
     color: #C3C3C3;
     margin: 10px;

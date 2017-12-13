@@ -7,7 +7,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../containers/ApplicationBar';
-import ArticlePlaceholder from '../components/ArticlePlaceholder';
+import Placeholder from '../containers/Placeholder';
 import ArticleForm from '../components/ArticleForm';
 import PhotosComponent from '../components/PhotosComponent';
 
@@ -154,14 +154,14 @@ class ArticleEditorPage extends React.Component {
                 articleSaveRequest = this.props.createArticle(articleToSave);
             }
             articleSaveRequest.then((res) => {
+                this.setState({
+                    errors: {},
+                    modified: false
+                });
                 this.props.setLoading(false);
                 this.props.setGlobalMessage({
                     messageText: 'Artikel wurde gespeichert.',
                     messageType: OK_MESSAGE
-                });
-                this.setState({
-                    errors: {},
-                    modified: false
                 });
                 if (!articleId) {
                     this.props.history.replace(`/article/${res.article._id}`);
@@ -214,7 +214,7 @@ class ArticleEditorPage extends React.Component {
                         </FloatingActionButton>}
                     </form>
                     :
-                    <ArticlePlaceholder width={300} height={300} loading={loading}/>
+                    <Placeholder width={300} height={300} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>
                 }
             </div>
         );
