@@ -1,7 +1,9 @@
+import { APPLICATION_SLICE_NAME } from '../store/slices';
+
 export const getGlobalMessage = (theState) => {
-    return theState.application ? theState.application.globalMessage : {};
+    return theState[APPLICATION_SLICE_NAME] ? theState[APPLICATION_SLICE_NAME].globalMessage : {};
 };
 
 export const isLoading = (theState) => {
-    return theState.application ? theState.application.isLoading : false;
+    return theState[APPLICATION_SLICE_NAME] ? theState[APPLICATION_SLICE_NAME].isLoading : false;
 };

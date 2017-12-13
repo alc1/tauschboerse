@@ -10,13 +10,22 @@ import { initialState as marketplaceInitialState } from '../reducers/marketplace
 import { initialState as tradeInitialState } from '../reducers/trade';
 import { initialState as userInitialState } from '../reducers/user';
 
+import {
+    APPLICATION_SLICE_NAME,
+    ARTICLE_SLICE_NAME,
+    CATEGORIES_SLICE_NAME,
+    MARKETPLACE_SLICE_NAME,
+    TRADE_SLICE_NAME,
+    USER_SLICE_NAME
+} from './slices';
+
 const initialState = {
-    application: applicationInitialState,
-    article: articleInitialState,
-    categories: categoryInitialState,
-    marketplace: marketplaceInitialState,
-    trade: tradeInitialState,
-    user: userInitialState
+    [APPLICATION_SLICE_NAME]: applicationInitialState,
+    [ARTICLE_SLICE_NAME]: articleInitialState,
+    [CATEGORIES_SLICE_NAME]: categoryInitialState,
+    [MARKETPLACE_SLICE_NAME]: marketplaceInitialState,
+    [TRADE_SLICE_NAME]: tradeInitialState,
+    [USER_SLICE_NAME]: userInitialState
 };
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
