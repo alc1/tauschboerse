@@ -34,7 +34,6 @@ export default class InputComponent extends React.Component {
         }
         return (
             <TextField
-                className="input-component"
                 style={styles}
                 inputStyle={isDisplayMode ? displayInputStyles : undefined}
                 textareaStyle={isDisplayMode ? displayInputStyles : undefined}

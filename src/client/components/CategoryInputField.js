@@ -57,7 +57,6 @@ export default class CategoryInputField extends React.Component {
         const { isDisplayMode, categories, availableCategories, errors, loading, onRemoveCategory } = this.props;
         return (
             <ChipInput
-                className="input-component"
                 style={styles}
                 errorText={errors.categories}
                 hintText="Kategorien"

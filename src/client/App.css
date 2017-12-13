@@ -2,7 +2,3 @@ body {
     margin: 0;
     background: #F5F5F5;
 }
-
-.input-component:last-child {
-    margin-bottom: 30px;
-}
