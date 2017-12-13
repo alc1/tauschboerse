@@ -101,28 +101,28 @@ function setTradeState(req, res) {
     const { tradeId } = req.params;
     let trade = dataCache.getTrade(tradeId);
 
-    const newState = req.body;
+    const newState = req.body.newState;
 
     let requestStatus = 200;
     if (trade != null) {
         if (newState === 'REQUESTED') {
             if ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1 === req.user)) {
-                let trade = makeShallowCopy(trade);
+                trade = makeShallowCopy(trade);
                 trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
                 let offer = makeShallowCopy(trade.currentOffer);
-                offer.state = OFFER_STATE_REQUESTED;
+                offer.state = OfferState.OFFER_STATE_REQUESTED;
                 trade.offers = [offer];
                 dataCache.saveTrade(trade);
             } else if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
-                let trade = makeShallowCopy(trade);
+                trade = makeShallowCopy(trade);
                 trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
                 trade.offers = trade.offers.slice();
                 let offer = makeShallowCopy(trade.currentOffer);
-                offer.state = OFFER_STATE_REQUESTED;
+                offer.state = OfferState.OFFER_STATE_REQUESTED;
                 trade.offers[0] = offer;
                 if ((trade.offers.length > 1) && (trade.offers[1].state === OfferState.OFFER_STATE_REQUESTED)) {
-                    let offer = makeShallowCopy(trade.offers[1]);
-                    offer.state = OFFER_STATE_DECLINED;
+                    offer = makeShallowCopy(trade.offers[1]);
+                    offer.state = OfferState.OFFER_STATE_DECLINED;
                     trade.offers[1] = offer;
                 }
                 dataCache.saveTrade(trade);
@@ -131,25 +131,33 @@ function setTradeState(req, res) {
                 requestStatus = 403;
             }
         } else if ((newState === 'ACCEPTED') && (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) {
-            let trade = makeShallowCopy(trade);
-            trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
+            trade = makeShallowCopy(trade);
+            trade.state = TradeState.TRADE_STATE_COMPLETED;
             trade.offers = trade.offers.slice();
             let offer = makeShallowCopy(trade.currentOffer);
-            offer.state = OFFER_STATE_ACCEPTED;
+            offer.state = OfferState.OFFER_STATE_ACCEPTED;
             trade.offers[0] = offer;
             dataCache.saveTrade(trade);
         } else if (newState === 'DECLINED') {
             if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_REQUESTED)) {
-                let trade = makeShallowCopy(trade);
+                trade = makeShallowCopy(trade);
                 trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
                 trade.offers = trade.offers.slice();
                 let offer = makeShallowCopy(trade.currentOffer);
-                offer.state = OFFER_STATE_DECLINED;
+                offer.state = OfferState.OFFER_STATE_DECLINED;
                 trade.offers[0] = offer;
                 dataCache.saveTrade(trade);
             } else {
                 requestStatus = 403;
             }
+        } else if (newState === 'CANCELED') {
+            trade = makeShallowCopy(trade);
+            trade.state = TradeState.TRADE_STATE_CANCELED;
+            trade.offers = trade.offers.slice();
+            let offer = makeShallowCopy(trade.currentOffer);
+            offer.state = (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED;
+            trade.offers[0] = offer;
+            dataCache.saveTrade(trade);
         } else {
             requestStatus = 403;
         }
@@ -206,7 +214,13 @@ function findTrade(id, userId) {
 }
 
 function makeShallowCopy(obj) {
-    return object.assign({}, obj);
+    if (obj instanceof Trade) {
+        return new Trade(obj);
+    } else if (obj instanceof Offer) {
+        return new Offer(obj);
+    } else {
+        return Object.assign({}, obj);
+    }
 }
 
 module.exports = {

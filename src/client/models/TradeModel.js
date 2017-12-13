@@ -23,7 +23,7 @@ class TradeModel {
     }
 
     get hasMadeCurrentOffer() {
-        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (this.currentOffer.sender === this.user);
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserSender;
     }
 
     get hasCounteroffer() {
@@ -65,6 +65,10 @@ class TradeModel {
 
     get canDeclineOffer() {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
+    }
+
+    get requiresInputFromUser() {
+        return this.hasCounteroffer || this.canMakeCounteroffer;
     }
 
     get isUserSender() {

@@ -65,11 +65,11 @@ class TradeDetail extends React.Component {
             <div>
                 <section>
                     <div>{this.props.trade.tradePartner.name} möchte folgende Artikel von Dir:</div>
-                    <ArticleList articles={this.props.trade.tradePartnerArticles} />
+                    <ArticleList articles={this.props.trade.userArticles} />
                 </section>
                 <section>
                     <div>Dafür bietet er/sie Dir folgende Artikel an:</div>
-                    <ArticleList articles={this.props.trade.userArticles} />
+                    <ArticleList articles={this.props.trade.tradePartnerArticles} />
                 </section>
                 <section>
                     <div>

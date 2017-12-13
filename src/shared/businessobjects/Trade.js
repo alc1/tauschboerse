@@ -12,6 +12,8 @@ class Trade {
             utils.setValue(this, 'createDate', obj, new Date());
             utils.setValue(this, 'versionstamp', obj, undefined);
             utils.setValue(this, 'offers', obj, []);
+            utils.setValue(this, 'user1HasDelivered', obj, false);
+            utils.setValue(this, 'user2HasDelivered', obj, false);
 
             utils.transferId(obj, this);
         } else {
@@ -20,6 +22,8 @@ class Trade {
             this.state = TradeState.TRADE_STATE_INIT;
             this.createDate = new Date();
             this.offers = [];
+            this.user1HasDelivered = false;
+            this.user2HasDelivered = false;
         }
     }
 
@@ -49,6 +53,8 @@ class Trade {
         modified = utils.updateValue(this, 'state', obj) || modified;
         modified = utils.updateValue(this, 'createDate', obj) || modified;
         modified = utils.updateValue(this, 'offers', obj) || modified;
+        modified = utils.updateValue(this, 'user1HasDelivered', obj) || modified;
+        modified = utils.updateValue(this, 'user2HasDelivered', obj) || modified;
         
         utils.updateValue(this, 'versionstamp', obj);
 

@@ -61,7 +61,7 @@ export const declineTrade = (theTrade) => dispatch => {
 };
 
 function setTradeState(theTrade, theNewState, dispatch) {
-    return axios.put(`/api/trades/${theTrade._id}/state`, theNewState)
+    return axios.put(`/api/trades/${theTrade._id}/state`, { newState: theNewState })
         .then(response => dispatch(tradeStateChanged(response.data.trade)))
         .catch(err => handleError(err, dispatch));
 }

@@ -83,7 +83,7 @@ class TradeCache {
         } else {
             saveOp = (function(resolve, reject) {
                 if (rec.update(trade)) {
-                    db.update({_id: rec._id}, this.toPhysicalRecord(rec), {}, function(err, newRec) {
+                    this.db.update({_id: rec._id}, this.toPhysicalRecord(rec), {}, function(err, newRec) {
                         resolve(rec);
                     });
                 } else {
@@ -131,6 +131,8 @@ class TradeCache {
         rec.state = trade.state;
         rec.createDate = trade.createDate;
         rec.offers = trade.offers.map(offer => ({ senderId: offer.sender._id, createDate: offer.createDate, state: offer.state, articleIds: offer.articles.map(article => article._id) }));
+        rec.user1HasDelivered = trade.user1HasDelivered;
+        rec.user2HasDelivered = trade.user2HasDelivered;
         
         rec.versionstamp = this.getNextVersionstamp();
 
@@ -159,6 +161,8 @@ class TradeCache {
 
         trade.state = rec.state;
         trade.createDate = rec.createDate;
+        trade.user1HasDelivered = rec.user1HasDelivered;
+        trade.user2HasDelivered = rec.user2HasDelivered;
 
         trade.offers = rec.offers.map(offer => this.toLogicalOfferRecord(offer));
 

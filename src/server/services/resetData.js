@@ -16,7 +16,7 @@ function resetData(dataCache) {
         {name: 'Kindersachen'}
     ];
     const trades = [
-        { user1Id: 1, user2Id: 0, state: TradeState.TRADE_STATE_INIT, offers: [{ senderId: 0, state: OfferState.OFFER_STATE_INIT, articleIds: [0, 3] }] }
+        { user1Id: 1, user2Id: 0, state: TradeState.TRADE_STATE_INIT, offers: [{ senderId: 1, state: OfferState.OFFER_STATE_INIT, articleIds: [0, 3] }], user1HasDelivered: false, user2HasDelivered: false }
     ];
     const users = [
         {email: 'calbiez@hsr.ch', name: 'Christian Albiez', newPassword: 'c', registration: new Date()},
