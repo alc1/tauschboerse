@@ -115,7 +115,7 @@ function setTradeState(req, res) {
                 dataCache.saveTrade(trade);
             } else if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
                 trade = makeShallowCopy(trade);
-                trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
+                //trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
                 trade.offers = trade.offers.slice();
                 let offer = makeShallowCopy(trade.currentOffer);
                 offer.state = OfferState.OFFER_STATE_REQUESTED;
