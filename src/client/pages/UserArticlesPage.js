@@ -58,12 +58,12 @@ class UserArticlesPage extends React.Component {
                 this.props.setLoading(false);
             })
             .catch(() => this.props.setLoading(false));
-        setTimeout(() => this.filterField.focus(), 1000);
+        setTimeout(() => this.filterField.focus(), 500);
     }
 
     componentWillReceiveProps(nextProps) {
         this.applyFilterFromUrl();
-        setTimeout(() => this.filterField.focus(), 1000);
+        setTimeout(() => this.filterField.focus(), 500);
     }
 
     applyFilterFromUrl = () => {

@@ -108,26 +108,22 @@ class UserDetailsPage extends React.Component {
     };
 
     render() {
-        const { loading } = this.props;
-        const { registration } = this.props.user;
+        const { loading, user } = this.props;
         const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, modified } = this.state;
+        const { registration } = user;
+        const userDetails = { name, email, registration, changePassword, currentPassword, newPassword, passwordConfirmation };
         return (
             <div>
                 <ApplicationBar/>
                 <form className="user-editor__container" onSubmit={this.onSubmit}>
                     <UserDetailsForm
-                        name={name}
-                        email={email}
-                        registration={registration}
+                        userDetails={userDetails}
                         errors={errors}
                         loading={loading}
                         onChange={this.onChange}
                         onSubmit={this.onSubmit}/>
                     <UserPasswordForm
-                        changePassword={changePassword}
-                        currentPassword={currentPassword}
-                        newPassword={newPassword}
-                        passwordConfirmation={passwordConfirmation}
+                        userDetails={userDetails}
                         errors={errors}
                         loading={loading}
                         onChange={this.onChange}

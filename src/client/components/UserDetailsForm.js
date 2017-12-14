@@ -16,9 +16,11 @@ const toolbarTitleStyle = { color: 'black' };
 export default class UserDetailsForm extends React.Component {
 
     static propTypes = {
-        name: PropTypes.string.isRequired,
-        email: PropTypes.string.isRequired,
-        registration: PropTypes.string.isRequired,
+        userDetails: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            email: PropTypes.string.isRequired,
+            registration: PropTypes.string.isRequired
+        }).isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         onChange: PropTypes.func.isRequired,
@@ -30,7 +32,8 @@ export default class UserDetailsForm extends React.Component {
     }
 
     render() {
-        const { name, email, registration, errors, loading, onChange, onSubmit } = this.props;
+        const { userDetails, errors, loading, onChange, onSubmit } = this.props;
+        const { name, email, registration } = userDetails;
         return (
             <div className="user-details-form__container">
                 <Paper className="user-details-form__paper">
@@ -48,16 +51,14 @@ export default class UserDetailsForm extends React.Component {
                             onChange={onChange}
                             value={name}
                             field="name"
-                            disabled={loading}
-                        />
+                            disabled={loading}/>
                         <InputComponent
                             error={errors.email}
                             label="E-Mail"
                             onChange={onChange}
                             value={email}
                             field="email"
-                            disabled={loading}
-                        />
+                            disabled={loading}/>
                     </div>
                 </Paper>
             </div>

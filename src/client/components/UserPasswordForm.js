@@ -14,10 +14,12 @@ const toolbarTitleStyle = { color: 'black' };
 export default class UserDetailsForm extends React.Component {
 
     static propTypes = {
-        currentPassword: PropTypes.string.isRequired,
-        newPassword: PropTypes.string.isRequired,
-        passwordConfirmation: PropTypes.string.isRequired,
-        changePassword: PropTypes.bool.isRequired,
+        userDetails: PropTypes.shape({
+            changePassword: PropTypes.bool.isRequired,
+            currentPassword: PropTypes.string.isRequired,
+            newPassword: PropTypes.string.isRequired,
+            passwordConfirmation: PropTypes.string.isRequired
+        }).isRequired,
         errors: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         onChange: PropTypes.func.isRequired,
@@ -26,7 +28,8 @@ export default class UserDetailsForm extends React.Component {
     };
 
     render() {
-        const { currentPassword, newPassword, passwordConfirmation, changePassword, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
+        const { userDetails, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
+        const { changePassword, currentPassword, newPassword, passwordConfirmation } = userDetails;
         return (
             <div className="user-password-form__container">
                 <Paper className="user-password-form__paper">
@@ -43,36 +46,35 @@ export default class UserDetailsForm extends React.Component {
                             />
                         </ToolbarGroup>
                     </Toolbar>
-                    <div className="user-password-form__field-container" onSubmit={onSubmit}>
-                        {changePassword && <InputComponent
-                            inputRef={inputElement => this.firstInputElement = inputElement}
-                            error={errors.currentPassword}
-                            label="Bisheriges Passwort"
-                            onChange={onChange}
-                            value={currentPassword}
-                            field="currentPassword"
-                            type="password"
-                            disabled={loading}
-                        />}
-                        {changePassword && <InputComponent
-                            error={errors.newPassword}
-                            label="Neues Passwort"
-                            onChange={onChange}
-                            value={newPassword}
-                            field="newPassword"
-                            type="password"
-                            disabled={loading}
-                        />}
-                        {changePassword && <InputComponent
-                            error={errors.passwordConfirmation}
-                            label="Neues Passwort bestätigen"
-                            onChange={onChange}
-                            value={passwordConfirmation}
-                            field="passwordConfirmation"
-                            type="password"
-                            disabled={loading}
-                        />}
-                    </div>
+                    {changePassword &&
+                        <div className="user-password-form__field-container" onSubmit={onSubmit}>
+                            <InputComponent
+                                inputRef={inputElement => this.firstInputElement = inputElement}
+                                error={errors.currentPassword}
+                                label="Bisheriges Passwort"
+                                onChange={onChange}
+                                value={currentPassword}
+                                field="currentPassword"
+                                type="password"
+                                disabled={loading}/>
+                            <InputComponent
+                                error={errors.newPassword}
+                                label="Neues Passwort"
+                                onChange={onChange}
+                                value={newPassword}
+                                field="newPassword"
+                                type="password"
+                                disabled={loading}/>
+                            <InputComponent
+                                error={errors.passwordConfirmation}
+                                label="Neues Passwort bestätigen"
+                                onChange={onChange}
+                                value={passwordConfirmation}
+                                field="passwordConfirmation"
+                                type="password"
+                                disabled={loading}/>
+                        </div>
+                    }
                 </Paper>
             </div>
         );
