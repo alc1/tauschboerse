@@ -12,7 +12,7 @@ export const initialState = {
     isLoading: initialLoadingState
 };
 
-export default function globalMessage(theState = initialState, theAction) {
+export default function application(theState = initialState, theAction) {
     switch (theAction.type) {
         case GLOBAL_MESSAGE_RECEIVED:
             return {
