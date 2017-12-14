@@ -59,6 +59,20 @@
     animation-iteration-count: infinite;
 }
 
+.intro__text {
+    color: #555555;
+    text-align: center;
+    font-size: 1.5em;
+    margin: 10px;
+}
+
+.intro__account-buttons-bar {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    text-align: center;
+}
+
 @media (min-width: 1000px) {
     .intro__swap-image {
         animation-name: image-rotation-horizontal;

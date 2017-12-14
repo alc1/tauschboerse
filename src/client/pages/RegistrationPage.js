@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
+import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import RegistrationForm from '../components/RegistrationForm';
 
-import { setLoading } from '../actions/application';
+import { setLoading, setGlobalMessage, OK_MESSAGE } from '../actions/application';
 import { createUser } from '../actions/user';
 import { isLoading } from '../selectors/application';
 
@@ -23,6 +23,7 @@ class RegistrationPage extends React.Component {
     static propTypes = {
         createUser: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
+        setGlobalMessage: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
     };
@@ -49,6 +50,10 @@ class RegistrationPage extends React.Component {
             this.props.createUser(user)
                 .then(() => {
                     this.props.setLoading(false);
+                    this.props.setGlobalMessage({
+                        messageText: 'Dein Konto wurde erstellt.',
+                        messageType: OK_MESSAGE
+                    });
                     this.props.history.replace('/');
                 })
                 .catch((err) => {
@@ -79,7 +84,7 @@ class RegistrationPage extends React.Component {
                     onSubmit={this.onSubmit}>
                     <div className="registration-page__buttonbar">
                         <div className="registration-page__button">
-                            <RaisedButton type="submit" label="Registrieren" icon={<PersonAdd/>} disabled={loading} primary/>
+                            <RaisedButton type="submit" label="Registrieren" icon={<RegistrationIcon/>} disabled={loading} primary/>
                         </div>
                     </div>
                 </RegistrationForm>
@@ -94,4 +99,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { createUser, setLoading })(RegistrationPage);
+export default connect(mapStateToProps, { createUser, setLoading, setGlobalMessage })(RegistrationPage);

@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import MarketplaceIcon from 'material-ui/svg-icons/communication/business';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
-import NewAccountIcon from 'material-ui/svg-icons/social/person-add';
+import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
 import Swap from '../images/Swap';
 import Camera from '../images/Camera';
@@ -55,8 +54,12 @@ export default class Intro extends React.Component {
                     </div>
                 </div>
                 <RaisedButton style={buttonStyle} label="Marktplatz durchstöbern" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')} primary/>
-                <RaisedButton style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>
-                <FlatButton style={buttonStyle} label="Neues Konto erstellen" icon={<NewAccountIcon/>} onClick={this.goTo.bind(this, '/registration')} secondary/>
+                <span className="intro__text" style={{ fontFamily: fontFamily }}>Melde Dich an, wenn Du deine Artikel tauschen möchtest.</span>
+                <Paper className="intro__account-buttons-bar">
+                    <RaisedButton style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>
+                    <span>Hast Du noch kein Benutzerkonto?</span>
+                    <RaisedButton style={buttonStyle} label="Neues Konto erstellen" icon={<RegistrationIcon/>} onClick={this.goTo.bind(this, '/registration')} secondary/>
+                </Paper>
             </div>
         );
     }

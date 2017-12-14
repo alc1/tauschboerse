@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import LockOpen from 'material-ui/svg-icons/action/lock-open';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
+import LoginIcon from 'material-ui/svg-icons/action/lock-open';
+import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import LoginForm from '../components/LoginForm';
@@ -74,10 +74,10 @@ class LoginPage extends React.Component {
                     onSubmit={this.onSubmit}>
                     <div className="login-page__buttonbar">
                         <div className="login-page__button">
-                            <RaisedButton type="submit" label="Anmelden" icon={<LockOpen/>} disabled={loading} primary/>
+                            <RaisedButton type="submit" label="Anmelden" icon={<LoginIcon/>} disabled={loading} primary/>
                         </div>
                         <div className="login-page__button">
-                            <FlatButton label="Neues Konto erstellen" icon={<PersonAdd/>} disabled={loading} onClick={this.goToRegistration} secondary/>
+                            <FlatButton label="Neues Konto erstellen" icon={<RegistrationIcon/>} disabled={loading} onClick={this.goToRegistration} secondary/>
                         </div>
                     </div>
                 </LoginForm>

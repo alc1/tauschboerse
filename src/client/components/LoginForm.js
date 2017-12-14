@@ -27,25 +27,25 @@ export default class LoginForm extends React.Component {
         return (
             <div className="login-form__container">
                 <Paper className="login-form__paper">
+                    <h1 className="login-form__title">Melde Dich mit deiner E-Mail-Adresse an:</h1>
                     <form className="login-form__field-container" onSubmit={onSubmit}>
                         <InputComponent
                             inputRef={inputElement => this.firstInputElement = inputElement}
                             error={errors.email}
-                            label="E-Mail"
+                            label="E-Mail *"
                             onChange={onChange}
                             value={email}
                             field="email"
-                            disabled={loading}
-                        />
+                            disabled={loading}/>
                         <InputComponent
                             error={errors.currentPassword}
-                            label="Passwort"
+                            label="Passwort *"
                             onChange={onChange}
                             value={currentPassword}
                             field="currentPassword"
                             type="password"
-                            disabled={loading}
-                        />
+                            disabled={loading}/>
+                        <span className="login-form__hint-text">* Obligatorisches Feld</span>
                         {this.props.children}
                     </form>
                 </Paper>
