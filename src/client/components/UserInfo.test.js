@@ -1,6 +1,7 @@
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-15';
+import renderer from 'react-test-renderer';
 
 import UserInfo from './UserInfo';
 import User from '../../shared/businessobjects/User';
@@ -43,5 +44,15 @@ describe('UserInfo', () => {
 
         consoleSpy.mockReset();
         consoleSpy.mockRestore();
+    });
+    test('Test that the user info component renders correctly with a user (snapshot).', () => {
+        const user = createUser();
+        const tree = renderer.create(<UserInfo width={100} height={100} user={user} muiTheme={{ palette: { primary1Color: "#00BCD4" } }}/>).toJSON();
+        expect(tree).toMatchSnapshot();
+    });
+    test('Test that the user info component renders correctly without a user (snapshot).', () => {
+        const user = createUser();
+        const tree = renderer.create(<UserInfo width={100} height={100} muiTheme={{ palette: { primary1Color: "#00BCD4" } }}/>).toJSON();
+        expect(tree).toMatchSnapshot();
     });
 });
