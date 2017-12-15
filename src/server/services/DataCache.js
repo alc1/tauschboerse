@@ -89,7 +89,7 @@ class DataCache {
     }
 
     deleteCategory(categoryId) {
-        return this.categories.delete(categoryId);
+        return this.categories.deleteById(categoryId);
     }
 
     //--------------------

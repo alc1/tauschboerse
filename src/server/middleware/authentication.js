@@ -6,9 +6,6 @@
 
 const jwt = require('jsonwebtoken');
 
-const usersStore = require('../services/usersStorage');
-
-const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
 
 module.exports = (req, res, next) => {
@@ -24,13 +21,7 @@ module.exports = (req, res, next) => {
                 res.status(401).json({ globalError: 'Token zur Authentifizierung ungültig! Bitte erneut anmelden.' });
             }
             else {
-                let user;
-                if (useDataCache) {
-                    user = dataCache.getUserById(decoded._id);
-                } else {
-                    user = await usersStore.getUserById(decoded._id);
-                }
-
+                let user = dataCache.getUserById(decoded._id);
                 if (user) {
                     req.user = user;
                     next();

@@ -38,17 +38,11 @@ app.use('/api/categories', categoriesRoutes);
 app.use('/api/trades', tradesRoutes);
 app.use('/api/users', usersRoutes);
 
-const useDataCache = require('./useDataCache').useDataCache;
-
-if (useDataCache) {
-    initDataCache(false)
-        .then(() => {
-            console.log('Data Cache initialised');
-            startServer(3001);
-        })
-        .catch((err) => {
-            console.log('Error initialising cache: ' + err);
-        });
-} else {
-    startServer(3001);
-}
+initDataCache(false)
+    .then(() => {
+        console.log('Data Cache initialised');
+        startServer(3001);
+    })
+    .catch((err) => {
+        console.log('Error initialising cache: ' + err);
+    });

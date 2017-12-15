@@ -1,13 +1,11 @@
 'use strict';
 
 const userDetailsValidator = require('../../shared/validations/userDetails');
-const usersStore = require('../services/usersStorage');
 const encryptionUtils = require('../utils/encryptionUtils');
 
-const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
 
-async function validate(theUserId, theUser) {
+function validate(theUserId, theUser) {
     if (theUserId !== theUser._id) {
         return {
             status: 400,
@@ -24,13 +22,7 @@ async function validate(theUserId, theUser) {
         };
     }
 
-    let user;
-    if (useDataCache) {
-        user = dataCache.getUserById(theUserId);
-    }
-    else {
-        user = await usersStore.getUserById(theUserId);
-    }
+    let user = dataCache.getUserById(theUserId);
     const userCheckError = checkUser(user);
     if (userCheckError) {
         return {
@@ -40,13 +32,7 @@ async function validate(theUserId, theUser) {
         };
     }
 
-    let password;
-    if (useDataCache) {
-        password = dataCache.getPasswordByUserId(theUserId);
-    }
-    else {
-        password = user.password;
-    }
+    let password = dataCache.getPasswordByUserId(theUserId);
     const isAboutToChangePassword = !!theUser.currentPassword || !!theUser.newPassword || !!theUser.passwordConfirmation;
     const passwordCheckError = checkPassword(isAboutToChangePassword, theUser, password);
     if (passwordCheckError) {
@@ -58,7 +44,7 @@ async function validate(theUserId, theUser) {
     }
 
     const isAboutToChangeEmail = user.email !== theUser.email;
-    const emailCheckError = await checkEmail(isAboutToChangeEmail, theUser.email);
+    const emailCheckError = checkEmail(isAboutToChangeEmail, theUser.email);
     if (emailCheckError) {
         return {
             success: false,
@@ -107,15 +93,9 @@ function checkPassword(isAboutToChangePassword, theUser, thePassword) {
     return null;
 }
 
-async function checkEmail(isAboutToChangeEmail, theNewEmail) {
+function checkEmail(isAboutToChangeEmail, theNewEmail) {
     if (isAboutToChangeEmail) {
-        let existingUser;
-        if (useDataCache) {
-            existingUser = dataCache.getUserByEmail(theNewEmail);
-        }
-        else {
-            existingUser = await usersStore.getUserByEmail(theNewEmail);
-        }
+        let existingUser = dataCache.getUserByEmail(theNewEmail);
         if (existingUser) {
             return {
                 status: 400,

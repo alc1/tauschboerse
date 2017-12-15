@@ -1,12 +1,10 @@
 'use strict';
 
 const registrationValidator = require('../../shared/validations/registration');
-const usersStore = require('../services/usersStorage');
 
-const useDataCache = require('../useDataCache').useDataCache;
 const dataCache = require('../services/DataCache').dataCache;
 
-async function validate(theUser) {
+function validate(theUser) {
     const validationError = checkCredentials(theUser);
     if (validationError) {
         return {
@@ -16,13 +14,7 @@ async function validate(theUser) {
         };
     }
 
-    let existingUser;
-    if (useDataCache) {
-        existingUser = dataCache.getUserByEmail(theUser.email);
-    }
-    else {
-        existingUser = await usersStore.getUserByEmail(theUser.email);
-    }
+    let existingUser = dataCache.getUserByEmail(theUser.email);
     if (existingUser) {
         return {
             success: false,
