@@ -156,7 +156,12 @@ class ArticleCache {
         physicalRecord.description = theArticle.description;
         physicalRecord.created = new Date(theArticle.created);
         physicalRecord.status = theArticle.status;
-        physicalRecord.photos = theArticle.photos.map(photo => photo.fileName);
+        physicalRecord.photos = theArticle.photos.map(photo => {
+            return {
+                fileName: photo.fileName,
+                isMain: photo.isMain
+            };
+        });
         physicalRecord.categoryIds = theArticle.categories.map(category => category._id);
 
         return physicalRecord;
@@ -171,10 +176,11 @@ class ArticleCache {
         article.description = thePhysicalRecord.description;
         article.created = thePhysicalRecord.created;
         article.status = thePhysicalRecord.status;
-        article.photos = thePhysicalRecord.photos ? thePhysicalRecord.photos.map(photoFileName => {
+        article.photos = thePhysicalRecord.photos ? thePhysicalRecord.photos.map(photo => {
             return {
-                fileName: photoFileName,
-                url: `/images/article/${article._id}/${photoFileName}`
+                fileName: photo.fileName,
+                isMain: photo.isMain,
+                url: `/images/article/${article._id}/${photo.fileName}`
             };
         }) : [];
         article.categories = thePhysicalRecord.categoryIds ? thePhysicalRecord.categoryIds.map(id => this.categories.findById(id)) : [];

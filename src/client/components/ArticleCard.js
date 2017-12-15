@@ -29,7 +29,8 @@ export default class ArticleCard extends React.Component {
         const { title, description, status, owner, categories, photos, created } = article;
         const name = (owner) ? owner.name : '';
         const categoryNames = (categories) ? categories.map(category => category.name).join(', ') : '';
-        const photoSource = (photos && photos.length > 0) ? photos[0].url : null;
+        const mainPhoto = (photos && photos.length > 0) ? photos.find(photo => photo.isMain) : null;
+        const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
         return (
             <div className="article-card">
                 <Card>

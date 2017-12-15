@@ -8,6 +8,8 @@ import FlatButton from 'material-ui/FlatButton';
 
 import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo';
 import Delete from 'material-ui/svg-icons/action/delete';
+import FavoriteSelected from 'material-ui/svg-icons/action/favorite';
+import FavoriteUnselected from 'material-ui/svg-icons/action/favorite-border';
 
 import PhotoPlaceholder from './PhotoPlaceholder';
 
@@ -27,7 +29,8 @@ export default class PhotosComponent extends React.Component {
         photos: PropTypes.array.isRequired,
         loading: PropTypes.bool.isRequired,
         onPhotoLoaded: PropTypes.func,
-        onRemovePhoto: PropTypes.func
+        onRemovePhoto: PropTypes.func,
+        onSelectMainPhoto: PropTypes.func
     };
 
     static defaultProps = {
@@ -91,6 +94,7 @@ export default class PhotosComponent extends React.Component {
                     alt={photo.fileName}
                     onClick={this.onOpenPhoto.bind(this, index)}/>
                 {!this.props.isDisplayMode && this.props.onRemovePhoto && <FlatButton label="Entfernen" icon={<Delete/>} onClick={this.props.onRemovePhoto.bind(this, photo)} disabled={loading} secondary/>}
+                {!this.props.isDisplayMode && this.props.onSelectMainPhoto && <FlatButton label="Titelbild" icon={photo.isMain ? <FavoriteSelected/> : <FavoriteUnselected/>} onClick={this.props.onSelectMainPhoto.bind(this, photo)} disabled={loading} primary={photo.isMain}/>}
             </div>
         );
         const lightboxImages = photos.map((photo) => photo.isNew ? photo.fileContent : photo.url);

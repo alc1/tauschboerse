@@ -120,7 +120,8 @@ class ArticleEditorPage extends React.Component {
         const newPhoto = {
             fileName: uuid.v1() + theFile.name.substr(theFile.name.lastIndexOf('.')),
             fileContent: theEvent.target.result,
-            isNew: true
+            isNew: true,
+            isMain: this.state.photos.length === 0
         };
         this.setState({
             photos: [...this.state.photos, newPhoto],
@@ -131,6 +132,15 @@ class ArticleEditorPage extends React.Component {
     onRemovePhoto = (thePhotoToRemove) => {
         this.setState({
             photos: this.state.photos.filter((photo) => photo.fileName !== thePhotoToRemove.fileName),
+            modified: true
+        });
+    };
+
+    onSelectMainPhoto = (theMainPhoto) => {
+        this.setState({
+            photos: this.state.photos.map(photo => {
+                return { ...photo, isMain: photo.fileName === theMainPhoto.fileName };
+            }),
             modified: true
         });
     };
@@ -205,6 +215,7 @@ class ArticleEditorPage extends React.Component {
                             photos={photos}
                             onPhotoLoaded={this.onPhotoLoaded}
                             onRemovePhoto={this.onRemovePhoto}
+                            onSelectMainPhoto={this.onSelectMainPhoto}
                             loading={loading}/>
                         {isEditAllowed && <FloatingActionButton
                             style={FLOATING_ACTION_BUTTON_POSITION_STYLE}
