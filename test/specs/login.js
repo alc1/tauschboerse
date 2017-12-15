@@ -1,9 +1,9 @@
 /**
- * This end-to-end test goes through the login process. It fills the login forms and click the login button.
- * Expectation: The dashboard of the usr should appear says 'hello' to the user.
+ * This end-to-end test goes through the login process. It fills the login form and clicks the login button.
+ * Expectation: The dashboard of the user should appear and says 'hello' to the user.
  * This test requires a running application on 'http://localhost:3000' and the user 'max@mustermann.com'
  * with the password 'max' must exist.
- * According to the following links the browser should be closed manually:
+ * According to the following links the 'browser' object should NOT be closed manually:
  * http://webdriver.io/guide/testrunner/browserobject.html
  * https://github.com/webdriverio/webdriverio/issues/1206
  */
