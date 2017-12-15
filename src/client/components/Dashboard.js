@@ -56,7 +56,7 @@ export default class Dashboard extends React.Component {
         const { fontFamily } = this.props.muiTheme;
         const { accent1Color } = this.props.muiTheme.palette;
 
-        const countIncomingRequests = 3; // TODO: Count incoming requests: trades.map(trade => new Trade(trade)).map(trade => trade.currentOffer).reduce((sum, offer) => offer.state === OfferState.OFFER_STATE_REQUESTED ? sum + 1 : sum, 0);// and sender is not current user
+        const countIncomingRequests = 0; // TODO: Count incoming requests: trades.map(trade => new Trade(trade)).map(trade => trade.currentOffer).reduce((sum, offer) => offer.state === OfferState.OFFER_STATE_REQUESTED ? sum + 1 : sum, 0);// and sender is not current user
 
         const countArticlesFree = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_FREE ? sum + 1 : sum, 0);
         const countArticlesInNegotiation = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALING ? sum + 1 : sum, 0);

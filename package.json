@@ -50,7 +50,10 @@
   "devDependencies": {
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-15": "^1.0.5",
-    "react-test-renderer": "^15.5.0"
+    "react-test-renderer": "^15.5.0",
+    "wdio-jasmine-framework": "^0.3.2",
+    "wdio-selenium-standalone-service": "0.0.9",
+    "webdriverio": "^4.9.11"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -58,7 +61,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "start-server": "node ./src/server/index.js",
-    "reset-data": "node ./src/server/resetData.js"
+    "reset-data": "node ./src/server/resetData.js",
+    "test-login": "./node_modules/.bin/wdio ./test/config/wdio.conf.js"
   },
   "proxy": "http://localhost:3001"
 }

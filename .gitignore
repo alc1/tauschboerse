@@ -2,3 +2,5 @@
 .vscode
 data
 node_modules
+public/images
+test/wdioErrorShots
