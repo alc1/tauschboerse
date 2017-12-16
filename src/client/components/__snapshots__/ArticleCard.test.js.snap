@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArticleCard Test that the ArticleCard renders correctly (snapshot). 1`] = `
+<div
+  className="article-card"
+>
+  <Card
+    expandable={false}
+    expanded={null}
+    initiallyExpanded={false}
+  >
+    <div
+      className="article-card__header"
+    >
+      <AvatarTag
+        icon={<ActionAccountCircle />}
+        text=""
+      />
+      <AvatarTag
+        icon={<EditorModeEdit />}
+        text="16.12.2017 | 01:00"
+      />
+      <ArticleStatusComponent
+        status="FREE"
+      />
+    </div>
+    <CardMedia
+      overlay={
+        <CardTitle
+          subtitle=""
+          title="Fussballschuhe"
+        />
+      }
+    >
+      <div
+        className="article-card__image-container"
+      >
+        <PhotoPlaceholder
+          height={300}
+          width={300}
+        />
+      </div>
+    </CardMedia>
+    <CardText
+      className="article-card__text"
+    >
+      Fussballschuhe, kaum gebraucht...
+    </CardText>
+    <CardActions />
+  </Card>
+</div>
+`;

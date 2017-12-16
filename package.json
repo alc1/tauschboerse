@@ -50,6 +50,7 @@
   "devDependencies": {
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-15": "^1.0.5",
+    "enzyme-to-json": "^3.3.0",
     "react-test-renderer": "^15.5.0",
     "wdio-jasmine-framework": "^0.3.2",
     "wdio-selenium-standalone-service": "0.0.9",
