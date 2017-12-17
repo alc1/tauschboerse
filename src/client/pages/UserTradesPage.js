@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 
 import ApplicationBar from '../containers/ApplicationBar';
-import TradeGridList from '../components/TradeGridList';
+import TradeGridList from '../components/TradeGridList/TradeGridList';
 import TradeModel from '../model/TradeModel';
 
 import { loadUserTrades } from '../store/actions/user';

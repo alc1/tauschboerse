@@ -10,8 +10,8 @@ import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 
 import ApplicationBar from '../containers/ApplicationBar';
-import ArticleGridList from '../components/ArticleGridList';
-import ArticleSearchInputComponent from '../components/ArticleSearchInputComponent';
+import ArticleGridList from '../components/ArticleGridList/ArticleGridList';
+import ArticleSearchInput from '../components/ArticleSearchInput/ArticleSearchInput';
 
 import { findArticles, clearLastSearch, createTrade } from '../store/actions/marketplace';
 import { setLoading } from '../store/actions/application';
@@ -156,7 +156,7 @@ class MarketplacePage extends React.Component {
         return (
             <div>
                 <ApplicationBar/>
-                <ArticleSearchInputComponent text={this.state.searchText} onSearch={this.onSearch} />
+                <ArticleSearchInput text={this.state.searchText} onSearch={this.onSearch} />
                 <ArticleGridList articles={this.state.notUserArticles} articleActions={this.buildActionList(false)} loading={this.props.loading} />
                 {(this.state.userArticles.length > 0) && <ArticleGridList articles={this.state.userArticles} articleActions={this.buildActionList(true)} loading={this.props.loading} />}
             </div>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import LoadingIndicator from '../components/LoadingIndicator';
+import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator';
 
 import { isLoading } from '../store/selectors/application';
 

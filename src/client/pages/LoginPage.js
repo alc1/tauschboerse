@@ -8,7 +8,7 @@ import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../containers/ApplicationBar';
-import LoginForm from '../components/LoginForm';
+import LoginForm from '../components/LoginForm/LoginForm';
 
 import { setLoading } from '../store/actions/application';
 import { login } from '../store/actions/user';

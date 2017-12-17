@@ -8,8 +8,8 @@ import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import Placeholder from '../containers/Placeholder';
-import ArticleForm from '../components/ArticleForm';
-import PhotosComponent from '../components/PhotosComponent';
+import ArticleForm from '../components/ArticleForm/ArticleForm';
+import PhotosComponent from '../components/PhotosComponent/PhotosComponent';
 
 import { setLoading, setGlobalMessage, OK_MESSAGE } from '../store/actions/application';
 import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../store/actions/article';

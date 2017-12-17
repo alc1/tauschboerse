@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../containers/ApplicationBar';
-import RegistrationForm from '../components/RegistrationForm';
+import RegistrationForm from '../components/RegistrationForm/RegistrationForm';
 
 import { setLoading, setGlobalMessage, OK_MESSAGE } from '../store/actions/application';
 import { createUser } from '../store/actions/user';

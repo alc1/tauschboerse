@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import Navigation from '../components/Navigation';
+import Navigation from '../components/Navigation/Navigation';
 
 import { getUser } from '../store/selectors/user';
 import { logout } from '../store/actions/user';

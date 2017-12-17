@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import Dashboard from '../components/Dashboard';
+import Dashboard from '../components/Dashboard/Dashboard';
 
 import { setLoading } from '../store/actions/application';
 import { logout, loadUserArticles, loadUserTrades } from '../store/actions/user';

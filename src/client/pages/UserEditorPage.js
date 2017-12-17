@@ -6,8 +6,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../containers/ApplicationBar';
-import UserDetailsForm from '../components/UserDetailsForm';
-import UserPasswordForm from '../components/UserPasswordForm';
+import UserDetailsForm from '../components/UserDetailsForm/UserDetailsForm';
+import UserPasswordForm from '../components/UserPasswordForm/UserPasswordForm';
 
 import { setGlobalMessage, setLoading, OK_MESSAGE } from '../store/actions/application';
 import { updateUser } from '../store/actions/user';

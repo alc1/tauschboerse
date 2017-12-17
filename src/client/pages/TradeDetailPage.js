@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ApplicationBar from '../containers/ApplicationBar';
-import TradeDetail from '../components/TradeDetail';
+import TradeDetail from '../components/TradeDetail/TradeDetail';
 import TradeModel from '../model/TradeModel';
 import TradeAction from '../model/TradeAction';
 

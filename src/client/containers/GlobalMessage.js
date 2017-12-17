@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import GlobalMessage from '../components/GlobalMessage';
+import GlobalMessage from '../components/GlobalMessage/GlobalMessage';
 
 import { removeGlobalMessage, goToLogin } from '../store/actions/application';
 import { getGlobalMessage } from '../store/selectors/application';
