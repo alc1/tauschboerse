@@ -22,6 +22,8 @@ describe('Login test (end-to-end)', () => {
         expect(browser.getValue('input[type="password"][name="currentPassword"]')).toBe('max');
 
         browser.click('button[type="submit"]');
+
+        browser.waitForExist('.dashboard__text', 5000);
         expect(browser.getText('.dashboard__text')).toBe('Hallo Max Mustermann');
     });
 });
