@@ -21,8 +21,6 @@ import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 
 import articleDetailsValidator from '../../shared/validations/articleDetails';
 
-import Article from '../../shared/businessobjects/Article';
-
 import './ArticleEditorPage.css';
 
 class ArticleEditorPage extends React.Component {
@@ -151,7 +149,7 @@ class ArticleEditorPage extends React.Component {
         const { user } = this.props;
         const { title, description, categories, photos, created } = this.state;
         const { articleId } = this.props.match.params;
-        let articleToSave = new Article({ title, description, categories, photos });
+        let articleToSave = { title, description, categories, photos };
         const validation = articleDetailsValidator.validate(articleToSave);
         if (validation.isValid) {
             let articleSaveRequest;

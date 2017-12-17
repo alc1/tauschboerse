@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import TradeAction from '../models/TradeAction';
+import TradeAction from '../model/TradeAction';
 import ArticleList from './ArticleList';
 
 import './TradeDetail.css';

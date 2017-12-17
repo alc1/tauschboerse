@@ -14,8 +14,6 @@ import { isLoading } from '../store/selectors/application';
 
 import registrationValidator from '../../shared/validations/registration';
 
-import User from '../../shared/businessobjects/User';
-
 import './RegistrationPage.css';
 
 class RegistrationPage extends React.Component {
@@ -44,7 +42,7 @@ class RegistrationPage extends React.Component {
         theEvent.preventDefault();
         this.props.setLoading(true);
         const { email, name, newPassword, passwordConfirmation } = this.state;
-        const user = new User({ email, name, newPassword, passwordConfirmation });
+        const user = { email, name, newPassword, passwordConfirmation };
         const validation = registrationValidator.validate(user);
         if (validation.isValid) {
             this.props.createUser(user)

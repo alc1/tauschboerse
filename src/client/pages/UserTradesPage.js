@@ -6,7 +6,7 @@ import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import TradeGridList from '../components/TradeGridList';
-import TradeModel from '../models/TradeModel';
+import TradeModel from '../model/TradeModel';
 
 import { loadUserTrades } from '../store/actions/user';
 import { setLoading } from '../store/actions/application';

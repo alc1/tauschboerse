@@ -1,6 +1,6 @@
-const utils = require('../utils/businessUtils');
+const utils = require('../utils/modelUtils');
 
-const ArticleStatus = require('./ArticleStatus');
+const ArticleStatus = require('../../shared/constants/ArticleStatus');
 
 class Article {
     constructor(obj) {

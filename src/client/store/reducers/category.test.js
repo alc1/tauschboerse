@@ -3,7 +3,6 @@ import {
     CATEGORIES_FETCHED
 } from '../actions/category';
 import articleReducer, { initialState } from './category';
-import Category from '../../../shared/businessobjects/Category';
 
 const createDummyAction = () => {
     return {
@@ -13,16 +12,16 @@ const createDummyAction = () => {
 };
 const createCategoriesGroup1 = () => {
     return [
-        new Category({ _id: '1', name: 'Football' }),
-        new Category({ _id: '2', name: 'Sport' }),
-        new Category({ _id: '3', name: 'Furnitures' })
+        { _id: '1', name: 'Football' },
+        { _id: '2', name: 'Sport' },
+        { _id: '3', name: 'Furnitures' }
     ];
 };
 const createCategoriesGroup2 = () => {
     return [
-        new Category({ _id: '1', name: 'Football' }),
-        new Category({ _id: '4', name: 'Clothes' }),
-        new Category({ _id: '5', name: 'Shoes' })
+        { _id: '1', name: 'Football' },
+        { _id: '4', name: 'Clothes' },
+        { _id: '5', name: 'Shoes' }
     ];
 };
 

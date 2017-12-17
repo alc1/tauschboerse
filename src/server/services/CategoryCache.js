@@ -1,7 +1,7 @@
 'use strict';
 
-const Category = require('../../shared/businessobjects/Category');
-const utils = require('../../shared/utils/businessUtils');
+const Category = require('../model/Category');
+const utils = require('../utils/modelUtils');
 
 class CategoryCache {
     constructor(db) {

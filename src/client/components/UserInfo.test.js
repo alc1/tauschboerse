@@ -4,16 +4,15 @@ import Adapter from 'enzyme-adapter-react-15';
 import renderer from 'react-test-renderer';
 
 import UserInfo from './UserInfo';
-import User from '../../shared/businessobjects/User';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 const createUser = () => {
-    return new User({
+    return {
         _id: '1',
         name: 'Max Mustermann',
         email: 'max@mustermann.com'
-    });
+    };
 };
 
 describe('UserInfo', () => {

@@ -1,10 +1,10 @@
 'use strict';
 
 const dataCache = require('../services/DataCache').dataCache;
-const Offer = require('../../shared/businessobjects/Offer');
-const OfferState = require('../../shared/businessobjects/OfferState');
-const Trade = require('../../shared/businessobjects/Trade');
-const TradeState = require('../../shared/businessobjects/TradeState');
+const Offer = require('../model/Offer');
+const OfferState = require('../../shared/constants/OfferState');
+const Trade = require('../model/Trade');
+const TradeState = require('../../shared/constants/TradeState');
 
 function addTrade(req, res) {
     const { articleIds } = req.body;

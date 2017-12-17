@@ -13,9 +13,9 @@ import { cyan500, blue500, orange900, deepOrangeA700 } from 'material-ui/styles/
 import Placeholder from '../containers/Placeholder';
 import Info from '../images/Info';
 
-import ArticleStatus from '../../shared/businessobjects/ArticleStatus';
-import TradeState from '../../shared/businessobjects/TradeState';
-import TradesModel from '../models/TradesModel';
+import ArticleStatus from '../../shared/constants/ArticleStatus';
+import TradeState from '../../shared/constants/TradeState';
+import TradesModel from '../model/TradesModel';
 
 import './Dashboard.css';
 

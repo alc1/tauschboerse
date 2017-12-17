@@ -1,7 +1,7 @@
 'use strict';
 
-const Trade = require('../../shared/businessobjects/Trade');
-const Offer = require('../../shared/businessobjects/Offer');
+const Trade = require('../model/Trade');
+const Offer = require('../model/Offer');
 
 class TradeCache {
     constructor(db, users, articles) {

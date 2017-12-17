@@ -25,7 +25,7 @@ import { getUserArticles, getUser } from '../store/selectors/user';
 import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 import './UserArticlesPage.css';
 
-const ArticleStatus = require('../../shared/businessobjects/ArticleStatus');
+const ArticleStatus = require('../../shared/constants/ArticleStatus');
 const statusRadioButtonStyle = { maxWidth: '20vw' };
 
 class UserArticlesPage extends React.Component {

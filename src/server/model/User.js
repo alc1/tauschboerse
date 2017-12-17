@@ -1,4 +1,4 @@
-const utils = require('../utils/businessUtils');
+const utils = require('../utils/modelUtils');
 
 class User {
     constructor(obj) {

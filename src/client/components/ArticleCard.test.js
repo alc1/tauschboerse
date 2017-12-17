@@ -6,19 +6,20 @@ import toJson from 'enzyme-to-json';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import ArticleCard from './ArticleCard';
-import Article from '../../shared/businessobjects/Article';
+import ArticleStatus from '../../shared/constants/ArticleStatus';
 
 const muiTheme = getMuiTheme();
 
 Enzyme.configure({ adapter: new Adapter() });
 
 const createArticle = () => {
-    return new Article({
+    return {
         _id: '1',
         title: 'Fussballschuhe',
         description: 'Fussballschuhe, kaum gebraucht...',
-        created: new Date('2017-12-16')
-    });
+        created: new Date('2017-12-16'),
+        status: ArticleStatus.STATUS_FREE
+    };
 };
 
 describe('ArticleCard', () => {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { handleError } from './common';
-import TradeState from '../../../shared/businessobjects/TradeState'
+import TradeState from '../../../shared/constants/TradeState'
 
 /*
  * Action Type Constants

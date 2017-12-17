@@ -11,7 +11,6 @@ import {
     REMOVE_SELECTED_ARTICLE
 } from '../actions/article';
 import articleReducer, { initialState } from './article';
-import Article from '../../../shared/businessobjects/Article';
 
 const createDummyAction = () => {
     return {
@@ -20,18 +19,18 @@ const createDummyAction = () => {
     };
 };
 const createFootball = () => {
-    return new Article({
+    return {
         _id: '1',
         title: 'Fussball',
         description: 'Ein Ball zum Fussballspielen'
-    });
+    };
 };
 const createTable = () => {
-    return new Article({
+    return {
         _id: '2',
         title: 'Tisch',
         description: 'Ein exklusiver Designer-Tisch'
-    });
+    };
 };
 
 describe('Article Reducer', () => {

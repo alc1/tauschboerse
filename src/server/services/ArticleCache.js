@@ -2,7 +2,7 @@
 
 const uuid = require('uuid');
 
-const Article = require('../../shared/businessobjects/Article');
+const Article = require('../model/Article');
 
 class ArticleCache {
     constructor(db, users, categories) {

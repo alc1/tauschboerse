@@ -1,5 +1,5 @@
-const TradeState = require('../../shared/businessobjects/TradeState');
-const OfferState = require('../../shared/businessobjects/OfferState');
+const TradeState = require('../../shared/constants/TradeState');
+const OfferState = require('../../shared/constants/OfferState');
 
 function resetData(dataCache) {
     const articles = [

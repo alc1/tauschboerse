@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('../../shared/businessobjects/User');
+const User = require('../model/User');
 const encryptionUtils = require('../utils/encryptionUtils');
 
 class UserCache {

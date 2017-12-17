@@ -1,6 +1,6 @@
-const utils = require('../utils/businessUtils');
+const utils = require('../utils/modelUtils');
 
-const TradeState = require('./TradeState');
+const TradeState = require('../../shared/constants/TradeState');
 const Offer = require('./Offer');
 
 class Trade {

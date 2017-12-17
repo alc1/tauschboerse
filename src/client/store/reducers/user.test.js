@@ -15,8 +15,6 @@ import {
     articleDeleted
 } from '../actions/article';
 import userReducer, { initialState } from './user';
-import Article from '../../../shared/businessobjects/Article';
-import User from '../../../shared/businessobjects/User';
 
 const createDummyAction = () => {
     return {
@@ -25,25 +23,25 @@ const createDummyAction = () => {
     };
 };
 const createFootball = () => {
-    return new Article({
+    return {
         _id: '1',
         title: 'Fussball',
         description: 'Ein Ball zum Fussballspielen'
-    });
+    };
 };
 const createTable = () => {
-    return new Article({
+    return {
         _id: '2',
         title: 'Tisch',
         description: 'Ein exklusiver Designer-Tisch'
-    });
+    };
 };
 const createUser = () => {
-    return new User({
+    return {
         _id: '1',
         name: 'Max Mustermann',
         email: 'max@mustermann.com'
-    });
+    };
 };
 
 describe('User Reducer', () => {

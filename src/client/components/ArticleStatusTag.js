@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Chip from 'material-ui/Chip';
 import { black, cyan500, blue500, orange900, deepOrangeA700, white } from 'material-ui/styles/colors';
 
-import ArticleStatus from '../../shared/businessobjects/ArticleStatus';
+import ArticleStatus from '../../shared/constants/ArticleStatus';
 
 import './ArticleStatusTag.css';
 

@@ -18,8 +18,6 @@ import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 
 import userDetailsValidator from '../../shared/validations/userDetails';
 
-import User from '../../shared/businessobjects/User';
-
 import './UserEditorPage.css';
 
 class UserDetailsPage extends React.Component {
@@ -77,7 +75,7 @@ class UserDetailsPage extends React.Component {
         this.props.setLoading(true);
         const { email, name, currentPassword, newPassword, passwordConfirmation } = this.state;
         const { _id, registration } = this.props.user;
-        const user = new User({ email, name, registration, currentPassword, newPassword, passwordConfirmation });
+        const user = { email, name, registration, currentPassword, newPassword, passwordConfirmation };
         user._id = _id;
         const validation = userDetailsValidator.validate(user);
         if (validation.isValid) {

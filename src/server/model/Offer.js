@@ -1,5 +1,5 @@
-const utils = require('../utils/businessUtils');
-const OfferState = require('./OfferState');
+const utils = require('../utils/modelUtils');
+const OfferState = require('../../shared/constants/OfferState');
 
 class Offer {
     constructor(obj) {

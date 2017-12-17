@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import TradeDetail from '../components/TradeDetail';
-import TradeModel from '../models/TradeModel';
-import TradeAction from '../models/TradeAction';
+import TradeModel from '../model/TradeModel';
+import TradeAction from '../model/TradeAction';
 
 import { acceptTrade, declineTrade, loadTrade, submitTrade } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';

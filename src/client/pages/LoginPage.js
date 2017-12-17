@@ -14,8 +14,6 @@ import { setLoading } from '../store/actions/application';
 import { login } from '../store/actions/user';
 import { isLoading } from '../store/selectors/application';
 
-import User from '../../shared/businessobjects/User';
-
 import './LoginPage.css';
 
 class LoginPage extends React.Component {
@@ -46,7 +44,7 @@ class LoginPage extends React.Component {
         this.props.setLoading(true);
         this.setState({ errors: {} });
         const { email, currentPassword } = this.state;
-        const user = new User({ email, currentPassword });
+        const user = { email, currentPassword };
         this.props.login(user)
             .then(() => {
                 this.props.setLoading(false);
