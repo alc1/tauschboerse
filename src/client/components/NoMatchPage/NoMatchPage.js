@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ApplicationBar from '../containers/ApplicationBar';
+import ApplicationBar from '../../containers/ApplicationBar';
 
 const NoMatchPage = ({ location }) => (
     <div>

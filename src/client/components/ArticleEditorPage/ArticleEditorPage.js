@@ -1,27 +1,22 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
-import ApplicationBar from '../containers/ApplicationBar';
-import Placeholder from '../containers/Placeholder';
-import ArticleForm from '../components/ArticleForm/ArticleForm';
-import PhotosComponent from '../components/PhotosComponent/PhotosComponent';
-import PageButton from '../components/PageButton/PageButton';
+import ApplicationBar from '../../containers/ApplicationBar';
+import Placeholder from '../../containers/Placeholder';
+import ArticleForm from '../ArticleForm/ArticleForm';
+import PhotosComponent from '../PhotosComponent/PhotosComponent';
+import PageButton from '../PageButton/PageButton';
 
-import { setLoading, setGlobalMessage, OK_MESSAGE } from '../store/actions/application';
-import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../store/actions/article';
-import { isLoading } from '../store/selectors/application';
-import { getArticle } from '../store/selectors/article';
-import { getUser } from '../store/selectors/user';
+import { OK_MESSAGE } from '../../store/actions/application';
 
-import articleDetailsValidator from '../../shared/validations/articleDetails';
+import articleDetailsValidator from '../../../shared/validations/articleDetails';
 
 import './ArticleEditorPage.css';
 
-class ArticleEditorPage extends React.Component {
+export default class ArticleEditorPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -30,7 +25,7 @@ class ArticleEditorPage extends React.Component {
 
     static propTypes = {
         article: PropTypes.object,
-        user: PropTypes.object.isRequired,
+        user: PropTypes.object,
         loading: PropTypes.bool.isRequired,
         loadArticle: PropTypes.func.isRequired,
         createArticle: PropTypes.func.isRequired,
@@ -183,13 +178,22 @@ class ArticleEditorPage extends React.Component {
         }
     };
 
+    isEditAllowed = (theOwner, theUser) => {
+        // Editing of an existing article is allowed if the current user is the owner
+        if (theOwner && theOwner._id && theUser && theOwner._id === theUser._id) {
+            return true;
+        }
+        // Or editing is allowed if there is no owner yet (new article) and a user is logged in
+        else if (!theOwner && theUser) {
+            return true;
+        }
+        return false;
+    };
+
     render() {
         const { user, loading } = this.props;
         const { title, description, categories, photos, status, created, owner, errors, modified } = this.state;
-        let isEditAllowed = true;
-        if (owner && owner._id && owner._id !== user._id) {
-            isEditAllowed = false;
-        }
+        let isEditAllowed = this.isEditAllowed(owner, user);
         return (
             <div>
                 <ApplicationBar/>
@@ -224,13 +228,3 @@ class ArticleEditorPage extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        article: getArticle(theState),
-        user: getUser(theState),
-        loading: isLoading(theState)
-    };
-}
-
-export default connect(mapStateToProps, { loadArticle, createArticle, updateArticle, removeSelectedArticle, setLoading, setGlobalMessage })(ArticleEditorPage);

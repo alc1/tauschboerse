@@ -1,19 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 
-import ApplicationBar from '../containers/ApplicationBar';
-import TradeGridList from '../components/TradeGridList/TradeGridList';
-import TradeModel from '../model/TradeModel';
+import ApplicationBar from '../../containers/ApplicationBar';
+import TradeGridList from '../TradeGridList/TradeGridList';
+import TradeModel from '../../model/TradeModel';
 
-import { loadUserTrades } from '../store/actions/user';
-import { setLoading } from '../store/actions/application';
-import { getUser, getUserTrades } from '../store/selectors/user';
-import { isLoading } from '../store/selectors/application';
-
-class UserTradesPage extends React.Component {
+export default class UserTradesPage extends React.Component {
 
     static propTypes = {
         trades: PropTypes.array.isRequired,
@@ -76,13 +70,3 @@ class UserTradesPage extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        trades: getUserTrades(theState),
-        user: getUser(theState),
-        loading: isLoading(theState)
-    };
-}
-
-export default connect(mapStateToProps, { loadUserTrades, setLoading })(UserTradesPage);

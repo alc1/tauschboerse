@@ -1,14 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import ApplicationBar from '../containers/ApplicationBar';
-import Dashboard from '../containers/Dashboard';
-import Intro from '../containers/Intro';
+import ApplicationBar from '../../containers/ApplicationBar';
+import Dashboard from '../../containers/Dashboard';
+import Intro from '../../containers/Intro';
 
-import { getUser } from '../store/selectors/user';
-
-class HomePage extends React.Component {
+export default class HomePage extends React.Component {
 
     static propTypes = {
         user: PropTypes.object
@@ -28,11 +25,3 @@ class HomePage extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        user: getUser(theState)
-    };
-}
-
-export default connect(mapStateToProps)(HomePage);

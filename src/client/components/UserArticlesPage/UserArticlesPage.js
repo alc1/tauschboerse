@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 
@@ -11,23 +10,17 @@ import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import PlusIcon from 'material-ui/svg-icons/content/add';
 
-import ApplicationBar from '../containers/ApplicationBar';
-import ArticleGridList from '../components/ArticleGridList/ArticleGridList';
-import DeleteArticleDialog from '../components/DeleteArticleDialog/DeleteArticleDialog';
-import PageButton from '../components/PageButton/PageButton';
-
-import { setLoading } from '../store/actions/application';
-import { loadUserArticles } from '../store/actions/user';
-import { deleteArticle } from '../store/actions/article';
-import { isLoading } from '../store/selectors/application';
-import { getUserArticles, getUser } from '../store/selectors/user';
+import ApplicationBar from '../../containers/ApplicationBar';
+import ArticleGridList from '../ArticleGridList/ArticleGridList';
+import DeleteArticleDialog from '../DeleteArticleDialog/DeleteArticleDialog';
+import PageButton from '../PageButton/PageButton';
 
 import './UserArticlesPage.css';
 
-const ArticleStatus = require('../../shared/constants/ArticleStatus');
+const ArticleStatus = require('../../../shared/constants/ArticleStatus');
 const statusRadioButtonStyle = { maxWidth: '20vw' };
 
-class UserArticlesPage extends React.Component {
+export default class UserArticlesPage extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
@@ -200,13 +193,3 @@ class UserArticlesPage extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        articles: getUserArticles(theState),
-        user: getUser(theState),
-        loading: isLoading(theState)
-    };
-}
-
-export default connect(mapStateToProps, { loadUserArticles, deleteArticle, setLoading })(UserArticlesPage);
