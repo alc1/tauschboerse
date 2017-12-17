@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import createBrowserHistory from 'history/createBrowserHistory';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -16,13 +17,14 @@ import RegistrationPage from './pages/RegistrationPage';
 import LoginPage from './pages/LoginPage';
 import NoMatchPage from './pages/NoMatchPage';
 
-import PrivateRoute from './routes/PrivateRoute';
-import PublicRoute from './routes/PublicRoute';
+import PrivateRoute from './containers/PrivateRoute';
+import PublicRoute from './containers/PublicRoute';
 
 import store from '../client/store/store';
-import history from '../client/history/history';
 
 import './App.css';
+
+const history = createBrowserHistory();
 
 export default class App extends React.Component {
 

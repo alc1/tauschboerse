@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Photo from '../../images/Photo';
+import Photo from '../_svg/Photo';
 
 export default class PhotoPlaceholder extends React.Component {
 

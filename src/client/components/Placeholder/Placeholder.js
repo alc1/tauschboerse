@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Loading from '../../images/Loading';
-import Info from '../../images/Info';
+import Loading from '../_svg/Loading';
+import Info from '../_svg/Info';
 
 import './Placeholder.css';
 

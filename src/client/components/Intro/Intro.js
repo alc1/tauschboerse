@@ -7,13 +7,13 @@ import MarketplaceIcon from 'material-ui/svg-icons/communication/business';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
-import Swap from '../../images/Swap';
-import Camera from '../../images/Camera';
-import Flower from '../../images/Flower';
-import Bike from '../../images/Bike';
-import Toys from '../../images/Toys';
-import Watch from '../../images/Watch';
-import Tablet from '../../images/Tablet';
+import Swap from '../_svg/Swap';
+import Camera from '../_svg/Camera';
+import Flower from '../_svg/Flower';
+import Bike from '../_svg/Bike';
+import Toys from '../_svg/Toys';
+import Watch from '../_svg/Watch';
+import Tablet from '../_svg/Tablet';
 
 import './Intro.css';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Account from '../../images/Account';
-import Info from '../../images/Info';
+import Account from '../_svg/Account';
+import Info from '../_svg/Info';
 
 import './UserInfo.css';
 

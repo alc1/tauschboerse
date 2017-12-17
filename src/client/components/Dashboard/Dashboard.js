@@ -11,7 +11,7 @@ import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 import { cyan500, blue500, orange900, deepOrangeA700 } from 'material-ui/styles/colors';
 
 import Placeholder from '../../containers/Placeholder';
-import Info from '../../images/Info';
+import Info from '../_svg/Info';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
 import TradeState from '../../../shared/constants/TradeState';
