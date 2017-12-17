@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Snackbar from 'material-ui/Snackbar';
 import { orange500 } from 'material-ui/styles/colors';
 
-import { GO_TO_LOGIN, OK_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE } from '../actions/application';
+import { GO_TO_LOGIN, OK_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE } from '../store/actions/application';
 
 export default class GlobalMessage extends React.Component {
 

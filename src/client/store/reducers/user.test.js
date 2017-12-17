@@ -9,14 +9,14 @@ import {
     userCreated,
     userUpdated,
     userArticlesFetched
-} from './../actions/user';
+} from '../actions/user';
 import {
     ARTICLE_DELETED,
     articleDeleted
-} from './../actions/article';
+} from '../actions/article';
 import userReducer, { initialState } from './user';
-import Article from '../../shared/businessobjects/Article';
-import User from '../../shared/businessobjects/User';
+import Article from '../../../shared/businessobjects/Article';
+import User from '../../../shared/businessobjects/User';
 
 const createDummyAction = () => {
     return {

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import LoadingIndicator from '../components/LoadingIndicator';
 
-import { isLoading } from '../selectors/application';
+import { isLoading } from '../store/selectors/application';
 
 function mapStateToProps(theState) {
     return {

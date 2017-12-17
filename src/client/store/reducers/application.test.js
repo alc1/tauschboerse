@@ -9,7 +9,7 @@ import {
     WARNING_MESSAGE,
     OK_MESSAGE,
     GO_TO_LOGIN
-} from './../actions/application';
+} from '../actions/application';
 import applicationReducer, { initialState } from './application';
 
 const createDummyAction = () => {

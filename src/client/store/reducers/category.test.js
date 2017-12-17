@@ -1,9 +1,9 @@
 import {
     categoriesFetched,
     CATEGORIES_FETCHED
-} from './../actions/category';
+} from '../actions/category';
 import articleReducer, { initialState } from './category';
-import Category from '../../shared/businessobjects/Category';
+import Category from '../../../shared/businessobjects/Category';
 
 const createDummyAction = () => {
     return {

@@ -2,8 +2,8 @@ import { connect } from 'react-redux';
 
 import CategoryInputField from '../components/CategoryInputField';
 
-import { loadCategories } from '../actions/category';
-import { getCategories } from '../selectors/category';
+import { loadCategories } from '../store/actions/category';
+import { getCategories } from '../store/selectors/category';
 
 function mapStateToProps(theState) {
     return {

@@ -5,8 +5,8 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import GlobalMessage from '../components/GlobalMessage';
 
-import { removeGlobalMessage, goToLogin } from '../actions/application';
-import { getGlobalMessage } from '../selectors/application';
+import { removeGlobalMessage, goToLogin } from '../store/actions/application';
+import { getGlobalMessage } from '../store/selectors/application';
 
 function mapStateToProps(theState) {
     return {

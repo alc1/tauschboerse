@@ -16,11 +16,11 @@ import ApplicationBar from '../containers/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList';
 import DeleteArticleDialog from '../components/DeleteArticleDialog';
 
-import { setLoading } from '../actions/application';
-import { loadUserArticles } from '../actions/user';
-import { deleteArticle } from '../actions/article';
-import { isLoading } from '../selectors/application';
-import { getUserArticles, getUser } from '../selectors/user';
+import { setLoading } from '../store/actions/application';
+import { loadUserArticles } from '../store/actions/user';
+import { deleteArticle } from '../store/actions/article';
+import { isLoading } from '../store/selectors/application';
+import { getUserArticles, getUser } from '../store/selectors/user';
 
 import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 import './UserArticlesPage.css';

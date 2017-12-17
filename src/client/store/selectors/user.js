@@ -1,4 +1,4 @@
-import { USER_SLICE_NAME } from '../store/slices';
+import { USER_SLICE_NAME } from '../slices';
 
 export const getUserArticles = (theState) => {
     return theState[USER_SLICE_NAME] ? (theState[USER_SLICE_NAME].articles && theState[USER_SLICE_NAME].articles.sort((article1, article2) => article1.title.localeCompare(article2.title))) || [] : [];

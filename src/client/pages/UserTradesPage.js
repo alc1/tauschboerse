@@ -8,10 +8,10 @@ import ApplicationBar from '../containers/ApplicationBar';
 import TradeGridList from '../components/TradeGridList';
 import TradeModel from '../models/TradeModel';
 
-import { loadUserTrades } from '../actions/user';
-import { setLoading } from '../actions/application';
-import { getUser, getUserTrades } from '../selectors/user';
-import { isLoading } from '../selectors/application';
+import { loadUserTrades } from '../store/actions/user';
+import { setLoading } from '../store/actions/application';
+import { getUser, getUserTrades } from '../store/selectors/user';
+import { isLoading } from '../store/selectors/application';
 
 class UserTradesPage extends React.Component {
 

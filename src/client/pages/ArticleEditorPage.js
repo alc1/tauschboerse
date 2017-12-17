@@ -11,11 +11,11 @@ import Placeholder from '../containers/Placeholder';
 import ArticleForm from '../components/ArticleForm';
 import PhotosComponent from '../components/PhotosComponent';
 
-import { setLoading, setGlobalMessage, OK_MESSAGE } from '../actions/application';
-import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../actions/article';
-import { isLoading } from '../selectors/application';
-import { getArticle } from '../selectors/article';
-import { getUser } from '../selectors/user';
+import { setLoading, setGlobalMessage, OK_MESSAGE } from '../store/actions/application';
+import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../store/actions/article';
+import { isLoading } from '../store/selectors/application';
+import { getArticle } from '../store/selectors/article';
+import { getUser } from '../store/selectors/user';
 
 import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 

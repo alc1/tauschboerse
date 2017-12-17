@@ -9,10 +9,10 @@ import ApplicationBar from '../containers/ApplicationBar';
 import UserDetailsForm from '../components/UserDetailsForm';
 import UserPasswordForm from '../components/UserPasswordForm';
 
-import { setGlobalMessage, setLoading, OK_MESSAGE } from '../actions/application';
-import { updateUser } from '../actions/user';
-import { isLoading } from '../selectors/application';
-import { getUser } from '../selectors/user';
+import { setGlobalMessage, setLoading, OK_MESSAGE } from '../store/actions/application';
+import { updateUser } from '../store/actions/user';
+import { isLoading } from '../store/selectors/application';
+import { getUser } from '../store/selectors/user';
 
 import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 

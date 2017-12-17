@@ -6,7 +6,7 @@ import ApplicationBar from '../containers/ApplicationBar';
 import Dashboard from '../containers/Dashboard';
 import Intro from '../containers/Intro';
 
-import { getUser } from '../selectors/user';
+import { getUser } from '../store/selectors/user';
 
 class HomePage extends React.Component {
 

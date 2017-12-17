@@ -1,6 +1,6 @@
 import {
     CATEGORIES_FETCHED
-} from './../actions/category';
+} from '../actions/category';
 
 export const initialState = [];
 

@@ -5,10 +5,10 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import Dashboard from '../components/Dashboard';
 
-import { setLoading } from '../actions/application';
-import { logout, loadUserArticles, loadUserTrades } from '../actions/user';
-import { isLoading } from '../selectors/application';
-import { getUserArticles, getUserTrades } from '../selectors/user';
+import { setLoading } from '../store/actions/application';
+import { logout, loadUserArticles, loadUserTrades } from '../store/actions/user';
+import { isLoading } from '../store/selectors/application';
+import { getUserArticles, getUserTrades } from '../store/selectors/user';
 
 function mapStateToProps(theState) {
     return {

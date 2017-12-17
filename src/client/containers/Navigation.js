@@ -3,8 +3,8 @@ import { withRouter } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
 
-import { getUser } from '../selectors/user';
-import { logout } from '../actions/user';
+import { getUser } from '../store/selectors/user';
+import { logout } from '../store/actions/user';
 
 function mapStateToProps(theState) {
     return {

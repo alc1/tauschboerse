@@ -5,11 +5,11 @@ import {
     USER_UPDATED,
     USER_ARTICLES_FETCHED,
     USER_TRADES_FETCHED
-} from './../actions/user';
+} from '../actions/user';
 
 import {
     ARTICLE_DELETED
-} from './../actions/article';
+} from '../actions/article';
 
 export const initialState = null;
 

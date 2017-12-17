@@ -14,7 +14,7 @@ import {
     MARKETPLACE_SLICE_NAME,
     TRADE_SLICE_NAME,
     USER_SLICE_NAME
-} from '../store/slices';
+} from '../slices';
 
 export default combineReducers({
     [APPLICATION_SLICE_NAME]: applicationReducer,

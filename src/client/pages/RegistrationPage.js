@@ -8,9 +8,9 @@ import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 import ApplicationBar from '../containers/ApplicationBar';
 import RegistrationForm from '../components/RegistrationForm';
 
-import { setLoading, setGlobalMessage, OK_MESSAGE } from '../actions/application';
-import { createUser } from '../actions/user';
-import { isLoading } from '../selectors/application';
+import { setLoading, setGlobalMessage, OK_MESSAGE } from '../store/actions/application';
+import { createUser } from '../store/actions/user';
+import { isLoading } from '../store/selectors/application';
 
 import registrationValidator from '../../shared/validations/registration';
 

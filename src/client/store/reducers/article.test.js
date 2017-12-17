@@ -9,9 +9,9 @@ import {
     ARTICLE_UPDATED,
     ARTICLE_DELETED,
     REMOVE_SELECTED_ARTICLE
-} from './../actions/article';
+} from '../actions/article';
 import articleReducer, { initialState } from './article';
-import Article from '../../shared/businessobjects/Article';
+import Article from '../../../shared/businessobjects/Article';
 
 const createDummyAction = () => {
     return {

@@ -7,11 +7,11 @@ import TradeDetail from '../components/TradeDetail';
 import TradeModel from '../models/TradeModel';
 import TradeAction from '../models/TradeAction';
 
-import { acceptTrade, declineTrade, loadTrade, submitTrade } from '../actions/trade';
-import { setLoading } from '../actions/application';
-import { getTrade } from '../selectors/trade';
-import { getUser } from '../selectors/user';
-import { isLoading } from '../selectors/application';
+import { acceptTrade, declineTrade, loadTrade, submitTrade } from '../store/actions/trade';
+import { setLoading } from '../store/actions/application';
+import { getTrade } from '../store/selectors/trade';
+import { getUser } from '../store/selectors/user';
+import { isLoading } from '../store/selectors/application';
 
 class TradeDetailPage extends React.Component {
 

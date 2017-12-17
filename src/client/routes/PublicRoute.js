@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { getUser } from '../selectors/user';
+import { getUser } from '../store/selectors/user';
 
 const PublicRoute = ({ isLoggedIn, component: Component, ...rest }) => (
     <Route {...rest} render={props =>

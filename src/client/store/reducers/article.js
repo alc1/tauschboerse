@@ -4,7 +4,7 @@ import {
     ARTICLE_UPDATED,
     ARTICLE_DELETED,
     REMOVE_SELECTED_ARTICLE
-} from './../actions/article';
+} from '../actions/article';
 
 export const initialState = null;
 

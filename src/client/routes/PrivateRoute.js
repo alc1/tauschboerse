@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { setGlobalMessage, WARNING_MESSAGE } from '../actions/application';
-import { getUser, getUserId } from '../selectors/user';
+import { setGlobalMessage, WARNING_MESSAGE } from '../store/actions/application';
+import { getUser, getUserId } from '../store/selectors/user';
 
 const PrivateRoute = ({ isLoggedIn, userId, setGlobalMessage, component: Component, ...rest }) => (
     <Route {...rest} render={props => {
