@@ -7,26 +7,16 @@ export default class ArticleChooser extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
+        user: PropTypes.object.isRequired
     };
 
-    static defaultProps = {
-        articles: [],
-    }
-
-    generateArticleWrappers() {
+    // generateArticleWrappers() {
         
-    }
-
-    hasArticles() {
-        return this.props.articles ? this.props.articles.length > 0 : false;
-    }
+    // }
     
     render() {
-        const hasArticles = this.props.articles.length > 0;
-        const articleWrappers = hasArticles ? generateArticleWrappers() : null;
-
         return (
-            <div></div>
+            <div>Choosing articles from {this.props.user.name}...</div>
         );
     }
 }
