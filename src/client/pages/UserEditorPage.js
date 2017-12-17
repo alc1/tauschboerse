@@ -2,19 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Save from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import UserDetailsForm from '../components/UserDetailsForm/UserDetailsForm';
 import UserPasswordForm from '../components/UserPasswordForm/UserPasswordForm';
+import PageButton from '../components/PageButton/PageButton';
 
 import { setGlobalMessage, setLoading, OK_MESSAGE } from '../store/actions/application';
 import { updateUser } from '../store/actions/user';
 import { isLoading } from '../store/selectors/application';
 import { getUser } from '../store/selectors/user';
-
-import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 
 import userDetailsValidator from '../../shared/validations/userDetails';
 
@@ -127,12 +125,9 @@ class UserDetailsPage extends React.Component {
                         onChange={this.onChange}
                         onPasswordChangeChecked={this.onPasswordChangeToggled}
                         onSubmit={this.onSubmit}/>
-                    <FloatingActionButton
-                        style={FLOATING_ACTION_BUTTON_POSITION_STYLE}
-                        type="submit"
-                        disabled={loading || !modified}>
+                    <PageButton isSubmit={true} disabled={loading || !modified}>
                         <Save/>
-                    </FloatingActionButton>
+                    </PageButton>
                 </form>
             </div>
         );

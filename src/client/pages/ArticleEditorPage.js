@@ -3,21 +3,19 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../containers/ApplicationBar';
 import Placeholder from '../containers/Placeholder';
 import ArticleForm from '../components/ArticleForm/ArticleForm';
 import PhotosComponent from '../components/PhotosComponent/PhotosComponent';
+import PageButton from '../components/PageButton/PageButton';
 
 import { setLoading, setGlobalMessage, OK_MESSAGE } from '../store/actions/application';
 import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../store/actions/article';
 import { isLoading } from '../store/selectors/application';
 import { getArticle } from '../store/selectors/article';
 import { getUser } from '../store/selectors/user';
-
-import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 
 import articleDetailsValidator from '../../shared/validations/articleDetails';
 
@@ -215,12 +213,9 @@ class ArticleEditorPage extends React.Component {
                             onRemovePhoto={this.onRemovePhoto}
                             onSelectMainPhoto={this.onSelectMainPhoto}
                             loading={loading}/>
-                        {isEditAllowed && <FloatingActionButton
-                            style={FLOATING_ACTION_BUTTON_POSITION_STYLE}
-                            type="submit"
-                            disabled={loading || !modified}>
+                        {isEditAllowed && <PageButton isSubmit={true} disabled={loading || !modified}>
                             <SaveIcon/>
-                        </FloatingActionButton>}
+                        </PageButton>}
                     </form>
                     :
                     <Placeholder width={300} height={300} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>

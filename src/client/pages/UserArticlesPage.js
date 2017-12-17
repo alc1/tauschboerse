@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Paper from 'material-ui/Paper';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import SearchBar from 'material-ui-search-bar';
@@ -15,6 +14,7 @@ import PlusIcon from 'material-ui/svg-icons/content/add';
 import ApplicationBar from '../containers/ApplicationBar';
 import ArticleGridList from '../components/ArticleGridList/ArticleGridList';
 import DeleteArticleDialog from '../components/DeleteArticleDialog/DeleteArticleDialog';
+import PageButton from '../components/PageButton/PageButton';
 
 import { setLoading } from '../store/actions/application';
 import { loadUserArticles } from '../store/actions/user';
@@ -22,7 +22,6 @@ import { deleteArticle } from '../store/actions/article';
 import { isLoading } from '../store/selectors/application';
 import { getUserArticles, getUser } from '../store/selectors/user';
 
-import { FLOATING_ACTION_BUTTON_POSITION_STYLE } from '../common';
 import './UserArticlesPage.css';
 
 const ArticleStatus = require('../../shared/constants/ArticleStatus');
@@ -189,9 +188,9 @@ class UserArticlesPage extends React.Component {
                     </RadioButtonGroup>
                 </Paper>
                 <ArticleGridList articles={articles} articleActions={this.createArticleActions()} loading={loading}/>
-                <FloatingActionButton style={FLOATING_ACTION_BUTTON_POSITION_STYLE} onClick={this.createNewArticle}>
+                <PageButton onClick={this.createNewArticle}>
                     <PlusIcon/>
-                </FloatingActionButton>
+                </PageButton>
                 <DeleteArticleDialog
                     open={isDeleteDialogOpen}
                     deleteAction={this.deleteArticle.bind(this, articleToDelete)}

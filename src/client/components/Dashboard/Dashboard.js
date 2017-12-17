@@ -14,7 +14,6 @@ import Placeholder from '../../containers/Placeholder';
 import Info from '../_svg/Info';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
-import TradeState from '../../../shared/constants/TradeState';
 import TradesModel from '../../model/TradesModel';
 
 import './Dashboard.css';

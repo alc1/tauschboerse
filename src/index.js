@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { setToken, userLoggedIn } from './client/store/actions/user';
-import { JWT_TOKEN_KEY } from './client/common';
+import { JWT_TOKEN_KEY } from './client/constants/jwt';
 import store from './client/store/store';
 
 import App from './client/App';

@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
 import { globalMessageReceived, OK_MESSAGE } from './application';
-import { JWT_TOKEN_KEY } from '../../common';
+import { JWT_TOKEN_KEY } from '../../constants/jwt';
 import { handleError } from './common';
 
 /*
