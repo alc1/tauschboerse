@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
@@ -7,16 +6,12 @@ import FlatButton from 'material-ui/FlatButton';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
-import ApplicationBar from '../containers/ApplicationBar';
-import LoginForm from '../components/LoginForm/LoginForm';
-
-import { setLoading } from '../store/actions/application';
-import { login } from '../store/actions/user';
-import { isLoading } from '../store/selectors/application';
+import ApplicationBar from '../../containers/ApplicationBar';
+import LoginForm from '../LoginForm/LoginForm';
 
 import './LoginPage.css';
 
-class LoginPage extends React.Component {
+export default class LoginPage extends React.Component {
 
     static propTypes = {
         login: PropTypes.func.isRequired,
@@ -83,11 +78,3 @@ class LoginPage extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        loading: isLoading(theState)
-    };
-}
-
-export default connect(mapStateToProps, { login, setLoading })(LoginPage);

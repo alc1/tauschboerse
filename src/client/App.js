@@ -6,16 +6,16 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import HomePage from './pages/HomePage';
-import MarketplacePage from './pages/MarketplacePage';
-import UserArticlesPage from './pages/UserArticlesPage';
-import UserEditorPage from './pages/UserEditorPage';
-import UserTradesPage from './pages/UserTradesPage';
-import ArticleEditorPage from './pages/ArticleEditorPage';
-import TradeDetailPage from "./pages/TradeDetailPage";
-import RegistrationPage from './pages/RegistrationPage';
-import LoginPage from './pages/LoginPage';
-import NoMatchPage from './pages/NoMatchPage';
+import HomePage from './containers/HomePage';
+import MarketplacePage from './containers/MarketplacePage';
+import UserArticlesPage from './containers/UserArticlesPage';
+import UserEditorPage from './containers/UserEditorPage';
+import UserTradesPage from './containers/UserTradesPage';
+import ArticleEditorPage from './containers/ArticleEditorPage';
+import TradeDetailPage from './containers/TradeDetailPage';
+import RegistrationPage from './containers/RegistrationPage';
+import LoginPage from './containers/LoginPage';
+import NoMatchPage from './components/NoMatchPage/NoMatchPage';
 
 import PrivateRoute from './containers/PrivateRoute';
 import PublicRoute from './containers/PublicRoute';

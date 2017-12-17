@@ -1,24 +1,20 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Save from 'material-ui/svg-icons/content/save';
+import SaveIcon from 'material-ui/svg-icons/content/save';
 
-import ApplicationBar from '../containers/ApplicationBar';
-import UserDetailsForm from '../components/UserDetailsForm/UserDetailsForm';
-import UserPasswordForm from '../components/UserPasswordForm/UserPasswordForm';
-import PageButton from '../components/PageButton/PageButton';
+import ApplicationBar from '../../containers/ApplicationBar';
+import UserDetailsForm from '../UserDetailsForm/UserDetailsForm';
+import UserPasswordForm from '../UserPasswordForm/UserPasswordForm';
+import PageButton from '../PageButton/PageButton';
 
-import { setGlobalMessage, setLoading, OK_MESSAGE } from '../store/actions/application';
-import { updateUser } from '../store/actions/user';
-import { isLoading } from '../store/selectors/application';
-import { getUser } from '../store/selectors/user';
+import { OK_MESSAGE } from '../../store/actions/application';
 
-import userDetailsValidator from '../../shared/validations/userDetails';
+import userDetailsValidator from '../../../shared/validations/userDetails';
 
 import './UserEditorPage.css';
 
-class UserDetailsPage extends React.Component {
+export default class UserDetailsPage extends React.Component {
 
     static propTypes = {
         updateUser: PropTypes.func.isRequired,
@@ -126,19 +122,10 @@ class UserDetailsPage extends React.Component {
                         onPasswordChangeChecked={this.onPasswordChangeToggled}
                         onSubmit={this.onSubmit}/>
                     <PageButton isSubmit={true} disabled={loading || !modified}>
-                        <Save/>
+                        <SaveIcon/>
                     </PageButton>
                 </form>
             </div>
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        user: getUser(theState),
-        loading: isLoading(theState)
-    };
-}
-
-export default connect(mapStateToProps, { updateUser, setGlobalMessage, setLoading })(UserDetailsPage);

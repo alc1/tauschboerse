@@ -1,25 +1,15 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import queryString from "query-string";
-import axios from 'axios';
-
-import { handleError } from '../store/actions/common';
 
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 
-import ApplicationBar from '../containers/ApplicationBar';
-import ArticleGridList from '../components/ArticleGridList/ArticleGridList';
-import ArticleSearchInput from '../components/ArticleSearchInput/ArticleSearchInput';
+import ApplicationBar from '../../containers/ApplicationBar';
+import ArticleGridList from '../ArticleGridList/ArticleGridList';
+import ArticleSearchInput from '../ArticleSearchInput/ArticleSearchInput';
 
-import { findArticles, clearLastSearch, createTrade } from '../store/actions/marketplace';
-import { setLoading } from '../store/actions/application';
-import { getLastSearch, getTrade } from '../store/selectors/marketplace';
-import { getUser } from '../store/selectors/user';
-import { isLoading } from '../store/selectors/application';
-
-class MarketplacePage extends React.Component {
+export default class MarketplacePage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -163,14 +153,3 @@ class MarketplacePage extends React.Component {
         );
     }
 }
-
-function mapStateToProps(theState) {
-    return {
-        lastSearch: getLastSearch(theState),
-        user: getUser(theState),
-        loading: isLoading(theState),
-        trade: getTrade(theState)
-    };
-}
-
-export default connect(mapStateToProps, { findArticles, clearLastSearch, createTrade, setLoading })(MarketplacePage);
