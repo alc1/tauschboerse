@@ -1,0 +1,5 @@
+article-row_container {
+    display: flex;
+    min-height: 40px;
+    border: 1px dotted #ccc;
+}

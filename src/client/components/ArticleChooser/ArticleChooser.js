@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-//import './ArticleChooser.css';
+import './ArticleChooser.css';
 
 export default class ArticleChooser extends React.Component {
 
@@ -16,7 +16,7 @@ export default class ArticleChooser extends React.Component {
     
     render() {
         return (
-            <div>Choosing articles from {this.props.user.name}...</div>
+            <div className="article-chooser_container">Choosing articles from {this.props.user.name}...</div>
         );
     }
 }

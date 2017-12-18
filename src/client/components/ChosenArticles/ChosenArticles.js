@@ -10,7 +10,7 @@ import EditIcon from 'material-ui/svg-icons/image/edit';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import ArticleChooser from '../ArticleChooser/ArticleChooser';
-import ArticleList from '../ArticleList/ArticleList';
+import ArticleRowList from '../ArticleRowList/ArticleRowList';
 
 import './ChosenArticles.css';
 
@@ -64,34 +64,33 @@ export default class ChosenArticles extends React.Component {
         this.stopEditing();
     }
         
-    generateToolbarButton(label, icon, clickHandler) {
-        return <FlatButton label={label} icon={icon} onClick={clickHandler} disabled={this.props.loading} primary />;
+    generateToolbarButton(label, icon, clickHandler, key) {
+        return <FlatButton label={label} icon={icon} onClick={clickHandler} disabled={this.props.loading} key={key} primary />;
     }
 
     generateToolbarButtonsForShow() {
         return [
-            this.generateToolbarButton('Bearbeiten', <EditIcon/>, this.edit)
+            this.generateToolbarButton('Bearbeiten', <EditIcon/>, this.edit, 'edit')
         ];
     }
 
     generateToolbarButtonsForEdit() {
         return [
-            this.generateToolbarButton('Speichern', <SaveIcon/>, this.save),
-            this.generateToolbarButton('Abbrechen', <CancelIcon/>, this.cancel)
+            this.generateToolbarButton('Speichern', <SaveIcon/>, this.save, 'save'),
+            this.generateToolbarButton('Abbrechen', <CancelIcon/>, this.cancel, 'cancel')
         ];
     }
 
     generateArticleList() {
-        return <ArticleList articles={this.props.articles} />;
+        return <ArticleRowList articles={this.props.articles} />;
     }
 
     generateArticleChooser() {
-        return <ArticleChooser articles={this.state.newlyChosenArticles} user={this.props.user} onArticleToggled={this.onArticleToggled} />
+        return this.state.isEditing ? <ArticleChooser articles={this.state.newlyChosenArticles} user={this.props.user} onArticleToggled={this.onArticleToggled} /> : null;
     }
 
     render() {
         const toolbarButtons = this.props.canEdit ? (this.state.isEditing ? this.generateToolbarButtonsForEdit() : this.generateToolbarButtonsForShow()) : [];
-        const content = this.state.isEditing ? this.generateArticleChooser() : this.generateArticleList();
 
         return (
             <div className="chosen-articles__container">
@@ -105,7 +104,8 @@ export default class ChosenArticles extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="chosen-articles__articles-container">
-                        {content}
+                        {this.generateArticleList()}
+                        {this.generateArticleChooser()}
                     </div>
                 </Paper>
             </div>

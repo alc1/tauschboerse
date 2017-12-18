@@ -6,12 +6,20 @@ import './ArticleRow.css';
 export default class ArticleRow extends React.Component {
 
     static propTypes = {
-        article: PropTypes.array.isRequired,
+        article: PropTypes.object.isRequired,
+        selectable: PropTypes.bool.isRequired,
+        selected: PropTypes.bool.isRequired
     };
     
+    static defaultProps = {
+        selectable: false,
+        selected: false
+    }
+
     render() {
         return (
-            <div></div>
+            <div className="article-row_container">
+            </div>
         );
     }
 }

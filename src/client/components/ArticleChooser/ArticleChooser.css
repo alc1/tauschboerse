@@ -1,0 +1,4 @@
+article-chooser_container {
+    display: flex;
+    min-height: 40px;
+}
