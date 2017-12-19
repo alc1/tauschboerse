@@ -7,3 +7,11 @@ export const getTrades = (theState) => {
 export const getTrade = (theState) => {
     return theState[TRADE_SLICE_NAME].trade;
 };
+
+export const getUserArticles = (theState) => {
+    return theState[TRADE_SLICE_NAME].userArticles;
+};
+
+export const getPartnerArticles = (theState) => {
+    return theState[TRADE_SLICE_NAME].parterArticles;
+};

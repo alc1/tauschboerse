@@ -15,7 +15,11 @@ export default class TradeDetailPage extends React.Component {
     static propTypes = {
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
+        userArticles: PropTypes.array,
+        partnerArticles: PropTypes.array,
         loadTrade: PropTypes.func.isRequired,
+        loadUserArticles: PropTypes.func.isRequired,
+        loadPartnerArticles: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
@@ -52,6 +56,12 @@ export default class TradeDetailPage extends React.Component {
                 break;
             case TradeAction.TRADE_ACTION_WITHDRAW:
                 break;
+            case TradeAction.TRADE_ACTION_LOAD_USER_ARTICLES:
+                this.state.loadUserArticles(this.props.user._id);
+                break;
+            case TradeAction.TRADE_ACTION_LOAD_PARTNER_ARTICLES:
+                this.state.loadPartnerArticles(this.props.trade.tradePartner._id);
+                break;
             default:
                 break;
         }
@@ -61,7 +71,7 @@ export default class TradeDetailPage extends React.Component {
         return (
             <div>
                 <ApplicationBar/>
-                {this.state.trade && <TradeDetail trade={this.state.trade} user={this.props.user} onAction={this.doTradeAction} />}
+                {this.state.trade && <TradeDetail trade={this.state.trade} user={this.props.user} onAction={this.doTradeAction} setLoading={this.props.setLoading} />}
             </div>
         );
     }

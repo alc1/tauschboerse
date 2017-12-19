@@ -24,7 +24,9 @@ export default class ChosenArticles extends React.Component {
         loading: PropTypes.bool.isRequired,
         onAction: PropTypes.func,
         title: PropTypes.string.isRequired,
-        user: PropTypes.object
+        user: PropTypes.object,
+        setLoading: PropTypes.func.isRequired,
+        loadAction: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -49,6 +51,7 @@ export default class ChosenArticles extends React.Component {
     };
 
     edit = () => {
+        this.props.onAction(this.props.loadAction);
         this.setState({
             isEditing: true,
             newlyChosenArticles: this.props.articles.slice()
@@ -81,12 +84,8 @@ export default class ChosenArticles extends React.Component {
         ];
     }
 
-    generateArticleList() {
-        return <ArticleRowList articles={this.props.articles} />;
-    }
-
     generateArticleChooser() {
-        return this.state.isEditing ? <ArticleChooser articles={this.state.newlyChosenArticles} user={this.props.user} onArticleToggled={this.onArticleToggled} /> : null;
+        return this.state.isEditing ? <ArticleChooser articles={this.state.newlyChosenArticles} user={this.props.user} onArticleToggled={this.onArticleToggled} setLoading={this.props.setLoading} /> : null;
     }
 
     render() {
@@ -104,7 +103,7 @@ export default class ChosenArticles extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="chosen-articles__articles-container">
-                        {this.generateArticleList()}
+                        <ArticleRowList articles={this.props.articles} isEditing={this.state.isEditing} />
                         {this.generateArticleChooser()}
                     </div>
                 </Paper>

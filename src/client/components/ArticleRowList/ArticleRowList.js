@@ -9,10 +9,11 @@ export default class ArticleRowList extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
+        isEditing: PropTypes.bool.isRequired
     };
     
     render() {
-        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} />);
+        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} isEditing={this.props.isEditing} />);
 
         return (
             <div className="article-row-list_container">

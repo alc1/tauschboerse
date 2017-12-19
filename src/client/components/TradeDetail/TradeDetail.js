@@ -13,7 +13,8 @@ class TradeDetail extends React.Component {
         trade: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
         onAction: PropTypes.func.isRequired,
-        loading: PropTypes.bool
+        loading: PropTypes.bool,
+        setLoading: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -34,8 +35,8 @@ class TradeDetail extends React.Component {
 
         return (
             <div>
-                <ChosenArticles articles={this.props.trade.tradePartnerArticles} user={this.props.trade.tradePartner} title={tradePartnerArticlesTitle} canEdit={true} isEditing={this.state.isEditingWantedArticles} onAction={this.onAction} loading={this.props.loading} />
-                <ChosenArticles articles={this.props.trade.userArticles} user={this.props.user} title="Du bietest dafür folgende Artikel an:" canEdit={true} isEditing={this.state.isEditingOfferedArticles} onAction={this.onAction} loading={this.props.loading} />
+                <ChosenArticles articles={this.props.trade.tradePartnerArticles} user={this.props.trade.tradePartner} title={tradePartnerArticlesTitle} canEdit={true} isEditing={this.state.isEditingWantedArticles} onAction={this.onAction} loading={this.props.loading} setLoading={this.props.setLoading} loadAction={TradeAction.TRADE_ACTION_LOAD_PARTNER_ARTICLES} />
+                <ChosenArticles articles={this.props.trade.userArticles} user={this.props.user} title="Du bietest dafür folgende Artikel an:" canEdit={true} isEditing={this.state.isEditingOfferedArticles} onAction={this.onAction} loading={this.props.loading} setLoading={this.props.setLoading} loadAction={TradeAction.TRADE_ACTION_LOAD_USER_ARTICLES} />
                 <section>
                     <div><button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_SUBMIT)}>Angebot machen</button></div>
                 </section>
