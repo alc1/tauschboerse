@@ -10,7 +10,8 @@ export default class Photo extends React.Component {
     static propTypes = {
         photos: PropTypes.array.isRequired,
         mainPhotoIndex: PropTypes.number.isRequired,
-        imageClassName: PropTypes.string.isRequired
+        imageClassName: PropTypes.string.isRequired,
+        imageStyle: PropTypes.object
     };
 
     state = {
@@ -32,7 +33,7 @@ export default class Photo extends React.Component {
     };
 
     render() {
-        const { photos, mainPhotoIndex, imageClassName } = this.props;
+        const { photos, mainPhotoIndex, imageClassName, imageStyle } = this.props;
         const { isPhotoLightboxOpen, photoLightboxIndex } = this.state;
         const photo = photos[mainPhotoIndex];
         const photoSources = photos.map(photo => photo.isNew ? photo.fileContent : photo.url);
@@ -40,6 +41,7 @@ export default class Photo extends React.Component {
             <div>
                 <img
                     className={imageClassName}
+                    style={imageStyle}
                     src={photo.isNew ? photo.fileContent : photo.url}
                     alt={photo.fileName}
                     onClick={this.onOpenPhoto.bind(this, mainPhotoIndex)}/>
