@@ -7,7 +7,7 @@ import { Card, CardMedia, CardTitle, CardText, CardActions } from 'material-ui/C
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 
-import ArticleStatusComponent from '../ArticleStatusTag/ArticleStatusTag';
+import ArticleStatusTag from '../ArticleStatusTag/ArticleStatusTag';
 import AvatarTag from '../AvatarTag/AvatarTag';
 import PhotoPlaceholder from '../PhotoPlaceholder/PhotoPlaceholder';
 
@@ -37,7 +37,7 @@ export default class ArticleCard extends React.Component {
                     <div className="article-card__header">
                         <AvatarTag text={name} icon={<AccountIcon/>}/>
                         <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>
-                        <ArticleStatusComponent status={status}/>
+                        <ArticleStatusTag status={status}/>
                     </div>
                     <CardMedia overlay={<CardTitle title={title} subtitle={categoryNames}/>}>
                         <div className="article-card__image-container">

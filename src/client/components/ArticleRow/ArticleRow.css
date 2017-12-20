@@ -1,5 +1,66 @@
-.article-row_container {
+.article-row__container {
     display: flex;
-    min-height: 40px;
-    border: 1px dotted #333;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+    min-height: 100px;
 }
+
+.article-row__checkbox-column {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin-left: 10px;
+}
+
+.article-row__image-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin-left: 10px;
+    width: 100px;
+    height: 100px;
+}
+
+.article-row__image {
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+}
+
+.article-row__text-column {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-left: 10px;
+}
+
+.article-row__title {
+    font-size: 1.5em;
+}
+
+.article-row__categories {
+    font-style: italic;
+}
+
+.article-row__description {
+    white-space: pre-wrap;
+}
+
+/*.article-row__tag-column {*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*margin-left: 10px;*/
+/*}*/

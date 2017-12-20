@@ -13,7 +13,7 @@ export default class ArticleRowList extends React.Component {
     };
     
     render() {
-        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} isEditing={this.props.isEditing} />);
+        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} isEditing={this.props.isEditing} onSelectionToggled={(article, isSelected) => console.log(`Selection of ${article.title} is now: ${isSelected}`)}/>);
 
         return (
             <div className="article-row-list_container">

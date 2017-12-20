@@ -8,7 +8,7 @@ import ArticleStatus from '../../../shared/constants/ArticleStatus';
 
 import './ArticleStatusTag.css';
 
-export default class ArticleStatusComponent extends React.Component {
+export default class ArticleStatusTag extends React.Component {
 
     static propTypes = {
         status: PropTypes.string.isRequired
