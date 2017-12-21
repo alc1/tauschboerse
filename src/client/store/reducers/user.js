@@ -4,7 +4,8 @@ import {
     USER_CREATED,
     USER_UPDATED,
     USER_ARTICLES_FETCHED,
-    USER_TRADES_FETCHED
+    USER_TRADES_FETCHED,
+    USER_ARTICLES_FILTERED
 } from '../actions/user';
 
 import {
@@ -41,6 +42,14 @@ export default function user(theState = initialState, theAction) {
             return {
                 ...theState,
                 articles: theState.articles.filter(article => article._id !== theAction.articleId)
+            };
+        case USER_ARTICLES_FILTERED:
+            return {
+                ...theState,
+                userArticlesFilter: {
+                    filterText: theAction.filterText,
+                    filterStatus: theAction.filterStatus
+                }
             };
         default:
             return theState;

@@ -4,11 +4,13 @@ import {
     USER_CREATED,
     USER_UPDATED,
     USER_ARTICLES_FETCHED,
+    USER_ARTICLES_FILTERED,
     userLoggedIn,
     userLoggedOut,
     userCreated,
     userUpdated,
-    userArticlesFetched
+    userArticlesFetched,
+    userArticlesFiltered
 } from '../actions/user';
 import {
     ARTICLE_DELETED,
@@ -41,6 +43,12 @@ const createUser = () => {
         _id: '1',
         name: 'Max Mustermann',
         email: 'max@mustermann.com'
+    };
+};
+const createUserArticlesFilter = () => {
+    return {
+        filterText: 'Test',
+        filterStatus: 'FREE'
     };
 };
 
@@ -116,6 +124,15 @@ describe('User Reducer', () => {
             const expectedUserArticles = [ createTable() ];
             const newState = userReducer({ ...initialState, user: user, articles: initialUserArticles }, articleDeleted('1'));
             expect(newState).toEqual({ ...initialState, user: user, articles: expectedUserArticles });
+        });
+    });
+
+    describe(`Test action ${USER_ARTICLES_FILTERED}`, () => {
+        test(`Putting filter criteria to store which has already a logged in user. Expectation: New state should now contain the filter criteria as well.`, () => {
+            const user = createUser();
+            const userArticlesFilter = createUserArticlesFilter();
+            const newState = userReducer({ ...initialState, user: user }, userArticlesFiltered(userArticlesFilter.filterText, userArticlesFilter.filterStatus));
+            expect(newState).toEqual({ ...initialState, user: user, userArticlesFilter: userArticlesFilter });
         });
     });
 

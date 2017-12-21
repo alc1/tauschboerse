@@ -15,6 +15,7 @@ export const USER_CREATED = 'USER_CREATED';
 export const USER_UPDATED = 'USER_UPDATED';
 export const USER_ARTICLES_FETCHED = 'USER_ARTICLES_FETCHED';
 export const USER_TRADES_FETCHED = 'USER_TRADES_FETCHED';
+export const USER_ARTICLES_FILTERED = 'USER_ARTICLES_FILTERED';
 
 /*
  * Action Creators
@@ -49,6 +50,12 @@ export const userTradesFetched = (theTrades) => ({
     trades: theTrades
 });
 
+export const userArticlesFiltered = (theFilterText, theFilterStatus) => ({
+    type: USER_ARTICLES_FILTERED,
+    filterText: theFilterText,
+    filterStatus: theFilterStatus
+});
+
 /*
  * Thunk Actions
  */
@@ -81,6 +88,9 @@ export const loadUserTrades = (theUserId) => dispatch =>
     axios.get(`/api/users/${theUserId}/trades`)
         .then(response => dispatch(userTradesFetched(response.data.trades)))
         .catch(err => handleError(err, dispatch));
+
+export const filterUserArticles = (theFilterText, theFilterStatus) => dispatch =>
+    dispatch(userArticlesFiltered(theFilterText, theFilterStatus));
 
 /*
  * Actions

@@ -20,7 +20,7 @@ exports[`ArticleCard Test that the ArticleCard renders correctly (snapshot). 1`]
         icon={<EditorModeEdit />}
         text="16.12.2017 | 01:00"
       />
-      <ArticleStatusComponent
+      <ArticleStatusTag
         status="FREE"
       />
     </div>

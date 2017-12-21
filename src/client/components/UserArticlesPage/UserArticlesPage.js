@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 
 import Paper from 'material-ui/Paper';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
@@ -27,6 +26,11 @@ export default class UserArticlesPage extends React.Component {
         user: PropTypes.object.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         deleteArticle: PropTypes.func.isRequired,
+        filterUserArticles: PropTypes.func.isRequired,
+        userArticlesFilter: PropTypes.shape({
+            filterText: PropTypes.string,
+            filterStatus: PropTypes.string
+        }).isRequired,
         setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
@@ -35,46 +39,17 @@ export default class UserArticlesPage extends React.Component {
     state = {
         articles: [],
         isDeleteDialogOpen: false,
-        articleToDelete: null,
-        editingFilterText: '',
-        appliedFilterText: '',
-        appliedFilterStatus: ''
+        articleToDelete: null
     };
 
     componentDidMount() {
         this.props.setLoading(true);
         const { userId } = this.props.match.params;
         this.props.loadUserArticles(userId)
-            .then(() => {
-                this.applyFilterFromUrl();
-                this.props.setLoading(false);
-            })
+            .then(() => this.props.setLoading(false))
             .catch(() => this.props.setLoading(false));
-        setTimeout(() => this.filterField.focus(), 500);
+        this.filterField.focus();
     }
-
-    componentWillReceiveProps(nextProps) {
-        this.applyFilterFromUrl();
-        setTimeout(() => this.filterField.focus(), 500);
-    }
-
-    applyFilterFromUrl = () => {
-        let parsedQuery = queryString.parse(this.props.history.location.search);
-        const filter = parsedQuery.filter || '';
-        const status = parsedQuery.status || '';
-        this.setState({
-            editingFilterText: filter,
-            appliedFilterText: filter,
-            appliedFilterStatus: status,
-            articles: this.filterArticles(this.props.articles, filter, status)
-        });
-    };
-
-    filterArticles = (theArticles, theFilterText, theFilterStatus) => {
-        return theArticles.filter(article =>
-            (article.title.includes(theFilterText) || article.description.includes(theFilterText)) &&
-            (theFilterStatus === '' || article.status === theFilterStatus));
-    };
 
     editArticleDetails = (theArticle) => {
         this.props.history.push(`/article/${theArticle._id}`);
@@ -118,43 +93,20 @@ export default class UserArticlesPage extends React.Component {
     };
 
     onFilterTextChange = (theFilterText) => {
-        this.setState({
-            editingFilterText: theFilterText
-        });
+        this.props.filterUserArticles(theFilterText, this.props.userArticlesFilter.filterStatus);
     };
 
     onFilterStatusChange = (theEvent, theFilterStatus) => {
-        this.onApplyFilter(this.state.editingFilterText, theFilterStatus);
-    };
-
-    onApplyFilter = (theText, theStatus) => {
-        let urlPath = `/user/${this.props.user._id}/articles`;
-        let urlParams = '';
-        urlParams = this.appendQueryParameter(urlParams, 'filter', theText);
-        urlParams = this.appendQueryParameter(urlParams, 'status', theStatus);
-        this.props.history.replace(urlPath + urlParams);
-    };
-
-    appendQueryParameter = (theUrlParams, theParameterName, theParameterValue) => {
-        if (theParameterValue && theParameterValue.length > 0) {
-            if (theUrlParams.length > 0) {
-                theUrlParams = theUrlParams + '&';
-            }
-            else {
-                theUrlParams = theUrlParams + '?';
-            }
-            theUrlParams = theUrlParams + `${theParameterName}=${theParameterValue}`;
-        }
-        return theUrlParams;
+        this.props.filterUserArticles(this.props.userArticlesFilter.filterText, theFilterStatus);
     };
 
     onFilterRequested = () => {
-        this.onApplyFilter(this.state.editingFilterText, this.state.appliedFilterStatus);
+        this.props.filterUserArticles(this.props.userArticlesFilter.filterText, this.props.userArticlesFilter.filterStatus);
     };
 
     render() {
-        const { loading } = this.props;
-        const { articles, isDeleteDialogOpen, articleToDelete, editingFilterText, appliedFilterStatus } = this.state;
+        const { loading, articles, userArticlesFilter } = this.props;
+        const { isDeleteDialogOpen, articleToDelete } = this.state;
         const articleTitle = articleToDelete ? articleToDelete.title : '';
         return (
             <div>
@@ -164,14 +116,14 @@ export default class UserArticlesPage extends React.Component {
                     hintText="Filtern nach Titel/Beschreibung"
                     onChange={this.onFilterTextChange}
                     onRequestSearch={this.onFilterRequested}
-                    value={editingFilterText}
+                    value={userArticlesFilter.filterText}
                     disabled={loading}
                 />
                 <Paper>
                     <RadioButtonGroup
                         className="user-articles-page__status-container"
                         name="status"
-                        valueSelected={appliedFilterStatus}
+                        valueSelected={userArticlesFilter.filterStatus}
                         onChange={this.onFilterStatusChange}>
                         <RadioButton style={statusRadioButtonStyle} disabled={loading} value={''} label="Alle Artikel"/>
                         <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_FREE} label="Freie Artikel"/>
