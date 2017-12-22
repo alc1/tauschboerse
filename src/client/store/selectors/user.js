@@ -18,11 +18,11 @@ export const getFilteredUserArticles = (theState) => {
 };
 
 export const getUserTrades = (theState) => {
-    return theState[USER_SLICE_NAME] && theState[USER_SLICE_NAME].trades || initialUserTrades;
+    return theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].trades || initialUserTrades : initialUserTrades;
 };
 
 export const getUser = (theState) => {
-    return theState[USER_SLICE_NAME] && theState[USER_SLICE_NAME].user || initialUser;
+    return theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].user : initialUser;
 };
 
 export const getUserId = (theState) => {
@@ -31,7 +31,7 @@ export const getUserId = (theState) => {
 };
 
 export const getUserArticlesFilter = (theState) => {
-    return theState[USER_SLICE_NAME] && theState[USER_SLICE_NAME].userArticlesFilter || initialUserArticlesFilter;
+    return theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].userArticlesFilter || initialUserArticlesFilter : initialUserArticlesFilter;
 };
 
 const getUserArticlesInternal = (theState) => {
