@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 import SearchBar from 'material-ui-search-bar';
 
 export default class ArticleSearchInput extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     static propTypes = {
         text: PropTypes.string,
@@ -26,16 +23,19 @@ export default class ArticleSearchInput extends React.Component {
     }
         
     onChange = (text) => {
-        this.setState({
-            text: text
-        });
+        this.setState({ text: text });
+    };
+
+    onSearch = () => {
+        this.props.onSearch(this.state.text);
     };
 
     render() {
         return (
             <SearchBar
+                hintText="Nach Titel / Beschreibung / Kategorie suchen ..."
                 onChange={this.onChange}
-                onRequestSearch={() => {this.props.onSearch(this.state.text); }}
+                onRequestSearch={this.onSearch}
                 value={this.state.text}
             />
         );

@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 
+import muiThemeable from 'material-ui/styles/muiThemeable';
+
 import MarketplacePage from '../components/MarketplacePage/MarketplacePage';
 
 import { findArticles, clearLastSearch, createTrade } from '../store/actions/marketplace';
@@ -17,4 +19,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { findArticles, clearLastSearch, createTrade, setLoading })(MarketplacePage);
+export default connect(mapStateToProps, { findArticles, clearLastSearch, createTrade, setLoading })(muiThemeable()(MarketplacePage));

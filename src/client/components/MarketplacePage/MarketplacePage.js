@@ -1,9 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from "query-string";
+import queryString from 'query-string';
 
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
-import Edit from 'material-ui/svg-icons/editor/mode-edit';
+import { Step, Stepper, StepButton, StepContent, StepLabel } from 'material-ui/Stepper';
+
+import ShowIcon from 'material-ui/svg-icons/image/remove-red-eye';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import SwapIcon from 'material-ui/svg-icons/action/swap-horiz';
+import SectionClosedIcon from 'material-ui/svg-icons/av/play-circle-filled';
+import SectionOpenedIcon from 'material-ui/svg-icons/navigation/arrow-drop-down-circle';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import ArticleGridList from '../ArticleGridList/ArticleGridList';
@@ -26,13 +31,19 @@ export default class MarketplacePage extends React.Component {
         createTrade: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         setLoading: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired
+        history: PropTypes.object.isRequired,
+        muiTheme: PropTypes.shape({
+            palette: PropTypes.shape({
+                primary1Color: PropTypes.string.isRequired,
+            }).isRequired
+        }).isRequired
     };
 
     state = {
         searchText: '',
         userArticles: [],
-        notUserArticles: []
+        notUserArticles: [],
+        sectionIndex: 0
     };
 
     getSearchText(location) {
@@ -93,8 +104,8 @@ export default class MarketplacePage extends React.Component {
             if ((!this.props.lastSearch) || (nextProps.lastSearch !== this.props.lastSearch)) {
                 let userArticles, notUserArticles;
                 if (this.props.user) {
-                    userArticles = nextProps.lastSearch.articles.filter(a => a.owner._id === this.props.user._id);
-                    notUserArticles = nextProps.lastSearch.articles.filter(a => a.owner._id !== this.props.user._id);
+                    userArticles = nextProps.lastSearch.articles.filter(article => article.owner._id === this.props.user._id);
+                    notUserArticles = nextProps.lastSearch.articles.filter(article => article.owner._id !== this.props.user._id);
                 } else {
                     userArticles = [];
                     notUserArticles = nextProps.lastSearch.articles;
@@ -125,7 +136,7 @@ export default class MarketplacePage extends React.Component {
     };
 
     showArticleDetails = (theArticle) => {
-
+        this.props.history.push(`/article/${theArticle._id}`);
     };
 
     createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
@@ -134,21 +145,64 @@ export default class MarketplacePage extends React.Component {
 
     buildActionList = (forUserArticles) => {
         return forUserArticles ? [
-            this.createArticleAction("Ansehen", <RemoveRedEye/>, this.showArticleDetails, false, false, true)
+            this.createArticleAction("Bearbeiten", <EditIcon/>, this.showArticleDetails, true, false, true)
+        ] : this.props.user ? [
+            this.createArticleAction("Ansehen", <ShowIcon/>, this.showArticleDetails, true, false, true),
+            this.createArticleAction("Tauschen", <SwapIcon/>, this.startTrade, false, true, true)
         ] : [
-            this.createArticleAction("Tauschen", <Edit/>, this.startTrade, false, false, true)
+            this.createArticleAction("Ansehen", <ShowIcon/>, this.showArticleDetails, true, false, true)
         ];
     };
 
+    onSectionClicked = (theSectionIndex) => {
+        this.setState({ sectionIndex: theSectionIndex === this.state.sectionIndex ? -1 : theSectionIndex });
+    };
+
+    createFirstSectionText = (theNumberOfResults) => {
+        if (theNumberOfResults === 1) {
+            return `${theNumberOfResults} Artikel entspricht den Suchkriterien`;
+        }
+        return `${theNumberOfResults} Artikel entsprechen den Suchkriterien`;
+    };
+
+    createSecondSectionText = (theNumberOfResults) => {
+        if (theNumberOfResults === 1) {
+            return `Von meinen Artikeln entspricht ${theNumberOfResults} den Suchkriterien`;
+        }
+        return `Von meinen Artikeln entsprechen ${theNumberOfResults} den Suchkriterien`;
+    };
+
     render() {
-        let articles = (this.props.lastSearch) ? this.props.lastSearch.articles : [];
+        const { loading, muiTheme } = this.props;
+        const { searchText, notUserArticles, userArticles, sectionIndex } = this.state;
 
         return (
             <div>
                 <ApplicationBar/>
-                <ArticleSearchInput text={this.state.searchText} onSearch={this.onSearch} />
-                <ArticleGridList articles={this.state.notUserArticles} articleActions={this.buildActionList(false)} loading={this.props.loading} />
-                {(this.state.userArticles.length > 0) && <ArticleGridList articles={this.state.userArticles} articleActions={this.buildActionList(true)} loading={this.props.loading} />}
+                <ArticleSearchInput text={searchText} onSearch={this.onSearch}/>
+                <Stepper
+                    activeStep={sectionIndex}
+                    linear={false}
+                    orientation="vertical">
+                    <Step>
+                        <StepButton icon={sectionIndex === 0 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClicked.bind(this, 0)}>
+                            <StepLabel>{this.createFirstSectionText(notUserArticles.length)}</StepLabel>
+                        </StepButton>
+                        <StepContent transitionDuration={300}>
+                            <ArticleGridList articles={notUserArticles} articleActions={this.buildActionList(false)} loading={loading}/>
+                        </StepContent>
+                    </Step>
+                    {this.props.user &&
+                        <Step>
+                            <StepButton icon={sectionIndex === 1 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClicked.bind(this, 1)}>
+                                <StepLabel>{this.createSecondSectionText(userArticles.length)}</StepLabel>
+                            </StepButton>
+                            <StepContent transitionDuration={300}>
+                                <ArticleGridList articles={userArticles} articleActions={this.buildActionList(true)} loading={loading}/>
+                            </StepContent>
+                        </Step>
+                    }
+                </Stepper>
             </div>
         );
     }
