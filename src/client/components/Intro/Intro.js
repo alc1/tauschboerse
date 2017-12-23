@@ -61,7 +61,7 @@ export default class Intro extends React.Component {
                     <Paper className="intro__option-box">
                         <h2 className="intro__subtitle">Anmelden</h2>
                         <span>Melde Dich an, wenn Du deine Artikel tauschen möchtest.</span>
-                        <RaisedButton style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>
+                        <RaisedButton data-button-id="login" style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>
                     </Paper>
                     <Paper className="intro__option-box">
                         <h2 className="intro__subtitle">Registrieren</h2>

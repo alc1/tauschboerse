@@ -12,8 +12,12 @@ const webdriverio = require('webdriverio');
 
 describe('Login test (end-to-end)', () => {
     it('Test that a user can login', () => {
-        browser.url('http://localhost:3000/login');
+        browser.url('http://localhost:3000');
         expect(browser.getTitle()).toBe('Tauschbörse');
+
+        browser.click('button[data-button-id="login"]');
+        browser.waitForExist('.login-form__title', 5000);
+        expect(browser.getText('.login-form__title')).toBe('Melde Dich mit deiner E-Mail-Adresse an:');
 
         browser.setValue('input[type="text"][name="email"]', 'max@mustermann.com');
         expect(browser.getValue('input[type="text"][name="email"]')).toBe('max@mustermann.com');
