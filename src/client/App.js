@@ -15,7 +15,7 @@ import ArticleEditorPage from './containers/ArticleEditorPage';
 import TradeDetailPage from './containers/TradeDetailPage';
 import RegistrationPage from './containers/RegistrationPage';
 import LoginPage from './containers/LoginPage';
-import NoMatchPage from './components/NoMatchPage/NoMatchPage';
+import NoMatchPage from './containers/NoMatchPage';
 
 import PrivateRoute from './containers/PrivateRoute';
 import PublicRoute from './containers/PublicRoute';

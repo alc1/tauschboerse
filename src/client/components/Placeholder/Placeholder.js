@@ -19,6 +19,11 @@ export default class Placeholder extends React.Component {
         }).isRequired
     };
 
+    static defaultProps = {
+        loading: false,
+        loadingText: ''
+    };
+
     render() {
         const { width, height, loading, text, loadingText } = this.props;
         const { fontFamily } = this.props.muiTheme;

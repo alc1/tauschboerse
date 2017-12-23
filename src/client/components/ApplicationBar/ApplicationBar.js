@@ -64,7 +64,6 @@ export default class ApplicationBar extends React.Component {
             <div>
                 <AppBar
                     style={appbarStyles}
-                    className="appbar"
                     title="Tauschbörse"
                     iconElementLeft={<IconButton><MenuIcon/></IconButton>}
                     iconElementRight={loginButtonBar}
