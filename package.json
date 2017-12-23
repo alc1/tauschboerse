@@ -63,7 +63,7 @@
     "eject": "react-scripts eject",
     "start-server": "node ./src/server/index.js",
     "reset-data": "node ./src/server/resetData.js",
-    "test-login": "./node_modules/.bin/wdio ./test/config/wdio.conf.js"
+    "test-e2e": "./node_modules/.bin/wdio ./test/config/wdio.conf.js"
   },
   "proxy": "http://localhost:3001"
 }

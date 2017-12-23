@@ -86,7 +86,7 @@ export default class Dashboard extends React.Component {
                     <span className="dashboard__text" style={{ fontFamily: fontFamily }}>Hallo {user.name}</span>
                 )}
                 <RaisedButton style={buttonStyle} label="Marktplatz durchstöbern" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')} primary/>
-                <RaisedButton style={buttonStyle} label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>
+                <RaisedButton data-button-id="logout" style={buttonStyle} label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>
                 <div className="dashboard__charts-container">
                     <div className="dashboard__charts-paper-container">
                         <Paper className="dashboard__charts-paper">
