@@ -23,10 +23,21 @@
     margin: 10px;
 }
 
+.intro__swap-image-wrapper {
+    margin: 10px;
+}
+
 .intro__title {
     color: #555555;
     text-align: center;
     font-size: 2.5em;
+}
+
+.intro__subtitle {
+    color: #555555;
+    text-align: center;
+    font-size: 1.5em;
+    margin: 10px;
 }
 
 .intro__swap-image {
@@ -59,18 +70,22 @@
     animation-iteration-count: infinite;
 }
 
-.intro__text {
-    color: #555555;
-    text-align: center;
-    font-size: 1.5em;
+.intro__options-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
     margin: 10px;
 }
 
-.intro__account-buttons-bar {
+.intro__option-box {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     margin: 10px;
     text-align: center;
+    width: 300px;
 }
 
 @media (min-width: 1000px) {

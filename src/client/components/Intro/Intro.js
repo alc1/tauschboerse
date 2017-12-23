@@ -18,7 +18,6 @@ import Tablet from '../_svg/Tablet';
 import './Intro.css';
 
 const buttonStyle = { margin: '10px' };
-const swapCircleStyle = { margin: '10px' };
 
 export default class Intro extends React.Component {
 
@@ -44,7 +43,7 @@ export default class Intro extends React.Component {
                         <Flower className="intro__image2"/>
                         <Bike className="intro__image3"/>
                     </div>
-                    <Paper zDepth={3} circle style={swapCircleStyle}>
+                    <Paper className="intro__swap-image-wrapper" zDepth={3} circle>
                         <Swap className="intro__swap-image"/>
                     </Paper>
                     <div className="intro__images-group">
@@ -53,13 +52,23 @@ export default class Intro extends React.Component {
                         <Tablet className="intro__image1"/>
                     </div>
                 </div>
-                <RaisedButton style={buttonStyle} label="Marktplatz durchstöbern" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')} primary/>
-                <span className="intro__text" style={{ fontFamily: fontFamily }}>Melde Dich an, wenn Du deine Artikel tauschen möchtest.</span>
-                <Paper className="intro__account-buttons-bar">
-                    <RaisedButton style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>
-                    <span>Hast Du noch kein Benutzerkonto?</span>
-                    <RaisedButton style={buttonStyle} label="Neues Konto erstellen" icon={<RegistrationIcon/>} onClick={this.goTo.bind(this, '/registration')} secondary/>
-                </Paper>
+                <div className="intro__options-bar">
+                    <Paper className="intro__option-box">
+                        <h2 className="intro__subtitle">Marktplatz</h2>
+                        <span>Du kannst den Marktplatz auch als Gast durchstöbern.</span>
+                        <RaisedButton style={buttonStyle} label="Zum Marktplatz" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')}/>
+                    </Paper>
+                    <Paper className="intro__option-box">
+                        <h2 className="intro__subtitle">Anmelden</h2>
+                        <span>Melde Dich an, wenn Du deine Artikel tauschen möchtest.</span>
+                        <RaisedButton style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>
+                    </Paper>
+                    <Paper className="intro__option-box">
+                        <h2 className="intro__subtitle">Registrieren</h2>
+                        <span>Du bist noch nicht registriert?</span>
+                        <RaisedButton style={buttonStyle} label="Registrieren" icon={<RegistrationIcon/>} onClick={this.goTo.bind(this, '/registration')} secondary/>
+                    </Paper>
+                </div>
             </div>
         );
     }
