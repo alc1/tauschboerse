@@ -9,6 +9,7 @@ import { handleError } from './common';
 export const ARTICLES_FOUND = 'ARTICLES_FOUND';
 export const LAST_SEARCH_CLEARED = 'LAST_SEARCH_CLEARED';
 export const TRADE_CREATED = 'TRADE_CREATED';
+export const SECTION_OPENED = 'SECTION_OPENED';
 
 /*
  * Action Creators
@@ -28,6 +29,11 @@ const lastSearchCleared = () => ({
 const tradeCreated = (theTrade) => ({
     type: TRADE_CREATED,
     trade: theTrade
+});
+
+const sectionOpened = (theSectionIndex) => ({
+    type: SECTION_OPENED,
+    sectionIndex: theSectionIndex
 });
 
 /*
@@ -67,12 +73,13 @@ export const findArticles = (theSearchText, theVersion) => dispatch => {
         .catch((err) => handleError(err, dispatch));
 };
 
-export const clearLastSearch = () => dispatch => {
+export const clearLastSearch = () => dispatch =>
     dispatch(lastSearchCleared());
-}
 
-export const createTrade = (theArticle) => dispatch => {
+export const createTrade = (theArticle) => dispatch =>
     axios.post('/api/trades', { articleIds: [theArticle._id] })
         .then(response => dispatch(tradeCreated(response.data)))
         .catch(err => handleError(err, dispatch));
-}
+
+export const openSection = (theSectionIndex) => dispatch =>
+    dispatch(sectionOpened(theSectionIndex));

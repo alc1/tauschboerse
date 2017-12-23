@@ -25,10 +25,12 @@ export default class MarketplacePage extends React.Component {
     static propTypes = {
         lastSearch: PropTypes.object,
         user: PropTypes.object,
-        findArticles: PropTypes.func.isRequired,
         trade: PropTypes.object,
+        sectionIndex: PropTypes.number.isRequired,
+        findArticles: PropTypes.func.isRequired,
         clearLastSearch: PropTypes.func.isRequired,
         createTrade: PropTypes.func.isRequired,
+        openSection: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
@@ -42,8 +44,7 @@ export default class MarketplacePage extends React.Component {
     state = {
         searchText: '',
         userArticles: [],
-        notUserArticles: [],
-        sectionIndex: 0
+        notUserArticles: []
     };
 
     getSearchText(location) {
@@ -155,7 +156,7 @@ export default class MarketplacePage extends React.Component {
     };
 
     onSectionClicked = (theSectionIndex) => {
-        this.setState({ sectionIndex: theSectionIndex === this.state.sectionIndex ? -1 : theSectionIndex });
+        this.props.openSection(theSectionIndex === this.props.sectionIndex ? -1 : theSectionIndex);
     };
 
     createFirstSectionText = (theNumberOfResults) => {
@@ -173,8 +174,8 @@ export default class MarketplacePage extends React.Component {
     };
 
     render() {
-        const { loading, muiTheme } = this.props;
-        const { searchText, notUserArticles, userArticles, sectionIndex } = this.state;
+        const { loading, muiTheme, sectionIndex } = this.props;
+        const { searchText, notUserArticles, userArticles } = this.state;
 
         return (
             <div>
