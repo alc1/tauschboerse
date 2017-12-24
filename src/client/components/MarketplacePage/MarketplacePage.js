@@ -179,7 +179,7 @@ export default class MarketplacePage extends React.Component {
 
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle="Auf dem Marktplatz"/>
                 <ArticleSearchInput text={searchText} onSearch={this.onSearch}/>
                 <Stepper
                     activeStep={sectionIndex}

@@ -55,7 +55,7 @@ export default class Intro extends React.Component {
                 <div className="intro__options-bar">
                     <Paper className="intro__option-box">
                         <h2 className="intro__subtitle">Marktplatz</h2>
-                        <span>Du kannst den Marktplatz auch als Gast durchstöbern.</span>
+                        <span>Du kannst den Marktplatz als Gast durchstöbern und alle Artikel ansehen.</span>
                         <RaisedButton style={buttonStyle} label="Zum Marktplatz" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')}/>
                     </Paper>
                     <Paper className="intro__option-box">

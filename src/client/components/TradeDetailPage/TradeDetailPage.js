@@ -70,7 +70,7 @@ export default class TradeDetailPage extends React.Component {
     render() {
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle="Tauschgeschäft verwalten"/>
                 {this.state.trade && <TradeDetail trade={this.state.trade} user={this.props.user} onAction={this.doTradeAction} setLoading={this.props.setLoading} />}
             </div>
         );

@@ -57,7 +57,7 @@ export default class LoginPage extends React.Component {
         const { email, currentPassword, errors } = this.state;
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle="Anmeldung"/>
                 <LoginForm
                     email={email}
                     currentPassword={currentPassword}

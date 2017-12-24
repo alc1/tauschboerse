@@ -110,7 +110,7 @@ export default class UserArticlesPage extends React.Component {
         const articleTitle = articleToDelete ? articleToDelete.title : '';
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle="Meine Artikel verwalten"/>
                 <SearchBar
                     ref={element => this.filterField = element}
                     hintText="Nach Titel / Beschreibung filtern ..."

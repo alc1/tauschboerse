@@ -106,7 +106,7 @@ export default class UserDetailsPage extends React.Component {
         const userDetails = { name, email, registration, changePassword, currentPassword, newPassword, passwordConfirmation };
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle="Mein Konto verwalten"/>
                 <form className="user-editor__container" onSubmit={this.onSubmit}>
                     <UserDetailsForm
                         userDetails={userDetails}

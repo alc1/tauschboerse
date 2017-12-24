@@ -190,13 +190,32 @@ export default class ArticleEditorPage extends React.Component {
         return false;
     };
 
+    getSubTitle = (isEditAllowed) => {
+        if (this.articleFound) {
+            if (isEditAllowed) {
+                if (this.props.match.params.articleId) {
+                    return 'Artikel bearbeiten';
+                }
+                else {
+                    return 'Neuer Artikel erfassen';
+                }
+            }
+            else {
+                return 'Artikel ansehen';
+            }
+        }
+        else {
+            return 'Artikel nicht gefunden';
+        }
+    };
+
     render() {
         const { user, loading } = this.props;
         const { title, description, categories, photos, status, created, owner, errors, modified } = this.state;
         let isEditAllowed = this.isEditAllowed(owner, user);
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle={this.getSubTitle(isEditAllowed)}/>
                 {this.articleFound ?
                     <form className="article-editor__container" onSubmit={this.onSubmit}>
                         <ArticleForm
@@ -222,7 +241,7 @@ export default class ArticleEditorPage extends React.Component {
                         </PageButton>}
                     </form>
                     :
-                    <Placeholder width={300} height={300} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>
+                    <Placeholder width={300} height={300} loading={loading} text="Artikel nicht gefunden" loadingText="... Artikel wird geladen ..."/>
                 }
             </div>
         );

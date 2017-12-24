@@ -7,6 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 
+import AppTitle from '../AppTitle/AppTitle';
 import Navigation from '../../containers/Navigation';
 import LoadingIndicator from '../../containers/LoadingIndicator';
 import GlobalMessage from '../../containers/GlobalMessage';
@@ -23,7 +24,8 @@ export default class ApplicationBar extends React.Component {
     static propTypes = {
         history: PropTypes.object.isRequired,
         logout: PropTypes.func.isRequired,
-        user: PropTypes.object
+        user: PropTypes.object,
+        subtitle: PropTypes.string
     };
 
     state = {
@@ -52,6 +54,7 @@ export default class ApplicationBar extends React.Component {
     };
 
     render() {
+        const { subtitle } = this.props;
         let loginButtonBar;
         if (this.props.user) {
             loginButtonBar = <FlatButton label="Logout" onClick={this.onLogout}/>;
@@ -64,7 +67,8 @@ export default class ApplicationBar extends React.Component {
             <div>
                 <AppBar
                     style={appbarStyles}
-                    title="Tauschbörse"
+                    titleStyle={{ lineHeight: subtitle ? 'normal' : '64px' }}
+                    title={<AppTitle subtitle={subtitle}/>}
                     iconElementLeft={<IconButton><MenuIcon/></IconButton>}
                     iconElementRight={loginButtonBar}
                     onLeftIconButtonClick={this.toggleMenu}/>

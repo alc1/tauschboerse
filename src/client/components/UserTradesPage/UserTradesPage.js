@@ -63,7 +63,7 @@ export default class UserTradesPage extends React.Component {
 
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle="Meine Tauschgeschäfte verwalten"/>
                 <TradeGridList trades={this.state.activeTrades} loading={loading} actions={this.buildActionList()}  />
                 <TradeGridList trades={this.state.finishedTrades} loading={loading} actions={this.buildActionList()} />
             </div>

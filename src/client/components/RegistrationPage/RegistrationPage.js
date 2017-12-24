@@ -67,7 +67,7 @@ export default class RegistrationPage extends React.Component {
         const { name, email, newPassword, passwordConfirmation, errors } = this.state;
         return (
             <div>
-                <ApplicationBar/>
+                <ApplicationBar subtitle="Registrierung"/>
                 <RegistrationForm
                     name={name}
                     email={email}
