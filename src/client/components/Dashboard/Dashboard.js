@@ -6,19 +6,24 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import MarketplaceIcon from 'material-ui/svg-icons/communication/business';
-import ShowIcon from 'material-ui/svg-icons/image/remove-red-eye';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 import { cyan500, blue500, orange900, deepOrangeA700 } from 'material-ui/styles/colors';
 
+import PlusIcon from 'material-ui/svg-icons/content/add';
+import ArticlesIcon from 'material-ui/svg-icons/action/list';
+import SwapIcon from 'material-ui/svg-icons/action/swap-horiz';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
+import ShowIcon from 'material-ui/svg-icons/image/remove-red-eye';
+
 import Placeholder from '../../containers/Placeholder';
-import Info from '../_svg/Info';
+import TradesList from '../TradesList/TradesList';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
 import TradesModel from '../../model/TradesModel';
 
 import './Dashboard.css';
 
-const buttonStyle = { margin: '10px' };
+const buttonStyle = { marginLeft: '10px', marginRight: '10px', marginBottom: '10px' };
 const toolbarStyle = { width: '100%' };
 const toolbarTitleStyle = { color: 'black' };
 
@@ -50,20 +55,30 @@ export default class Dashboard extends React.Component {
         this.props.history.push(thePath);
     };
 
+    showTrade = (theTrade) => {
+        this.goTo(`/trade/${theTrade._id}`);
+    };
+
+    createTradeAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
+        return { label, icon, onClick, isPrimary, isSecondary, isRaised };
+    };
+
+    createTradeActions = () => {
+        return [
+            this.createTradeAction("Angebot ansehen", <ShowIcon/>, this.showTrade, true, false, true)
+        ];
+    };
+
     render() {
         const { user, articles, loading } = this.props;
         const { fontFamily } = this.props.muiTheme;
-        const { accent1Color } = this.props.muiTheme.palette;
-
-        const countIncomingRequests = 0; // TODO: Count incoming requests: trades.map(trade => new Trade(trade)).map(trade => trade.currentOffer).reduce((sum, offer) => offer.state === OfferState.OFFER_STATE_REQUESTED ? sum + 1 : sum, 0);// and sender is not current user
-
+        const trades = new TradesModel(this.props.trades, user);
+        const countIncomingRequests = trades.receivedTrades.length;
         const countArticlesFree = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_FREE ? sum + 1 : sum, 0);
         const countArticlesInNegotiation = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALING ? sum + 1 : sum, 0);
         const countArticlesDealed = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALED ? sum + 1 : sum, 0);
         const countArticlesDeleted = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DELETED ? sum + 1 : sum, 0);
         const countArticlesAll = countArticlesFree + countArticlesInNegotiation + countArticlesDealed + countArticlesDeleted;
-
-        let trades = new TradesModel(this.props.trades, user);
 
         const articlesData = [
             { name: 'Frei', value: countArticlesFree, fill: cyan500 },
@@ -80,56 +95,76 @@ export default class Dashboard extends React.Component {
 
         return (
             <div className="dashboard__container">
-                {countIncomingRequests > 0 ? (
-                    <span className="dashboard__text" style={{ fontFamily: fontFamily }}><Info width={25} height={25} fill={accent1Color}/>Hallo {user.name}, Du hast eingehende Tauschanfragen<Info width={25} height={25} fill={accent1Color}/></span>
-                ) : (
-                    <span className="dashboard__text" style={{ fontFamily: fontFamily }}>Hallo {user.name}</span>
-                )}
-                <RaisedButton style={buttonStyle} label="Marktplatz durchstöbern" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')} primary/>
-                <RaisedButton data-button-id="logout" style={buttonStyle} label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>
+                <span className="dashboard__text" style={{ fontFamily: fontFamily }}>Hallo {user.name}</span>
+                <div className="dashboard__options-bar">
+                    <Paper className="dashboard__option-box">
+                        <h2 className="dashboard__subtitle">Marktplatz</h2>
+                        <span className="dashboard__option-text">Durchstöbere den Marktplatz und finde, was Du schon immer gesucht hast.</span>
+                        <RaisedButton style={buttonStyle} label="Zum Marktplatz" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')}/>
+                    </Paper>
+                    <Paper className="dashboard__option-box">
+                        <h2 className="dashboard__subtitle">Tauschgeschäfte</h2>
+                        <span className="dashboard__option-text">Verwalte hier deine Tauschgeschäfte.</span>
+                        <RaisedButton style={buttonStyle} label="Meine Tauschgeschäfte" icon={<SwapIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/trades`)} primary/>
+                    </Paper>
+                    <Paper className="dashboard__option-box">
+                        <h2 className="dashboard__subtitle">Artikel</h2>
+                        <span className="dashboard__option-text">Verwalte hier deine Artikel.</span>
+                        <RaisedButton style={buttonStyle} label="Neuer Artikel erfassen" icon={<PlusIcon/>} onClick={this.goTo.bind(this, '/article')}/>
+                        <RaisedButton style={buttonStyle} label="Meine Artikel" icon={<ArticlesIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/articles`)} primary/>
+                    </Paper>
+                    <Paper className="dashboard__option-box">
+                        <h2 className="dashboard__subtitle">Benutzerkonto</h2>
+                        <span className="dashboard__option-text">Verwalte hier dein Benutzerkonto.</span>
+                        <RaisedButton style={buttonStyle} label="Mein Konto" icon={<AccountIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/details`)} primary/>
+                        <RaisedButton data-button-id="logout" style={buttonStyle}  label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>
+                    </Paper>
+                </div>
+                <Paper className="dashboard__news">
+                    <Toolbar style={toolbarStyle}>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyle} text={countIncomingRequests > 0 ? 'Du hast eingehende Tauschanfragen' : 'Eingehende Tauschanfragen'}/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    {countIncomingRequests > 0 ? (
+                        <TradesList trades={trades.receivedTrades} loading={loading} tradeActions={this.createTradeActions()}/>
+                    ) : (
+                        <Placeholder width={100} height={100} loading={loading} text="Keine eingehenden Tauschanfragen" loadingText="... Tauschgeschäfte werden geladen ..."/>
+                    )}
+                </Paper>
                 <div className="dashboard__charts-container">
-                    <div className="dashboard__charts-paper-container">
-                        <Paper className="dashboard__charts-paper">
-                            <Toolbar style={toolbarStyle}>
-                                <ToolbarGroup>
-                                    <ToolbarTitle style={toolbarTitleStyle} text={`Meine Artikel (${countArticlesAll})`}/>
-                                </ToolbarGroup>
-                                <ToolbarGroup>
-                                    <RaisedButton style={buttonStyle} label="Anzeigen" icon={<ShowIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/articles`)} primary/>
-                                </ToolbarGroup>
-                            </Toolbar>
-                            {countArticlesAll > 0 ? (
-                                <PieChart width={450} height={400}>
-                                    <Pie dataKey="value" data={articlesData} innerRadius={20} outerRadius={120} isAnimationActive label/>
-                                    <Tooltip/>
-                                    <Legend/>
-                                </PieChart>
-                            ) : (
-                                <Placeholder width={450} height={343} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>
-                            )}
-                        </Paper>
-                    </div>
-                    <div className="dashboard__charts-paper-container">
-                        <Paper className="dashboard__charts-paper">
-                            <Toolbar style={toolbarStyle}>
-                                <ToolbarGroup>
-                                    <ToolbarTitle style={toolbarTitleStyle} text={`Tauschgeschäfte (${trades.count})`}/>
-                                </ToolbarGroup>
-                                <ToolbarGroup>
-                                    <RaisedButton style={buttonStyle} label="Anzeigen" icon={<ShowIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/trades`)} primary/>
-                                </ToolbarGroup>
-                            </Toolbar>
-                            {trades.count > 0 ? (
-                                <PieChart width={450} height={400}>
-                                    <Pie dataKey="value" data={tradesData} innerRadius={20} outerRadius={120} isAnimationActive label/>
-                                    <Tooltip/>
-                                    <Legend/>
-                                </PieChart>
-                            ) : (
-                                <Placeholder width={450} height={343} loading={loading} text="Keine Tauschgeschäfte gefunden" loadingText="... Tauschgeschäfte werden geladen ..."/>
-                            )}
-                        </Paper>
-                    </div>
+                    <Paper className="dashboard__chart-box">
+                        <Toolbar style={toolbarStyle}>
+                            <ToolbarGroup>
+                                <ToolbarTitle style={toolbarTitleStyle} text={`Meine Artikel (${countArticlesAll})`}/>
+                            </ToolbarGroup>
+                        </Toolbar>
+                        {countArticlesAll > 0 ? (
+                            <PieChart width={450} height={400}>
+                                <Pie dataKey="value" data={articlesData} innerRadius={20} outerRadius={120} isAnimationActive label/>
+                                <Tooltip/>
+                                <Legend/>
+                            </PieChart>
+                        ) : (
+                            <Placeholder width={450} height={343} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>
+                        )}
+                    </Paper>
+                    <Paper className="dashboard__chart-box">
+                        <Toolbar style={toolbarStyle}>
+                            <ToolbarGroup>
+                                <ToolbarTitle style={toolbarTitleStyle} text={`Tauschgeschäfte (${trades.count})`}/>
+                            </ToolbarGroup>
+                        </Toolbar>
+                        {trades.count > 0 ? (
+                            <PieChart width={450} height={400}>
+                                <Pie dataKey="value" data={tradesData} innerRadius={20} outerRadius={120} isAnimationActive label/>
+                                <Tooltip/>
+                                <Legend/>
+                            </PieChart>
+                        ) : (
+                            <Placeholder width={450} height={343} loading={loading} text="Keine Tauschgeschäfte gefunden" loadingText="... Tauschgeschäfte werden geladen ..."/>
+                        )}
+                    </Paper>
                 </div>
             </div>
         );

@@ -34,7 +34,7 @@ class TradeModel {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserSender;
     }
 
-    get hasReceivedCurrentOfer() {
+    get hasReceivedCurrentOffer() {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
     }
 

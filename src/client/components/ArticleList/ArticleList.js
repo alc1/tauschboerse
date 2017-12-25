@@ -10,7 +10,22 @@ export default class ArticleList extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
-        loading: PropTypes.bool.isRequired
+        loading: PropTypes.bool.isRequired,
+        hideCheckbox: PropTypes.bool.isRequired,
+        hideCategories: PropTypes.bool.isRequired,
+        hideDescription: PropTypes.bool.isRequired,
+        hideOwner: PropTypes.bool.isRequired,
+        hideCreationDate: PropTypes.bool.isRequired,
+        hideStatus: PropTypes.bool.isRequired
+    };
+
+    static defaultProps = {
+        hideCheckbox: false,
+        hideCategories: false,
+        hideDescription: false,
+        hideOwner: false,
+        hideCreationDate: false,
+        hideStatus: false
     };
 
     state = {
@@ -24,6 +39,7 @@ export default class ArticleList extends React.Component {
     };
 
     generateArticleList = () => {
+        const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus } = this.props;
         return this.props.articles.map(article => {
             const isSelected = !!this.state.selectedArticles.find(selectedArticle => selectedArticle._id === article._id);
             return (
@@ -32,7 +48,13 @@ export default class ArticleList extends React.Component {
                     article={article}
                     onSelectionToggled={this.onSelectionToggled}
                     selectable={true}
-                    selected={isSelected}/>
+                    selected={isSelected}
+                    hideCheckbox={hideCheckbox}
+                    hideCategories={hideCategories}
+                    hideDescription={hideDescription}
+                    hideOwner={hideOwner}
+                    hideCreationDate={hideCreationDate}
+                    hideStatus={hideStatus}/>
             );
         });
     };

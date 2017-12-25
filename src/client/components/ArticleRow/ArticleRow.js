@@ -21,12 +21,24 @@ export default class ArticleRow extends React.Component {
         article: PropTypes.object.isRequired,
         selectable: PropTypes.bool.isRequired,
         selected: PropTypes.bool.isRequired,
-        onSelectionToggled: PropTypes.func.isRequired
+        onSelectionToggled: PropTypes.func.isRequired,
+        hideCheckbox: PropTypes.bool.isRequired,
+        hideCategories: PropTypes.bool.isRequired,
+        hideDescription: PropTypes.bool.isRequired,
+        hideOwner: PropTypes.bool.isRequired,
+        hideCreationDate: PropTypes.bool.isRequired,
+        hideStatus: PropTypes.bool.isRequired
     };
     
     static defaultProps = {
         selectable: false,
-        selected: false
+        selected: false,
+        hideCheckbox: false,
+        hideCategories: false,
+        hideDescription: false,
+        hideOwner: false,
+        hideCreationDate: false,
+        hideStatus: false
     };
 
     onSelectionToggled = (theEvent, isChecked) => {
@@ -35,6 +47,7 @@ export default class ArticleRow extends React.Component {
 
     render() {
         const { article, selected, selectable } = this.props;
+        const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus } = this.props;
         const { title, description, status, created, owner, categories, photos } = article;
         const name = (owner) ? owner.name : '';
         const categoryNames = (categories) ? categories.map(category => category.name).join(', ') : '';
@@ -44,20 +57,20 @@ export default class ArticleRow extends React.Component {
         return (
             <Paper className="article-row__container">
                 <div className="article-row__checkbox-column">
-                    <Checkbox checked={selected} disabled={!selectable} onCheck={this.onSelectionToggled}/>
+                    {!hideCheckbox && <Checkbox checked={selected} disabled={!selectable} onCheck={this.onSelectionToggled}/>}
                 </div>
                 <div className="article-row__image-column">
                     {photoSource ? <Photo imageClassName="article-row__image" photos={photos} mainPhotoIndex={mainPhotoIndex}/> : <PhotoPlaceholder width={100} height={100}/>}
                 </div>
                 <div className="article-row__text-column">
                     <span className="article-row__title">{title}</span>
-                    <span className="article-row__categories">{categoryNames}</span>
-                    <span className="article-row__description">{description}</span>
+                    {!hideCategories && <span className="article-row__categories">{categoryNames}</span>}
+                    {!hideDescription && <span className="article-row__description">{description}</span>}
                 </div>
                 <div>
-                    <AvatarTag text={name} icon={<AccountIcon/>}/>
-                    <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>
-                    <ArticleStatusTag status={status}/>
+                    {!hideOwner && <AvatarTag text={name} icon={<AccountIcon/>}/>}
+                    {!hideCreationDate && <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>}
+                    {!hideStatus && <ArticleStatusTag status={status}/>}
                 </div>
             </Paper>
         );
