@@ -19,6 +19,7 @@ import NoMatchPage from './containers/NoMatchPage';
 
 import PrivateRoute from './containers/PrivateRoute';
 import PublicRoute from './containers/PublicRoute';
+import LoggedInRoute from './containers/LoggedInRoute';
 
 import store from '../client/store/store';
 
@@ -36,7 +37,7 @@ export default class App extends React.Component {
                         <Switch>
                             <Route exact path="/" component={HomePage}/>
                             <Route path="/marketplace" component={MarketplacePage}/>
-                            <Route exact path="/article" component={ArticleEditorPage}/>
+                            <LoggedInRoute exact path="/article" component={ArticleEditorPage}/>
                             <Route exact path="/article/:articleId" component={ArticleEditorPage}/>
                             <Route exact path="/trade/:tradeId" component={TradeDetailPage}/>
                             <PublicRoute exact path="/registration" component={RegistrationPage}/>
