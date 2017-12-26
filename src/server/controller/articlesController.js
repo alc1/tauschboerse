@@ -6,6 +6,8 @@ const path = require('path');
 const articleCreatorValidator = require('./articleCreatorValidator');
 const articleUpdaterValidator = require('./articleUpdaterValidator');
 
+const ArticleStatus = require('../../shared/constants/ArticleStatus');
+
 const dataCache = require('../services/DataCache').dataCache;
 
 function getArticlesByOwner(req, res) {
@@ -26,14 +28,25 @@ function getArticleById(req, res) {
 
 function deleteArticleById(req, res) {
     const { articleId } = req.params;
-    dataCache.deleteArticleById(articleId)
-        .then(() => {
-            deletePhotos(articleId);
-            res.json({ articleId });
-        })
-        .catch(err => {
-            res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
-        });
+    const article = dataCache.getArticleById(articleId);
+    if (article) {
+        if (article.status !== ArticleStatus.STATUS_FREE) {
+            res.status(500).json({ globalError: 'Der Artikel konnte nicht gelöscht werden, weil er nicht frei ist.' });
+        }
+        else {
+            dataCache.deleteArticleById(articleId)
+                .then(() => {
+                    deletePhotos(articleId);
+                    res.json({ articleId });
+                })
+                .catch(() => {
+                    res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
+                });
+        }
+    }
+    else {
+        res.status(404).json({ globalError: 'Der zu löschende Artikel wurde nicht gefunden.' });
+    }
 }
 
 async function createArticle(req, res) {
