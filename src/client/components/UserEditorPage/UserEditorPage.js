@@ -11,6 +11,7 @@ import PageButton from '../PageButton/PageButton';
 import { OK_MESSAGE } from '../../store/actions/application';
 
 import userDetailsValidator from '../../../shared/validations/userDetails';
+import Gender from '../../../shared/constants/Gender';
 
 import './UserEditorPage.css';
 
@@ -25,8 +26,10 @@ export default class UserDetailsPage extends React.Component {
     };
 
     state = {
+        gender: Gender.MALE,
         name: '',
         email: '',
+        address: '',
         currentPassword: '',
         newPassword: '',
         passwordConfirmation: '',
@@ -36,13 +39,20 @@ export default class UserDetailsPage extends React.Component {
     };
 
     componentDidMount() {
-        const { name, email } = this.props.user;
-        this.setState({ name, email });
+        const { gender, name, email, address } = this.props.user;
+        this.setState({ gender, name, email, address });
     }
 
     onChange = (theEvent) => {
         this.setState({
             [theEvent.target.name]: theEvent.target.value,
+            modified: true
+        });
+    };
+
+    onGenderSelectionChange = (theEvent, theKey, theValue) => {
+        this.setState({
+            gender: theValue,
             modified: true
         });
     };
@@ -55,8 +65,10 @@ export default class UserDetailsPage extends React.Component {
             newPassword: !newChangePasswordState ? '' : this.state.newPassword,
             passwordConfirmation: !newChangePasswordState ? '' : this.state.passwordConfirmation,
             errors: {
+                gender: this.state.errors.gender,
                 name: this.state.errors.name,
                 email: this.state.errors.email,
+                address: this.state.errors.address,
                 currentPassword: !newChangePasswordState ? undefined : this.state.errors.currentPassword,
                 newPassword: !newChangePasswordState ? undefined : this.state.errors.newPassword,
                 passwordConfirmation: !newChangePasswordState ? undefined : this.state.errors.passwordConfirmation,
@@ -67,9 +79,9 @@ export default class UserDetailsPage extends React.Component {
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.props.setLoading(true);
-        const { email, name, currentPassword, newPassword, passwordConfirmation } = this.state;
+        const { gender, name, email, address, currentPassword, newPassword, passwordConfirmation } = this.state;
         const { _id, registration } = this.props.user;
-        const user = { email, name, registration, currentPassword, newPassword, passwordConfirmation };
+        const user = { gender, name, email, address, registration, currentPassword, newPassword, passwordConfirmation };
         user._id = _id;
         const validation = userDetailsValidator.validate(user);
         if (validation.isValid) {
@@ -101,9 +113,9 @@ export default class UserDetailsPage extends React.Component {
 
     render() {
         const { loading, user } = this.props;
-        const { name, email, currentPassword, newPassword, passwordConfirmation, changePassword, errors, modified } = this.state;
+        const { gender, name, email, address, currentPassword, newPassword, passwordConfirmation, changePassword, errors, modified } = this.state;
         const { registration } = user;
-        const userDetails = { name, email, registration, changePassword, currentPassword, newPassword, passwordConfirmation };
+        const userDetails = { gender, name, email, address, registration, changePassword, currentPassword, newPassword, passwordConfirmation };
         return (
             <div>
                 <ApplicationBar subtitle="Mein Konto verwalten"/>
@@ -113,6 +125,7 @@ export default class UserDetailsPage extends React.Component {
                         errors={errors}
                         loading={loading}
                         onChange={this.onChange}
+                        onGenderSelectionChange={this.onGenderSelectionChange}
                         onSubmit={this.onSubmit}/>
                     <UserPasswordForm
                         userDetails={userDetails}

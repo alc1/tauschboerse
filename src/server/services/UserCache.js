@@ -135,8 +135,10 @@ class UserCache {
             physicalRecord._id = theUser._id;
         }
 
+        physicalRecord.gender = theUser.gender;
         physicalRecord.email = theUser.email;
         physicalRecord.name = theUser.name;
+        physicalRecord.address = theUser.address;
         physicalRecord.registration = new Date(theUser.registration);
 
         return physicalRecord;
@@ -146,8 +148,10 @@ class UserCache {
         let user = new User(null);
 
         user._id = thePhysicalRecord._id;
+        user.gender = thePhysicalRecord.gender;
         user.email = thePhysicalRecord.email;
         user.name = thePhysicalRecord.name;
+        user.address = thePhysicalRecord.address;
         user.registration = thePhysicalRecord.registration;
 
         delete user.currentPassword;

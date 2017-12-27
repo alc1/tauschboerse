@@ -20,7 +20,15 @@ export default class ArticleForm extends React.Component {
 
     static propTypes = {
         isDisplayMode: PropTypes.bool.isRequired,
-        article: PropTypes.object.isRequired,
+        article: PropTypes.shape({
+            title: PropTypes.string.isRequired,
+            description: PropTypes.string.isRequired,
+            categories: PropTypes.array.isRequired,
+            photos: PropTypes.array.isRequired,
+            status: PropTypes.string,
+            created: PropTypes.string,
+            owner: PropTypes.object
+        }).isRequired,
         loading: PropTypes.bool.isRequired,
         errors: PropTypes.object,
         onChange: PropTypes.func,
@@ -63,12 +71,11 @@ export default class ArticleForm extends React.Component {
                             isDisplayMode={isDisplayMode}
                             inputRef={inputElement => this.firstInputElement = inputElement}
                             error={errors.title}
-                            label="Titel"
+                            label={isDisplayMode ? 'Titel' : 'Titel *'}
                             onChange={onChange}
                             value={title}
                             field="title"
-                            disabled={loading}
-                        />
+                            disabled={loading}/>
                         <InputComponent
                             isDisplayMode={isDisplayMode}
                             error={errors.description}
@@ -77,8 +84,7 @@ export default class ArticleForm extends React.Component {
                             value={description}
                             field="description"
                             multiLine={true}
-                            disabled={loading}
-                        />
+                            disabled={loading}/>
                         <CategoryInputField
                             isDisplayMode={isDisplayMode}
                             categories={categories}
@@ -86,8 +92,8 @@ export default class ArticleForm extends React.Component {
                             loading={loading}
                             onAddCategory={onAddCategory}
                             onRemoveCategory={onRemoveCategory}
-                            allowNewValues={true}
-                        />
+                            allowNewValues={true}/>
+                        {!isDisplayMode && <span className="article-form__hint-text">* Obligatorisches Feld</span>}
                     </div>
                 </Paper>
             </div>

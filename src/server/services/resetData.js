@@ -1,5 +1,6 @@
 const TradeState = require('../../shared/constants/TradeState');
 const OfferState = require('../../shared/constants/OfferState');
+const Gender = require('../../shared/constants/Gender');
 
 function resetData(dataCache) {
     const articles = [
@@ -19,10 +20,10 @@ function resetData(dataCache) {
         { user1Id: 1, user2Id: 0, state: TradeState.TRADE_STATE_INIT, offers: [{ senderId: 1, state: OfferState.OFFER_STATE_INIT, articleIds: [0, 3] }], user1HasDelivered: false, user2HasDelivered: false }
     ];
     const users = [
-        {email: 'calbiez@hsr.ch', name: 'Christian Albiez', newPassword: 'c', registration: new Date()},
-        {email: 'stephen.atchison@hsr.ch', name: 'Stephen Atchison', newPassword: 'stephen', registration: new Date()},
-        {email: 'max@mustermann.com', name: 'Max Mustermann', newPassword: 'max', registration: new Date()},
-        {email: 'jamesbond007@agent.com', name: 'James Bond', newPassword: 'james', registration: new Date()}
+        {gender: Gender.MALE, email: 'calbiez@hsr.ch', name: 'Christian Albiez', newPassword: 'c', registration: new Date()},
+        {gender: Gender.MALE, email: 'stephen.atchison@hsr.ch', name: 'Stephen Atchison', newPassword: 'stephen', registration: new Date()},
+        {gender: Gender.MALE, email: 'max@mustermann.com', name: 'Max Mustermann', newPassword: 'max', registration: new Date()},
+        {gender: Gender.MALE, email: 'jamesbond007@agent.com', name: 'James Bond', newPassword: 'james', registration: new Date()}
     ];
 
     function insertUsers() {

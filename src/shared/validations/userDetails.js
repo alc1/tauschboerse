@@ -8,6 +8,9 @@ function validate(theUser) {
     let errors = {};
 
     if (theUser) {
+        if (isEmpty(theUser.gender)) {
+            errors.gender = 'Die Anrede ist obligatorisch';
+        }
         if (isEmpty(theUser.name)) {
             errors.name = 'Der Name ist obligatorisch';
         }
@@ -37,6 +40,7 @@ function validate(theUser) {
         }
     }
     else {
+        errors.gender = 'Die Anrede ist obligatorisch';
         errors.name = 'Der Name ist obligatorisch';
         errors.email = 'Die E-Mail ist obligatorisch';
     }

@@ -10,6 +10,7 @@ import RegistrationForm from '../RegistrationForm/RegistrationForm';
 import { OK_MESSAGE } from '../../store/actions/application';
 
 import registrationValidator from '../../../shared/validations/registration';
+import Gender from '../../../shared/constants/Gender';
 
 import './RegistrationPage.css';
 
@@ -24,8 +25,10 @@ export default class RegistrationPage extends React.Component {
     };
 
     state = {
+        gender: Gender.MALE,
         name: '',
         email: '',
+        address: '',
         newPassword: '',
         passwordConfirmation: '',
         errors: {}
@@ -35,11 +38,15 @@ export default class RegistrationPage extends React.Component {
         this.setState({ [theEvent.target.name]: theEvent.target.value });
     };
 
+    onGenderSelectionChange = (theEvent, theKey, theValue) => {
+        this.setState({ gender: theValue });
+    };
+
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.props.setLoading(true);
-        const { email, name, newPassword, passwordConfirmation } = this.state;
-        const user = { email, name, newPassword, passwordConfirmation };
+        const { gender, email, name, address, newPassword, passwordConfirmation } = this.state;
+        const user = { gender, email, name, address, newPassword, passwordConfirmation };
         const validation = registrationValidator.validate(user);
         if (validation.isValid) {
             this.props.createUser(user)
@@ -64,18 +71,21 @@ export default class RegistrationPage extends React.Component {
 
     render() {
         const { loading } = this.props;
-        const { name, email, newPassword, passwordConfirmation, errors } = this.state;
+        const { gender, name, email, address, newPassword, passwordConfirmation, errors } = this.state;
         return (
             <div>
                 <ApplicationBar subtitle="Registrierung"/>
                 <RegistrationForm
+                    gender={gender}
                     name={name}
                     email={email}
+                    address={address}
                     newPassword={newPassword}
                     passwordConfirmation={passwordConfirmation}
                     errors={errors}
                     loading={loading}
                     onChange={this.onChange}
+                    onGenderSelectionChange={this.onGenderSelectionChange}
                     onSubmit={this.onSubmit}>
                     <div className="registration-page__buttonbar">
                         <div className="registration-page__button">

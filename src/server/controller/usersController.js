@@ -28,7 +28,7 @@ function login(req, res) {
     const passwordToCheck = (req.isNewUser) ? user.newPassword: user.currentPassword;
     const acceptedUser = dataCache.authenticateUser(user.email, passwordToCheck);
     if (acceptedUser) {
-        res.json({ token: createToken(acceptedUser._id, acceptedUser.name, acceptedUser.email, acceptedUser.registration) });
+        res.json({ token: createToken(acceptedUser._id, acceptedUser.gender, acceptedUser.name, acceptedUser.email, acceptedUser.address, acceptedUser.registration) });
     }
     else {
         res.status(400).json({
@@ -65,7 +65,7 @@ function updateUser(req, res) {
     if (validation.success) {
         const preparedUser = dataCache.prepareUser(user);
         dataCache.saveUser(preparedUser)
-            .then(user => res.json({ token: createToken(user._id, user.name, user.email, user.registration) }))
+            .then(user => res.json({ token: createToken(user._id, user.gender, user.name, user.email, user.address, user.registration) }))
             .catch(() => res.status(500).json({ globalError: 'Unbekannter Server-Fehler' }));
     }
     else {
@@ -73,12 +73,14 @@ function updateUser(req, res) {
     }
 }
 
-function createToken(theUserId, theName, theEmail, theRegistrationDate) {
-    console.log(`Create token for user ID [${theUserId}], name [${theName}], email [${theEmail}], registration [${theRegistrationDate}]`);
+function createToken(theUserId, theGender, theName, theEmail, theAddress, theRegistrationDate) {
+    console.log(`Create token for user ID [${theUserId}], gender [${theGender}], name [${theName}], email [${theEmail}], registration [${theRegistrationDate}]`);
     return jwt.sign({
         _id: theUserId,
+        gender: theGender,
         name: theName,
         email: theEmail,
+        address: theAddress,
         registration: theRegistrationDate
     }, process.env.JWT_KEY, { expiresIn: '1h' });
 }
