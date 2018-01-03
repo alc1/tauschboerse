@@ -119,7 +119,7 @@ export default class MarketplacePage extends React.Component {
 
         //
         if (nextProps.trade && (nextProps.trade !== this.props.trade)) {
-            this.props.history.push(`/trade/${nextProps.trade._id}`);
+            this.props.history.push(`/trade/show/${nextProps.trade._id}`);
         }
     }
 

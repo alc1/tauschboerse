@@ -2,6 +2,7 @@ import {
     TRADE_FETCHED,
     TRADE_NOT_FOUND,
     TRADE_SAVED,
+    TRADE_ARTICLES_SAVED,
     TRADE_STATE_CHANGED,
     TRADE_USER_ARTICLES_FETCHED,
     TRADE_PARTNER_ARTICLES_FETCHED,
@@ -125,6 +126,11 @@ export default function trade(theState = initialState, theAction) {
                 ...theState,
                 notFound: true
             };
+
+        case TRADE_ARTICLES_SAVED:
+            return {
+                ...theState
+            }
 
         case TRADE_SAVED:
         case TRADE_STATE_CHANGED:

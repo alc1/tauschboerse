@@ -45,7 +45,7 @@ export default class UserTradesPage extends React.Component {
     }
 
     showTradeDetails = (theTrade) => {
-        this.props.history.push(`/trade/${theTrade._id}`);
+        this.props.history.push(`/trade/show/${theTrade._id}`);
     };
 
     createTradeAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {

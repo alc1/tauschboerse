@@ -16,13 +16,12 @@ class TradeDetail extends React.Component {
         partnerArticles: PropTypes.object.isRequired,
         loading: PropTypes.bool,
         setLoading: PropTypes.func.isRequired,
+        saveArticles: PropTypes.func,
         startEditingUserArticles: PropTypes.func,
         cancelEditingUserArticles: PropTypes.func,
-        saveUserArticles: PropTypes.func,
         toggleUserArticle: PropTypes.func,
         startEditingPartnerArticles: PropTypes.func,
         cancelEditingPartnerArticles: PropTypes.func,
-        savePartnerArticles: PropTypes.func,
         togglePartnerArticle: PropTypes.func,
     };
 
@@ -64,8 +63,8 @@ class TradeDetail extends React.Component {
 
         return (
             <div>
-                <ChosenArticles chosenArticles={this.props.partnerArticles.chosen} allArticles={this.props.partnerArticles.all} title={tradePartnerArticlesTitle} canEdit={this.props.trade.canEdit} isEditing={this.props.partnerArticles.isEditing} startEditing={this.startEditingPartnerArticles} cancelEditing={this.props.cancelEditingPartnerArticles} saveArticles={this.props.savePartnerArticles} toggleArticle={this.props.togglePartnerArticle} />
-                <ChosenArticles chosenArticles={this.props.userArticles.chosen} allArticles={this.props.userArticles.all} title="Du bietest dafür folgende Artikel an:" canEdit={this.props.trade.canEdit}  isEditing={this.props.userArticles.isEditing} startEditing={this.startEditingUserArticles} cancelEditing={this.props.cancelEditingUserArticles} saveArticles={this.props.saveUserArticles} toggleArticle={this.props.toggleUserArticle} />
+                <ChosenArticles chosenArticles={this.props.partnerArticles.chosen} allArticles={this.props.partnerArticles.all} title={tradePartnerArticlesTitle} canEdit={this.props.trade.canEdit} isEditing={this.props.partnerArticles.isEditing} startEditing={this.startEditingPartnerArticles} cancelEditing={this.props.cancelEditingPartnerArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.togglePartnerArticle} />
+                <ChosenArticles chosenArticles={this.props.userArticles.chosen} allArticles={this.props.userArticles.all} title="Du bietest dafür folgende Artikel an:" canEdit={this.props.trade.canEdit}  isEditing={this.props.userArticles.isEditing} startEditing={this.startEditingUserArticles} cancelEditing={this.props.cancelEditingUserArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.toggleUserArticle} />
                 <section>
                     <div><button type="button" onClick={this.angebotMachen}>Angebot machen</button></div>
                 </section>
@@ -128,7 +127,7 @@ class TradeDetail extends React.Component {
     }
 
     render() {
-        let title = this.props.trade ? <h1>Tauschgeschäft mit {this.props.trade.tradePartner.name}</h1> : <h1>Unbekanntes Tauschgescäft</h1>;
+        let title = this.props.trade ? <h1>Tauschgeschäft mit {this.props.trade.tradePartner.name}</h1> : <h1>Unbekanntes Tauschgeschäft</h1>;
         let content = null;
         if (this.props.trade.isNew) {
             content = this.generateContentForNewTrade();

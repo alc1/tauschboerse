@@ -56,7 +56,7 @@ export default class Dashboard extends React.Component {
     };
 
     showTrade = (theTrade) => {
-        this.goTo(`/trade/${theTrade._id}`);
+        this.goTo(`/trade/show/${theTrade._id}`);
     };
 
     createTradeAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {

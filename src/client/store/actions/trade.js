@@ -20,10 +20,9 @@ export const TRADE_EDITING_USER_ARTICLES_STARTED = 'TRADE_EDITING_USER_ARTICLES_
 export const TRADE_EDITING_PARTNER_ARTICLES_STARTED = 'TRADE_EDITING_PARTNER_ARTICLES_STARTED';
 export const TRADE_EDITING_USER_ARTICLES_CANCELED = 'TRADE_EDITING_USER_ARTICLES_CANCELED';
 export const TRADE_EDITING_PARTNER_ARTICLES_CANCELED = 'TRADE_EDITING_PARTNER_ARTICLES_CANCELED';
-export const TRADE_USER_ARTICLES_SAVED = 'TRADE_USER_ARTICLES_SAVED';
-export const TRADE_PARTNER_ARTICLES_SAVED = 'TRADE_PARTNER_ARTICLES_SAVED';
 export const TRADE_PARTNER_ARTICLE_TOGGLED = 'TRADE_PARTNER_ARTICLE_TOGGLED';
 export const TRADE_USER_ARTICLE_TOGGLED = 'TRADE_USER_ARTICLE_TOGGLED';
+export const TRADE_ARTICLES_SAVED = 'TRADE_ARTICLES_SAVED';
 
 /*
  * Action Creators
@@ -84,6 +83,10 @@ const editingPartnerArticlesCanceled = () => ({
     type: TRADE_EDITING_PARTNER_ARTICLES_CANCELED
 });
 
+const articlesSaved = (theTrade) => ({
+    type: TRADE_ARTICLES_SAVED
+});
+
 /*
  * Thunk Actions
  */
@@ -109,12 +112,10 @@ export const saveTrade = (theTrade) => dispatch => {
     // dispatch(lastSearchCleared());
 };
 
-export const saveUserArticles = (theTrade) => dispatch => {
-
-};
-
-export const savePartnerArticles = (theTrade) => dispatch => {
-
+export const saveArticles = (theTradeId, theArticles) => dispatch => {
+    return axios.put(`/api/trades/${theTradeId}`, theArticles.map(a => a._id))
+        .then(response => dispatch(articlesSaved(new TradeModel(response.data))))
+        .catch(err => handleError(err, dispatch));
 };
 
 export const startEditingUserArticles = (theUserId, loadArticles) => dispatch => {
