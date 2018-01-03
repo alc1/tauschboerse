@@ -24,8 +24,6 @@
     align-items: center;
     height: 377px;
     max-width: 450px;
-    /*line-height: 377px;*/
-    /*border:1px solid black*/
 }
 
 .article-card__image {
@@ -38,18 +36,3 @@
     height: 50px;
     overflow: hidden;
 }
-
-/*.article-card__action-bar {*/
-    /*display: flex;*/
-    /*flex-direction: row;*/
-    /*justify-content: center;*/
-    /*align-items: stretch;*/
-    /*background: green;*/
-    /*margin: 5px;*/
-/*}*/
-
-/*@media (max-width: 750px) {*/
-    /*.article-card__action-bar {*/
-        /*flex-direction: column;*/
-    /*}*/
-/*}*/

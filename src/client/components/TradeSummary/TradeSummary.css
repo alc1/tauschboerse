@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    width: 100%;
 }
 
 .trade-summary__trade-container {
@@ -23,13 +24,14 @@
 }
 
 .trade-summary__articles-title {
-    color: #555555;
+    color: #555;
     text-align: center;
     font-size: 1.2em;
     margin: 10px;
 }
 
 .trade-summary__swap-image-wrapper {
+    align-self: center;
     margin: 10px;
 }
 
@@ -44,5 +46,16 @@
     flex-direction: row;
     justify-content: center;
     width: 100%;
-    margin: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 750px) {
+    .trade-summary__trade-container {
+        flex-direction: column;
+    }
+
+    .trade-summary__swap-image {
+        transform: rotate(90deg);
+    }
 }

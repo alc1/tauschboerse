@@ -55,7 +55,7 @@ export default class TradesList extends React.Component {
         const { loading } = this.props;
         let tradeList = this.hasTrades() ? this.generateTradeList() : <Placeholder width={300} height={300} loading={loading} text="Keine Tauschgeschäfte gefunden" loadingText="... Tauschgeschäfte werden geladen ..."/>;
         return (
-            <div className="trade-list">
+            <div className="trades-list">
                 {tradeList}
             </div>
         );

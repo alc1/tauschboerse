@@ -52,18 +52,21 @@
     "enzyme-adapter-react-15": "^1.0.5",
     "enzyme-to-json": "^3.3.0",
     "react-test-renderer": "^15.5.0",
+    "stylelint": "^8.4.0",
+    "stylelint-config-standard": "^18.0.0",
     "wdio-jasmine-framework": "^0.3.2",
     "wdio-selenium-standalone-service": "0.0.9",
     "webdriverio": "^4.9.11"
   },
   "scripts": {
+    "reset-data": "node ./src/server/resetData.js",
     "start": "react-scripts start",
+    "start-server": "node ./src/server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "start-server": "node ./src/server/index.js",
-    "reset-data": "node ./src/server/resetData.js",
-    "test-e2e": "./node_modules/.bin/wdio ./test/config/wdio.conf.js"
+    "test-e2e": "./node_modules/.bin/wdio ./test/config/wdio.conf.js",
+    "test-css": "./node_modules/.bin/stylelint ./src/**/*.css",
+    "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:3001"
 }

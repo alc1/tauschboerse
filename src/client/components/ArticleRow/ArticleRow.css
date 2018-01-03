@@ -3,7 +3,6 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-
     width: 100%;
     min-height: 100px;
 }
@@ -57,10 +56,10 @@
     white-space: pre-wrap;
 }
 
-/*.article-row__tag-column {*/
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    /*margin-left: 10px;*/
-/*}*/
+.article-row__properties {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    margin-left: 10px;
+}
