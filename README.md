@@ -1,3 +1,23 @@
+#Inhaltsverzeichnis
+* [Inhaltsverzeichnis](#table-of-content)
+* [Tauschbörse](#tauschboerse)
+  * [Module/Features](#modules-features)
+    * [Anforderungen](#requirements)
+    * [Optionale Ideen](#optional-ideas)
+    * [Implementierte Zusatzmodule/-funktionen](#implemented-additional-modules-features)
+  * [Setup](#setup)
+    * [Installation](#installation)
+    * [Testdaten](#test-data)
+  * [Applikation starten](#start-application)
+    * [1) API-Server starten](#start-api-server)
+    * [2) Web-Server starten](#start-web-server)
+  * [Tests](#tests)
+    * [a) Unit Tests](#unit-tests)
+      * [Tests für die Reducers (Redux)](#reducer-tests)
+      * [Tests für die React-Komponenten](#react-component-tests)
+    * [b) End-to-End Tests](#e2e-tests)
+    * [c) CSS Style Tests](#css-style-tests)
+
 # Tauschbörse
 
 Online-Tauschbörse im Rahmen des CAS FEE 2017. Ziel des Projekts ist es, eine Web-Applikation zu entwickeln, die es Benutzern ermöglicht, beliebige Artikel untereinander zu tauschen. Dazu wählt man die Artikel aus, die man von einem anderen Benutzer haben möchte, und bietet dafür einen oder mehrere der eigenen Artikeln zum Tausch an. Der angefragte Benutzer kann dann das Tauschgeschäft bestätigen oder ablehnen.
@@ -90,9 +110,9 @@ Wir stellen Testdaten zur Verfügung, welche mit dem folgenden Kommando eingespi
 npm run reset-data
 ```
 
-## Entwicklungsserver starten
+## Applikation starten
 
-### 1) API-Server starten mit:
+### 1) API-Server starten
 
 ```bash
 npm run start-server
@@ -100,7 +120,7 @@ npm run start-server
 
 Der API-Server läuft nun auf <code>http://localhost:3001</code>.
 
-### 2) Web-Server starten mit:
+### 2) Web-Server starten
 
 ```bash
 npm run start
@@ -122,11 +142,11 @@ npm run test
 
 Die Unit Tests decken folgenden Bereiche ab:
 
-#### - Tests für die Reducers (Redux)
+#### Tests für die Reducers (Redux)
 
 Da die Reducers "pure functions" sind, sind sie mit normalen Unit Tests einfach zu testen.
 
-#### - Tests für die React-Komponenten
+#### Tests für die React-Komponenten
 
 Es gibt verschiedenste Möglichkeiten, wie man React-Komponenten testen kann. Wir haben sogenannte "shallow" und "snapshot" Tests umgesetzt.
 
@@ -138,7 +158,7 @@ Folgende Bedingungen müssen erfüllt sein, damit diese Tests funktioniert:
 * Der Web-Server und der API-Server müssen auf localhost (Ports 3000 und 3001) laufen.
 * Der Benutzer mit der E-Mail-Adresse "max@mustermann.com" muss mit dem Passwort "max" vorhanden sein (dieser wird automatisch mit den Testdaten eingespielt).
 * Der Chrome Browser muss installiert sein (die E2E-Tests sind so konfiguriert, dass sie diesen Browser verwenden).
-* Java JRE muss installiert sein (Selenium ist in Java geschrieben und benötigt darum eine Java Runtime Environment).
+* Eine Java Runtime Environment muss installiert sein (Selenium ist in Java geschrieben und benötigt darum eine Java JRE).
 
 Für die beiden Testfälle wird je ein Browser-Fenster geöffnet, welche nach dem Beenden der Tests automatisch wieder geschlossen werden. Das Interagieren mit diesen Browser-Fenstern (z.B. manuell in ein Eingabefeld klicken) kann zu Fehlern in den Tests führen, weil man damit die Automatisierung aus dem Konzept bringen kann.
 
@@ -152,7 +172,7 @@ Bei fehlgeschlagenen Tests wird ein Screenshot gemacht und im Verzeichnis <code>
 
 ### c) CSS Style Tests
 
-Der Inhalt der CSS-Dateien wird mit "Stylelint" geprüft. Webstorm und Visual Studio Code wurden mit den entsprechend Plugins konfiguriert, damit Stylelint bereits beim Codieren Fehler anzeigt, sobald die definierten Coding Guidelines missachtet werden (Konfigurationsdatei: <code>.stylelintrc</code>).
+Der Inhalt der CSS-Dateien wird mit "Stylelint" geprüft. Webstorm und Visual Studio Code wurden mit den entsprechenden Plugins konfiguriert, damit Stylelint bereits beim Codieren Fehler anzeigt, sobald die definierten Coding Guidelines missachtet werden (Konfigurationsdatei <code>.stylelintrc</code>).
  
 Die Stylelint Tests können auch manuell mit folgendem Kommando ausgeführt werden:
 
