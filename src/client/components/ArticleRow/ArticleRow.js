@@ -67,7 +67,7 @@ export default class ArticleRow extends React.Component {
                     {!hideCategories && <span className="article-row__categories">{categoryNames}</span>}
                     {!hideDescription && <span className="article-row__description">{description}</span>}
                 </div>
-                <div>
+                <div className="article-row__properties">
                     {!hideOwner && <AvatarTag text={name} icon={<AccountIcon/>}/>}
                     {!hideCreationDate && <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>}
                     {!hideStatus && <ArticleStatusTag status={status}/>}

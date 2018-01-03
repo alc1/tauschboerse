@@ -7,7 +7,7 @@
 }
 
 .dashboard__text {
-    color: #555555;
+    color: #555;
     text-align: center;
     font-size: 2em;
 }
@@ -31,7 +31,7 @@
 }
 
 .dashboard__subtitle {
-    color: #555555;
+    color: #555;
     text-align: center;
     font-size: 1.5em;
     margin: 10px;

@@ -24,8 +24,10 @@
     align-items: center;
     height: 377px;
     max-width: 450px;
-    /*line-height: 377px;*/
-    /*border:1px solid black*/
+
+    /* line-height: 377px; */
+
+    /* border: 1px solid black; */
 }
 
 .trade-card__image {
