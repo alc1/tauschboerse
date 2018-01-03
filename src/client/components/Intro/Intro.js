@@ -39,17 +39,17 @@ export default class Intro extends React.Component {
                 <h1 className="intro__title" style={{ fontFamily: fontFamily }}>Willkommen bei der Tauschbörse!</h1>
                 <div className="intro__image-container">
                     <div className="intro__images-group">
-                        <Camera className="intro__image1"/>
-                        <Flower className="intro__image2"/>
-                        <Bike className="intro__image3"/>
+                        <Camera className="intro__small-image intro__image--animation"/>
+                        <Flower className="intro__medium-image intro__image--animation"/>
+                        <Bike className="intro__large-image intro__image--animation"/>
                     </div>
                     <Paper className="intro__swap-image-wrapper" zDepth={3} circle>
-                        <Swap className="intro__swap-image"/>
+                        <Swap className="intro__swap-image intro__image--animation"/>
                     </Paper>
                     <div className="intro__images-group">
-                        <Toys className="intro__image3"/>
-                        <Watch className="intro__image2"/>
-                        <Tablet className="intro__image1"/>
+                        <Toys className="intro__large-image intro__image--animation"/>
+                        <Watch className="intro__medium-image intro__image--animation"/>
+                        <Tablet className="intro__small-image intro__image--animation"/>
                     </div>
                 </div>
                 <div className="intro__options-bar">
