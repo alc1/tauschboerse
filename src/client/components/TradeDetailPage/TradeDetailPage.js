@@ -8,16 +8,20 @@ import TradeAction from '../../constants/TradeAction';
 
 export default class TradeDetailPage extends React.Component {
 
-    state = {
-        trade: null
-    };
-
     static propTypes = {
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
-        userArticles: PropTypes.array,
-        partnerArticles: PropTypes.array,
+        userArticles: PropTypes.object,
+        partnerArticles: PropTypes.object,
         loadTrade: PropTypes.func.isRequired,
+        startEditingUserArticles: PropTypes.func.isRequired,
+        startEditingPartnerArticles: PropTypes.func.isRequired,
+        cancelEditingUserArticles: PropTypes.func.isRequired,
+        cancelEditingPartnerArticles: PropTypes.func.isRequired,
+        saveUserArticles: PropTypes.func.isRequired,
+        savePartnerArticles: PropTypes.func.isRequired,
+        toggleUserArticle: PropTypes.func.isRequired,
+        togglePartnerArticle: PropTypes.func.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         loadPartnerArticles: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
@@ -28,17 +32,12 @@ export default class TradeDetailPage extends React.Component {
     componentDidMount() {
         this.props.setLoading(true);
         const { tradeId } = this.props.match.params;
-        this.props.loadTrade(tradeId)
+        this.props.loadTrade(tradeId, this.props.user)
             .then(() => this.props.setLoading(false))
             .catch(() => this.props.setLoading(false));
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.trade && (!this.props.trade || (this.props.trade !== nextProps.trade))) {
-            this.setState({ trade: new TradeModel(nextProps.trade, this.props.user) });
-        } else {
-            this.setState({ trades: null });
-        }
     }
 
     doTradeAction = (theAction) => {
@@ -57,10 +56,10 @@ export default class TradeDetailPage extends React.Component {
             case TradeAction.TRADE_ACTION_WITHDRAW:
                 break;
             case TradeAction.TRADE_ACTION_LOAD_USER_ARTICLES:
-                this.state.loadUserArticles(this.props.user._id);
+                this.props.loadUserArticles(this.props.user._id);
                 break;
             case TradeAction.TRADE_ACTION_LOAD_PARTNER_ARTICLES:
-                this.state.loadPartnerArticles(this.props.trade.tradePartner._id);
+                this.props.loadPartnerArticles(this.props.trade.tradePartner._id);
                 break;
             default:
                 break;
@@ -71,7 +70,7 @@ export default class TradeDetailPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Tauschgeschäft verwalten"/>
-                {this.state.trade && <TradeDetail trade={this.state.trade} user={this.props.user} onAction={this.doTradeAction} setLoading={this.props.setLoading} />}
+                {this.props.trade && <TradeDetail {...this.props} />}
             </div>
         );
     }

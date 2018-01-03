@@ -9,11 +9,21 @@ export default class ArticleRowList extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
-        isEditing: PropTypes.bool.isRequired
+        isEditing: PropTypes.bool.isRequired,
+        isArticleSelected: PropTypes.func,
+        articleToggled: PropTypes.func
     };
-    
+
+    isArticleSelected = (article) => (typeof this.props.isArticleSelected === 'function') ? this.props.isArticleSelected(article) : false;
+
+    selectionToggled = (e) => {
+        if (typeof this.props.articleToggled === 'function') {
+            this.props.articleToggled(e);
+        }
+    }
+
     render() {
-        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} isEditing={this.props.isEditing} onSelectionToggled={(article, isSelected) => console.log(`Selection of ${article.title} is now: ${isSelected}`)}/>);
+        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} selectable={true} selected={this.isArticleSelected(article)} hideCheckbox={!this.props.isEditing} onSelectionToggled={this.selectionToggled}/>);
 
         return (
             <div className="article-row-list_container">

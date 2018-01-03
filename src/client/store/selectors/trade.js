@@ -13,5 +13,5 @@ export const getUserArticles = (theState) => {
 };
 
 export const getPartnerArticles = (theState) => {
-    return theState[TRADE_SLICE_NAME].parterArticles;
+    return theState[TRADE_SLICE_NAME].partnerArticles;
 };

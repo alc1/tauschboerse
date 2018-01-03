@@ -19,52 +19,45 @@ const toolbarTitleStyles = { color: 'black' };
 export default class ChosenArticles extends React.Component {
 
     static propTypes = {
-        articles: PropTypes.array.isRequired,
+        chosenArticles: PropTypes.array.isRequired,
+        allArticles: PropTypes.array.isRequired,
         canEdit: PropTypes.bool.isRequired,
+        isEditing: PropTypes.bool.isRequired,
         loading: PropTypes.bool.isRequired,
-        onAction: PropTypes.func,
         title: PropTypes.string.isRequired,
-        user: PropTypes.object,
-        setLoading: PropTypes.func.isRequired,
-        loadAction: PropTypes.string.isRequired
+        startEditing: PropTypes.func,
+        cancelEditing: PropTypes.func,
+        saveChanges: PropTypes.func,
+        toggleArticle: PropTypes.func
     };
 
     static defaultProps = {
         canEdit: false,
-        loading: false,
-    }
-
-    state = {
         isEditing: false,
-        newlyChosenArticles: null
-    };
-
-    stopEditing() {
-        this.setState({
-            isEditing: false,
-            newlyChosenArticles: null
-        });
+        loading: false,
+        allArticles: []
     }
 
-    onArticleToggled = (article) => {
-        
+    isArticleSelected = (article) => {
+        return this.props.chosenArticles.some(a => a._id === article._id);
     };
 
     edit = () => {
-        this.props.onAction(this.props.loadAction);
-        this.setState({
-            isEditing: true,
-            newlyChosenArticles: this.props.articles.slice()
-        });
+        if (typeof this.props.startEditing === 'function') {
+            this.props.startEditing();
+        }
     }
 
     save = () => {
-        this.props.onAction('SAVE', this.state.newlyChosenArticles);
-        this.stopEditing();
+        if (typeof this.props.saveChanges === 'function') {
+            this.props.saveChanges();
+        }
     }
 
     cancel = () => {
-        this.stopEditing();
+        if (typeof this.props.cancelEditing === 'function') {
+            this.props.cancelEditing();
+        }
     }
         
     generateToolbarButton(label, icon, clickHandler, key) {
@@ -85,11 +78,11 @@ export default class ChosenArticles extends React.Component {
     }
 
     generateArticleChooser() {
-        return this.state.isEditing ? <ArticleChooser articles={this.state.newlyChosenArticles} user={this.props.user} onArticleToggled={this.onArticleToggled} setLoading={this.props.setLoading} /> : null;
+        return this.props.isEditing ? <ArticleChooser articles={this.props.allArticles} chosenArticles={this.props.chosenArticles} toggleArticle={this.props.toggleArticle} /> : null;
     }
 
     render() {
-        const toolbarButtons = this.props.canEdit ? (this.state.isEditing ? this.generateToolbarButtonsForEdit() : this.generateToolbarButtonsForShow()) : [];
+        const toolbarButtons = this.props.canEdit ? (this.props.isEditing ? this.generateToolbarButtonsForEdit() : this.generateToolbarButtonsForShow()) : [];
 
         return (
             <div className="chosen-articles__container">
@@ -103,7 +96,7 @@ export default class ChosenArticles extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="chosen-articles__articles-container">
-                        <ArticleRowList articles={this.props.articles} isEditing={this.state.isEditing} />
+                        <ArticleRowList articles={this.props.chosenArticles} isEditing={this.props.isEditing} isArticleSelected={this.isArticleSelected} toggleArticle={this.props.toggleArticle} />
                         {this.generateArticleChooser()}
                     </div>
                 </Paper>

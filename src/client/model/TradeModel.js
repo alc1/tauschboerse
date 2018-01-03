@@ -30,6 +30,10 @@ class TradeModel {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION);
     }
 
+    get isMakingCounteroffer() {
+        return this.hasCounteroffer && this.isUserSender;
+    }
+
     get hasMadeCurrentOffer() {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserSender;
     }
@@ -91,6 +95,10 @@ class TradeModel {
     get userArticles() {
         this.prepareArticleLists();
         return this._userArticles;
+    }
+
+    get canEdit() {
+        return this.isNew || this.isMakingCounteroffer;
     }
 
     prepareArticleLists() {

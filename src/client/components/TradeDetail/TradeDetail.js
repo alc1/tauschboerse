@@ -12,33 +12,62 @@ class TradeDetail extends React.Component {
     static propTypes = {
         trade: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
-        onAction: PropTypes.func.isRequired,
+        userArticles: PropTypes.object.isRequired,
+        partnerArticles: PropTypes.object.isRequired,
         loading: PropTypes.bool,
-        setLoading: PropTypes.func.isRequired
+        setLoading: PropTypes.func.isRequired,
+        startEditingUserArticles: PropTypes.func,
+        cancelEditingUserArticles: PropTypes.func,
+        saveUserArticles: PropTypes.func,
+        toggleUserArticle: PropTypes.func,
+        startEditingPartnerArticles: PropTypes.func,
+        cancelEditingPartnerArticles: PropTypes.func,
+        savePartnerArticles: PropTypes.func,
+        togglePartnerArticle: PropTypes.func,
     };
 
     static defaultProps = {
         trade: null
     };
 
-    state = {
-        isEditingWantedArticles: false,
-        isEditingOfferedArticles: false
+    // state = {
+    // };
+
+    startEditingUserArticles = () => {
+        if (!this.props.userArticles.isEditing && this.props.trade.canEdit && (typeof this.props.startEditingUserArticles === 'function')) {
+            var promise;
+            if (!this.props.userArticles.all) {
+                promise = this.props.loadUserArticles(this.props.user._id);
+            } else {
+                promise = Promise.resolve(null);
+            }
+            promise.then(() => { this.props.startEditingUserArticles(); }).catch(() => {});
+        }
     };
 
-    doAction(theAction) {
-        this.props.onAction(theAction);
-    }
+    startEditingPartnerArticles = () => {
+        if (!this.props.partnerArticles.isEditing && this.props.trade.canEdit && (typeof this.props.startEditingPartnerArticles === 'function')) {
+            var promise;
+            if (!this.props.partnerArticles.all) {
+                promise = this.props.loadPartnerArticles(this.props.trade.tradePartner._id);
+            } else {
+                promise = Promise.resolve(null);
+            }
+            promise.then(() => { this.props.startEditingPartnerArticles(); }).catch(() => {});
+        }
+    };
+
+    angebotMachen = () => { };
 
     generateContentForNewTrade() {
         let tradePartnerArticlesTitle = `Du möchtest folgende Artikel von ${this.props.trade.tradePartner.name}:`;
 
         return (
             <div>
-                <ChosenArticles articles={this.props.trade.tradePartnerArticles} user={this.props.trade.tradePartner} title={tradePartnerArticlesTitle} canEdit={true} isEditing={this.state.isEditingWantedArticles} onAction={this.onAction} loading={this.props.loading} setLoading={this.props.setLoading} loadAction={TradeAction.TRADE_ACTION_LOAD_PARTNER_ARTICLES} />
-                <ChosenArticles articles={this.props.trade.userArticles} user={this.props.user} title="Du bietest dafür folgende Artikel an:" canEdit={true} isEditing={this.state.isEditingOfferedArticles} onAction={this.onAction} loading={this.props.loading} setLoading={this.props.setLoading} loadAction={TradeAction.TRADE_ACTION_LOAD_USER_ARTICLES} />
+                <ChosenArticles chosenArticles={this.props.partnerArticles.chosen} allArticles={this.props.partnerArticles.all} title={tradePartnerArticlesTitle} canEdit={this.props.trade.canEdit} isEditing={this.props.partnerArticles.isEditing} startEditing={this.startEditingPartnerArticles} cancelEditing={this.props.cancelEditingPartnerArticles} saveArticles={this.props.savePartnerArticles} toggleArticle={this.props.togglePartnerArticle} />
+                <ChosenArticles chosenArticles={this.props.userArticles.chosen} allArticles={this.props.userArticles.all} title="Du bietest dafür folgende Artikel an:" canEdit={this.props.trade.canEdit}  isEditing={this.props.userArticles.isEditing} startEditing={this.startEditingUserArticles} cancelEditing={this.props.cancelEditingUserArticles} saveArticles={this.props.saveUserArticles} toggleArticle={this.props.toggleUserArticle} />
                 <section>
-                    <div><button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_SUBMIT)}>Angebot machen</button></div>
+                    <div><button type="button" onClick={this.angebotMachen}>Angebot machen</button></div>
                 </section>
             </div>
         );
@@ -64,7 +93,7 @@ class TradeDetail extends React.Component {
         
         return (
             <div>
-                <ChosenArticles articles={this.props.trade.userArticles} title={tradePartnerArticlesTitle} loading={this.props.loading} />
+                <ChosenArticles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} loading={this.props.loading} />
                 <ChosenArticles articles={this.props.trade.userArticles} title="Dafür bietet er/sie Dir folgende Artikel an:" loading={this.props.loading} />
                 <section>
                     <div>
@@ -90,7 +119,6 @@ class TradeDetail extends React.Component {
     }
 
     generateContentForCanceledTrade() {
-
     }
 
     generateContentForUnforeseenState() {
@@ -108,7 +136,7 @@ class TradeDetail extends React.Component {
             content = this.generateContentForMadeOffer();
         } else if (this.props.trade.requiresInputFromUser) {
             content = this.generateContentForReceivedOffer();
-        } else if (this.props.trade.isMakingCounterOffer) {
+        } else if (this.props.trade.isMakingCounteroffer) {
             content = this.generateContentForCounterOffer();
         } else if (this.props.trade.isDeclined) {
             content = this.generateContentForDeclinedOffer();

@@ -10,8 +10,8 @@ export default class ArticleChooser extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
-        user: PropTypes.object.isRequired,
-        setLoading: PropTypes.func.isRequired
+        chosenArticles: PropTypes.array.isRequired,
+        toggleArticle: PropTypes.func.isRequired
     };
 
     state = {
@@ -34,12 +34,22 @@ export default class ArticleChooser extends React.Component {
     // generateArticleWrappers() {
         
     // }
+
+    selectionToggled = (e) => {
+        if (typeof this.props.toggleArticle === 'function') {
+            this.props.toggleArticle(e);
+        }
+    };
     
+    isArticleSelected = (article) => {
+        return this.props.chosenArticles.some(a => a._id === article._id);
+    };
+
     render() {
         return (
             <div className="article-chooser_container">
                 <ArticleSearchInput text={this.state.searchText} onSearch={this.onSearch} />
-                <ArticleRowList articles={this.props.articles} isEditing={this.state.isEditing} />
+                <ArticleRowList articles={this.props.articles} isEditing={true} isArticleSelected={this.isArticleSelected} toggleArticle={this.props.toggleArticle} />
             </div>
         );
     }
