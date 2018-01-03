@@ -2,3 +2,8 @@ body {
     margin: 0;
     background: #F5F5F5;
 }
+
+.base-page {
+    padding-left: 24px;
+    padding-right: 24px;
+}

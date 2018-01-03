@@ -1,3 +1,4 @@
 .article-row-list_container {
     display: flex;
+    flex-flow: column wrap;
 }

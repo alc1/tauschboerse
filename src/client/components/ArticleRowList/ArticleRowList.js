@@ -11,14 +11,14 @@ export default class ArticleRowList extends React.Component {
         articles: PropTypes.array.isRequired,
         isEditing: PropTypes.bool.isRequired,
         isArticleSelected: PropTypes.func,
-        articleToggled: PropTypes.func
+        toggleArticle: PropTypes.func
     };
 
     isArticleSelected = (article) => (typeof this.props.isArticleSelected === 'function') ? this.props.isArticleSelected(article) : false;
 
-    selectionToggled = (e) => {
-        if (typeof this.props.articleToggled === 'function') {
-            this.props.articleToggled(e);
+    selectionToggled = (article, isChecked) => {
+        if (typeof this.props.toggleArticle === 'function') {
+            this.props.toggleArticle(article);
         }
     }
 

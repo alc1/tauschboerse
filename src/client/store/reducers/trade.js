@@ -1,5 +1,6 @@
 import {
     TRADE_FETCHED,
+    TRADE_NOT_FOUND,
     TRADE_SAVED,
     TRADE_STATE_CHANGED,
     TRADE_USER_ARTICLES_FETCHED,
@@ -7,11 +8,14 @@ import {
     TRADE_EDITING_PARTNER_ARTICLES_CANCELED,
     TRADE_EDITING_PARTNER_ARTICLES_STARTED,
     TRADE_EDITING_USER_ARTICLES_CANCELED,
-    TRADE_EDITING_USER_ARTICLES_STARTED
+    TRADE_EDITING_USER_ARTICLES_STARTED,
+    TRADE_PARTNER_ARTICLE_TOGGLED,
+    TRADE_USER_ARTICLE_TOGGLED
 } from '../actions/trade';
 
 export const initialState = {
     trade: null,
+    notFound: false,
     userArticles: {
         all: null,
         chosen: [],
@@ -25,6 +29,19 @@ export const initialState = {
         isEditing: false
     }
 };
+
+function toggleArticle(article, chosenArticles) {
+    let newChosenArticles = chosenArticles.slice();
+
+    let idx = chosenArticles.findIndex(a => a._id === article._id);
+    if (idx < 0) {
+        newChosenArticles.push(article);
+    } else {
+        newChosenArticles.splice(idx, 1);
+    }
+
+    return newChosenArticles;
+}
 
 export default function trade(theState = initialState, theAction) {
     switch (theAction.type) {
@@ -68,6 +85,24 @@ export default function trade(theState = initialState, theAction) {
                 }
             };
 
+        case TRADE_PARTNER_ARTICLE_TOGGLED:
+            return {
+                ...theState,
+                partnerArticles: {
+                    ...theState.partnerArticles,
+                    chosen: toggleArticle(theAction.article, theState.partnerArticles.chosen)
+                }
+            };
+
+        case TRADE_USER_ARTICLE_TOGGLED:
+            return {
+                ...theState,
+                userArticles: {
+                    ...theState.userArticles,
+                    chosen: toggleArticle(theAction.article, theState.userArticles.chosen)
+                }
+            };
+
         case TRADE_FETCHED:
             return {
                 ...theState,
@@ -83,6 +118,12 @@ export default function trade(theState = initialState, theAction) {
                     currentlyChosen: theAction.trade.tradePartnerArticles,
                     all: (theState.trade == null) || (theState.trade.tradePartner._id === theAction.trade.tradePartner._id) ? theState.partnerArticles.all : null
                 }
+            };
+
+        case TRADE_NOT_FOUND:
+            return {
+                ...theState,
+                notFound: true
             };
 
         case TRADE_SAVED:

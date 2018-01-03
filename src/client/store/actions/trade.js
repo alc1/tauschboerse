@@ -9,6 +9,7 @@ import TradeModel from '../../model/TradeModel';
  */
 
 export const TRADE_FETCHED = 'TRADE_FETCHED';
+export const TRADE_NOT_FOUND = 'TRADE_NOT_FOUND';
 export const TRADE_SAVED = 'TRADE_SAVED';
 export const TRADE_STATE_CHANGED = 'TRADE_STATE_CHANGED';
 
@@ -21,6 +22,8 @@ export const TRADE_EDITING_USER_ARTICLES_CANCELED = 'TRADE_EDITING_USER_ARTICLES
 export const TRADE_EDITING_PARTNER_ARTICLES_CANCELED = 'TRADE_EDITING_PARTNER_ARTICLES_CANCELED';
 export const TRADE_USER_ARTICLES_SAVED = 'TRADE_USER_ARTICLES_SAVED';
 export const TRADE_PARTNER_ARTICLES_SAVED = 'TRADE_PARTNER_ARTICLES_SAVED';
+export const TRADE_PARTNER_ARTICLE_TOGGLED = 'TRADE_PARTNER_ARTICLE_TOGGLED';
+export const TRADE_USER_ARTICLE_TOGGLED = 'TRADE_USER_ARTICLE_TOGGLED';
 
 /*
  * Action Creators
@@ -29,6 +32,10 @@ export const TRADE_PARTNER_ARTICLES_SAVED = 'TRADE_PARTNER_ARTICLES_SAVED';
 const tradeFetched = (theTrade) => ({
     type: TRADE_FETCHED,
     trade: theTrade,
+});
+
+const tradeNotFound = () => ({
+    type: TRADE_NOT_FOUND
 });
 
 const tradeSaved = (theTrade) => ({
@@ -49,6 +56,16 @@ const userArticlesFetched = (theArticles) => ({
 const partnerArticlesFetched = (theArticles) => ({
     type: TRADE_PARTNER_ARTICLES_FETCHED,
     articles: theArticles
+});
+
+const userArticleToggled = (theArticle) => ({
+    type: TRADE_USER_ARTICLE_TOGGLED,
+    article: theArticle
+});
+
+const partnerArticleToggled = (theArticle) => ({
+    type: TRADE_PARTNER_ARTICLE_TOGGLED,
+    article: theArticle
 });
 
 const editingUserArticlesStarted = () => ({
@@ -74,7 +91,10 @@ const editingPartnerArticlesCanceled = () => ({
 export const loadTrade = (theTradeId, theUser) => dispatch => {
     return axios.get(`/api/trades/${theTradeId}`)
         .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, theUser))))
-        .catch(err => handleError(err, dispatch));
+        .catch(err => {
+            handleError(err, dispatch);
+            dispatch(tradeNotFound());
+        });
 };
 
 export const loadUserArticles = (theUserId) => dispatch => {
@@ -99,27 +119,26 @@ export const savePartnerArticles = (theTrade) => dispatch => {
 
 export const startEditingUserArticles = (theUserId, loadArticles) => dispatch => {
     dispatch(editingUserArticlesStarted());
-    return true;
 };
 
 export const startEditingPartnerArticles = (theUserId, loadArticles) => dispatch => {
-    return startEditingArticles(theUserId, loadArticles, editingPartnerArticlesStarted, dispatch);
+    dispatch(editingPartnerArticlesStarted());
 };
 
 export const cancelEditingUserArticles = () => dispatch => {
     dispatch(editingUserArticlesCanceled());
-    return true;
 };
 
 export const cancelEditingPartnerArticles = () => dispatch => {
     dispatch(editingPartnerArticlesCanceled());
-    return true;
 };
 
 export const toggleUserArticle = (theArticle) => dispatch => {
+    dispatch(userArticleToggled(theArticle));
 };
 
 export const togglePartnerArticle = (theArticle) => dispatch => {
+    dispatch(partnerArticleToggled(theArticle));
 };
 
 export const submitTrade = (theTrade) => dispatch => {
