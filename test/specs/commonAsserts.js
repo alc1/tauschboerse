@@ -20,8 +20,8 @@ function assertLogin(theName, theEmail, thePassword) {
     browser.click('button[type="submit"]');
 
     // Check the greeting on the dashboard
-    browser.waitForExist('.dashboard__text', 5000);
-    expect(browser.getText('.dashboard__text')).toBe(`Hallo ${theName}`);
+    browser.waitForExist('.dashboard__title', 5000);
+    expect(browser.getText('.dashboard__title')).toBe(`Hallo ${theName}`);
 }
 
 function assertLogout() {

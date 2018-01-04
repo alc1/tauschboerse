@@ -1,0 +1,28 @@
+.dashboard-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    margin: 10px;
+}
+
+.dashboard-actions__action-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px;
+    text-align: center;
+    width: 300px;
+}
+
+.dashboard-actions__action-title {
+    color: #555;
+    text-align: center;
+    font-size: 1.5em;
+    margin: 10px;
+}
+
+.dashboard-actions__action-text {
+    margin: 10px;
+}
