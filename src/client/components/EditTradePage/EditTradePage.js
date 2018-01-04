@@ -72,6 +72,10 @@ export default class EditTradePage extends React.Component {
         }
     };
 
+    handleCancel = () => {
+        this.props.history.goBack();
+    }
+
     handleSave = () => {
 
     }
@@ -137,6 +141,13 @@ export default class EditTradePage extends React.Component {
 
     render() {
         let title = this.props.trade ? <h1>Tauschgeschäft mit {this.props.trade.tradePartner.name}</h1> : <h1>Unbekanntes Tauschgeschäft</h1>;
+        let navigation = (
+            <div>
+                <FlatButton label="Voriger Schritt" disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: '12px'}} />
+                <RaisedButton label="Nächster Schritt" disabled={!this.canGotoNextStep()} primary={true} onClick={this.handleNext} style={{marginRight: '48px'}} />
+                <FlatButton label="Abbrechen" onClick={this.handleCancel} />
+            </div>
+        );
 
         return (
             <div>
@@ -165,13 +176,11 @@ export default class EditTradePage extends React.Component {
                             </StepButton>
                         </Step>
                     </Stepper>
+                    {navigation}
                     <div className="tradeEditor-stepContainer">
                         {this.renderStep()}
                     </div>
-                    <div>
-                        <FlatButton label="Back" disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: 12}} />
-                        <RaisedButton label="Next" disabled={!this.canGotoNextStep()} primary={true} onClick={this.handleNext} />
-                    </div>
+                    {navigation}
                 </div>
             </div>
         );
