@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 
 import ApplicationBar from '../../containers/ApplicationBar';
-import ChosenArticles from '../ChosenArticles/ChosenArticles';
+import Articles from '../Articles/Articles';
 import TradeDetail from '../TradeDetail/TradeDetail';
 import TradeModel from '../../model/TradeModel';
 import TradeAction from '../../constants/TradeAction';
@@ -17,26 +17,26 @@ export default class EditTradePage extends React.Component {
     static propTypes = {
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
-        userArticles: PropTypes.object,
-        partnerArticles: PropTypes.object,
+        stepIndex: PropTypes.number.isRequired,
+        userArticles: PropTypes.array,
+        partnerArticles: PropTypes.array,
+        chosenUserArticles: PropTypes.array,
+        chosenPartnerArticles: PropTypes.array,
         loadTrade: PropTypes.func.isRequired,
         saveArticles: PropTypes.func.isRequired,
-        startEditingUserArticles: PropTypes.func.isRequired,
-        startEditingPartnerArticles: PropTypes.func.isRequired,
-        cancelEditingUserArticles: PropTypes.func.isRequired,
-        cancelEditingPartnerArticles: PropTypes.func.isRequired,
         toggleUserArticle: PropTypes.func.isRequired,
         togglePartnerArticle: PropTypes.func.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         loadPartnerArticles: PropTypes.func.isRequired,
+        setStepIndex: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
     };
 
-    state = {
-        stepIndex: 0
-    };
+    static defaultProps = {
+        stepIndex: 0,
+    }
 
     componentDidMount() {
         this.props.setLoading(true);
@@ -56,15 +56,19 @@ export default class EditTradePage extends React.Component {
     componentWillReceiveProps(nextProps) {
     }
 
+    canGoToPreviousStep = () => this.props.stepIndex > 0
+
+    canGotoNextStep = () => this.props.stepIndex < 3
+
     handlePrev = () => {
-        if (this.state.stepIndex > 0) {
-            this.setState({ stepIndex: this.state.stepIndex - 1 });
+        if (this.canGoToPreviousStep()) {
+            this.props.setStepIndex(this.props.stepIndex - 1);
         }
     };
 
     handleNext = () => {
-        if (this.state.stepIndex < 3) {
-            this.setState({ stepIndex: this.state.stepIndex + 1 });
+        if (this.canGotoNextStep()) {
+            this.props.setStepIndex(this.props.stepIndex + 1);
         }
     };
 
@@ -77,22 +81,32 @@ export default class EditTradePage extends React.Component {
     }
 
     renderPartnerArticleChooser() {
+        let otherPartnerArticles = this.props.partnerArticles.filter(article => !this.props.chosenPartnerArticles.some(a => a._id === article._id));
+
         return (
-            <ChosenArticles chosenArticles={this.props.partnerArticles.chosen} allArticles={this.props.partnerArticles.all} title="Bla bla bla" canEdit="true" isEditing="true" startEditing={this.startEditingPartnerArticles} cancelEditing={this.props.cancelEditingPartnerArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.togglePartnerArticle} />
+            <div>
+                <Articles articles={this.props.chosenPartnerArticles} title="Bla bla bla" isEditing={true} selected={true} filtering={false} toggleArticle={this.props.togglePartnerArticle} />
+                <Articles articles={otherPartnerArticles} title="Bla bla bla" isEditing={true} selected={false} filtering={true} toggleArticle={this.props.togglePartnerArticle} />
+            </div>
         );
     }
 
     renderUserArticleChooser() {
+        let otherUserArticles = this.props.userArticles.filter(article => !this.props.chosenUserArticles.some(a => a._id === article._id));
+
         return (
-            <ChosenArticles chosenArticles={this.props.userArticles.chosen} allArticles={this.props.userArticles.all} title="Du bietest dafür folgende Artikel an:" canEdit={this.props.trade.canEdit}  isEditing={this.props.userArticles.isEditing} startEditing={this.startEditingUserArticles} cancelEditing={this.props.cancelEditingUserArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.toggleUserArticle} />
+            <div>
+                <Articles articles={this.props.chosenUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={true} filtering={false} toggleArticle={this.props.toggleUserArticle} />
+                <Articles articles={otherUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={false} filtering={true} toggleArticle={this.props.toggleUserArticle} />
+            </div>
         );
     }
 
     renderSaveChanges() {
         return (
             <div>
-                <ChosenArticles chosenArticles={this.props.partnerArticles.chosen} allArticles={this.props.partnerArticles.all} title="Bla bla bla" canEdit={false} isEditing={false} startEditing={this.startEditingPartnerArticles} cancelEditing={this.props.cancelEditingPartnerArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.togglePartnerArticle} />
-                <ChosenArticles chosenArticles={this.props.userArticles.chosen} allArticles={this.props.userArticles.all} title="Du bietest dafür folgende Artikel an:" canEdit={false}  isEditing={false} startEditing={this.startEditingUserArticles} cancelEditing={this.props.cancelEditingUserArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.toggleUserArticle} />
+                <Articles articles={this.props.chosenPartnerArticles} title="Bla bla bla" />
+                <Articles articles={this.props.chosenUserArticles} title="Du bietest dafür folgende Artikel an:" />
                 <RaisedButton label="Speichern" primary={true} onClick={this.handleSave} />
             </div>
         );
@@ -103,7 +117,7 @@ export default class EditTradePage extends React.Component {
     }
 
     renderStep() {
-        switch(this.state.stepIndex) {
+        switch(this.props.stepIndex) {
             case 0:
                 return this.renderIntro();
 
@@ -129,24 +143,24 @@ export default class EditTradePage extends React.Component {
                 <ApplicationBar subtitle="Tauschgeschäft bearbeiten"/>
                 <div className="base-page">
                     {title}
-                    <Stepper linear={false} activeStep={this.state.stepIndex}>
-                    <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 0})}>
+                    <Stepper linear={false} activeStep={this.props.stepIndex}>
+                        <Step>
+                            <StepButton onClick={() => this.props.setStepIndex(0)}>
                                 Intro
                             </StepButton>
                         </Step>
                         <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 1})}>
+                            <StepButton onClick={() => this.props.setStepIndex(1)}>
                                 Gewünschte Artikel auswählen
                             </StepButton>
                         </Step>
                         <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 2})}>
+                            <StepButton onClick={() => this.props.setStepIndex(2)}>
                                 Artikel um Tauschen
                             </StepButton>
                         </Step>
                         <Step>
-                            <StepButton onClick={() => this.setState({stepIndex: 3})}>
+                            <StepButton onClick={() => this.props.setStepIndex(3)}>
                                 Speichern
                             </StepButton>
                         </Step>
@@ -155,8 +169,8 @@ export default class EditTradePage extends React.Component {
                         {this.renderStep()}
                     </div>
                     <div>
-                        <FlatButton label="Back" disabled={this.state.stepIndex === 0} onClick={this.handlePrev} style={{marginRight: 12}} />
-                        <RaisedButton label="Next" disabled={this.state.stepIndex === 3} primary={true} onClick={this.handleNext} />
+                        <FlatButton label="Back" disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: 12}} />
+                        <RaisedButton label="Next" disabled={!this.canGotoNextStep()} primary={true} onClick={this.handleNext} />
                     </div>
                 </div>
             </div>

@@ -1,0 +1,17 @@
+.articles__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+@media (min-width: 750px) {
+    .articles__container {
+        width: 100%;
+    }
+}
+
+.articles__paper {
+    width: 100%;
+    height: 100%;
+}

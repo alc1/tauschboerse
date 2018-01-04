@@ -3,26 +3,22 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import TradeAction from '../../constants/TradeAction';
-import ChosenArticles from '../ChosenArticles/ChosenArticles';
+import Articles from '../Articles/Articles';
 
 import './TradeDetail.css';
 
 class TradeDetail extends React.Component {
 
     static propTypes = {
-        trade: PropTypes.object.isRequired,
+        trade: PropTypes.object,
         user: PropTypes.object.isRequired,
-        userArticles: PropTypes.object.isRequired,
-        partnerArticles: PropTypes.object.isRequired,
-        loading: PropTypes.bool,
+        loading: PropTypes.bool.isRequired,
+        loadTrade: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
-        saveArticles: PropTypes.func,
-        startEditingUserArticles: PropTypes.func,
-        cancelEditingUserArticles: PropTypes.func,
-        toggleUserArticle: PropTypes.func,
-        startEditingPartnerArticles: PropTypes.func,
-        cancelEditingPartnerArticles: PropTypes.func,
-        togglePartnerArticle: PropTypes.func,
+        submitTrade: PropTypes.func.isRequired,
+        acceptTrade: PropTypes.func.isRequired,
+        declineTrade: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired
     };
 
     static defaultProps = {
@@ -32,30 +28,6 @@ class TradeDetail extends React.Component {
     // state = {
     // };
 
-    startEditingUserArticles = () => {
-        if (!this.props.userArticles.isEditing && this.props.trade.canEdit && (typeof this.props.startEditingUserArticles === 'function')) {
-            var promise;
-            if (!this.props.userArticles.all) {
-                promise = this.props.loadUserArticles(this.props.user._id);
-            } else {
-                promise = Promise.resolve(null);
-            }
-            promise.then(() => { this.props.startEditingUserArticles(); }).catch(() => {});
-        }
-    };
-
-    startEditingPartnerArticles = () => {
-        if (!this.props.partnerArticles.isEditing && this.props.trade.canEdit && (typeof this.props.startEditingPartnerArticles === 'function')) {
-            var promise;
-            if (!this.props.partnerArticles.all) {
-                promise = this.props.loadPartnerArticles(this.props.trade.tradePartner._id);
-            } else {
-                promise = Promise.resolve(null);
-            }
-            promise.then(() => { this.props.startEditingPartnerArticles(); }).catch(() => {});
-        }
-    };
-
     angebotMachen = () => { };
 
     generateContentForNewTrade() {
@@ -63,8 +35,8 @@ class TradeDetail extends React.Component {
 
         return (
             <div>
-                <ChosenArticles chosenArticles={this.props.partnerArticles.chosen} allArticles={this.props.partnerArticles.all} title={tradePartnerArticlesTitle} canEdit={this.props.trade.canEdit} isEditing={this.props.partnerArticles.isEditing} startEditing={this.startEditingPartnerArticles} cancelEditing={this.props.cancelEditingPartnerArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.togglePartnerArticle} />
-                <ChosenArticles chosenArticles={this.props.userArticles.chosen} allArticles={this.props.userArticles.all} title="Du bietest dafür folgende Artikel an:" canEdit={this.props.trade.canEdit}  isEditing={this.props.userArticles.isEditing} startEditing={this.startEditingUserArticles} cancelEditing={this.props.cancelEditingUserArticles} saveArticles={this.props.saveArticles} toggleArticle={this.props.toggleUserArticle} />
+                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
+                <Articles articles={this.props.trade.userArticles} title="Du bietest dafür folgende Artikel an:" />
                 <section>
                     <div><button type="button" onClick={this.angebotMachen}>Angebot machen</button></div>
                 </section>
@@ -77,8 +49,8 @@ class TradeDetail extends React.Component {
 
         return (
             <div>
-                <ChosenArticles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} loading={this.props.loading} />
-                <ChosenArticles articles={this.props.trade.userArticles} title="Du hast dafür folgende Artikel angeboten:" loading={this.props.loading} />
+                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
+                <Articles articles={this.props.trade.userArticles} title="Du hast dafür folgende Artikel angeboten:" />
                 <section>
                     <div>{this.props.trade.tradePartner.name} hat sich noch nicht entschieden</div>
                     <div><button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_WITHDRAW)}>Angebot zurückziehen</button></div>
@@ -92,8 +64,8 @@ class TradeDetail extends React.Component {
         
         return (
             <div>
-                <ChosenArticles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} loading={this.props.loading} />
-                <ChosenArticles articles={this.props.trade.userArticles} title="Dafür bietet er/sie Dir folgende Artikel an:" loading={this.props.loading} />
+                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
+                <Articles articles={this.props.trade.userArticles} title="Dafür bietet er/sie Dir folgende Artikel an:" />
                 <section>
                     <div>
                         <button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_ACCEPT)}>Angebot annehmen</button>

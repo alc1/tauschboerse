@@ -9,20 +9,16 @@ import TradeModel from '../../model/TradeModel';
  */
 
 export const TRADE_FETCHED = 'TRADE_FETCHED';
+export const TRADE_FETCHING = 'TRADE_FETCHING';
 export const TRADE_NOT_FOUND = 'TRADE_NOT_FOUND';
 export const TRADE_SAVED = 'TRADE_SAVED';
+export const TRADE_ARTICLES_SAVED = 'TRADE_ARTICLES_SAVED';
 export const TRADE_STATE_CHANGED = 'TRADE_STATE_CHANGED';
-
 export const TRADE_USER_ARTICLES_FETCHED = 'TRADE_USER_ARTICLES_FETCHED';
 export const TRADE_PARTNER_ARTICLES_FETCHED = 'TRADE_PARTNER_ARTICLES_FETCHED';
-
-export const TRADE_EDITING_USER_ARTICLES_STARTED = 'TRADE_EDITING_USER_ARTICLES_STARTED';
-export const TRADE_EDITING_PARTNER_ARTICLES_STARTED = 'TRADE_EDITING_PARTNER_ARTICLES_STARTED';
-export const TRADE_EDITING_USER_ARTICLES_CANCELED = 'TRADE_EDITING_USER_ARTICLES_CANCELED';
-export const TRADE_EDITING_PARTNER_ARTICLES_CANCELED = 'TRADE_EDITING_PARTNER_ARTICLES_CANCELED';
 export const TRADE_PARTNER_ARTICLE_TOGGLED = 'TRADE_PARTNER_ARTICLE_TOGGLED';
 export const TRADE_USER_ARTICLE_TOGGLED = 'TRADE_USER_ARTICLE_TOGGLED';
-export const TRADE_ARTICLES_SAVED = 'TRADE_ARTICLES_SAVED';
+export const TRADE_STEP_INDEX_SET = 'TRADE_STEP_INDEX_SET';
 
 /*
  * Action Creators
@@ -33,13 +29,22 @@ const tradeFetched = (theTrade) => ({
     trade: theTrade,
 });
 
+const tradeIsBeingFetched = () => ({
+    type: TRADE_FETCHING
+});
+
 const tradeNotFound = () => ({
     type: TRADE_NOT_FOUND
 });
 
 const tradeSaved = (theTrade) => ({
     type: TRADE_SAVED,
-    trade: theTrade,
+    trade: theTrade
+});
+
+const articlesSaved = (theTrade) => ({
+    type: TRADE_ARTICLES_SAVED,
+    trade: theTrade
 });
 
 const tradeStateChanged = (theTrade) => ({
@@ -67,24 +72,9 @@ const partnerArticleToggled = (theArticle) => ({
     article: theArticle
 });
 
-const editingUserArticlesStarted = () => ({
-    type: TRADE_EDITING_USER_ARTICLES_STARTED
-});
-
-const editingPartnerArticlesStarted = () => ({
-    type: TRADE_EDITING_PARTNER_ARTICLES_STARTED
-});
-
-const editingUserArticlesCanceled = () => ({
-    type: TRADE_EDITING_USER_ARTICLES_CANCELED
-});
-
-const editingPartnerArticlesCanceled = () => ({
-    type: TRADE_EDITING_PARTNER_ARTICLES_CANCELED
-});
-
-const articlesSaved = (theTrade) => ({
-    type: TRADE_ARTICLES_SAVED
+const stepIndexSet = (stepIndex) => ({
+    type: TRADE_STEP_INDEX_SET,
+    stepIndex: stepIndex
 });
 
 /*
@@ -92,11 +82,12 @@ const articlesSaved = (theTrade) => ({
  */
 
 export const loadTrade = (theTradeId, theUser) => dispatch => {
+    dispatch(tradeIsBeingFetched());
     return axios.get(`/api/trades/${theTradeId}`)
         .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, theUser))))
         .catch(err => {
             handleError(err, dispatch);
-            dispatch(tradeNotFound());
+            return dispatch(tradeNotFound());
         });
 };
 
@@ -116,22 +107,6 @@ export const saveArticles = (theTradeId, theArticles) => dispatch => {
     return axios.put(`/api/trades/${theTradeId}`, theArticles.map(a => a._id))
         .then(response => dispatch(articlesSaved(new TradeModel(response.data))))
         .catch(err => handleError(err, dispatch));
-};
-
-export const startEditingUserArticles = (theUserId, loadArticles) => dispatch => {
-    dispatch(editingUserArticlesStarted());
-};
-
-export const startEditingPartnerArticles = (theUserId, loadArticles) => dispatch => {
-    dispatch(editingPartnerArticlesStarted());
-};
-
-export const cancelEditingUserArticles = () => dispatch => {
-    dispatch(editingUserArticlesCanceled());
-};
-
-export const cancelEditingPartnerArticles = () => dispatch => {
-    dispatch(editingPartnerArticlesCanceled());
 };
 
 export const toggleUserArticle = (theArticle) => dispatch => {
@@ -158,6 +133,10 @@ export const declineTrade = (theTrade) => dispatch => {
     return setTradeState(theTrade, 'DECLINED', dispatch);
 };
 
+export const setStepIndex = (theStepIndex) => dispatch => {
+    return dispatch(stepIndexSet(theStepIndex));
+}
+
 function setTradeState(theTrade, theNewState, dispatch) {
     return axios.put(`/api/trades/${theTrade._id}/state`, { newState: theNewState })
         .then(response => dispatch(tradeStateChanged(response.data.trade)))
@@ -169,12 +148,3 @@ function loadArticlesByUserId(theUserId, actionCreator, dispatch) {
         .then(response => dispatch(actionCreator(response.data.articles)))
         .catch(err => handleError(err, dispatch));
 }
-
-function startEditingArticles(theUserId, loadArticles, actionCreator, dispatch) {
-    if (loadArticles) {
-        return loadArticlesByUserId(theUserId, actionCreator, dispatch);
-    } else {
-        dispatch(actionCreator(null));
-        return Promise.resolve(null);
-    }
-};

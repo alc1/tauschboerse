@@ -49,7 +49,7 @@ export default class ArticleChooser extends React.Component {
         return (
             <div className="article-chooser_container">
                 <ArticleSearchInput text={this.state.searchText} onSearch={this.onSearch} />
-                <ArticleRowList articles={this.props.articles} isEditing={true} isArticleSelected={this.isArticleSelected} toggleArticle={this.props.toggleArticle} />
+                <ArticleRowList articles={this.props.articles} isEditing={true} selected={this.isArticleSelected} toggleArticle={this.props.toggleArticle} />
             </div>
         );
     }

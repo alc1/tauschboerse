@@ -11,20 +11,12 @@ export default class TradeDetailPage extends React.Component {
     static propTypes = {
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
-        userArticles: PropTypes.object,
-        partnerArticles: PropTypes.object,
-        loadTrade: PropTypes.func.isRequired,
-        saveArticles: PropTypes.func.isRequired,
-        startEditingUserArticles: PropTypes.func.isRequired,
-        startEditingPartnerArticles: PropTypes.func.isRequired,
-        cancelEditingUserArticles: PropTypes.func.isRequired,
-        cancelEditingPartnerArticles: PropTypes.func.isRequired,
-        toggleUserArticle: PropTypes.func.isRequired,
-        togglePartnerArticle: PropTypes.func.isRequired,
-        loadUserArticles: PropTypes.func.isRequired,
-        loadPartnerArticles: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
+        loadTrade: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired,
+        submitTrade: PropTypes.func.isRequired,
+        acceptTrade: PropTypes.func.isRequired,
+        declineTrade: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 

@@ -2,9 +2,9 @@ import { connect } from 'react-redux';
 
 import EditTradePage from '../components/EditTradePage/EditTradePage';
 
-import { acceptTrade, declineTrade, loadTrade, submitTrade, loadUserArticles, loadPartnerArticles, startEditingUserArticles, startEditingPartnerArticles, cancelEditingUserArticles, cancelEditingPartnerArticles, saveArticles, toggleUserArticle, togglePartnerArticle } from '../store/actions/trade';
+import { acceptTrade, declineTrade, loadTrade, submitTrade, loadUserArticles, loadPartnerArticles, startEditingUserArticles, startEditingPartnerArticles, cancelEditingUserArticles, cancelEditingPartnerArticles, saveArticles, toggleUserArticle, togglePartnerArticle, setStepIndex } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
-import { getTrade, getPartnerArticles, getUserArticles } from '../store/selectors/trade';
+import { getTrade, getPartnerArticles, getUserArticles, getChosenPartnerArticles, getChosenUserArticles, getStepIndex } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
 import { isLoading } from '../store/selectors/application';
 
@@ -12,9 +12,12 @@ function mapStateToProps(theState) {
     return {
         trade: getTrade(theState),
         user: getUser(theState),
+        stepIndex: getStepIndex(theState),
         loading: isLoading(theState),
         userArticles: getUserArticles(theState),
-        partnerArticles: getPartnerArticles(theState)
+        partnerArticles: getPartnerArticles(theState),
+        chosenUserArticles: getChosenUserArticles(theState),
+        chosenPartnerArticles: getChosenPartnerArticles(theState)
     };
 }
 
@@ -27,10 +30,7 @@ export default connect(mapStateToProps, {
     saveArticles,
     loadUserArticles,
     loadPartnerArticles,
-    startEditingUserArticles,
-    startEditingPartnerArticles,
-    cancelEditingUserArticles,
-    cancelEditingPartnerArticles,
     toggleUserArticle,
-    togglePartnerArticle
+    togglePartnerArticle,
+    setStepIndex
 })(EditTradePage);

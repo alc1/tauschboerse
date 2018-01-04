@@ -15,3 +15,15 @@ export const getUserArticles = (theState) => {
 export const getPartnerArticles = (theState) => {
     return theState[TRADE_SLICE_NAME].partnerArticles;
 };
+
+export const getChosenUserArticles = (theState) => {
+    return theState[TRADE_SLICE_NAME].chosenUserArticles;
+};
+
+export const getChosenPartnerArticles = (theState) => {
+    return theState[TRADE_SLICE_NAME].chosenPartnerArticles;
+};
+
+export const getStepIndex = (theState) => {
+    return theState[TRADE_SLICE_NAME].stepIndex;
+}
