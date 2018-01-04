@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 
-import AppTitle from '../AppTitle/AppTitle';
+import AppTitle from '../../containers/AppTitle';
 import Navigation from '../../containers/Navigation';
 import LoadingIndicator from '../../containers/LoadingIndicator';
 import GlobalMessage from '../../containers/GlobalMessage';

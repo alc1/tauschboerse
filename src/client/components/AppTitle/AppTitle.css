@@ -1,7 +1,18 @@
-.title__main {
+.app-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.app-title__main {
     margin-top: 10px;
 }
 
-.title__sub {
+.app-title__main--clickable {
+    cursor: pointer;
+}
+
+.app-title__sub {
     font-size: small;
 }

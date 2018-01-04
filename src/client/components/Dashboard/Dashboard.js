@@ -152,7 +152,7 @@ export default class Dashboard extends React.Component {
                     <Paper className="dashboard__chart-box">
                         <Toolbar style={toolbarStyle}>
                             <ToolbarGroup>
-                                <ToolbarTitle style={toolbarTitleStyle} text={`Tauschgeschäfte (${trades.count})`}/>
+                                <ToolbarTitle style={toolbarTitleStyle} text={`Meine Tauschgeschäfte (${trades.count})`}/>
                             </ToolbarGroup>
                         </Toolbar>
                         {trades.count > 0 ? (

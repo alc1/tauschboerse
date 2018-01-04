@@ -168,9 +168,9 @@ export default class MarketplacePage extends React.Component {
 
     createSecondSectionText = (theNumberOfResults) => {
         if (theNumberOfResults === 1) {
-            return `Von meinen Artikeln entspricht ${theNumberOfResults} den Suchkriterien`;
+            return `${theNumberOfResults} eigener Artikel entspricht den Suchkriterien`;
         }
-        return `Von meinen Artikeln entsprechen ${theNumberOfResults} den Suchkriterien`;
+        return `${theNumberOfResults} eigene Artikel entsprechen den Suchkriterien`;
     };
 
     render() {

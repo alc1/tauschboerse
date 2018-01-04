@@ -6,21 +6,26 @@ import './AppTitle.css';
 export default class AppTitle extends React.Component {
 
     static propTypes = {
-        subtitle: PropTypes.string
+        history: PropTypes.object.isRequired,
+        subtitle: PropTypes.string,
+    };
+
+    goToHome = () => {
+        this.props.history.push('/');
     };
 
     getTitleToRender = () => {
         const { subtitle } = this.props;
         if (subtitle) {
             return (
-                <div>
-                    <div className="title__main">Tauschbörse</div>
-                    <div className="title__sub">{subtitle}</div>
+                <div className="app-title">
+                    <span className="app-title__main app-title__main--clickable" onClick={this.goToHome}>Tauschbörse</span>
+                    <span className="app-title__sub">{subtitle}</span>
                 </div>
             );
         }
         else {
-            return <div>Tauschbörse</div>;
+            return <span className="app-title__main--clickable" onClick={this.goToHome}>Tauschbörse</span>;
         }
     };
 
