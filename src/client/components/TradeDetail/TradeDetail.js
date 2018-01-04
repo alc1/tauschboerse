@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import TradeAction from '../../constants/TradeAction';
 import Articles from '../Articles/Articles';
@@ -29,6 +30,10 @@ class TradeDetail extends React.Component {
     // };
 
     angebotMachen = () => { };
+
+    handleEdit = () => {
+        this.props.history.push(`/trade/edit/${this.props.trade._id}`);
+    }
 
     generateContentForNewTrade() {
         let tradePartnerArticlesTitle = `Du möchtest folgende Artikel von ${this.props.trade.tradePartner.name}:`;
@@ -98,8 +103,15 @@ class TradeDetail extends React.Component {
         );
     }
 
+    renderEditButton = () => (
+        <div>
+            <RaisedButton label="Bearbeiten" disabled={!this.props.trade.canEdit} primary={true} onClick={this.handleEdit} />
+        </div>
+    );
+
     render() {
         let title = this.props.trade ? <h1>Tauschgeschäft mit {this.props.trade.tradePartner.name}</h1> : <h1>Unbekanntes Tauschgeschäft</h1>;
+
         let content = null;
         if (this.props.trade.isNew) {
             content = this.generateContentForNewTrade();
@@ -122,6 +134,7 @@ class TradeDetail extends React.Component {
         return (
             <div className="base-page">
                 {title}
+                {this.renderEditButton()}
                 {content}
             </div>
         );
