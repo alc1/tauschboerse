@@ -34,6 +34,10 @@ export default class Articles extends React.Component {
         filterText: ''
     }
 
+    onSearch = (text) => {
+
+    }
+
     toggleArticle = (article) => {
         if (typeof this.props.toggleArticle === 'function') {
             this.props.toggleArticle(article);

@@ -91,6 +91,18 @@ export const loadTrade = (theTradeId, theUser) => dispatch => {
         });
 };
 
+export const loadNewTrade = (theArticleId, theUser) => dispatch => {
+    dispatch(tradeIsBeingFetched());
+    return axios.get(`/api/trades/new/${theArticleId}`)
+        .then(
+            response => dispatch(tradeFetched(new TradeModel(response.data.trade, theUser)))
+         )
+        .catch((err) => {
+            handleError(err, dispatch);
+            return dispatch(tradeNotFound());
+        });
+};
+
 export const loadUserArticles = (theUserId) => dispatch => {
     return loadArticlesByUserId(theUserId, userArticlesFetched, dispatch);
 };

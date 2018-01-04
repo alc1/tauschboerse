@@ -134,7 +134,8 @@ export default class MarketplacePage extends React.Component {
     };
 
     startTrade = (theArticle) => {
-        this.props.createTrade(theArticle);
+        this.props.history.push(`/trade/new/${theArticle._id}`);
+        // this.props.createTrade(theArticle);
     };
 
     showArticleDetails = (theArticle) => {

@@ -14,6 +14,7 @@ import UserTradesPage from './containers/UserTradesPage';
 import ArticleEditorPage from './containers/ArticleEditorPage';
 import TradeDetailPage from './containers/TradeDetailPage';
 import EditTradePage from './containers/EditTradePage';
+import NewTradePage from './containers/NewTradePage';
 import RegistrationPage from './containers/RegistrationPage';
 import LoginPage from './containers/LoginPage';
 import NoMatchPage from './containers/NoMatchPage';
@@ -42,6 +43,7 @@ export default class App extends React.Component {
                             <Route exact path="/article/:articleId" component={ArticleEditorPage}/>
                             <Route exact path="/trade/show/:tradeId" component={TradeDetailPage}/>
                             <Route exact path="/trade/edit/:tradeId" component={EditTradePage}/>
+                            <Route exact path="/trade/new/:articleId" component={NewTradePage}/>
                             <PublicRoute exact path="/registration" component={RegistrationPage}/>
                             <PublicRoute exact path="/login" component={LoginPage}/>
                             <PrivateRoute path="/user/:userId/articles" component={UserArticlesPage}/>

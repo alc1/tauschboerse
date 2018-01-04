@@ -202,6 +202,22 @@ function getTrade(req, res) {
     }
 }
 
+function getNewTrade(req, res) {
+    const { articleId } = req.params;
+    let article = dataCache.getArticleById(articleId);
+
+    if (article === null) {
+        res.sendStatus(404);
+    }
+
+    let trade = new Trade();
+    trade.user1 = req.user;
+    trade.user2 = article.owner;
+    trade.addOffer(req.user, [article]);
+
+    res.json({ trade: trade });
+}
+
 function findTrade(id, userId) {
     let trade = dataCache.getTrade(id);
     if (trade) {
@@ -229,5 +245,6 @@ module.exports = {
     setTradeState,
     getTradesByUser,
     getTrades,
-    getTrade
+    getTrade,
+    getNewTrade
 };

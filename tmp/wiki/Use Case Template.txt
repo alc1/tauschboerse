@@ -1,0 +1,13 @@
+Name			UC[x] [name]
+
+Kurzbeschreibung	[beschreibung]
+
+Akteure
+
+Vorbedingung
+
+Nachbedingung
+
+Eingehende Daten
+
+Essenzieller Ablauf

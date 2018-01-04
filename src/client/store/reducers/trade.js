@@ -15,6 +15,7 @@ import {
 export const initialState = {
     trade: null,
     notFound: false,
+    stepIndex: 0,
     userArticles: [],
     partnerArticles: [],
     chosenUserArticles: [],
