@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import MarketplaceIcon from 'material-ui/svg-icons/communication/business';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
+
+import ActionBox from '../ActionBox/ActionBox';
 
 import './IntroActions.css';
 
@@ -24,21 +25,15 @@ export default class IntroActions extends React.Component {
     render() {
         return (
             <div className="intro-actions">
-                <Paper className="intro-actions__action-box">
-                    <h2 className="intro-actions__action-title">Marktplatz</h2>
-                    <span>Du kannst den Marktplatz als Gast durchstöbern und alle Artikel ansehen.</span>
+                <ActionBox title="Marktplatz" text="Du kannst den Marktplatz als Gast durchstöbern und alle Artikel ansehen.">
                     <RaisedButton data-button-id="marketplace" style={buttonStyle} label="Zum Marktplatz" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')}/>
-                </Paper>
-                <Paper className="intro-actions__action-box">
-                    <h2 className="intro-actions__action-title">Anmelden</h2>
-                    <span>Melde Dich an, wenn Du deine Artikel tauschen möchtest.</span>
+                </ActionBox>
+                <ActionBox title="Anmelden" text="Melde Dich an, wenn Du deine Artikel tauschen möchtest.">
                     <RaisedButton data-button-id="login" style={buttonStyle} label="Anmelden" icon={<LoginIcon/>} onClick={this.goTo.bind(this, '/login')} primary/>
-                </Paper>
-                <Paper className="intro-actions__action-box">
-                    <h2 className="intro-actions__action-title">Registrieren</h2>
-                    <span>Du bist noch nicht registriert?</span>
+                </ActionBox>
+                <ActionBox title="Registrieren" text="Du bist noch nicht registriert? Dann erstelle jetzt dein Benutzerkonto.">
                     <RaisedButton data-button-id="registration" style={buttonStyle} label="Registrieren" icon={<RegistrationIcon/>} onClick={this.goTo.bind(this, '/registration')} secondary/>
-                </Paper>
+                </ActionBox>
             </div>
         );
     }
