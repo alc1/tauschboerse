@@ -113,7 +113,7 @@ export default class UserArticlesPage extends React.Component {
                 <ApplicationBar subtitle="Meine Artikel verwalten"/>
                 <SearchBar
                     ref={element => this.filterField = element}
-                    hintText="Nach Titel / Beschreibung filtern ..."
+                    hintText="Nach Titel / Beschreibung / Kategorie filtern ..."
                     onChange={this.onFilterTextChange}
                     onRequestSearch={this.onFilterRequested}
                     value={userArticlesFilter.filterText}
