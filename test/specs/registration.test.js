@@ -45,8 +45,8 @@ describe('Registration test (end-to-end)', () => {
         browser.click('button[type="submit"]');
 
         // Check the greeting on the dashboard
-        browser.waitForExist('.dashboard__text', 5000);
-        expect(browser.getText('.dashboard__text')).toBe(`Hallo ${name}`);
+        browser.waitForExist('.dashboard__title', 5000);
+        expect(browser.getText('.dashboard__title')).toBe(`Hallo ${name}`);
 
         // Logout by clicking the logout button on the dashboard
         commonAsserts.assertLogout();

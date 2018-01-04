@@ -1,0 +1,19 @@
+.action-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px;
+    text-align: center;
+    width: 300px;
+}
+
+.action-box__title {
+    color: #555;
+    text-align: center;
+    font-size: 1.5em;
+    margin: 10px;
+}
+
+.action-box__text {
+    margin: 10px;
+}

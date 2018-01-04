@@ -43,7 +43,9 @@ const filterArticles = (theArticles, theUserArticlesFilter) => {
         return theArticles;
     }
     return theArticles.filter(article =>
-        (isMatchingFilterText(article.title, theUserArticlesFilter.filterText) || isMatchingFilterText(article.description, theUserArticlesFilter.filterText)) &&
+        (isMatchingFilterText(article.title, theUserArticlesFilter.filterText)
+            || isMatchingFilterText(article.description, theUserArticlesFilter.filterText)
+            || isMatchingFilterText(article.categories ? article.categories.map(category => category.name).join(', ') : '', theUserArticlesFilter.filterText)) &&
         (isMatchingFilterStatus(article.status, theUserArticlesFilter.filterStatus)));
 };
 

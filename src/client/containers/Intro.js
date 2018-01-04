@@ -1,7 +1,5 @@
-import { withRouter } from 'react-router-dom';
-
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import Intro from '../components/Intro/Intro';
 
-export default withRouter(muiThemeable()(Intro));
+export default muiThemeable()(Intro);

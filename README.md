@@ -154,8 +154,8 @@ Es gibt verschiedenste Möglichkeiten, wie man React-Komponenten testen kann. Wi
 
 Mit vollautomatisierten End-to-End Tests kann ein ganzer Workflow von Benutzerinteraktionen ausgeführt und auf richtiges Verhalten getestet werden. Wir haben dafür Selenium/Webdriver verwendet und damit den Login- und den Registrierungsprozess abgedeckt.
 
-Folgende Bedingungen müssen erfüllt sein, damit diese Tests funktioniert:
-* Der Web-Server und der API-Server müssen auf localhost (Ports 3000 und 3001) laufen.
+Folgende Bedingungen müssen erfüllt sein, damit diese Tests funktionieren:
+* Der Web-Server und der API-Server müssen laufen auf <code>http://localhost:3000</code> und <code>http://localhost:3001</code>.
 * Der Benutzer mit der E-Mail-Adresse "max@mustermann.com" muss mit dem Passwort "max" vorhanden sein (dieser wird automatisch mit den Testdaten eingespielt).
 * Der Chrome Browser muss installiert sein (die E2E-Tests sind so konfiguriert, dass sie diesen Browser verwenden).
 * Eine Java Runtime Environment muss installiert sein (Selenium ist in Java geschrieben und benötigt darum eine Java JRE).

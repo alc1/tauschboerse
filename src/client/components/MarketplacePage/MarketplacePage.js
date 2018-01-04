@@ -61,6 +61,7 @@ export default class MarketplacePage extends React.Component {
                 .then(() => {
                     this.props.setLoading(false);
                     this.currentSearch = '';
+                    this.openFirstSectionIfNeeded();
                 })
                 .catch(() => {
                     this.props.setLoading(false);
@@ -155,6 +156,12 @@ export default class MarketplacePage extends React.Component {
         ];
     };
 
+    openFirstSectionIfNeeded = () => {
+        if (this.props.sectionIndex === -1) {
+            this.onSectionClicked(0);
+        }
+    };
+
     onSectionClicked = (theSectionIndex) => {
         this.props.openSection(theSectionIndex === this.props.sectionIndex ? -1 : theSectionIndex);
     };
@@ -168,9 +175,9 @@ export default class MarketplacePage extends React.Component {
 
     createSecondSectionText = (theNumberOfResults) => {
         if (theNumberOfResults === 1) {
-            return `Von meinen Artikeln entspricht ${theNumberOfResults} den Suchkriterien`;
+            return `${theNumberOfResults} eigener Artikel entspricht den Suchkriterien`;
         }
-        return `Von meinen Artikeln entsprechen ${theNumberOfResults} den Suchkriterien`;
+        return `${theNumberOfResults} eigene Artikel entsprechen den Suchkriterien`;
     };
 
     render() {
@@ -189,7 +196,7 @@ export default class MarketplacePage extends React.Component {
                         <StepButton icon={sectionIndex === 0 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClicked.bind(this, 0)}>
                             <StepLabel>{this.createFirstSectionText(notUserArticles.length)}</StepLabel>
                         </StepButton>
-                        <StepContent transitionDuration={300}>
+                        <StepContent transitionDuration={0}>
                             <ArticleGridList articles={notUserArticles} articleActions={this.buildActionList(false)} loading={loading}/>
                         </StepContent>
                     </Step>
@@ -198,7 +205,7 @@ export default class MarketplacePage extends React.Component {
                             <StepButton icon={sectionIndex === 1 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClicked.bind(this, 1)}>
                                 <StepLabel>{this.createSecondSectionText(userArticles.length)}</StepLabel>
                             </StepButton>
-                            <StepContent transitionDuration={300}>
+                            <StepContent transitionDuration={0}>
                                 <ArticleGridList articles={userArticles} articleActions={this.buildActionList(true)} loading={loading}/>
                             </StepContent>
                         </Step>
