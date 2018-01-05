@@ -1,4 +1,4 @@
-.trade-summary__container {
+.trade-summary {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

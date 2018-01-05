@@ -9,7 +9,7 @@ import { handleError } from './common';
 export const ARTICLES_FOUND = 'ARTICLES_FOUND';
 export const LAST_SEARCH_CLEARED = 'LAST_SEARCH_CLEARED';
 export const TRADE_CREATED = 'TRADE_CREATED';
-export const SECTION_OPENED = 'SECTION_OPENED';
+export const MARKETPLACE_SECTION_OPENED = 'MARKETPLACE_SECTION_OPENED';
 
 /*
  * Action Creators
@@ -31,9 +31,9 @@ const tradeCreated = (theTrade) => ({
     trade: theTrade
 });
 
-const sectionOpened = (theSectionIndex) => ({
-    type: SECTION_OPENED,
-    sectionIndex: theSectionIndex
+const marketplaceSectionOpened = (theMarketplaceSectionIndex) => ({
+    type: MARKETPLACE_SECTION_OPENED,
+    marketplaceSectionIndex: theMarketplaceSectionIndex
 });
 
 /*
@@ -81,5 +81,5 @@ export const createTrade = (theArticle) => dispatch =>
         .then(response => dispatch(tradeCreated(response.data)))
         .catch(err => handleError(err, dispatch));
 
-export const openSection = (theSectionIndex) => dispatch =>
-    dispatch(sectionOpened(theSectionIndex));
+export const openMarketplaceSection = (theMarketplaceSectionIndex) => dispatch =>
+    dispatch(marketplaceSectionOpened(theMarketplaceSectionIndex));

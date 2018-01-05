@@ -7,6 +7,7 @@ const initialUserArticlesFilter = {
     filterText: '',
     filterStatus: ''
 };
+const initialUserTradesSectionIndex = -1;
 
 export const getUserArticles = (theState) => {
     return sortUserArticles(getUserArticlesInternal(theState));
@@ -32,6 +33,13 @@ export const getUserId = (theState) => {
 
 export const getUserArticlesFilter = (theState) => {
     return theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].userArticlesFilter || initialUserArticlesFilter : initialUserArticlesFilter;
+};
+
+export const getUserTradesSectionIndex = (theState) => {
+    if (theState[USER_SLICE_NAME] && typeof theState[USER_SLICE_NAME].userTradesSectionIndex === 'number') {
+        return theState[USER_SLICE_NAME].userTradesSectionIndex;
+    }
+    return initialUserTradesSectionIndex;
 };
 
 const getUserArticlesInternal = (theState) => {

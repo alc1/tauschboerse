@@ -101,6 +101,14 @@ class TradeModel {
         return this._userArticles;
     }
 
+    get userArticleListTitle() {
+        return 'TODO: User Article Text';
+    }
+
+    get partnerArticleListTitle() {
+        return 'TODO: Partner Article Text';
+    }
+
     get canEdit() {
         return this.isNew || this.isMakingCounteroffer;
     }

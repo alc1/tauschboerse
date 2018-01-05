@@ -23,10 +23,10 @@ export default class TradeSummary extends React.Component {
     render() {
         const { trade, loading, actions } = this.props;
         return (
-            <Paper className="trade-summary__container">
+            <Paper className="trade-summary">
                 <div className="trade-summary__trade-container">
                     <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{`${trade.tradePartner.name} möchte von dir:`}</span>
+                        <span className="trade-summary__articles-title">{trade.userArticleListTitle}</span>
                         <ArticleList articles={trade.userArticles} loading={loading} hideCheckbox hideDescription hideOwner hideCreationDate hideStatus/>
                     </div>
                     <div className="trade-summary__swap-image-wrapper">
@@ -35,7 +35,7 @@ export default class TradeSummary extends React.Component {
                         </Paper>
                     </div>
                     <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{`${trade.tradePartner.name} bietet dafür:`}</span>
+                        <span className="trade-summary__articles-title">{trade.partnerArticleListTitle}</span>
                         <ArticleList articles={trade.tradePartnerArticles} loading={loading} hideCheckbox hideDescription hideOwner hideCreationDate hideStatus/>
                     </div>
                 </div>
