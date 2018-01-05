@@ -55,7 +55,9 @@ export default class EditTradePage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Tauschgeschäft bearbeiten" />
-                {this.props.trade || <TradeEditor {...this.props} save={this.handleSave} />}
+                <div className="base-page">
+                    {this.props.trade && <TradeEditor {...this.props} save={this.handleSave} />}
+                </div>
             </div>
         );
     }

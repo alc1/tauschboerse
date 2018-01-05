@@ -41,9 +41,9 @@ export default class App extends React.Component {
                             <Route path="/marketplace" component={MarketplacePage}/>
                             <LoggedInRoute exact path="/article" component={ArticleEditorPage}/>
                             <Route exact path="/article/:articleId" component={ArticleEditorPage}/>
-                            <Route exact path="/trade/show/:tradeId" component={TradeDetailPage}/>
-                            <Route exact path="/trade/edit/:tradeId" component={EditTradePage}/>
-                            <Route exact path="/trade/new/:articleId" component={NewTradePage}/>
+                            <LoggedInRoute exact path="/trade/show/:tradeId" component={TradeDetailPage}/>
+                            <LoggedInRoute exact path="/trade/edit/:tradeId" component={EditTradePage}/>
+                            <LoggedInRoute exact path="/trade/new/:articleId" component={NewTradePage}/>
                             <PublicRoute exact path="/registration" component={RegistrationPage}/>
                             <PublicRoute exact path="/login" component={LoginPage}/>
                             <PrivateRoute path="/user/:userId/articles" component={UserArticlesPage}/>

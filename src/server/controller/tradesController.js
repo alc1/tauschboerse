@@ -39,7 +39,7 @@ function setTradeArticles(req, res) {
     const { tradeId } = req.params;
     let trade = dataCache.getTrade(tradeId);
 
-    requestStatus = 200;
+    let requestStatus = 200;
     if (trade != null) {
         const { articleIds } = req.body;
         let articles = dataCache.getArticlesById(articleIds);

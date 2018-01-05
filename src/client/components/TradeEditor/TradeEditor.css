@@ -1,3 +1,21 @@
-.tradeEditor-stepContainer {
+.trade-editor-stepContainer {
     min-height: 400px;
+    margin-top: 264px;
+}
+
+.trade-editor-navigation {
+    position: fixed;
+    height: 240px;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: 5;
+    padding: 0 24px;
+}
+
+.trade-editor-navigation-buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    margin-top: 20px;
 }
