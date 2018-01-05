@@ -13,7 +13,7 @@ export default class PhotoPlaceholder extends React.Component {
     render() {
         const { width, height } = this.props;
         return (
-            <Photo fill="#E1E1E1" width={width} height={height}/>
+            <Photo fill="#E1E1E1" width={width} height={height} {...this.props}/>
         );
     }
 }

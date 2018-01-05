@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import PhotoLightbox from '../PhotoLightbox/PhotoLightbox';
 
-import './Photo.css';
-
 export default class Photo extends React.Component {
 
     static propTypes = {
