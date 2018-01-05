@@ -16,6 +16,8 @@ export default class EditTradePage extends React.Component {
         partnerArticles: PropTypes.array,
         chosenUserArticles: PropTypes.array,
         chosenPartnerArticles: PropTypes.array,
+        userArticleFilterText: PropTypes.string.isRequired,
+        partnerArticleFilterText: PropTypes.string.isRequired,
         loadTrade: PropTypes.func.isRequired,
         saveTrade: PropTypes.func.isRequired,
         toggleUserArticle: PropTypes.func.isRequired,
@@ -25,15 +27,21 @@ export default class EditTradePage extends React.Component {
         setStepIndex: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
+        setUserArticleFilterText: PropTypes.func.isRequired,
+        setPartnerArticleFilterText: PropTypes.func.isRequired,
+        initTradeEditor: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
     static defaultProps = {
-        stepIndex: 0
+        stepIndex: 0,
+        userArticleFilterText: '',
+        partnerArticleFilterText: ''
     }
 
     componentDidMount() {
         this.props.setLoading(true);
+        this.props.initTradeEditor();
 
         const { tradeId } = this.props.match.params;
 

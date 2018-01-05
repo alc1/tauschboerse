@@ -16,6 +16,8 @@ export default class NewTradePage extends React.Component {
         partnerArticles: PropTypes.array,
         chosenUserArticles: PropTypes.array,
         chosenPartnerArticles: PropTypes.array,
+        userArticleFilterText: PropTypes.string.isRequired,
+        partnerArticleFilterText: PropTypes.string.isRequired,
         loadNewTrade: PropTypes.func.isRequired,
         saveTrade: PropTypes.func.isRequired,
         toggleUserArticle: PropTypes.func.isRequired,
@@ -25,11 +27,32 @@ export default class NewTradePage extends React.Component {
         setStepIndex: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
+        setUserArticleFilterText: PropTypes.func.isRequired,
+        setPartnerArticleFilterText: PropTypes.func.isRequired,
+        initTradeEditor: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
     static defaultProps = {
-        stepIndex: 0
+        stepIndex: 0,
+        userArticleFilterText: '',
+        partnerArticleFilterText: ''
+    }
+
+    componentDidMount() {
+        this.props.setLoading(true);
+        this.props.initTradeEditor();
+
+        const { articleId } = this.props.match.params;
+
+        var loadPromises = [
+            this.props.loadNewTrade(articleId),
+            this.props.loadUserArticles()
+        ];
+        Promise.all(loadPromises)
+            .then(() => this.props.loadPartnerArticles())
+            .then(() => this.props.setLoading(false))
+            .catch(() => this.props.setLoading(false));
     }
 
     handleSave = () => {
@@ -46,24 +69,6 @@ export default class NewTradePage extends React.Component {
 
     handleCancel = () => {
         this.props.history.goBack();
-    }
-
-    componentDidMount() {
-        this.props.setLoading(true);
-
-        const { articleId } = this.props.match.params;
-
-        var loadPromises = [
-            this.props.loadNewTrade(articleId),
-            this.props.loadUserArticles()
-        ];
-        Promise.all(loadPromises)
-            .then(() => this.props.loadPartnerArticles())
-            .then(() => this.props.setLoading(false))
-            .catch(() => this.props.setLoading(false));
-    }
-
-    componentWillReceiveProps(nextProps) {
     }
 
     render() {

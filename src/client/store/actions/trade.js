@@ -22,6 +22,8 @@ export const TRADE_PARTNER_ARTICLES_FETCHED = 'TRADE_PARTNER_ARTICLES_FETCHED';
 export const TRADE_PARTNER_ARTICLE_TOGGLED = 'TRADE_PARTNER_ARTICLE_TOGGLED';
 export const TRADE_USER_ARTICLE_TOGGLED = 'TRADE_USER_ARTICLE_TOGGLED';
 export const TRADE_STEP_INDEX_SET = 'TRADE_STEP_INDEX_SET';
+export const TRADE_ARTICLE_FILTER_TEXT_SET = 'TRADE_ARTICLE_FILTERTEXT_SET';
+export const TRADE_EDITOR_INITIALISED = 'TRADE_EDITOR_INITIALISED';
 
 /*
  * Action Creators
@@ -78,6 +80,16 @@ const partnerArticleToggled = (theArticle) => ({
 const stepIndexSet = (stepIndex) => ({
     type: TRADE_STEP_INDEX_SET,
     stepIndex: stepIndex
+});
+
+const tradeEditorInitialised = () => ({
+    type: TRADE_EDITOR_INITIALISED
+});
+
+const articleFilterTextSet = (theText, forUser) => ({
+    type: TRADE_ARTICLE_FILTER_TEXT_SET,
+    forUser: forUser,
+    text: theText
 });
 
 /*
@@ -165,6 +177,18 @@ export const declineTrade = () => (dispatch, getState) => {
 
 export const setStepIndex = (theStepIndex) => (dispatch) => {
     return dispatch(stepIndexSet(theStepIndex));
+}
+
+export const initTradeEditor = () => (dispatch) => {
+    return dispatch(tradeEditorInitialised());
+}
+
+export const setUserArticleFilterText = (theText) => (dispatch) => {
+    return dispatch(articleFilterTextSet(theText, true));
+}
+
+export const setPartnerArticleFilterText = (theText) => (dispatch) => {
+    return dispatch(articleFilterTextSet(theText, false));
 }
 
 function setTradeState(theTrade, theNewState, dispatch) {

@@ -9,13 +9,17 @@ import {
     TRADE_PARTNER_ARTICLES_FETCHED,
     TRADE_PARTNER_ARTICLE_TOGGLED,
     TRADE_USER_ARTICLE_TOGGLED,
-    TRADE_STEP_INDEX_SET
+    TRADE_STEP_INDEX_SET,
+    TRADE_EDITOR_INITIALISED,
+    TRADE_ARTICLE_FILTER_TEXT_SET
 } from '../actions/trade';
 
 export const initialState = {
     trade: null,
     notFound: false,
     stepIndex: 0,
+    userArticleFilterText: '',
+    partnerArticleFilterText: '',
     userArticles: [],
     partnerArticles: [],
     chosenUserArticles: [],
@@ -44,6 +48,21 @@ function toggleArticle(article, chosenArticles) {
 
 export default function trade(theState = initialState, theAction) {
     switch (theAction.type) {
+        case TRADE_EDITOR_INITIALISED:
+            return {
+                ...theState,
+                stepIndex: 0,
+                userArticleFilterText: '',
+                partnerArticleFilterText: ''
+            };
+
+        case TRADE_ARTICLE_FILTER_TEXT_SET:
+            return {
+                ...theState,
+                userArticleFilterText: theAction.forUser ? theAction.text : theState.userArticleFilterText,
+                partnerArticleFilterText: theAction.forUser ? theState.partnerArticleFilterText : theAction.text
+            };
+
         case TRADE_STEP_INDEX_SET:
             return {
                 ...theState,
