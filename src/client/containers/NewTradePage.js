@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import NewTradePage from '../components/NewTradePage/NewTradePage';
 
-import { loadNewTrade, submitTrade, loadUserArticles, loadPartnerArticles, startEditingUserArticles, startEditingPartnerArticles, cancelEditingUserArticles, cancelEditingPartnerArticles, saveTrade, toggleUserArticle, togglePartnerArticle, setStepIndex } from '../store/actions/trade';
+import { loadNewTrade, loadUserArticles, loadPartnerArticles, startEditingUserArticles, startEditingPartnerArticles, cancelEditingUserArticles, cancelEditingPartnerArticles, saveTrade, toggleUserArticle, togglePartnerArticle, setStepIndex } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
 import { getTrade, getArticle, getPartnerArticles, getUserArticles, getChosenPartnerArticles, getChosenUserArticles, getStepIndex } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
@@ -23,9 +23,8 @@ function mapStateToProps(theState) {
 
 export default connect(mapStateToProps, {
     loadNewTrade,
-    setLoading,
-    submitTrade,
     saveTrade,
+    setLoading,
     loadUserArticles,
     loadPartnerArticles,
     toggleUserArticle,

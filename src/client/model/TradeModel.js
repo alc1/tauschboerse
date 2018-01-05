@@ -18,6 +18,10 @@ class TradeModel {
         return this.trade._id;
     }
 
+    get exists() {
+        return (typeof this.trade._id !== 'undefined');
+    }
+
     get isFinished() {
         return (this.trade.state === TradeState.TRADE_STATE_COMPLETED) || (this.trade.state === TradeState.TRADE_STATE_CANCELED);
     }

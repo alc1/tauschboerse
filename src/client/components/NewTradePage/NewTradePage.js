@@ -33,9 +33,20 @@ export default class NewTradePage extends React.Component {
     }
 
     handleSave = () => {
-        let articles = this.props.chosenPartnerArticles.concat(this.props.chosenUserArticles);
-        this.props.saveTrade(null);
+        this.props.setLoading(true);
+        this.props.saveTrade()
+            .then(() => {
+                this.props.setLoading(false);
+                this.props.history.push(`/trade/show/${this.props.trade._id}`);
+            })
+            .catch(() => {
+                this.props.setLoading(false);
+            });
     };
+
+    handleCancel = () => {
+        this.props.history.goBack();
+    }
 
     componentDidMount() {
         this.props.setLoading(true);
@@ -43,11 +54,11 @@ export default class NewTradePage extends React.Component {
         const { articleId } = this.props.match.params;
 
         var loadPromises = [
-            this.props.loadNewTrade(articleId, this.props.user),
-            this.props.loadUserArticles(this.props.user._id)
+            this.props.loadNewTrade(articleId),
+            this.props.loadUserArticles()
         ];
         Promise.all(loadPromises)
-            .then(() => this.props.loadPartnerArticles(this.props.trade.tradePartner._id))
+            .then(() => this.props.loadPartnerArticles())
             .then(() => this.props.setLoading(false))
             .catch(() => this.props.setLoading(false));
     }
@@ -59,7 +70,7 @@ export default class NewTradePage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Neues Tauschgeschäft erstellen" />
-                {this.props.trade && <TradeEditor {...this.props} save={this.handleSave} />}
+                {this.props.trade && <TradeEditor {...this.props} onSave={this.handleSave} onCancel={this.handleCancel} />}
             </div>
         );
     }

@@ -4,6 +4,9 @@ import { handleError } from './common';
 import TradeState from '../../../shared/constants/TradeState';
 import TradeModel from '../../model/TradeModel';
 
+import { getChosenPartnerArticles, getChosenUserArticles, getTrade } from '../selectors/trade.js';
+import { getUser } from '../selectors/user';
+
 /*
  * Action Type Constants
  */
@@ -81,21 +84,21 @@ const stepIndexSet = (stepIndex) => ({
  * Thunk Actions
  */
 
-export const loadTrade = (theTradeId, theUser) => dispatch => {
+export const loadTrade = (theTradeId) => (dispatch, getState) => {
     dispatch(tradeIsBeingFetched());
     return axios.get(`/api/trades/${theTradeId}`)
-        .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, theUser))))
+        .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, getUser(getState())))))
         .catch(err => {
             handleError(err, dispatch);
             return dispatch(tradeNotFound());
         });
 };
 
-export const loadNewTrade = (theArticleId, theUser) => dispatch => {
+export const loadNewTrade = (theArticleId) => (dispatch, getState) => {
     dispatch(tradeIsBeingFetched());
     return axios.get(`/api/trades/new/${theArticleId}`)
         .then(
-            response => dispatch(tradeFetched(new TradeModel(response.data.trade, theUser)))
+            response => dispatch(tradeFetched(new TradeModel(response.data.trade, getUser(getState()))))
          )
         .catch((err) => {
             handleError(err, dispatch);
@@ -103,21 +106,32 @@ export const loadNewTrade = (theArticleId, theUser) => dispatch => {
         });
 };
 
-export const loadUserArticles = (theUserId) => dispatch => {
-    return loadArticlesByUserId(theUserId, userArticlesFetched, dispatch);
+export const loadUserArticles = () => (dispatch, getState) => {
+    return loadArticlesByUserId(getUser(getState())._id, userArticlesFetched, dispatch);
 };
 
-export const loadPartnerArticles = (theUserId) => dispatch => {
-    return loadArticlesByUserId(theUserId, partnerArticlesFetched, dispatch);
+export const loadPartnerArticles = () => (dispatch, getState) => {
+    let currentState = getState();
+    let trade = getTrade(currentState);
+    return loadArticlesByUserId(trade.tradePartner._id, partnerArticlesFetched, dispatch);
 };
 
-export const saveTrade = (theTrade) => dispatch => {
-    // dispatch(lastSearchCleared());
-};
+export const saveTrade = () => (dispatch, getState) => {
+    let currentState = getState();
+    let articles = getChosenUserArticles(currentState).concat(getChosenPartnerArticles(currentState)).map(a => a._id);
+    let trade = getTrade(currentState);
+    let user = getUser(currentState);
 
-export const saveArticles = (theTradeId, theArticles) => dispatch => {
-    return axios.put(`/api/trades/${theTradeId}`, theArticles.map(a => a._id))
-        .then(response => dispatch(articlesSaved(new TradeModel(response.data))))
+    let op;
+    let body = { articleIds: articles };
+    if (trade.exists) {
+        op = axios.post(`/api/trades/${trade._id}/articles`, body);
+    } else {
+        op = axios.post(`/api/trades/`, body);
+    }
+
+    return op
+        .then(response => dispatch(tradeFetched(new TradeModel(response.data, user))))
         .catch(err => handleError(err, dispatch));
 };
 
@@ -129,23 +143,27 @@ export const togglePartnerArticle = (theArticle) => dispatch => {
     dispatch(partnerArticleToggled(theArticle));
 };
 
-export const submitTrade = (theTrade) => dispatch => {
-    return setTradeState(theTrade, 'REQUESTED', dispatch);
+export const submitTrade = () => (dispatch, getState) => {
+    let trade = getTrade(getState());
+    return setTradeState(trade, 'REQUESTED', dispatch);
 };
 
-export const withdrawTrade = (theTrade) => dispatch => {
+export const withdrawTrade = () => (dispatch, getState) => {
+    let trade = getTrade(getState());
     
 };
 
-export const acceptTrade = (theTrade) => dispatch => {
-    return setTradeState(theTrade, 'ACCEPTED', dispatch);
+export const acceptTrade = () => (dispatch, getState) => {
+    let trade = getTrade(getState());
+    return setTradeState(trade, 'ACCEPTED', dispatch);
 };
 
-export const declineTrade = (theTrade) => dispatch => {
-    return setTradeState(theTrade, 'DECLINED', dispatch);
+export const declineTrade = () => (dispatch, getState) => {
+    let trade = getTrade(getState());
+    return setTradeState(trade, 'DECLINED', dispatch);
 };
 
-export const setStepIndex = (theStepIndex) => dispatch => {
+export const setStepIndex = (theStepIndex) => (dispatch) => {
     return dispatch(stepIndexSet(theStepIndex));
 }
 

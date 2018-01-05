@@ -23,7 +23,7 @@ export default class TradeDetailPage extends React.Component {
     componentDidMount() {
         this.props.setLoading(true);
         const { tradeId } = this.props.match.params;
-        this.props.loadTrade(tradeId, this.props.user)
+        this.props.loadTrade(tradeId)
             .then(() => this.props.setLoading(false))
             .catch(() => this.props.setLoading(false));
     }

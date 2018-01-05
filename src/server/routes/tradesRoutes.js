@@ -8,7 +8,7 @@ router.get('/', authenticationMiddleware, tradesController.getTrades);
 router.get('/new/:articleId', authenticationMiddleware, tradesController.getNewTrade)
 router.post('/', authenticationMiddleware, tradesController.addTrade);
 router.get('/:tradeId', authenticationMiddleware, tradesController.getTrade);
-router.put('/:tradeId/articles', authenticationMiddleware, tradesController.setTradeArticles);
-router.put('/:tradeId/state', authenticationMiddleware, tradesController.setTradeState);
+router.post('/:tradeId/articles', authenticationMiddleware, tradesController.setTradeArticles);
+router.post('/:tradeId/state', authenticationMiddleware, tradesController.setTradeState);
 
 module.exports = router;

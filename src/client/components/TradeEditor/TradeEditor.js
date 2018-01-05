@@ -21,17 +21,19 @@ export default class TradeEditor extends React.Component {
         partnerArticles: PropTypes.array,
         chosenUserArticles: PropTypes.array,
         chosenPartnerArticles: PropTypes.array,
-        save: PropTypes.func.isRequired,
+        onSave: PropTypes.func.isRequired,
+        onCancel: PropTypes.func.isRequired,
         toggleUserArticle: PropTypes.func.isRequired,
         togglePartnerArticle: PropTypes.func.isRequired,
-        setStepIndex: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
-        loading: PropTypes.bool.isRequired,
-        history: PropTypes.object.isRequired
+        setStepIndex: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         stepIndex: 0,
+    }
+
+    componentDidMount() {
+        this.props.setStepIndex(0);
     }
 
     canGoToPreviousStep = () => this.props.stepIndex > 0
@@ -49,10 +51,6 @@ export default class TradeEditor extends React.Component {
             this.props.setStepIndex(this.props.stepIndex + 1);
         }
     };
-
-    handleCancel = () => {
-        this.props.history.goBack();
-    }
 
     renderIntro() {
         return <p>Intro</p>;
@@ -85,7 +83,7 @@ export default class TradeEditor extends React.Component {
             <div>
                 <Articles articles={this.props.chosenPartnerArticles} title="Bla bla bla" />
                 <Articles articles={this.props.chosenUserArticles} title="Du bietest dafür folgende Artikel an:" />
-                <RaisedButton label="Speichern" primary={true} onClick={this.props.save} />
+                <RaisedButton label="Speichern" primary={true} onClick={this.props.onSave} />
             </div>
         );
     }
@@ -119,7 +117,7 @@ export default class TradeEditor extends React.Component {
             <div className="trade-editor-navigation-buttons">
                 <FlatButton label="Voriger Schritt" disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: '12px'}} />
                 <RaisedButton label="Nächster Schritt" disabled={!this.canGotoNextStep()} primary={true} onClick={this.handleNext} style={{marginRight: '48px'}} />
-                <FlatButton label="Abbrechen" onClick={this.handleCancel} />
+                <FlatButton label="Abbrechen" onClick={this.props.onCancel} />
             </div>
         );
 

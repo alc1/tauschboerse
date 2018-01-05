@@ -17,7 +17,7 @@ export default class EditTradePage extends React.Component {
         chosenUserArticles: PropTypes.array,
         chosenPartnerArticles: PropTypes.array,
         loadTrade: PropTypes.func.isRequired,
-        saveArticles: PropTypes.func.isRequired,
+        saveTrade: PropTypes.func.isRequired,
         toggleUserArticle: PropTypes.func.isRequired,
         togglePartnerArticle: PropTypes.func.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
@@ -29,12 +29,8 @@ export default class EditTradePage extends React.Component {
     };
 
     static defaultProps = {
-        stepIndex: 0,
+        stepIndex: 0
     }
-
-    handleSave = () => {
-
-    };
 
     componentDidMount() {
         this.props.setLoading(true);
@@ -42,13 +38,29 @@ export default class EditTradePage extends React.Component {
         const { tradeId } = this.props.match.params;
 
         var loadPromises = [
-            this.props.loadTrade(tradeId, this.props.user),
-            this.props.loadUserArticles(this.props.user._id)
+            this.props.loadTrade(tradeId),
+            this.props.loadUserArticles()
         ];
         Promise.all(loadPromises)
-            .then(() => this.props.loadPartnerArticles(this.props.trade.tradePartner._id))
+            .then(() => this.props.loadPartnerArticles())
             .then(() => this.props.setLoading(false))
             .catch(() => this.props.setLoading(false));
+    }
+
+    handleSave = () => {
+        this.props.setLoading(true);
+        this.props.saveTrade()
+            .then(() => {
+                this.props.setLoading(false);
+                this.props.history.push(`/trade/show/${this.props.trade._id}`);
+            })
+            .catch(() => {
+                this.props.setLoading(false);
+            });
+    };
+
+    handleCancel = () => {
+        this.props.history.goBack();
     }
 
     render() {
@@ -56,7 +68,7 @@ export default class EditTradePage extends React.Component {
             <div>
                 <ApplicationBar subtitle="Tauschgeschäft bearbeiten" />
                 <div className="base-page">
-                    {this.props.trade && <TradeEditor {...this.props} save={this.handleSave} />}
+                    {this.props.trade && <TradeEditor {...this.props} onSave={this.handleSave} onCancel={this.handleCancel} />}
                 </div>
             </div>
         );
