@@ -2,11 +2,11 @@ import {
     ARTICLES_FOUND,
     LAST_SEARCH_CLEARED,
     TRADE_CREATED,
-    SECTION_OPENED
+    MARKETPLACE_SECTION_OPENED
 } from '../actions/marketplace';
 
 export const initialState = {
-    sectionIndex: -1
+    marketplaceSectionIndex: -1
 };
 
 export default function marketplace(theState = initialState, theAction) {
@@ -26,10 +26,10 @@ export default function marketplace(theState = initialState, theAction) {
                 ...theState,
                 trade: theAction.trade
             };
-        case SECTION_OPENED:
+        case MARKETPLACE_SECTION_OPENED:
             return {
                 ...theState,
-                sectionIndex: theAction.sectionIndex
+                marketplaceSectionIndex: theAction.marketplaceSectionIndex
             };
         default:
             return theState;

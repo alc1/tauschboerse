@@ -16,6 +16,7 @@ export const USER_UPDATED = 'USER_UPDATED';
 export const USER_ARTICLES_FETCHED = 'USER_ARTICLES_FETCHED';
 export const USER_TRADES_FETCHED = 'USER_TRADES_FETCHED';
 export const USER_ARTICLES_FILTERED = 'USER_ARTICLES_FILTERED';
+export const USER_TRADES_SECTION_OPENED = 'USER_TRADES_SECTION_OPENED';
 
 /*
  * Action Creators
@@ -56,6 +57,11 @@ export const userArticlesFiltered = (theFilterText, theFilterStatus) => ({
     filterStatus: theFilterStatus
 });
 
+const userTradesSectionOpened = (theUserTradesSectionIndex) => ({
+    type: USER_TRADES_SECTION_OPENED,
+    userTradesSectionIndex: theUserTradesSectionIndex
+});
+
 /*
  * Thunk Actions
  */
@@ -91,6 +97,9 @@ export const loadUserTrades = (theUserId) => dispatch =>
 
 export const filterUserArticles = (theFilterText, theFilterStatus) => dispatch =>
     dispatch(userArticlesFiltered(theFilterText, theFilterStatus));
+
+export const openUserTradesSection = (theUserTradesSectionIndex) => dispatch =>
+    dispatch(userTradesSectionOpened(theUserTradesSectionIndex));
 
 /*
  * Actions

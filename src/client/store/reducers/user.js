@@ -5,7 +5,8 @@ import {
     USER_UPDATED,
     USER_ARTICLES_FETCHED,
     USER_TRADES_FETCHED,
-    USER_ARTICLES_FILTERED
+    USER_ARTICLES_FILTERED,
+    USER_TRADES_SECTION_OPENED
 } from '../actions/user';
 
 import {
@@ -50,6 +51,11 @@ export default function user(theState = initialState, theAction) {
                     filterText: theAction.filterText,
                     filterStatus: theAction.filterStatus
                 }
+            };
+        case USER_TRADES_SECTION_OPENED:
+            return {
+                ...theState,
+                userTradesSectionIndex: theAction.userTradesSectionIndex
             };
         default:
             return theState;

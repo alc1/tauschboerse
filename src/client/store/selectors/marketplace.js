@@ -8,6 +8,6 @@ export const getTrade = (theState) => {
     return theState[MARKETPLACE_SLICE_NAME].trade;
 };
 
-export const getSectionIndex = (theState) => {
-    return theState[MARKETPLACE_SLICE_NAME].sectionIndex;
+export const getMarketplaceSectionIndex = (theState) => {
+    return theState[MARKETPLACE_SLICE_NAME].marketplaceSectionIndex;
 };

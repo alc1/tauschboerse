@@ -26,11 +26,11 @@ export default class MarketplacePage extends React.Component {
         lastSearch: PropTypes.object,
         user: PropTypes.object,
         trade: PropTypes.object,
-        sectionIndex: PropTypes.number.isRequired,
+        marketplaceSectionIndex: PropTypes.number.isRequired,
         findArticles: PropTypes.func.isRequired,
         clearLastSearch: PropTypes.func.isRequired,
         createTrade: PropTypes.func.isRequired,
-        openSection: PropTypes.func.isRequired,
+        openMarketplaceSection: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
@@ -158,13 +158,13 @@ export default class MarketplacePage extends React.Component {
     };
 
     openFirstSectionIfNeeded = () => {
-        if (this.props.sectionIndex === -1) {
-            this.onSectionClicked(0);
+        if (this.props.marketplaceSectionIndex === -1) {
+            this.onSectionClick(0);
         }
     };
 
-    onSectionClicked = (theSectionIndex) => {
-        this.props.openSection(theSectionIndex === this.props.sectionIndex ? -1 : theSectionIndex);
+    onSectionClick = (theMarketplaceSectionIndex) => {
+        this.props.openMarketplaceSection(theMarketplaceSectionIndex === this.props.marketplaceSectionIndex ? -1 : theMarketplaceSectionIndex);
     };
 
     createFirstSectionText = (theNumberOfResults) => {
@@ -182,7 +182,7 @@ export default class MarketplacePage extends React.Component {
     };
 
     render() {
-        const { loading, muiTheme, sectionIndex } = this.props;
+        const { loading, muiTheme, marketplaceSectionIndex } = this.props;
         const { searchText, notUserArticles, userArticles } = this.state;
 
         return (
@@ -190,11 +190,11 @@ export default class MarketplacePage extends React.Component {
                 <ApplicationBar subtitle="Auf dem Marktplatz"/>
                 <ArticleSearchInput text={searchText} onSearch={this.onSearch}/>
                 <Stepper
-                    activeStep={sectionIndex}
+                    activeStep={marketplaceSectionIndex}
                     linear={false}
                     orientation="vertical">
                     <Step>
-                        <StepButton icon={sectionIndex === 0 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClicked.bind(this, 0)}>
+                        <StepButton icon={marketplaceSectionIndex === 0 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 0)}>
                             <StepLabel>{this.createFirstSectionText(notUserArticles.length)}</StepLabel>
                         </StepButton>
                         <StepContent transitionDuration={0}>
@@ -203,7 +203,7 @@ export default class MarketplacePage extends React.Component {
                     </Step>
                     {this.props.user &&
                         <Step>
-                            <StepButton icon={sectionIndex === 1 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClicked.bind(this, 1)}>
+                            <StepButton icon={marketplaceSectionIndex === 1 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 1)}>
                                 <StepLabel>{this.createSecondSectionText(userArticles.length)}</StepLabel>
                             </StepButton>
                             <StepContent transitionDuration={0}>
