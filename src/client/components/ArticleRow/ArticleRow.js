@@ -55,12 +55,16 @@ export default class ArticleRow extends React.Component {
         const mainPhotoIndex = (photos && photos.length > 0) ? photos.reduce((mainPhotoIndex, photo, index) => photo.isMain ? index : mainPhotoIndex, 0) : 0;
         const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
         return (
-            <Paper className="article-row__container">
+            <Paper className="article-row">
                 <div className="article-row__checkbox-column">
                     {!hideCheckbox && <Checkbox checked={selected} disabled={!selectable} onCheck={this.onSelectionToggled}/>}
                 </div>
                 <div className="article-row__image-column">
-                    {photoSource ? <Photo imageClassName="article-row__image" photos={photos} mainPhotoIndex={mainPhotoIndex}/> : <PhotoPlaceholder width={100} height={100}/>}
+                    {photoSource ? (
+                        <Photo imageClassName="article-row__image article-row__image--clickable" photos={photos} mainPhotoIndex={mainPhotoIndex}/>
+                    ) : (
+                        <PhotoPlaceholder className="article-row__image" width={100} height={100}/>
+                    )}
                 </div>
                 <div className="article-row__text-column">
                     <span className="article-row__title">{title}</span>
