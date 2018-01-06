@@ -114,7 +114,7 @@ export default class TradeEditor extends React.Component {
     render() {
         let title = this.props.trade ? `Tauschgeschäft mit ${this.props.trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft';
         let navigation = (
-            <div className="trade-editor-navigation-buttons">
+            <div className="trade-editor__navigation-buttons">
                 <FlatButton label="Voriger Schritt" disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: '12px'}} />
                 <RaisedButton label="Nächster Schritt" disabled={!this.canGotoNextStep()} primary={true} onClick={this.handleNext} style={{marginRight: '48px'}} />
                 <FlatButton label="Abbrechen" onClick={this.props.onCancel} />
@@ -123,7 +123,7 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
-                <div className="trade-editor-navigation">
+                <div className="trade-editor__navigation">
                     <h1 className="nowrap">{title}</h1>
                     <Stepper linear={false} activeStep={this.props.stepIndex}>
                         <Step>
@@ -149,7 +149,7 @@ export default class TradeEditor extends React.Component {
                     </Stepper>
                     {navigation}
                 </div>
-                <div className="trade-editor-stepContainer">
+                <div className="trade-editor__step-container">
                     {this.renderStep()}
                 </div>
             </div>

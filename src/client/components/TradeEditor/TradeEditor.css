@@ -1,9 +1,9 @@
-.trade-editor-stepContainer {
+.trade-editor__step-container {
     min-height: 400px;
     margin-top: 264px;
 }
 
-.trade-editor-navigation {
+.trade-editor__navigation {
     position: fixed;
     height: 240px;
     top: 64px;
@@ -14,7 +14,7 @@
     padding: 0 24px;
 }
 
-.trade-editor-navigation-buttons {
+.trade-editor__navigation-buttons {
     display: flex;
     flex-flow: row nowrap;
     margin-top: 20px;
