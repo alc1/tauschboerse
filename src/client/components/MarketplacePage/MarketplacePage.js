@@ -181,7 +181,7 @@ export default class MarketplacePage extends React.Component {
         return `${theNumberOfResults} eigene Artikel entsprechen den Suchkriterien`;
     };
 
-    createMarketplaceSection = (theSectionIndex, theCurrentMarketplaceSectionIndex, theArticles, theSectionTitle) => {
+    createMarketplaceSection = (theSectionIndex, theCurrentMarketplaceSectionIndex, theArticles, theSectionTitle, forUserArticles) => {
         const { loading, muiTheme } = this.props;
         return (
             <Step>
@@ -189,7 +189,7 @@ export default class MarketplacePage extends React.Component {
                     <StepLabel>{theSectionTitle}</StepLabel>
                 </StepButton>
                 <StepContent transitionDuration={0}>
-                    <ArticleGridList articles={theArticles} articleActions={this.buildActionList(false)} loading={loading}/>
+                    <ArticleGridList articles={theArticles} articleActions={this.buildActionList(forUserArticles)} loading={loading}/>
                 </StepContent>
             </Step>
         );
@@ -207,8 +207,8 @@ export default class MarketplacePage extends React.Component {
                     activeStep={marketplaceSectionIndex}
                     linear={false}
                     orientation="vertical">
-                    {this.createMarketplaceSection(0, marketplaceSectionIndex, notUserArticles, this.createFirstSectionText(notUserArticles.length))}
-                    {this.props.user && this.createMarketplaceSection(1, marketplaceSectionIndex, userArticles, this.createSecondSectionText(userArticles.length))}
+                    {this.createMarketplaceSection(0, marketplaceSectionIndex, notUserArticles, this.createFirstSectionText(notUserArticles.length), false)}
+                    {this.props.user && this.createMarketplaceSection(1, marketplaceSectionIndex, userArticles, this.createSecondSectionText(userArticles.length), true)}
                 </Stepper>
             </div>
         );
