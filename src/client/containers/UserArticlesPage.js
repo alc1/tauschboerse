@@ -10,7 +10,7 @@ import { getFilteredUserArticles, getUser, getUserArticlesFilter } from '../stor
 
 function mapStateToProps(theState) {
     return {
-        articles: getFilteredUserArticles(theState),
+        filteredArticles: getFilteredUserArticles(theState),
         user: getUser(theState),
         loading: isLoading(theState),
         userArticlesFilter: getUserArticlesFilter(theState)

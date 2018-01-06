@@ -1,6 +1,9 @@
 import axios from 'axios';
 
 import { handleError } from './common';
+import { getUser } from '../selectors/user';
+
+import TradesModel from '../../model/TradesModel';
 
 /*
  * Action Type Constants
@@ -44,9 +47,9 @@ export const selectedArticleRemoved = () => ({
  * Thunk Actions
  */
 
-export const loadArticle = (theArticleId) => dispatch =>
+export const loadArticle = (theArticleId) => (dispatch, getState) =>
     axios.get(`/api/articles/${theArticleId}`)
-        .then(response => dispatch(articleFetched(response.data.article)))
+        .then(response => dispatch(articleFetched(extendArticleWithTrades(response.data.article, response.data.trades, getUser(getState())))))
         .catch((err) => handleError(err, dispatch));
 
 export const createArticle = (article) => dispatch =>
@@ -54,16 +57,33 @@ export const createArticle = (article) => dispatch =>
         .then(response => dispatch(articleCreated(response.data.article)))
         .catch((err) => handleError(err, dispatch));
 
-export const updateArticle = (ownerId, article) => dispatch =>
+export const updateArticle = (ownerId, article) => (dispatch, getState) =>
     axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
-        .then(response => dispatch(articleUpdated(response.data.article)))
+        .then(response => dispatch(articleUpdated(extendArticleWithTrades(response.data.article, response.data.trades, getUser(getState())))))
         .catch((err) => handleError(err, dispatch));
 
-export const deleteArticle = (ownerId, articleId) => dispatch =>
+export const deleteArticle = (ownerId, articleId) => (dispatch, getState) =>
     axios.delete(`/api/users/${ownerId}/articles/${articleId}`)
-        .then(response => dispatch(articleDeleted(response.data.articleId)))
+        .then(response => {
+            if (response.data.isDeleted) {
+                if (response.data.articleId) {
+                    dispatch(articleDeleted(response.data.articleId));
+                }
+                else if (response.data.article) {
+                    dispatch(articleUpdated(extendArticleWithTrades(response.data.article, response.data.trades, getUser(getState()))));
+                }
+            }
+        })
         .catch((err) => handleError(err, dispatch));
 
 export const removeSelectedArticle = () => dispatch => {
     dispatch(selectedArticleRemoved());
+};
+
+const extendArticleWithTrades = (theArticle, theTrades, theUser) => {
+    let article = theArticle;
+    if (theTrades) {
+        article.trades = new TradesModel(theTrades, theUser);
+    }
+    return article;
 };

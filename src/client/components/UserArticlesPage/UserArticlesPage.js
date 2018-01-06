@@ -14,15 +14,16 @@ import ArticleGridList from '../ArticleGridList/ArticleGridList';
 import DeleteArticleDialog from '../DeleteArticleDialog/DeleteArticleDialog';
 import PageButton from '../PageButton/PageButton';
 
+import ArticleStatus from '../../../shared/constants/ArticleStatus';
+
 import './UserArticlesPage.css';
 
-const ArticleStatus = require('../../../shared/constants/ArticleStatus');
 const statusRadioButtonStyle = { maxWidth: '20vw' };
 
 export default class UserArticlesPage extends React.Component {
 
     static propTypes = {
-        articles: PropTypes.array.isRequired,
+        filteredArticles: PropTypes.array.isRequired,
         user: PropTypes.object.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         deleteArticle: PropTypes.func.isRequired,
@@ -37,7 +38,7 @@ export default class UserArticlesPage extends React.Component {
     };
 
     state = {
-        articles: [],
+        filteredArticles: [],
         isDeleteDialogOpen: false,
         articleToDelete: null
     };
@@ -48,7 +49,11 @@ export default class UserArticlesPage extends React.Component {
         this.props.loadUserArticles(userId)
             .then(() => this.props.setLoading(false))
             .catch(() => this.props.setLoading(false));
-        this.filterField.focus();
+        this.filterFieldTimeout = setTimeout(() => {this.filterField.focus();}, 1000);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.filterFieldTimeout);
     }
 
     editArticleDetails = (theArticle) => {
@@ -81,14 +86,18 @@ export default class UserArticlesPage extends React.Component {
             .catch(() => this.props.setLoading(false));
     };
 
-    createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised) => {
-        return { label, icon, onClick, isPrimary, isSecondary, isRaised };
+    createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised, isDisabled) => {
+        return { label, icon, onClick, isPrimary, isSecondary, isRaised, isDisabled };
+    };
+
+    isDeleteDisabled = (theArticle) => {
+        return theArticle.status === ArticleStatus.STATUS_DEALED || theArticle.status === ArticleStatus.STATUS_DELETED;
     };
 
     createArticleActions = () => {
         return [
             this.createArticleAction("Bearbeiten", <EditIcon/>, this.editArticleDetails, true, false, true),
-            this.createArticleAction("Löschen", <DeleteIcon/>, this.showDeleteConfirmationDialog, false, true, false)
+            this.createArticleAction("Löschen", <DeleteIcon/>, this.showDeleteConfirmationDialog, false, true, false, this.isDeleteDisabled)
         ];
     };
 
@@ -105,7 +114,7 @@ export default class UserArticlesPage extends React.Component {
     };
 
     render() {
-        const { loading, articles, userArticlesFilter } = this.props;
+        const { loading, filteredArticles, userArticlesFilter } = this.props;
         const { isDeleteDialogOpen, articleToDelete } = this.state;
         const articleTitle = articleToDelete ? articleToDelete.title : '';
         return (
@@ -117,8 +126,7 @@ export default class UserArticlesPage extends React.Component {
                     onChange={this.onFilterTextChange}
                     onRequestSearch={this.onFilterRequested}
                     value={userArticlesFilter.filterText}
-                    disabled={loading}
-                />
+                    disabled={loading}/>
                 <Paper>
                     <RadioButtonGroup
                         className="user-articles-page__status-container"
@@ -132,7 +140,7 @@ export default class UserArticlesPage extends React.Component {
                         <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DELETED} label="Gelöschte Artikel"/>
                     </RadioButtonGroup>
                 </Paper>
-                <ArticleGridList articles={articles} articleActions={this.createArticleActions()} loading={loading}/>
+                <ArticleGridList articles={filteredArticles} articleActions={this.createArticleActions()} loading={loading}/>
                 <PageButton onClick={this.createNewArticle}>
                     <PlusIcon/>
                 </PageButton>

@@ -11,6 +11,7 @@ import AvatarTag from '../AvatarTag/AvatarTag';
 import ArticleStatusComponent from '../ArticleStatusTag/ArticleStatusTag';
 import InputComponent from '../InputComponent/InputComponent';
 import CategoryInputField from '../../containers/CategoryInputField';
+import TradeLink from '../../containers/TradeLink';
 
 import './ArticleForm.css';
 
@@ -27,7 +28,8 @@ export default class ArticleForm extends React.Component {
             photos: PropTypes.array.isRequired,
             status: PropTypes.string,
             created: PropTypes.string,
-            owner: PropTypes.object
+            owner: PropTypes.object,
+            trades: PropTypes.object
         }).isRequired,
         loading: PropTypes.bool.isRequired,
         errors: PropTypes.object,
@@ -64,9 +66,11 @@ export default class ArticleForm extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="article-form__field-container">
-                        {owner && <AvatarTag text={owner} icon={<AccountIcon/>}/>}
-                        {created && <AvatarTag text={created} icon={<EditIcon/>}/>}
-                        {status && <ArticleStatusComponent status={status}/>}
+                        <div className="article-form__properties">
+                            {owner && <AvatarTag text={owner} icon={<AccountIcon/>}/>}
+                            {created && <AvatarTag text={created} icon={<EditIcon/>}/>}
+                            {status && <ArticleStatusComponent status={status}/>}
+                        </div>
                         <InputComponent
                             isDisplayMode={isDisplayMode}
                             inputRef={inputElement => this.firstInputElement = inputElement}
@@ -96,6 +100,17 @@ export default class ArticleForm extends React.Component {
                         {!isDisplayMode && <span className="article-form__hint-text">* Obligatorisches Feld</span>}
                     </div>
                 </Paper>
+                {article.trades && article.trades.allTrades.length > 0 && <Paper className="article-form__trades">
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyle} text="Involviert in:"/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    <div className="article-form__trades-container">
+                        {article.trades.allTrades.sort((trade1, trade2) => - moment(trade1.trade.createDate).format('YYYYMMDDHHmmss').localeCompare(moment(trade2.trade.createDate).format('YYYYMMDDHHmmss')))
+                            .map(trade => <TradeLink key={trade._id} trade={trade} loading={loading}/>)}
+                    </div>
+                </Paper>}
             </div>
         );
     }

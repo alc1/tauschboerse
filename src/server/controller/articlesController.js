@@ -19,34 +19,59 @@ function getArticleById(req, res) {
     const { articleId } = req.params;
     const article = dataCache.getArticleById(articleId);
     if (article) {
-        res.json({ article });
+        res.json({ article, trades: getTradesIfAllowed(req.user, articleId) });
     }
     else {
         res.status(404).json({ globalError: `Artikel [${articleId}] nicht gefunden` });
     }
 }
 
-function deleteArticleById(req, res) {
+function getTradesIfAllowed(theRequestingUser, theArticleId) {
+    const article = dataCache.getArticleById(theArticleId);
+    if (article && theRequestingUser && theRequestingUser._id === article.owner._id) {
+        return dataCache.getTradesByArticle(theArticleId);
+    }
+    return null;
+}
+
+async function deleteArticleById(req, res) {
     const { articleId } = req.params;
     const article = dataCache.getArticleById(articleId);
     if (article) {
-        if (article.status !== ArticleStatus.STATUS_FREE) {
-            res.status(500).json({ globalError: 'Der Artikel konnte nicht gelöscht werden, weil er nicht frei ist.' });
+        if (isArticleUsed(article) && article.status !== ArticleStatus.STATUS_DEALED && article.status !== ArticleStatus.STATUS_DELETED) {
+            let articleToSave = dataCache.prepareArticle(article, req.user);
+            articleToSave.status = ArticleStatus.STATUS_DELETED;
+            const savedArticle = await dataCache.saveArticle(articleToSave);
+            if (savedArticle) {
+                // TODO Trades invalidieren
+                res.json({ isDeleted: true, article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
+            }
+            else {
+                res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
+            }
         }
-        else {
+        else if (article.status === ArticleStatus.STATUS_FREE) {
             dataCache.deleteArticleById(articleId)
                 .then(() => {
                     deletePhotos(articleId);
-                    res.json({ articleId });
+                    res.json({ isDeleted: true, articleId });
                 })
                 .catch(() => {
                     res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
                 });
         }
+        else {
+            res.json({ isDeleted: false, articleId });
+        }
     }
     else {
         res.status(404).json({ globalError: 'Der zu löschende Artikel wurde nicht gefunden.' });
     }
+}
+
+function isArticleUsed(theArticle) {
+    const trades = dataCache.getTradesByArticle(theArticle._id);
+    return trades && trades.length > 0;
 }
 
 async function createArticle(req, res) {
@@ -85,7 +110,7 @@ async function updateArticle(req, res) {
         const savedArticle = await dataCache.saveArticle(preparedArticle);
         if (savedArticle) {
             savePhotos(savedArticle._id, photos);
-            res.json({ article: savedArticle });
+            res.json({ article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
         }
         else {
             res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });

@@ -1,0 +1,13 @@
+.trade-link {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 10px;
+    padding: 10px;
+}
+
+.trade-link__button {
+    margin-left: auto;
+}

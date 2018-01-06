@@ -10,6 +10,8 @@ import {
 } from '../actions/user';
 
 import {
+    ARTICLE_FETCHED,
+    ARTICLE_UPDATED,
     ARTICLE_DELETED
 } from '../actions/article';
 
@@ -36,13 +38,22 @@ export default function user(theState = initialState, theAction) {
                 ...theState,
                 trades: theAction.trades
             };
+        case ARTICLE_FETCHED:
+        case ARTICLE_UPDATED:
+            if (theState === initialState) {
+                return initialState;
+            }
+            return {
+                ...theState,
+                articles: theState.articles ? theState.articles.map(article => (article._id === theAction.article._id) ? theAction.article : article) : []
+            };
         case ARTICLE_DELETED:
             if (theState === initialState) {
                 return initialState;
             }
             return {
                 ...theState,
-                articles: theState.articles.filter(article => article._id !== theAction.articleId)
+                articles: theState.articles ? theState.articles.filter(article => article._id !== theAction.articleId) : []
             };
         case USER_ARTICLES_FILTERED:
             return {

@@ -17,6 +17,10 @@ class TradesModel {
         return this.__trades.length;
     }
 
+    get allTrades() {
+        return this.__trades;
+    }
+
     get newTrades() {
         if (this.__newTrades === null) {
             this.__newTrades = this.__trades.filter(trade => trade.isNew);

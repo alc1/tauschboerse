@@ -182,6 +182,14 @@ class TradeCache {
     findByUserId(userId) {
         return this.trades.filter(t => (t.user1._id === userId) || (t.user2._id === userId));
     }
+
+    findByArticleId(theArticleId) {
+        return this.trades.filter(trade => {
+            return trade.offers.some(offer => {
+                return offer.articles.some(article => article._id === theArticleId);
+            });
+        });
+    }
 }
 
 module.exports = TradeCache;

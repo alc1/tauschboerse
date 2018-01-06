@@ -16,11 +16,24 @@
     height: 100%;
 }
 
+.article-form__trades {
+    width: 100%;
+    margin-top: 20px;
+}
+
 .article-form__field-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-bottom: 30px;
+}
+
+.article-form__properties {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .article-form__hint-text {

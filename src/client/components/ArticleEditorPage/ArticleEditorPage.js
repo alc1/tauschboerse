@@ -43,6 +43,7 @@ export default class ArticleEditorPage extends React.Component {
         status: null,
         created: null,
         owner: null,
+        trades: null,
         errors: {},
         modified: false
     };
@@ -73,7 +74,7 @@ export default class ArticleEditorPage extends React.Component {
 
     updateArticleInState = (props) => {
         const { article } = props;
-        const { modified, title, description, categories, photos, status, created, owner } = this.state;
+        const { modified, title, description, categories, photos, status, created, owner, trades } = this.state;
         this.setState({
             title: article && !modified ? article.title : title,
             description: article && !modified ? article.description : description,
@@ -81,7 +82,8 @@ export default class ArticleEditorPage extends React.Component {
             photos: article && !modified ? article.photos : photos,
             status: article && !modified ? article.status : status,
             created: article && !modified ? article.created : created,
-            owner: article && !modified ? article.owner : owner
+            owner: article && !modified ? article.owner : owner,
+            trades: article && !modified ? article.trades : trades
         });
     };
 
@@ -140,7 +142,7 @@ export default class ArticleEditorPage extends React.Component {
         theEvent.preventDefault();
         this.props.setLoading(true);
         const { user } = this.props;
-        const { title, description, categories, photos, created } = this.state;
+        const { title, description, categories, photos, status, created } = this.state;
         const { articleId } = this.props.match.params;
         let articleToSave = { title, description, categories, photos };
         const validation = articleDetailsValidator.validate(articleToSave);
@@ -148,6 +150,7 @@ export default class ArticleEditorPage extends React.Component {
             let articleSaveRequest;
             if (articleId) {
                 articleToSave._id = articleId;
+                articleToSave.status = status;
                 articleToSave.created = created;
                 articleSaveRequest = this.props.updateArticle(user._id, articleToSave);
             }
@@ -211,7 +214,7 @@ export default class ArticleEditorPage extends React.Component {
 
     render() {
         const { user, loading } = this.props;
-        const { title, description, categories, photos, status, created, owner, errors, modified } = this.state;
+        const { title, description, categories, photos, status, created, owner, trades, errors, modified } = this.state;
         let isEditAllowed = this.isEditAllowed(owner, user);
         return (
             <div>
@@ -220,7 +223,7 @@ export default class ArticleEditorPage extends React.Component {
                     <form className="article-editor__container" onSubmit={this.onSubmit}>
                         <ArticleForm
                             isDisplayMode={!isEditAllowed}
-                            article={{title, description, categories, photos, status, created, owner}}
+                            article={{title, description, categories, photos, status, created, owner, trades}}
                             errors={errors}
                             loading={loading}
                             onChange={this.onChange}

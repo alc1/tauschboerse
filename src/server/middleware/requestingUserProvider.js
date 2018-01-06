@@ -1,6 +1,7 @@
 /*
- * This middleware checks that the authorization token is available in the request
- * and the corresponding user exists.
+ * This middleware always adds the user from the requesting token to the request object.
+ * If there is no token or verifying the token fails, no user will be added.
+ * But this middleware will always pass.
  */
 'use strict';
 
@@ -17,22 +18,16 @@ module.exports = (req, res, next) => {
 
     if (token) {
         jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-            if (err) {
-                res.status(401).json({ globalError: 'Token zur Authentifizierung ungültig! Bitte erneut anmelden.' });
-            }
-            else {
+            if (!err) {
                 let user = dataCache.getUserById(decoded._id);
                 if (user) {
                     req.user = user;
-                    next();
-                }
-                else {
-                    res.status(401).json({ globalError: 'Token zur Authentifizierung ungültig! Bitte erneut anmelden.' });
                 }
             }
+            next();
         });
     }
     else {
-        res.status(403).json({ globalError: 'Kein Token zur Authentifizierung gefunden! Bitte anmelden.' });
+        next()
     }
 };

@@ -18,6 +18,10 @@ class TradeModel {
         return this.trade._id;
     }
 
+    get createDate() {
+        return this.trade.createDate;
+    }
+
     get exists() {
         return (typeof this.trade._id !== 'undefined');
     }

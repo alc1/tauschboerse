@@ -28,11 +28,11 @@ class User {
     update(obj) {
         let modified = false;
 
-        modified = utils.updateValue(this, 'gender', obj, null) || modified;
-        modified = utils.updateValue(this, 'email', obj, null) || modified;
-        modified = utils.updateValue(this, 'name', obj, null) || modified;
-        modified = utils.updateValue(this, 'address', obj, null) || modified;
-        modified = utils.updateValue(this, 'registration', obj, null) || modified;
+        modified = utils.updateValue(this, 'gender', obj) || modified;
+        modified = utils.updateValue(this, 'email', obj) || modified;
+        modified = utils.updateValue(this, 'name', obj) || modified;
+        modified = utils.updateValue(this, 'address', obj) || modified;
+        modified = utils.updateValue(this, 'registration', obj) || modified;
 
         return modified;
     }
