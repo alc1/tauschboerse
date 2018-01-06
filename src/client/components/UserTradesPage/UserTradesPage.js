@@ -8,6 +8,7 @@ import SectionClosedIcon from 'material-ui/svg-icons/av/play-circle-filled';
 import SectionOpenedIcon from 'material-ui/svg-icons/navigation/arrow-drop-down-circle';
 
 import ApplicationBar from '../../containers/ApplicationBar';
+import Placeholder from '../../containers/Placeholder';
 import TradesList from '../TradesList/TradesList';
 
 import TradesModel from '../../model/TradesModel';
@@ -56,58 +57,41 @@ export default class UserTradesPage extends React.Component {
         this.props.openUserTradesSection(theUserTradesSectionIndex === this.props.userTradesSectionIndex ? -1 : theUserTradesSectionIndex);
     };
 
+    createTradesSection = (theSectionIndex, theCurrentUserTradesSectionIndex, theTrades, theSectionTitle) => {
+        const { loading, muiTheme } = this.props;
+        return (
+            <Step>
+                <StepButton icon={theCurrentUserTradesSectionIndex === theSectionIndex ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, theSectionIndex)}>
+                    <StepLabel>{`${theSectionTitle} (${theTrades.length})`}</StepLabel>
+                </StepButton>
+                <StepContent transitionDuration={0}>
+                    <TradesList trades={theTrades} loading={loading} tradeActions={this.buildActionList()}/>
+                </StepContent>
+            </Step>
+        );
+    };
+
     render() {
-        const { user, loading, userTradesSectionIndex, muiTheme } = this.props;
+        const { user, loading, userTradesSectionIndex } = this.props;
         const trades = new TradesModel(this.props.trades, user);
 
         return (
             <div>
                 <ApplicationBar subtitle="Meine Tauschgeschäfte verwalten"/>
-                <Stepper
-                    activeStep={userTradesSectionIndex}
-                    linear={false}
-                    orientation="vertical">
-                    <Step>
-                        <StepButton icon={userTradesSectionIndex === 0 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 0)}>
-                            <StepLabel>{`Noch nicht gesendete Tauschgeschäfte in Vorbereitung (${trades.newTrades.length})`}</StepLabel>
-                        </StepButton>
-                        <StepContent transitionDuration={0}>
-                            <TradesList trades={trades.newTrades} loading={loading} tradeActions={this.buildActionList()}/>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepButton icon={userTradesSectionIndex === 1 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 1)}>
-                            <StepLabel>{`Tauschgeschäfte, die auf meine Antwort warten (${trades.receivedTrades.length})`}</StepLabel>
-                        </StepButton>
-                        <StepContent transitionDuration={0}>
-                            <TradesList trades={trades.receivedTrades} loading={loading} tradeActions={this.buildActionList()}/>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepButton icon={userTradesSectionIndex === 2 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 2)}>
-                            <StepLabel>{`Tauschgeschäfte, die auf Antwort des Empfängers warten (${trades.sentTrades.length})`}</StepLabel>
-                        </StepButton>
-                        <StepContent transitionDuration={0}>
-                            <TradesList trades={trades.sentTrades} loading={loading} tradeActions={this.buildActionList()}/>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepButton icon={userTradesSectionIndex === 3 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 3)}>
-                            <StepLabel>{`Erfolgreich abgeschlossene Tauschgeschäfte (${trades.completedTrades.length})`}</StepLabel>
-                        </StepButton>
-                        <StepContent transitionDuration={0}>
-                            <TradesList trades={trades.completedTrades} loading={loading} tradeActions={this.buildActionList()}/>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepButton icon={userTradesSectionIndex === 4 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 4)}>
-                            <StepLabel>{`Abgebrochene Tauschgeschäfte (${trades.canceledTrades.length})`}</StepLabel>
-                        </StepButton>
-                        <StepContent transitionDuration={0}>
-                            <TradesList trades={trades.canceledTrades} loading={loading} tradeActions={this.buildActionList()}/>
-                        </StepContent>
-                    </Step>
-                </Stepper>
+                {trades.count > 0 ? (
+                    <Stepper
+                        activeStep={userTradesSectionIndex}
+                        linear={false}
+                        orientation="vertical">
+                        {trades.hasNewTrades && this.createTradesSection(0, userTradesSectionIndex, trades.newTrades, 'Noch nicht gesendete Tauschgeschäfte in Vorbereitung')}
+                        {trades.hasReceivedTrades && this.createTradesSection(1, userTradesSectionIndex, trades.receivedTrades, 'Tauschgeschäfte, die auf meine Antwort warten')}
+                        {trades.hasSentTrades && this.createTradesSection(2, userTradesSectionIndex, trades.sentTrades, 'Tauschgeschäfte, die auf Antwort des Empfängers warten')}
+                        {trades.hasCompletedTrades && this.createTradesSection(3, userTradesSectionIndex, trades.completedTrades, 'Erfolgreich abgeschlossene Tauschgeschäfte')}
+                        {trades.hasCanceledTrades && this.createTradesSection(4, userTradesSectionIndex, trades.canceledTrades, 'Abgebrochene Tauschgeschäfte')}
+                    </Stepper>
+                ) : (
+                    <Placeholder width={300} height={300} loading={loading} text="Keine Tauschgeschäfte vorhanden" loadingText="... Tauschgeschäfte werden geladen ..."/>
+                )}
             </div>
         );
     }

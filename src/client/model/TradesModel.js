@@ -65,6 +65,34 @@ class TradesModel {
         }
         return this.__receivedTrades;
     }
+
+    get hasNewTrades() {
+        return this.newTrades.length > 0;
+    }
+
+    get hasReceivedTrades() {
+        return this.receivedTrades.length > 0;
+    }
+
+    get hasSentTrades() {
+        return this.sentTrades.length > 0;
+    }
+
+    get hasCompletedTrades() {
+        return this.completedTrades.length > 0;
+    }
+
+    get hasCanceledTrades() {
+        return this.canceledTrades.length > 0;
+    }
+
+    get hasOpenTrades() {
+        return this.openTrades.length > 0;
+    }
+
+    get hasFinishedTrades() {
+        return this.finishedTrades.length > 0;
+    }
 }
 
 module.exports = TradesModel;
