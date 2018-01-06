@@ -9,7 +9,7 @@ const PrivateRoute = ({ isLoggedIn, userId, setGlobalMessage, component: Compone
         const hasPermission = props.match.params.userId === userId;
         if (!hasPermission) {
             setGlobalMessage({
-                messageText: 'Keine Berechtigung für diese Seite!',
+                messageText: `Keine Berechtigung für die Seite: ${props.location.pathname + props.location.search}`,
                 messageType: WARNING_MESSAGE
             });
         }

@@ -33,6 +33,7 @@ export default class ApplicationBar extends React.Component {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
         logout: PropTypes.func.isRequired,
         user: PropTypes.object,
         subtitle: PropTypes.string
@@ -74,6 +75,15 @@ export default class ApplicationBar extends React.Component {
         );
     };
 
+    goToLogin = () => {
+        const { location } = this.props;
+        const to = {
+            pathname: '/login',
+            state: { from: location.pathname + location.search }
+        };
+        this.props.history.push(to);
+    };
+
     render() {
         const { subtitle } = this.props;
         let loginButtonBar;
@@ -81,7 +91,7 @@ export default class ApplicationBar extends React.Component {
             loginButtonBar = this.createUserMenu();
         }
         else {
-            loginButtonBar = <FlatButton label="Anmelden" onClick={this.goTo.bind(this, '/login')}/>;
+            loginButtonBar = <FlatButton label="Anmelden" onClick={this.goToLogin}/>;
         }
 
         return (

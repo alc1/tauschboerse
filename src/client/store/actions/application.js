@@ -57,7 +57,11 @@ export const setLoading = (isLoading) => dispatch =>
  * Follow-up Actions from within the global message snackbar
  */
 
-export const goToLogin = (history) => dispatch => {
-    removeToken(dispatch);
-    history.push('/login');
+export const goToLogin = (history, location) => dispatch => {
+    removeToken(dispatch, false);
+    const to = {
+        pathname: '/login',
+        state: { from: location.pathname + location.search }
+    };
+    history.push(to);
 };

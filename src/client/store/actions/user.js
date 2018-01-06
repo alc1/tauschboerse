@@ -72,7 +72,7 @@ export const login = (user) => dispatch =>
         .catch(err => handleError(err, dispatch));
 
 export const logout = () => dispatch => {
-    removeToken(dispatch);
+    removeToken(dispatch, true);
 };
 
 export const createUser = (user) => dispatch =>
@@ -117,13 +117,15 @@ export const setToken = (token, dispatch, actionCreator) => {
     dispatch(actionCreator(user));
 };
 
-export const removeToken = (dispatch) => {
+export const removeToken = (dispatch, showLogoutMessage) => {
     localStorage.removeItem(JWT_TOKEN_KEY);
     sessionStorage.removeItem(JWT_TOKEN_KEY);
     delete axios.defaults.headers.common['Authorization'];
     dispatch(userLoggedOut());
-    dispatch(globalMessageReceived({
-        messageText: 'Erfolgreich abgemeldet.',
-        messageType: OK_MESSAGE
-    }));
+    if (showLogoutMessage) {
+        dispatch(globalMessageReceived({
+            messageText: 'Erfolgreich abgemeldet.',
+            messageType: OK_MESSAGE
+        }));
+    }
 };

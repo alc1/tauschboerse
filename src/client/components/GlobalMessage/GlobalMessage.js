@@ -13,6 +13,7 @@ export default class GlobalMessage extends React.Component {
         removeGlobalMessage: PropTypes.func.isRequired,
         goToLogin: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
         muiTheme: PropTypes.shape({
             palette: PropTypes.shape({
                 primary1Color: PropTypes.string.isRequired,
@@ -36,7 +37,7 @@ export default class GlobalMessage extends React.Component {
         if (actionType === GO_TO_LOGIN) {
             action = () => {
                 this.props.removeGlobalMessage();
-                this.props.goToLogin(this.props.history);
+                this.props.goToLogin(this.props.history, this.props.location);
             }
         }
 

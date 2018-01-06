@@ -21,6 +21,7 @@ export default class Navigation extends React.Component {
     static propTypes = {
         closeMenu: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
         logout: PropTypes.func.isRequired,
         user: PropTypes.object
     };
@@ -30,10 +31,19 @@ export default class Navigation extends React.Component {
         this.props.history.push(theLink);
     };
 
-    onLogout = () => {
+    logout = () => {
         this.props.closeMenu();
         this.props.logout();
         this.props.history.push('/');
+    };
+
+    goToLogin = () => {
+        const { location } = this.props;
+        const to = {
+            pathname: '/login',
+            state: { from: location.pathname + location.search }
+        };
+        this.props.history.push(to);
     };
 
     render() {
@@ -58,8 +68,8 @@ export default class Navigation extends React.Component {
                     {user && <MenuItem primaryText="Meine Artikel" leftIcon={<ArticlesIcon/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
                     {user && <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
                     {user && <Divider/>}
-                    {user && <MenuItem primaryText="Abmelden" leftIcon={<ExitIcon/>} onClick={this.onLogout}/>}
-                    {!user && <MenuItem primaryText="Anmelden" leftIcon={<LoginIcon/>} onClick={this.openMenuItem.bind(this, '/login')}/>}
+                    {user && <MenuItem primaryText="Abmelden" leftIcon={<ExitIcon/>} onClick={this.logout}/>}
+                    {!user && <MenuItem primaryText="Anmelden" leftIcon={<LoginIcon/>} onClick={this.goToLogin}/>}
                     {!user && <MenuItem primaryText="Registrieren" leftIcon={<RegistrationIcon/>} onClick={this.openMenuItem.bind(this, '/registration')}/>}
                 </Menu>
             </div>
