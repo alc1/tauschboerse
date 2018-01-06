@@ -9,7 +9,7 @@ import HomeIcon from 'material-ui/svg-icons/action/home';
 import MarketplaceIcon from 'material-ui/svg-icons/communication/business';
 import ArticlesIcon from 'material-ui/svg-icons/action/list';
 import SwapIcon from 'material-ui/svg-icons/action/swap-horiz';
-import AccountIcon from 'material-ui/svg-icons/action/account-circle';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 import LoginIcon from 'material-ui/svg-icons/action/lock-open';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
@@ -56,7 +56,7 @@ export default class Navigation extends React.Component {
                     <Divider/>
                     {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.openMenuItem.bind(this, userTradesLink)}/>}
                     {user && <MenuItem primaryText="Meine Artikel" leftIcon={<ArticlesIcon/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
-                    {user && <MenuItem primaryText="Mein Konto" leftIcon={<AccountIcon/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
+                    {user && <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
                     {user && <Divider/>}
                     {user && <MenuItem primaryText="Abmelden" leftIcon={<ExitIcon/>} onClick={this.onLogout}/>}
                     {!user && <MenuItem primaryText="Anmelden" leftIcon={<LoginIcon/>} onClick={this.openMenuItem.bind(this, '/login')}/>}

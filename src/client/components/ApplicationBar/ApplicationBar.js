@@ -5,12 +5,22 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
+
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
+
+import { cyan400, white } from 'material-ui/styles/colors';
 
 import AppTitle from '../../containers/AppTitle';
 import Navigation from '../../containers/Navigation';
 import LoadingIndicator from '../../containers/LoadingIndicator';
 import GlobalMessage from '../../containers/GlobalMessage';
+import AvatarTag from '../AvatarTag/AvatarTag';
 
 import './ApplicationBar.css';
 
@@ -32,11 +42,11 @@ export default class ApplicationBar extends React.Component {
         isMenuOpen: false
     };
 
-    onLogin = () => {
-        this.props.history.push('/login');
+    goTo = (thePath) => {
+        this.props.history.push(thePath);
     };
 
-    onLogout = () => {
+    logout = () => {
         this.props.logout();
         this.props.history.push('/');
     };
@@ -53,14 +63,25 @@ export default class ApplicationBar extends React.Component {
         this.setState({ isMenuOpen: open });
     };
 
+    createUserMenu = () => {
+        const { user } = this.props;
+        return (
+            <IconMenu iconButtonElement={<AvatarTag backgroundColor={cyan400} labelColor={white} text={user.name} icon={<AccountIcon/>}/>}>
+                <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/details`)}/>
+                <Divider/>
+                <MenuItem primaryText="Abmelden" leftIcon={<ExitIcon/>} onClick={this.logout}/>
+            </IconMenu>
+        );
+    };
+
     render() {
         const { subtitle } = this.props;
         let loginButtonBar;
         if (this.props.user) {
-            loginButtonBar = <FlatButton label="Logout" onClick={this.onLogout}/>;
+            loginButtonBar = this.createUserMenu();
         }
         else {
-            loginButtonBar = <FlatButton label="Login" onClick={this.onLogin}/>;
+            loginButtonBar = <FlatButton label="Anmelden" onClick={this.goTo.bind(this, '/login')}/>;
         }
 
         return (
