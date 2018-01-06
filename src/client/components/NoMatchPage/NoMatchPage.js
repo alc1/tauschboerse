@@ -1,12 +1,12 @@
 import React from 'react';
 
 import ApplicationBar from '../../containers/ApplicationBar';
-import Placeholder from '../Placeholder/Placeholder';
+import Placeholder from '../../containers/Placeholder';
 
-const NoMatchPage = ({ location, muiTheme }) => (
+const NoMatchPage = ({ location }) => (
     <div>
         <ApplicationBar/>
-        <Placeholder width={300} height={300} muiTheme={muiTheme} text={`Seite nicht gefunden: ${location.pathname}`}/>
+        <Placeholder width={300} height={300} text={`Seite nicht gefunden: ${location.pathname}`}/>
     </div>
 );
 

@@ -181,8 +181,22 @@ export default class MarketplacePage extends React.Component {
         return `${theNumberOfResults} eigene Artikel entsprechen den Suchkriterien`;
     };
 
+    createMarketplaceSection = (theSectionIndex, theCurrentMarketplaceSectionIndex, theArticles, theSectionTitle) => {
+        const { loading, muiTheme } = this.props;
+        return (
+            <Step>
+                <StepButton icon={theCurrentMarketplaceSectionIndex === theSectionIndex ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, theSectionIndex)}>
+                    <StepLabel>{theSectionTitle}</StepLabel>
+                </StepButton>
+                <StepContent transitionDuration={0}>
+                    <ArticleGridList articles={theArticles} articleActions={this.buildActionList(false)} loading={loading}/>
+                </StepContent>
+            </Step>
+        );
+    };
+
     render() {
-        const { loading, muiTheme, marketplaceSectionIndex } = this.props;
+        const { marketplaceSectionIndex } = this.props;
         const { searchText, notUserArticles, userArticles } = this.state;
 
         return (
@@ -193,24 +207,8 @@ export default class MarketplacePage extends React.Component {
                     activeStep={marketplaceSectionIndex}
                     linear={false}
                     orientation="vertical">
-                    <Step>
-                        <StepButton icon={marketplaceSectionIndex === 0 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 0)}>
-                            <StepLabel>{this.createFirstSectionText(notUserArticles.length)}</StepLabel>
-                        </StepButton>
-                        <StepContent transitionDuration={0}>
-                            <ArticleGridList articles={notUserArticles} articleActions={this.buildActionList(false)} loading={loading}/>
-                        </StepContent>
-                    </Step>
-                    {this.props.user &&
-                        <Step>
-                            <StepButton icon={marketplaceSectionIndex === 1 ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, 1)}>
-                                <StepLabel>{this.createSecondSectionText(userArticles.length)}</StepLabel>
-                            </StepButton>
-                            <StepContent transitionDuration={0}>
-                                <ArticleGridList articles={userArticles} articleActions={this.buildActionList(true)} loading={loading}/>
-                            </StepContent>
-                        </Step>
-                    }
+                    {this.createMarketplaceSection(0, marketplaceSectionIndex, notUserArticles, this.createFirstSectionText(notUserArticles.length))}
+                    {this.props.user && this.createMarketplaceSection(1, marketplaceSectionIndex, userArticles, this.createSecondSectionText(userArticles.length))}
                 </Stepper>
             </div>
         );

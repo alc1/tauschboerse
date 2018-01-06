@@ -1,5 +1,7 @@
 import { USER_SLICE_NAME } from '../slices';
 
+import TradesModel from '../../model/TradesModel';
+
 const initialUser = null;
 const initialUserTrades = [];
 const initialUserArticles = [];
@@ -36,10 +38,33 @@ export const getUserArticlesFilter = (theState) => {
 };
 
 export const getUserTradesSectionIndex = (theState) => {
-    if (theState[USER_SLICE_NAME] && typeof theState[USER_SLICE_NAME].userTradesSectionIndex === 'number') {
-        return theState[USER_SLICE_NAME].userTradesSectionIndex;
+    const trades = new TradesModel(getUserTrades(theState), getUser(theState));
+    return getCurrentUserTradesSectionIndex(theState, trades.hasNewTrades, trades.hasReceivedTrades, trades.hasSentTrades, trades.hasCompletedTrades, trades.hasCanceledTrades);
+};
+
+const getCurrentUserTradesSectionIndex = (theState, hasNewTrades, hasReceivedTrades, hasSentTrades, hasCompletedTrades, hasCanceledTrades) => {
+    let storedUserTradesSectionIndex = theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].userTradesSectionIndex : null;
+    if (typeof storedUserTradesSectionIndex === 'number') {
+        return storedUserTradesSectionIndex;
     }
-    return initialUserTradesSectionIndex;
+    else if (hasReceivedTrades) {
+        return 1;
+    }
+    else if (hasNewTrades) {
+        return 0;
+    }
+    else if (hasSentTrades) {
+        return 2;
+    }
+    else if (hasCompletedTrades) {
+        return 3;
+    }
+    else if (hasCanceledTrades) {
+        return 4;
+    }
+    else {
+        return initialUserTradesSectionIndex;
+    }
 };
 
 const getUserArticlesInternal = (theState) => {
