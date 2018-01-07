@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 
 import UserArticlesPage from '../components/UserArticlesPage/UserArticlesPage';
 
-import { setLoading } from '../store/actions/application';
 import { loadUserArticles, filterUserArticles } from '../store/actions/user';
 import { deleteArticle } from '../store/actions/article';
 import { isLoading } from '../store/selectors/application';
@@ -17,4 +16,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadUserArticles, filterUserArticles, deleteArticle, setLoading })(UserArticlesPage);
+export default connect(mapStateToProps, { loadUserArticles, filterUserArticles, deleteArticle })(UserArticlesPage);

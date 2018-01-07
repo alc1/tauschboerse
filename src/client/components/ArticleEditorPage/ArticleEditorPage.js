@@ -18,11 +18,6 @@ import './ArticleEditorPage.css';
 
 export default class ArticleEditorPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.articleFound = true;
-    }
-
     static propTypes = {
         article: PropTypes.object,
         user: PropTypes.object,
@@ -45,21 +40,19 @@ export default class ArticleEditorPage extends React.Component {
         owner: null,
         trades: null,
         errors: {},
-        modified: false
+        modified: false,
+        articleFound: true
     };
 
     componentDidMount() {
         const { articleId } = this.props.match.params;
         if (articleId) {
-            this.props.setLoading(true);
             this.props.loadArticle(articleId)
                 .then(() => {
-                    this.props.setLoading(false);
                     this.updateArticleInState(this.props);
                 })
                 .catch(() => {
-                    this.articleFound = false;
-                    this.props.setLoading(false);
+                    this.setState({ articleFound: false });
                 });
         }
     }
@@ -194,7 +187,7 @@ export default class ArticleEditorPage extends React.Component {
     };
 
     getSubTitle = (isEditAllowed) => {
-        if (this.articleFound) {
+        if (this.state.articleFound) {
             if (isEditAllowed) {
                 if (this.props.match.params.articleId) {
                     return 'Artikel bearbeiten';
@@ -214,12 +207,12 @@ export default class ArticleEditorPage extends React.Component {
 
     render() {
         const { user, loading } = this.props;
-        const { title, description, categories, photos, status, created, owner, trades, errors, modified } = this.state;
+        const { title, description, categories, photos, status, created, owner, trades, errors, modified, articleFound } = this.state;
         let isEditAllowed = this.isEditAllowed(owner, user);
         return (
             <div>
                 <ApplicationBar subtitle={this.getSubTitle(isEditAllowed)}/>
-                {this.articleFound ?
+                {articleFound ? (
                     <form className="article-editor__container" onSubmit={this.onSubmit}>
                         <ArticleForm
                             isDisplayMode={!isEditAllowed}
@@ -243,9 +236,9 @@ export default class ArticleEditorPage extends React.Component {
                             <SaveIcon/>
                         </PageButton>}
                     </form>
-                    :
+                ) : (
                     <Placeholder width={300} height={300} loading={loading} text="Artikel nicht gefunden" loadingText="... Artikel wird geladen ..."/>
-                }
+                )}
             </div>
         );
     }

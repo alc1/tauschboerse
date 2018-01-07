@@ -15,7 +15,6 @@ export default class LoginPage extends React.Component {
 
     static propTypes = {
         login: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
     };
@@ -36,18 +35,15 @@ export default class LoginPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.props.setLoading(true);
         this.setState({ errors: {} });
         const { email, currentPassword } = this.state;
         const user = { email, currentPassword };
         this.props.login(user)
             .then(() => {
-                this.props.setLoading(false);
                 const { from } = this.props.location.state || { from: { pathname: '/' } };
                 this.props.history.replace(from);
             })
             .catch((err) => {
-                this.props.setLoading(false);
                 this.setState({ errors: err.response.data.errors || {} })
             });
     };

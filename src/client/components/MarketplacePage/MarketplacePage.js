@@ -32,7 +32,6 @@ export default class MarketplacePage extends React.Component {
         createTrade: PropTypes.func.isRequired,
         openMarketplaceSection: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
-        setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         muiTheme: PropTypes.shape({
             palette: PropTypes.shape({
@@ -56,15 +55,12 @@ export default class MarketplacePage extends React.Component {
         if (this.currentSearch.length === 0) {
             this.currentSearch = searchText;
             this.setState({ searchText: searchText });
-            this.props.setLoading(true);
             this.props.findArticles(searchText)
                 .then(() => {
-                    this.props.setLoading(false);
                     this.currentSearch = '';
                     this.openFirstSectionIfNeeded();
                 })
                 .catch(() => {
-                    this.props.setLoading(false);
                     this.currentSearch = '';
                 });
         }

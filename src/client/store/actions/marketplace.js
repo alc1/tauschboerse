@@ -1,6 +1,5 @@
-import axios from 'axios';
-
 import { handleError } from './common';
+import { execute, GET, POST } from '../../util/api';
 
 /*
  * Action Type Constants
@@ -43,7 +42,7 @@ const marketplaceSectionOpened = (theMarketplaceSectionIndex) => ({
 export const findArticles = (theSearchText, theVersion) => dispatch => {
     let versionCheckPromise = new Promise((resolve, reject) => {
         if (theVersion) {
-            axios.get('/api/articles/version')
+            execute(GET, '/api/articles/version')
                 .then(response => {
                     resolve(theVersion === Number(response.data.version));
                 })
@@ -54,7 +53,7 @@ export const findArticles = (theSearchText, theVersion) => dispatch => {
     });
 
     let searchPromise = new Promise((resolve, reject) => {
-        axios.get(`/api/articles?text=${theSearchText}`)
+        execute(GET, `/api/articles?text=${theSearchText}`)
             .then(response => {
                 dispatch(articlesFound(theSearchText, response.data.articles, response.data.version));
                 resolve();
@@ -77,7 +76,7 @@ export const clearLastSearch = () => dispatch =>
     dispatch(lastSearchCleared());
 
 export const createTrade = (theArticle) => dispatch =>
-    axios.post('/api/trades', { articleIds: [theArticle._id] })
+    execute(POST, '/api/trades', { articleIds: [theArticle._id] })
         .then(response => dispatch(tradeCreated(response.data)))
         .catch(err => handleError(err, dispatch));
 

@@ -20,7 +20,6 @@ export default class UserTradesPage extends React.Component {
         user: PropTypes.object.isRequired,
         userTradesSectionIndex: PropTypes.number.isRequired,
         loadUserTrades: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         openUserTradesSection: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired,
@@ -32,11 +31,7 @@ export default class UserTradesPage extends React.Component {
     };
 
     componentDidMount() {
-        this.props.setLoading(true);
-        const { userId } = this.props.match.params;
-        this.props.loadUserTrades(userId)
-            .then(() => this.props.setLoading(false))
-            .catch(() => this.props.setLoading(false));
+        this.props.loadUserTrades(this.props.match.params.userId);
     }
 
     showTradeDetails = (theTrade) => {

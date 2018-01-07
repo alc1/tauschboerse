@@ -92,18 +92,26 @@ describe('Application Reducer', () => {
     });
 
     describe(`Test action ${LOADING_STATE_RECEIVED}`, () => {
-        test(`Set loading state to TRUE with initial state before. Expectation: New state should now contain the new loading state.`, () => {
+        test(`Increase loading counter with initial state before. Expectation: New state should now contain the loading counter 1.`, () => {
             const newState = applicationReducer(initialState, loadingStateReceived(true));
-            expect(newState).toEqual({ ...initialState, isLoading: true });
+            expect(newState).toEqual({ ...initialState, loadingCounter: 1 });
         });
-        test(`Set loading state to FALSE with loading state on TRUE before. Expectation: The loading state should now be FALSE in the new state.`, () => {
-            const newState = applicationReducer({ ...initialState, isLoading: true }, loadingStateReceived(false));
-            expect(newState).toEqual({ ...initialState, isLoading: false });
+        test(`Decrease loading counter with loading counter 1 before. Expectation: The loading counter should now be 0 in the new state.`, () => {
+            const newState = applicationReducer({ ...initialState, loadingCounter: 1 }, loadingStateReceived(false));
+            expect(newState).toEqual({ ...initialState, loadingCounter: 0 });
         });
-        test(`Set loading state to TRUE with state which also contains any global message. Expectation: New state should now contain the new loading state and the global message from before.`, () => {
+        test(`Decrease loading counter with loading counter 0 before. Expectation: The loading counter should still be 0 in the new state.`, () => {
+            const newState = applicationReducer({ ...initialState, loadingCounter: 0 }, loadingStateReceived(false));
+            expect(newState).toEqual({ ...initialState, loadingCounter: 0 });
+        });
+        test(`Decrease loading counter with loading counter -1 before (which should never happen). Expectation: The loading counter should now be 0 in the new state.`, () => {
+            const newState = applicationReducer({ ...initialState, loadingCounter: -1 }, loadingStateReceived(false));
+            expect(newState).toEqual({ ...initialState, loadingCounter: 0 });
+        });
+        test(`Increase loading counter with state which also contains any global message. Expectation: New state should now contain the new loading counter and the global message from before.`, () => {
             const okMessage = createOkGlobalMessage();
-            const newState = applicationReducer({ ...initialState, globalMessage: okMessage }, loadingStateReceived(false));
-            expect(newState).toEqual({ ...initialState, globalMessage: okMessage, isLoading: false });
+            const newState = applicationReducer({ ...initialState, globalMessage: okMessage }, loadingStateReceived(true));
+            expect(newState).toEqual({ ...initialState, globalMessage: okMessage, loadingCounter: 1 });
         });
     });
 
@@ -114,8 +122,8 @@ describe('Application Reducer', () => {
         });
         test(`Expectation: Any other action should not affect store which has any state.`, () => {
             const okMessage = createOkGlobalMessage();
-            const newState = applicationReducer({ ...initialState, globalMessage: okMessage, isLoading: true }, createDummyAction());
-            expect(newState).toEqual({ ...initialState, globalMessage: okMessage, isLoading: true });
+            const newState = applicationReducer({ ...initialState, globalMessage: okMessage, loadingCounter: 1 }, createDummyAction());
+            expect(newState).toEqual({ ...initialState, globalMessage: okMessage, loadingCounter: 1 });
         });
     });
 });

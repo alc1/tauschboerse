@@ -19,7 +19,6 @@ export default class Dashboard extends React.Component {
         trades: PropTypes.array.isRequired,
         user: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
-        setLoading: PropTypes.func.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         loadUserTrades: PropTypes.func.isRequired,
         muiTheme: PropTypes.shape({
@@ -28,13 +27,10 @@ export default class Dashboard extends React.Component {
     };
 
     componentDidMount() {
-        this.props.setLoading(true);
         Promise.all([
             this.props.loadUserArticles(this.props.user._id),
             this.props.loadUserTrades(this.props.user._id)
-        ])
-        .then(() => this.props.setLoading(false))
-        .catch(() => this.props.setLoading(false));
+        ]);
     }
 
     render() {

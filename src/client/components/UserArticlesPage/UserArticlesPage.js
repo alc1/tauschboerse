@@ -32,7 +32,6 @@ export default class UserArticlesPage extends React.Component {
             filterText: PropTypes.string,
             filterStatus: PropTypes.string
         }).isRequired,
-        setLoading: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
     };
@@ -44,12 +43,9 @@ export default class UserArticlesPage extends React.Component {
     };
 
     componentDidMount() {
-        this.props.setLoading(true);
         const { userId } = this.props.match.params;
-        this.props.loadUserArticles(userId)
-            .then(() => this.props.setLoading(false))
-            .catch(() => this.props.setLoading(false));
-        this.filterFieldTimeout = setTimeout(() => {this.filterField.focus();}, 1000);
+        this.props.loadUserArticles(userId);
+        this.filterFieldTimeout = setTimeout(() => this.filterField.focus(), 1000);
     }
 
     componentWillUnmount() {
@@ -80,10 +76,7 @@ export default class UserArticlesPage extends React.Component {
 
     deleteArticle = (theArticle) => {
         this.closeDeleteDialog();
-        this.props.setLoading(true);
-        this.props.deleteArticle(theArticle.owner._id, theArticle._id)
-            .then(() => this.props.setLoading(false))
-            .catch(() => this.props.setLoading(false));
+        this.props.deleteArticle(theArticle.owner._id, theArticle._id);
     };
 
     createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised, isDisabled) => {

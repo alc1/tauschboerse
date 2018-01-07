@@ -18,7 +18,6 @@ export default class RegistrationPage extends React.Component {
 
     static propTypes = {
         createUser: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         setGlobalMessage: PropTypes.func.isRequired,
         loading: PropTypes.bool.isRequired,
         history: PropTypes.object.isRequired
@@ -44,14 +43,12 @@ export default class RegistrationPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.props.setLoading(true);
         const { gender, email, name, address, newPassword, passwordConfirmation } = this.state;
         const user = { gender, email, name, address, newPassword, passwordConfirmation };
         const validation = registrationValidator.validate(user);
         if (validation.isValid) {
             this.props.createUser(user)
                 .then(() => {
-                    this.props.setLoading(false);
                     this.props.setGlobalMessage({
                         messageText: 'Dein Konto wurde erstellt.',
                         messageType: OK_MESSAGE
@@ -59,12 +56,10 @@ export default class RegistrationPage extends React.Component {
                     this.props.history.replace('/');
                 })
                 .catch((err) => {
-                    this.props.setLoading(false);
                     this.setState({ errors: err.response.data.errors || {} })
                 });
         }
         else {
-            this.props.setLoading(false);
             this.setState({ errors: validation.errors });
         }
     };

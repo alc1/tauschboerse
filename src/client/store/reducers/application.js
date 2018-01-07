@@ -5,11 +5,11 @@ import {
 } from '../actions/application';
 
 const initialGlobalMessage = {};
-const initialLoadingState = false;
+const initialLoadingCounter = 0;
 
 export const initialState = {
     globalMessage: initialGlobalMessage,
-    isLoading: initialLoadingState
+    loadingCounter: initialLoadingCounter
 };
 
 export default function application(theState = initialState, theAction) {
@@ -32,7 +32,7 @@ export default function application(theState = initialState, theAction) {
         case LOADING_STATE_RECEIVED:
             return {
                 ...theState,
-                isLoading: theAction.isLoading
+                loadingCounter: theAction.isLoading ? theState.loadingCounter + 1 : (theState.loadingCounter <= 0 ? 0 : theState.loadingCounter - 1)
             };
         default:
             return theState;

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { globalMessageReceived, OK_MESSAGE } from './application';
 import { JWT_TOKEN_KEY } from '../../constants/jwt';
 import { handleError } from './common';
+import { execute, GET, POST, PUT } from '../../util/api';
 
 /*
  * Action Type Constants
@@ -67,7 +68,7 @@ const userTradesSectionOpened = (theUserTradesSectionIndex) => ({
  */
 
 export const login = (user) => dispatch =>
-    axios.post('/api/users/auth', { user })
+    execute(POST, '/api/users/auth', { user })
         .then(response => onTokenReceived(response.data.token, dispatch, userLoggedIn))
         .catch(err => handleError(err, dispatch));
 
@@ -76,22 +77,22 @@ export const logout = () => dispatch => {
 };
 
 export const createUser = (user) => dispatch =>
-    axios.post('/api/users', { user })
+    execute(POST, '/api/users', { user })
         .then(response => onTokenReceived(response.data.token, dispatch, userCreated))
         .catch(err => handleError(err, dispatch));
 
 export const updateUser = (user) => dispatch =>
-    axios.put(`/api/users/${user._id}`, { user })
+    execute(PUT, `/api/users/${user._id}`, { user })
         .then(response => onTokenReceived(response.data.token, dispatch, userUpdated))
         .catch(err => handleError(err, dispatch));
 
 export const loadUserArticles = (theUserId) => dispatch =>
-    axios.get(`/api/users/${theUserId}/articles`)
+    execute(GET, `/api/users/${theUserId}/articles`)
         .then(response => dispatch(userArticlesFetched(response.data.articles)))
         .catch(err => handleError(err, dispatch));
 
 export const loadUserTrades = (theUserId) => dispatch =>
-    axios.get(`/api/users/${theUserId}/trades`)
+    execute(GET, `/api/users/${theUserId}/trades`)
         .then(response => dispatch(userTradesFetched(response.data.trades)))
         .catch(err => handleError(err, dispatch));
 

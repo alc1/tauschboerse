@@ -5,5 +5,5 @@ export const getGlobalMessage = (theState) => {
 };
 
 export const isLoading = (theState) => {
-    return theState[APPLICATION_SLICE_NAME] ? theState[APPLICATION_SLICE_NAME].isLoading : false;
+    return theState[APPLICATION_SLICE_NAME] ? theState[APPLICATION_SLICE_NAME].loadingCounter > 0 : false;
 };

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { handleError } from './common';
 import { getUser } from '../selectors/user';
+import { execute, GET, DELETE } from '../../util/api';
 
 import TradesModel from '../../model/TradesModel';
 
@@ -48,7 +49,7 @@ export const selectedArticleRemoved = () => ({
  */
 
 export const loadArticle = (theArticleId) => (dispatch, getState) =>
-    axios.get(`/api/articles/${theArticleId}`)
+    execute(GET, `/api/articles/${theArticleId}`)
         .then(response => dispatch(articleFetched(extendArticleWithTrades(response.data.article, response.data.trades, getUser(getState())))))
         .catch((err) => handleError(err, dispatch));
 
@@ -63,7 +64,7 @@ export const updateArticle = (ownerId, article) => (dispatch, getState) =>
         .catch((err) => handleError(err, dispatch));
 
 export const deleteArticle = (ownerId, articleId) => (dispatch, getState) =>
-    axios.delete(`/api/users/${ownerId}/articles/${articleId}`)
+    execute(DELETE, `/api/users/${ownerId}/articles/${articleId}`)
         .then(response => {
             if (response.data.isDeleted) {
                 if (response.data.articleId) {

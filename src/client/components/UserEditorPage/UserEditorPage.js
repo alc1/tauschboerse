@@ -20,7 +20,6 @@ export default class UserDetailsPage extends React.Component {
     static propTypes = {
         updateUser: PropTypes.func.isRequired,
         setGlobalMessage: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         user: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired
     };
@@ -78,7 +77,6 @@ export default class UserDetailsPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.props.setLoading(true);
         const { gender, name, email, address, currentPassword, newPassword, passwordConfirmation } = this.state;
         const { _id, registration } = this.props.user;
         const user = { gender, name, email, address, registration, currentPassword, newPassword, passwordConfirmation };
@@ -87,7 +85,6 @@ export default class UserDetailsPage extends React.Component {
         if (validation.isValid) {
             this.props.updateUser(user)
                 .then(() => {
-                    this.props.setLoading(false);
                     if (this.state.changePassword) {
                         this.onPasswordChangeToggled();
                     }
@@ -101,12 +98,10 @@ export default class UserDetailsPage extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    this.props.setLoading(false);
                     this.setState({ errors: err.response.data.errors || {} })
                 });
         }
         else {
-            this.props.setLoading(false);
             this.setState({ errors: validation.errors });
         }
     };
