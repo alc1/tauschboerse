@@ -1,3 +1,11 @@
 .appbar__content {
     padding-top: 64px;
 }
+
+.appbar__user-menu-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 1px;
+}

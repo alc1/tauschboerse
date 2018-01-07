@@ -19,7 +19,7 @@ function validate(theUser) {
         }
         else {
             if (!isEmail(theUser.email)) {
-                errors.email = 'Ungültige E-Mail';
+                errors.email = 'Die E-Mail-Adresse ist ungültig';
             }
         }
 

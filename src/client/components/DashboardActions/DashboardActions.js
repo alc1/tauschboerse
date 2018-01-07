@@ -8,7 +8,7 @@ import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 import PlusIcon from 'material-ui/svg-icons/content/add';
 import ArticlesIcon from 'material-ui/svg-icons/action/list';
 import SwapIcon from 'material-ui/svg-icons/action/swap-horiz';
-import AccountIcon from 'material-ui/svg-icons/action/account-circle';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 
 import ActionBox from '../ActionBox/ActionBox';
 
@@ -44,7 +44,7 @@ export default class DashboardActions extends React.Component {
                     <RaisedButton style={buttonStyle} label="Meine Artikel" icon={<ArticlesIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/articles`)} primary/>
                 </ActionBox>
                 <ActionBox title="Benutzerkonto" text="Verwalte hier dein Benutzerkonto.">
-                    <RaisedButton style={buttonStyle} label="Mein Konto" icon={<AccountIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/details`)} primary/>
+                    <RaisedButton style={buttonStyle} label="Mein Konto" icon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/details`)} primary/>
                     <RaisedButton data-button-id="logout" style={buttonStyle}  label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>
                 </ActionBox>
             </div>

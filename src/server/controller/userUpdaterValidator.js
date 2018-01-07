@@ -100,7 +100,7 @@ function checkEmail(isAboutToChangeEmail, theNewEmail) {
             return {
                 status: 400,
                 errors: {
-                    email: 'E-Mail existiert bereits'
+                    email: 'Die E-Mail-Adresse ist ungültig'
                 }
             };
         }

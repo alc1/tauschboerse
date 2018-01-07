@@ -20,7 +20,7 @@ function validate(theUser) {
             success: false,
             status: 400,
             errors: {
-                email: 'Diese E-Mail existiert bereits'
+                email: 'Die E-Mail-Adresse ist ungültig'
             }
         };
     }

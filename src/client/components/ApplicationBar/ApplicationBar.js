@@ -13,6 +13,7 @@ import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
+import DropdownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 
 import { cyan400, white } from 'material-ui/styles/colors';
 
@@ -47,6 +48,15 @@ export default class ApplicationBar extends React.Component {
         this.props.history.push(thePath);
     };
 
+    goToLogin = () => {
+        const { location } = this.props;
+        const to = {
+            pathname: '/login',
+            state: { from: location.pathname + location.search }
+        };
+        this.props.history.push(to);
+    };
+
     logout = () => {
         this.props.logout();
         this.props.history.push('/');
@@ -60,39 +70,46 @@ export default class ApplicationBar extends React.Component {
         this.setState({ isMenuOpen: false });
     };
 
-    handleMenuChange = (open) => {
-        this.setState({ isMenuOpen: open });
+    handleMenuChange = (isMenuOpen) => {
+        this.setState({ isMenuOpen });
     };
 
-    createUserMenu = () => {
-        const { user } = this.props;
+    createUserMenuText = (theUser) => {
         return (
-            <IconMenu iconButtonElement={<AvatarTag backgroundColor={cyan400} labelColor={white} text={user.name} icon={<AccountIcon/>}/>}>
-                <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/details`)}/>
-                <Divider/>
-                <MenuItem primaryText="Abmelden" leftIcon={<ExitIcon/>} onClick={this.logout}/>
-            </IconMenu>
+            <div className="appbar__user-menu-text">
+                {theUser.name}
+                <DropdownIcon color={white}/>
+            </div>
         );
     };
 
-    goToLogin = () => {
-        const { location } = this.props;
-        const to = {
-            pathname: '/login',
-            state: { from: location.pathname + location.search }
-        };
-        this.props.history.push(to);
+    createUserMenuElement = (theUser) => {
+        return (
+            <AvatarTag backgroundColor={cyan400} labelColor={white} text={this.createUserMenuText(theUser)} icon={<AccountIcon/>}/>
+        );
+    };
+
+    createUserOptionButton = (theUser) => {
+        if (theUser) {
+            return (
+                <IconMenu iconButtonElement={this.createUserMenuElement(theUser)}>
+                    <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/details`)}/>
+                    <Divider/>
+                    <MenuItem primaryText="Abmelden" leftIcon={<ExitIcon/>} onClick={this.logout}/>
+                </IconMenu>
+            );
+        }
+        else {
+            return (
+                <FlatButton label="Anmelden" onClick={this.goToLogin}/>
+            );
+        }
     };
 
     render() {
-        const { subtitle } = this.props;
-        let loginButtonBar;
-        if (this.props.user) {
-            loginButtonBar = this.createUserMenu();
-        }
-        else {
-            loginButtonBar = <FlatButton label="Anmelden" onClick={this.goToLogin}/>;
-        }
+        const { isMenuOpen } = this.state;
+        const { subtitle, user } = this.props;
+        const userOptionButton = this.createUserOptionButton(user);
 
         return (
             <div>
@@ -101,11 +118,11 @@ export default class ApplicationBar extends React.Component {
                     titleStyle={{ lineHeight: subtitle ? 'normal' : '64px' }}
                     title={<AppTitle subtitle={subtitle}/>}
                     iconElementLeft={<IconButton><MenuIcon/></IconButton>}
-                    iconElementRight={loginButtonBar}
+                    iconElementRight={userOptionButton}
                     onLeftIconButtonClick={this.toggleMenu}/>
                 <Drawer
                     docked={false}
-                    open={this.state.isMenuOpen}
+                    open={isMenuOpen}
                     onRequestChange={this.handleMenuChange}>
                     <Navigation closeMenu={this.closeMenu}/>
                 </Drawer>
