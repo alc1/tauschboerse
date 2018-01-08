@@ -9,7 +9,7 @@ import './AvatarTag.css';
 export default class AvatarTag extends React.Component {
 
     static propTypes = {
-        text: PropTypes.string.isRequired,
+        text: PropTypes.any.isRequired,
         icon: PropTypes.object,
         backgroundColor: PropTypes.string,
         labelColor: PropTypes.string
