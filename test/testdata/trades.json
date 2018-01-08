@@ -1,0 +1,12 @@
+[
+    {
+        "user1Id": 1,
+        "user2Id": 0,
+        "state": "INIT",
+        "offers": [
+            { "senderId": 1, "state": "INIT", "articleIds": [0, 3] }
+        ],
+        "user1HasDelivered": false,
+        "user2HasDelivered": false
+    }
+]

@@ -1,0 +1,6 @@
+[
+    {"gender": "MALE", "email": "calbiez@hsr.ch", "name": "Christian Albiez", "address": "", "newPassword": "c", "registration": "NOW"},
+    {"gender": "MALE", "email": "stephen.atchison@hsr.ch", "name": "Stephen Atchison", "address": "", "newPassword": "stephen", "registration": "NOW"},
+    {"gender": "MALE", "email": "max@mustermann.com", "name": "Max Mustermann", "address": "", "newPassword": "max", "registration": "NOW"},
+    {"gender": "MALE", "email": "jamesbond007@agent.com", "name": "James Bond", "address": "", "newPassword": "james", "registration": "NOW"}
+]
