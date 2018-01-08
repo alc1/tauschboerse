@@ -25,7 +25,6 @@ export default class ArticleForm extends React.Component {
             title: PropTypes.string.isRequired,
             description: PropTypes.string.isRequired,
             categories: PropTypes.array.isRequired,
-            photos: PropTypes.array.isRequired,
             status: PropTypes.string,
             created: PropTypes.string,
             owner: PropTypes.object,

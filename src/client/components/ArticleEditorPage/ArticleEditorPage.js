@@ -41,7 +41,9 @@ export default class ArticleEditorPage extends React.Component {
         trades: null,
         errors: {},
         modified: false,
-        articleFound: true
+        articleFound: true,
+        addedPhotos: [],
+        removedPhotos: []
     };
 
     componentDidMount() {
@@ -107,35 +109,65 @@ export default class ArticleEditorPage extends React.Component {
             fileName: uuid.v1() + theFile.name.substr(theFile.name.lastIndexOf('.')),
             fileContent: theEvent.target.result,
             isNew: true,
-            isMain: this.state.photos.length === 0
+            isMain: this.state.photos.length - this.state.removedPhotos.length + this.state.addedPhotos.length === 0
         };
         this.setState({
-            photos: [...this.state.photos, newPhoto],
+            addedPhotos: [...this.state.addedPhotos, newPhoto],
             modified: true
         });
     };
 
     onRemovePhoto = (thePhotoToRemove) => {
-        this.setState({
-            photos: this.state.photos.filter((photo) => photo.fileName !== thePhotoToRemove.fileName),
-            modified: true
-        });
+        if (this.isNewPhoto(thePhotoToRemove)) {
+            this.setState({
+                addedPhotos: this.state.addedPhotos.filter((photo) => photo.fileName !== thePhotoToRemove.fileName),
+                modified: true
+            });
+        }
+        else {
+            this.setState({
+                removedPhotos: [...this.state.removedPhotos, thePhotoToRemove],
+                modified: true
+            });
+        }
     };
 
     onSelectMainPhoto = (theMainPhoto) => {
-        this.setState({
-            photos: this.state.photos.map(photo => {
-                return { ...photo, isMain: photo.fileName === theMainPhoto.fileName };
-            }),
-            modified: true
-        });
+        if (this.isNewPhoto(theMainPhoto)) {
+            this.setState({
+                addedPhotos: this.state.addedPhotos.map(photo => {
+                    return { ...photo, isMain: photo.fileName === theMainPhoto.fileName };
+                }),
+                photos: this.state.photos.map(photo => {
+                    photo.isMain = false;
+                    return photo;
+                }),
+                modified: true
+            });
+        }
+        else {
+            this.setState({
+                photos: this.state.photos.map(photo => {
+                    return { ...photo, isMain: photo.fileName === theMainPhoto.fileName };
+                }),
+                addedPhotos: this.state.addedPhotos.map(photo => {
+                    photo.isMain = false;
+                    return photo;
+                }),
+                modified: true
+            });
+        }
+    };
+
+    isNewPhoto = (thePhoto) => {
+        return this.state.addedPhotos.some(photo => photo.fileName === thePhoto.fileName);
     };
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
         this.props.setLoading(true);
         const { user } = this.props;
-        const { title, description, categories, photos, status, created } = this.state;
+        const { title, description, categories, photos, status, created, addedPhotos, removedPhotos } = this.state;
         const { articleId } = this.props.match.params;
         let articleToSave = { title, description, categories, photos };
         const validation = articleDetailsValidator.validate(articleToSave);
@@ -145,15 +177,17 @@ export default class ArticleEditorPage extends React.Component {
                 articleToSave._id = articleId;
                 articleToSave.status = status;
                 articleToSave.created = created;
-                articleSaveRequest = this.props.updateArticle(user._id, articleToSave);
+                articleSaveRequest = this.props.updateArticle(user._id, articleToSave, addedPhotos, removedPhotos);
             }
             else {
-                articleSaveRequest = this.props.createArticle(articleToSave);
+                articleSaveRequest = this.props.createArticle(articleToSave, addedPhotos);
             }
             articleSaveRequest.then((res) => {
                 this.setState({
                     errors: {},
-                    modified: false
+                    modified: false,
+                    addedPhotos: [],
+                    removedPhotos: []
                 });
                 this.props.setLoading(false);
                 this.props.setGlobalMessage({
@@ -207,8 +241,12 @@ export default class ArticleEditorPage extends React.Component {
 
     render() {
         const { user, loading } = this.props;
-        const { title, description, categories, photos, status, created, owner, trades, errors, modified, articleFound } = this.state;
+        const { title, description, categories, photos, status, created, owner, trades, errors, modified, articleFound, addedPhotos, removedPhotos } = this.state;
         let isEditAllowed = this.isEditAllowed(owner, user);
+        let photosToRender = photos.filter(photo => !removedPhotos.some(removedPhoto => removedPhoto.fileName === photo.fileName));
+        addedPhotos.forEach(photo => {
+            photosToRender.push(photo);
+        });
         return (
             <div>
                 <ApplicationBar subtitle={this.getSubTitle(isEditAllowed)}/>
@@ -216,7 +254,7 @@ export default class ArticleEditorPage extends React.Component {
                     <form className="article-editor__container" onSubmit={this.onSubmit}>
                         <ArticleForm
                             isDisplayMode={!isEditAllowed}
-                            article={{title, description, categories, photos, status, created, owner, trades}}
+                            article={{title, description, categories, status, created, owner, trades}}
                             errors={errors}
                             loading={loading}
                             onChange={this.onChange}
@@ -227,7 +265,7 @@ export default class ArticleEditorPage extends React.Component {
                             onRemovePhoto={this.onRemovePhoto}/>
                         <PhotosComponent
                             isDisplayMode={!isEditAllowed}
-                            photos={photos}
+                            photos={photosToRender}
                             onPhotoLoaded={this.onPhotoLoaded}
                             onRemovePhoto={this.onRemovePhoto}
                             onSelectMainPhoto={this.onSelectMainPhoto}

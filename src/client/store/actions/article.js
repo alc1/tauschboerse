@@ -53,14 +53,51 @@ export const loadArticle = (theArticleId) => (dispatch, getState) =>
         .then(response => dispatch(articleFetched(extendArticleWithTrades(response.data.article, response.data.trades, getUser(getState())))))
         .catch((err) => handleError(err, dispatch));
 
-export const createArticle = (article) => dispatch =>
+export const createArticle = (article, photos) => dispatch =>
     axios.post('/api/articles', { article })
-        .then(response => dispatch(articleCreated(response.data.article)))
+        .then(articleResponse => {
+            if (photos.length > 0) {
+                const allPhotoRequests = photos.map(photo => wrapIgnorablePromise(axios.post(`/api/articles/${articleResponse.data.article._id}/photos`, { photo })));
+                return Promise.all(allPhotoRequests)
+                    .then(allResponses => {
+                        let reverseResponses = allResponses.reverse();
+                        for (let lastSuccessfulResponse of reverseResponses) {
+                            if (lastSuccessfulResponse) {
+                                return dispatch(articleCreated(lastSuccessfulResponse.data.article));
+                            }
+                        }
+                        return dispatch(articleCreated(articleResponse.data.article));
+                    });
+            }
+            else {
+                return dispatch(articleCreated(articleResponse.data.article));
+            }
+        })
         .catch((err) => handleError(err, dispatch));
 
-export const updateArticle = (ownerId, article) => (dispatch, getState) =>
+export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (dispatch, getState) =>
     axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
-        .then(response => dispatch(articleUpdated(extendArticleWithTrades(response.data.article, response.data.trades, getUser(getState())))))
+        .then(articleResponse => {
+            if (addedPhotos.length > 0 || removedPhotos.length > 0) {
+                const allPhotoRequests = [
+                    ...addedPhotos.map(photo => wrapIgnorablePromise(axios.post(`/api/articles/${article._id}/photos`, { photo }))),
+                    ...removedPhotos.map(photo => wrapIgnorablePromise(axios.delete(`/api/articles/${article._id}/photos/${photo.fileName}`, { photo })))
+                ];
+                return Promise.all(allPhotoRequests)
+                    .then(allResponses => {
+                        let reverseResponses = allResponses.reverse();
+                        for (let lastSuccessfulResponse of reverseResponses) {
+                            if (lastSuccessfulResponse) {
+                                return dispatch(articleUpdated(extendArticleWithTrades(lastSuccessfulResponse.data.article, lastSuccessfulResponse.data.trades, getUser(getState()))));
+                            }
+                        }
+                        return dispatch(articleUpdated(extendArticleWithTrades(articleResponse.data.article, articleResponse.data.trades, getUser(getState()))));
+                    });
+            }
+            else {
+                return dispatch(articleUpdated(extendArticleWithTrades(articleResponse.data.article, articleResponse.data.trades, getUser(getState()))));
+            }
+        })
         .catch((err) => handleError(err, dispatch));
 
 export const deleteArticle = (ownerId, articleId) => (dispatch, getState) =>
@@ -88,3 +125,22 @@ const extendArticleWithTrades = (theArticle, theTrades, theUser) => {
     }
     return article;
 };
+
+/*
+ * Wraps the given Promise into a Promise which ignores an error. Goal is to use it with Promise.all where
+ * one failing Promise must not break the others. In other words it makes a failing Promise to a successful
+ * Promise with the return value of null which can be handled later.
+ */
+function wrapIgnorablePromise(thePromiseToIgnoreIfFailing) {
+    return new Promise((resolve, reject) => {
+        thePromiseToIgnoreIfFailing
+            .then(result => {
+                resolve(result);
+            })
+            .catch((err) => {
+                reject(null);
+            });
+    }).catch((err) => {
+        return err;
+    });
+}
