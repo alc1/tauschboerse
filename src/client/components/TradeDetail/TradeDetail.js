@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import TradeAction from '../../constants/TradeAction';
 import Articles from '../Articles/Articles';
+import ActionBox from '../ActionBox/ActionBox';
 
 import './TradeDetail.css';
 
@@ -26,13 +27,28 @@ class TradeDetail extends React.Component {
         trade: null
     };
 
-    // state = {
-    // };
+    handleMakeOffer = () => {
 
-    angebotMachen = () => { };
+    };
 
-    handleEdit = () => {
+    handleEditOffer = () => {
         this.props.history.push(`/trade/edit/${this.props.trade._id}`);
+    }
+
+    handleDeleteOffer = () => {
+
+    }
+
+    handleAccept = () => {
+
+    }
+
+    handleDecline = () => {
+
+    }
+
+    handleMakeCounteroffer = () => {
+
     }
 
     generateContentForNewTrade() {
@@ -43,7 +59,17 @@ class TradeDetail extends React.Component {
                 <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
                 <Articles articles={this.props.trade.userArticles} title="Du bietest dafür folgende Artikel an:" />
                 <section>
-                    <div><button type="button" onClick={this.angebotMachen}>Angebot machen</button></div>
+                    <div className="trade-detail__actions-container">
+                        <ActionBox title="Senden" text="Sie können ">
+                            <RaisedButton data-button-id="makeOffer" label="Senden" disabled={this.props.trade.cannotSubmit} onClick={this.handleMakeOffer} />
+                        </ActionBox>
+                        <ActionBox title="Bearbeiten" text="Sie haben den Handel [xy] nocht nicht unterbreitet. Sie können den Vorschlag bearbeiten.">
+                            <RaisedButton data-button-id="editOffer" label="Bearbeiten" onClick={this.handleEditOffer} />
+                        </ActionBox>
+                        <ActionBox title="Löschen" text="Sie haben den Handel [xy] noch nicht unterbreitet. Sie können den Vorschlag löschen.">
+                            <RaisedButton data-button-id="editOffer" label="Löschen" onClick={this.handleDeleteOffer} />
+                        </ActionBox>
+                    </div>
                 </section>
             </div>
         );
@@ -57,8 +83,11 @@ class TradeDetail extends React.Component {
                 <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
                 <Articles articles={this.props.trade.userArticles} title="Du hast dafür folgende Artikel angeboten:" />
                 <section>
-                    <div>{this.props.trade.tradePartner.name} hat sich noch nicht entschieden</div>
-                    <div><button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_WITHDRAW)}>Angebot zurückziehen</button></div>
+                    <div className="trade-detail__actions-container">
+                        <ActionBox title="Den Angebot zurückziehen" text="Tauschvorschlag zurückziehen">
+                            <RaisedButton data-button-id="withdrawOffer" label="Zurückziehen" onClick={this.handleWithdrawOffer}/>
+                        </ActionBox>
+                    </div>
                 </section>
             </div>
         );
@@ -72,10 +101,16 @@ class TradeDetail extends React.Component {
                 <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
                 <Articles articles={this.props.trade.userArticles} title="Dafür bietet er/sie Dir folgende Artikel an:" />
                 <section>
-                    <div>
-                        <button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_ACCEPT)}>Angebot annehmen</button>
-                        <button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_DECLINE)}>Angebot ablehnen</button>
-                        <button type="button" onClick={this.doAction.bind(this, TradeAction.TRADE_ACTION_MAKE_COUNTEROFFER)}>Gegenangebot machen</button>
+                    <div className="trade-detail__actions-container">
+                        <ActionBox title="Den Handel zustimmen" text="Zustimmen">
+                            <RaisedButton data-button-id="accept" label="Zustimmen" onClick={this.handleAccept}/>
+                        </ActionBox>
+                        <ActionBox title="Den Angebot machen" text="Ablehnen">
+                            <RaisedButton data-button-id="decline" label="Ablehnen" onClick={this.handleDecline}/>
+                        </ActionBox>
+                        <ActionBox title="Den Angebot machen" text="Angebot machen">
+                            <RaisedButton data-button-id="makeCounteroffer" label="Gegenangebot erstellen" onClick={this.handleMakeCounteroffer}/>
+                        </ActionBox>
                     </div>
                 </section>
             </div>
@@ -103,12 +138,6 @@ class TradeDetail extends React.Component {
         );
     }
 
-    renderEditButton = () => (
-        <div>
-            <RaisedButton label="Bearbeiten" disabled={!this.props.trade.canEdit} primary={true} onClick={this.handleEdit} />
-        </div>
-    );
-
     render() {
         let title = this.props.trade ? <h1>Tauschgeschäft mit {this.props.trade.tradePartner.name}</h1> : <h1>Unbekanntes Tauschgeschäft</h1>;
 
@@ -134,7 +163,6 @@ class TradeDetail extends React.Component {
         return (
             <div className="base-page">
                 {title}
-                {this.renderEditButton()}
                 {content}
             </div>
         );

@@ -6,6 +6,7 @@ import TradeModel from '../../model/TradeModel';
 
 import { getChosenPartnerArticles, getChosenUserArticles, getTrade } from '../selectors/trade.js';
 import { getUser } from '../selectors/user';
+import { execute, GET, DELETE, POST } from '../../util/api';
 
 /*
  * Action Type Constants
@@ -14,13 +15,9 @@ import { getUser } from '../selectors/user';
 export const TRADE_FETCHED = 'TRADE_FETCHED';
 export const TRADE_FETCHING = 'TRADE_FETCHING';
 export const TRADE_NOT_FOUND = 'TRADE_NOT_FOUND';
-export const TRADE_SAVED = 'TRADE_SAVED';
 export const TRADE_ARTICLES_SAVED = 'TRADE_ARTICLES_SAVED';
-export const TRADE_STATE_CHANGED = 'TRADE_STATE_CHANGED';
-export const TRADE_USER_ARTICLES_FETCHED = 'TRADE_USER_ARTICLES_FETCHED';
-export const TRADE_PARTNER_ARTICLES_FETCHED = 'TRADE_PARTNER_ARTICLES_FETCHED';
-export const TRADE_PARTNER_ARTICLE_TOGGLED = 'TRADE_PARTNER_ARTICLE_TOGGLED';
-export const TRADE_USER_ARTICLE_TOGGLED = 'TRADE_USER_ARTICLE_TOGGLED';
+export const TRADE_ARTICLES_FETCHED = 'TRADE_ARTICLES_FETCHED';
+export const TRADE_ARTICLE_TOGGLED = 'TRADE_ARTICLE_TOGGLED';
 export const TRADE_STEP_INDEX_SET = 'TRADE_STEP_INDEX_SET';
 export const TRADE_ARTICLE_FILTER_TEXT_SET = 'TRADE_ARTICLE_FILTERTEXT_SET';
 export const TRADE_EDITOR_INITIALISED = 'TRADE_EDITOR_INITIALISED';
@@ -42,38 +39,20 @@ const tradeNotFound = () => ({
     type: TRADE_NOT_FOUND
 });
 
-const tradeSaved = (theTrade) => ({
-    type: TRADE_SAVED,
-    trade: theTrade
-});
-
 const articlesSaved = (theTrade) => ({
     type: TRADE_ARTICLES_SAVED,
     trade: theTrade
 });
 
-const tradeStateChanged = (theTrade) => ({
-    type: TRADE_STATE_CHANGED,
-    trade: theTrade
-});
-
-const userArticlesFetched = (theArticles) => ({
-    type: TRADE_USER_ARTICLES_FETCHED,
+const articlesFetched = (theArticles, forUser) => ({
+    type: TRADE_ARTICLES_FETCHED,
+    forUser: forUser,
     articles: theArticles
 });
 
-const partnerArticlesFetched = (theArticles) => ({
-    type: TRADE_PARTNER_ARTICLES_FETCHED,
-    articles: theArticles
-});
-
-const userArticleToggled = (theArticle) => ({
-    type: TRADE_USER_ARTICLE_TOGGLED,
-    article: theArticle
-});
-
-const partnerArticleToggled = (theArticle) => ({
-    type: TRADE_PARTNER_ARTICLE_TOGGLED,
+const articleToggled = (theArticle, forUser) => ({
+    type: TRADE_ARTICLE_TOGGLED,
+    forUser: forUser,
     article: theArticle
 });
 
@@ -119,13 +98,13 @@ export const loadNewTrade = (theArticleId) => (dispatch, getState) => {
 };
 
 export const loadUserArticles = () => (dispatch, getState) => {
-    return loadArticlesByUserId(getUser(getState())._id, userArticlesFetched, dispatch);
+    return loadArticlesByUserId(getUser(getState())._id, true, dispatch);
 };
 
 export const loadPartnerArticles = () => (dispatch, getState) => {
     let currentState = getState();
     let trade = getTrade(currentState);
-    return loadArticlesByUserId(trade.tradePartner._id, partnerArticlesFetched, dispatch);
+    return loadArticlesByUserId(trade.tradePartner._id, false, dispatch);
 };
 
 export const saveTrade = () => (dispatch, getState) => {
@@ -148,31 +127,27 @@ export const saveTrade = () => (dispatch, getState) => {
 };
 
 export const toggleUserArticle = (theArticle) => dispatch => {
-    dispatch(userArticleToggled(theArticle));
+    dispatch(articleToggled(theArticle, true));
 };
 
 export const togglePartnerArticle = (theArticle) => dispatch => {
-    dispatch(partnerArticleToggled(theArticle));
+    dispatch(articleToggled(theArticle, false));
 };
 
 export const submitTrade = () => (dispatch, getState) => {
-    let trade = getTrade(getState());
-    return setTradeState(trade, 'REQUESTED', dispatch);
+    return setTradeState('REQUESTED', dispatch, getState);
 };
 
 export const withdrawTrade = () => (dispatch, getState) => {
-    let trade = getTrade(getState());
-    
+    return setTradeState('CANCELED', dispatch, getState);
 };
 
 export const acceptTrade = () => (dispatch, getState) => {
-    let trade = getTrade(getState());
-    return setTradeState(trade, 'ACCEPTED', dispatch);
+    return setTradeState('ACCEPTED', dispatch, getState);
 };
 
 export const declineTrade = () => (dispatch, getState) => {
-    let trade = getTrade(getState());
-    return setTradeState(trade, 'DECLINED', dispatch);
+    return setTradeState('DECLINED', dispatch, getState);
 };
 
 export const setStepIndex = (theStepIndex) => (dispatch) => {
@@ -191,14 +166,18 @@ export const setPartnerArticleFilterText = (theText) => (dispatch) => {
     return dispatch(articleFilterTextSet(theText, false));
 }
 
-function setTradeState(theTrade, theNewState, dispatch) {
-    return axios.put(`/api/trades/${theTrade._id}/state`, { newState: theNewState })
-        .then(response => dispatch(tradeStateChanged(response.data.trade)))
+function setTradeState(theNewTradeState, dispatch, getState) {
+    let currentState = getState();
+    let trade = getTrade(currentState);
+    let user = getUser(currentState);
+
+    return axios.put(`/api/trades/${trade._id}/state`, { state: theNewTradeState })
+        .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, user))))
         .catch(err => handleError(err, dispatch));
 }
 
-function loadArticlesByUserId(theUserId, actionCreator, dispatch) {
+function loadArticlesByUserId(theUserId, forUser, dispatch) {
     return axios.get(`/api/users/${theUserId}/articles`)
-        .then(response => dispatch(actionCreator(response.data.articles)))
+        .then(response => dispatch(articlesFetched(response.data.articles, forUser)))
         .catch(err => handleError(err, dispatch));
 }
