@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import SearchBar from 'material-ui-search-bar';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
@@ -11,7 +13,6 @@ import PlusIcon from 'material-ui/svg-icons/content/add';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import ArticleGridList from '../ArticleGridList/ArticleGridList';
-import DeleteArticleDialog from '../DeleteArticleDialog/DeleteArticleDialog';
 import PageButton from '../PageButton/PageButton';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
@@ -26,6 +27,7 @@ export default class UserArticlesPage extends React.Component {
         filteredArticles: PropTypes.array.isRequired,
         user: PropTypes.object.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
+        loadArticle: PropTypes.func.isRequired,
         deleteArticle: PropTypes.func.isRequired,
         filterUserArticles: PropTypes.func.isRequired,
         userArticlesFilter: PropTypes.shape({
@@ -39,7 +41,8 @@ export default class UserArticlesPage extends React.Component {
     state = {
         filteredArticles: [],
         isDeleteDialogOpen: false,
-        articleToDelete: null
+        articleToDelete: null,
+        deleteDialogContext: null
     };
 
     componentDidMount() {
@@ -61,16 +64,38 @@ export default class UserArticlesPage extends React.Component {
     };
 
     showDeleteConfirmationDialog = (theArticle) => {
-        this.setState({
-            isDeleteDialogOpen: true,
-            articleToDelete: theArticle
-        });
+        this.props.loadArticle(theArticle._id)
+            .then(response => {
+                let deleteDialogContent;
+                if (response.article.trades && response.article.trades.count > 0) {
+                    deleteDialogContent = (
+                        <div>
+                            <div>{`Der Artikel "${response.article.title}" ist/war in Tauschgeschäfte verwickelt und kann deswegen nur als gelöscht markiert werden. Dabei werden die noch aktiven Tauschgeschäfte storniert.`}</div>
+                            <br/>
+                            <span>{'Willst Du den Artikel wirklich als gelöscht markieren?'}</span>
+                        </div>
+                    );
+                }
+                else {
+                    deleteDialogContent = (
+                        <div>
+                            {`Willst Du den Artikel "${response.article.title}" wirklich komplett löschen?`}
+                        </div>
+                    );
+                }
+                this.setState({
+                    isDeleteDialogOpen: true,
+                    articleToDelete: theArticle,
+                    deleteDialogContext: deleteDialogContent
+                });
+            });
     };
 
     closeDeleteDialog = () => {
         this.setState({
             isDeleteDialogOpen: false,
-            articleToDelete: null
+            articleToDelete: null,
+            deleteDialogContext: null
         });
     };
 
@@ -108,8 +133,7 @@ export default class UserArticlesPage extends React.Component {
 
     render() {
         const { loading, filteredArticles, userArticlesFilter } = this.props;
-        const { isDeleteDialogOpen, articleToDelete } = this.state;
-        const articleTitle = articleToDelete ? articleToDelete.title : '';
+        const { isDeleteDialogOpen, articleToDelete, deleteDialogContext } = this.state;
         return (
             <div>
                 <ApplicationBar subtitle="Meine Artikel verwalten"/>
@@ -137,11 +161,16 @@ export default class UserArticlesPage extends React.Component {
                 <PageButton onClick={this.createNewArticle}>
                     <PlusIcon/>
                 </PageButton>
-                <DeleteArticleDialog
+                <Dialog
                     open={isDeleteDialogOpen}
-                    deleteAction={this.deleteArticle.bind(this, articleToDelete)}
-                    cancelAction={this.closeDeleteDialog}
-                    articleTitle={articleTitle}/>
+                    title="Löschen?"
+                    modal={true}
+                    actions={[
+                        <RaisedButton label="Löschen" icon={<DeleteIcon/>} onClick={this.deleteArticle.bind(this, articleToDelete)} keyboardFocused secondary/>,
+                        <RaisedButton label="Abbrechen" onClick={this.closeDeleteDialog}/>
+                    ]}>
+                    {deleteDialogContext}
+                </Dialog>
             </div>
         );
     }

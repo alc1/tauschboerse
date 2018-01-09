@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import UserArticlesPage from '../components/UserArticlesPage/UserArticlesPage';
 
 import { loadUserArticles, filterUserArticles } from '../store/actions/user';
-import { deleteArticle } from '../store/actions/article';
+import { loadArticle, deleteArticle } from '../store/actions/article';
 import { isLoading } from '../store/selectors/application';
 import { getFilteredUserArticles, getUser, getUserArticlesFilter } from '../store/selectors/user';
 
@@ -16,4 +16,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadUserArticles, filterUserArticles, deleteArticle })(UserArticlesPage);
+export default connect(mapStateToProps, { loadUserArticles, filterUserArticles, loadArticle, deleteArticle })(UserArticlesPage);
