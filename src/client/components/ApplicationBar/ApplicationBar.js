@@ -85,7 +85,7 @@ export default class ApplicationBar extends React.Component {
 
     createUserMenuElement = (theUser) => {
         return (
-            <AvatarTag backgroundColor={cyan400} labelColor={white} text={this.createUserMenuText(theUser)} icon={<AccountIcon/>}/>
+            <AvatarTag backgroundColor={cyan400} labelColor={white} text={this.createUserMenuText(theUser)} icon={<AccountIcon/>} withBorder/>
         );
     };
 

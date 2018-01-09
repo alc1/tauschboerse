@@ -10,16 +10,21 @@ export default class AvatarTag extends React.Component {
 
     static propTypes = {
         text: PropTypes.any.isRequired,
+        withBorder: PropTypes.bool.isRequired,
         icon: PropTypes.object,
         backgroundColor: PropTypes.string,
         labelColor: PropTypes.string
     };
 
+    static defaultProps = {
+        withBorder: false
+    };
+
     render() {
-        const { text, icon, backgroundColor, labelColor } = this.props;
+        const { text, withBorder, icon, backgroundColor, labelColor } = this.props;
         return (
             <div className="avatar-tag">
-                <Chip style={{ border: `2px solid ${labelColor}` }} backgroundColor={backgroundColor} labelColor={labelColor} onClick={this.props.onClick}>
+                <Chip style={withBorder ? { border: `2px solid ${labelColor}` } : null} backgroundColor={backgroundColor} labelColor={labelColor} onClick={this.props.onClick}>
                     {icon ? (
                         <Avatar backgroundColor={backgroundColor} color={labelColor} icon={icon}/>
                     ) : (

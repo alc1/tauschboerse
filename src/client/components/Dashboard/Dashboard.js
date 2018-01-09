@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { cyan500, blue500, orange900, deepOrangeA700 } from 'material-ui/styles/colors';
-
 import DashboardActions from '../../containers/DashboardActions';
 import IncomingTrades from '../../containers/IncomingTrades';
 import DashboardChart from '../DashboardChart/DashboardChart';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
+import TradeState from '../../../shared/constants/TradeState';
 import TradesModel from '../../model/TradesModel';
 
 import './Dashboard.css';
@@ -43,16 +42,16 @@ export default class Dashboard extends React.Component {
         const countArticlesDeleted = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DELETED ? sum + 1 : sum, 0);
 
         const articlesData = [
-            { name: 'Frei', value: countArticlesFree, fill: cyan500 },
-            { name: 'In Verhandlung', value: countArticlesInNegotiation, fill: blue500 },
-            { name: 'Bereits gehandelt', value: countArticlesDealed, fill: orange900 },
-            { name: 'Gelöscht', value: countArticlesDeleted, fill: deepOrangeA700 }
+            { name: ArticleStatus.getShortDescription(ArticleStatus.STATUS_FREE), value: countArticlesFree, fill: ArticleStatus.getColor(ArticleStatus.STATUS_FREE) },
+            { name: ArticleStatus.getShortDescription(ArticleStatus.STATUS_DEALING), value: countArticlesInNegotiation, fill: ArticleStatus.getColor(ArticleStatus.STATUS_DEALING) },
+            { name: ArticleStatus.getShortDescription(ArticleStatus.STATUS_DEALED), value: countArticlesDealed, fill: ArticleStatus.getColor(ArticleStatus.STATUS_DEALED) },
+            { name: ArticleStatus.getShortDescription(ArticleStatus.STATUS_DELETED), value: countArticlesDeleted, fill: ArticleStatus.getColor(ArticleStatus.STATUS_DELETED) }
         ];
         const tradesData = [
-            { name: 'In Vorbereitung', value: trades.newTrades.length, fill: cyan500 },
-            { name: 'In Verhandlung', value: trades.openTrades.length, fill: blue500 },
-            { name: 'Erfolgreich abgeschlossen', value: trades.completedTrades.length, fill: orange900 },
-            { name: 'Abgebrochen', value: trades.canceledTrades.length, fill: deepOrangeA700 }
+            { name: TradeState.getShortDescription(TradeState.TRADE_STATE_INIT), value: trades.newTrades.length, fill: TradeState.getColor(TradeState.TRADE_STATE_INIT) },
+            { name: TradeState.getShortDescription(TradeState.TRADE_STATE_IN_NEGOTIATION), value: trades.openTrades.length, fill: TradeState.getColor(TradeState.TRADE_STATE_IN_NEGOTIATION) },
+            { name: TradeState.getShortDescription(TradeState.TRADE_STATE_COMPLETED), value: trades.completedTrades.length, fill: TradeState.getColor(TradeState.TRADE_STATE_COMPLETED) },
+            { name: TradeState.getShortDescription(TradeState.TRADE_STATE_CANCELED), value: trades.canceledTrades.length, fill: TradeState.getColor(TradeState.TRADE_STATE_CANCELED) }
         ];
 
         return (

@@ -153,7 +153,7 @@ export default class UserArticlesPage extends React.Component {
                         <RadioButton style={statusRadioButtonStyle} disabled={loading} value={''} label="Alle Artikel"/>
                         <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_FREE} label="Freie Artikel"/>
                         <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DEALING} label="Artikel in Verhandlung"/>
-                        <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DEALED} label="Bereits gehandelte Artikel"/>
+                        <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DEALED} label="Getauschte Artikel"/>
                         <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DELETED} label="Gelöschte Artikel"/>
                     </RadioButtonGroup>
                 </Paper>

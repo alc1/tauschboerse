@@ -8,6 +8,14 @@
     padding: 10px;
 }
 
-.trade-link__button {
+.trade-link__left-column {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.trade-link__right-column {
+    text-align: center;
     margin-left: auto;
 }

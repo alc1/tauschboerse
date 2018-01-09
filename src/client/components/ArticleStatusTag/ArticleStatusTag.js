@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Chip from 'material-ui/Chip';
-import { black, cyan500, blue500, orange900, deepOrangeA700, white } from 'material-ui/styles/colors';
+import { white } from 'material-ui/styles/colors';
+
+import FreeIcon from 'material-ui/svg-icons/action/done';
+import DealingIcon from 'material-ui/svg-icons/action/swap-horiz';
+import DealedIcon from 'material-ui/svg-icons/action/done-all';
+import DeletedIcon from 'material-ui/svg-icons/navigation/cancel';
+
+import AvatarTag from '../AvatarTag/AvatarTag';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
-
-import './ArticleStatusTag.css';
 
 export default class ArticleStatusTag extends React.Component {
 
@@ -14,27 +18,25 @@ export default class ArticleStatusTag extends React.Component {
         status: PropTypes.string.isRequired
     };
 
-    getColor = (theStatus) => {
+    getIcon = (theStatus) => {
         switch (theStatus) {
             case ArticleStatus.STATUS_FREE:
-                return cyan500;
+                return <FreeIcon/>;
             case ArticleStatus.STATUS_DEALING:
-                return blue500;
+                return <DealingIcon/>;
             case ArticleStatus.STATUS_DEALED:
-                return orange900;
+                return <DealedIcon/>;
             case ArticleStatus.STATUS_DELETED:
-                return deepOrangeA700;
+                return <DeletedIcon/>;
             default:
-                return black;
+                return null;
         }
     };
 
     render() {
         const { status } = this.props;
         return (
-            <div className="article-status-tag">
-                <Chip backgroundColor={this.getColor(status)} labelColor={white}>{ArticleStatus.getDescription(status)}</Chip>
-            </div>
+            <AvatarTag backgroundColor={ArticleStatus.getColor(status)} labelColor={white} text={ArticleStatus.getDescription(status)} icon={this.getIcon(status)}/>
         );
     }
 }
