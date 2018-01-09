@@ -23,7 +23,7 @@ export default class Articles extends React.Component {
         pageSize: PropTypes.number.isRequired,
         selected: PropTypes.bool.isRequired,
         title: PropTypes.string.isRequired,
-        toggleArticle: PropTypes.func
+        onToggleArticle: PropTypes.func
     };
 
     static defaultProps = {
@@ -34,9 +34,9 @@ export default class Articles extends React.Component {
         selected: false
     }
 
-    toggleArticle = (article) => {
-        if (typeof this.props.toggleArticle === 'function') {
-            this.props.toggleArticle(article);
+    handleToggleArticle = (article) => {
+        if (typeof this.props.onToggleArticle === 'function') {
+            this.props.onToggleArticle(article);
         }
     };
 
@@ -67,7 +67,7 @@ export default class Articles extends React.Component {
                             onChange={this.handleFilterChange}
                             onRequestSearch={this.handleRequestSearch}
                             value={this.props.filterText} />}
-                        <ArticleRowList articles={articles} isEditing={this.props.isEditing} selected={this.props.selected} toggleArticle={this.toggleArticle} />
+                        <ArticleRowList articles={articles} isEditing={this.props.isEditing} selected={this.props.selected} onToggleArticle={this.handleToggleArticle} />
                     </div>
                 </Paper>
             </div>

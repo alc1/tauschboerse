@@ -61,8 +61,8 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
-                <Articles articles={this.props.chosenPartnerArticles} title="Bla bla bla" isEditing={true} selected={true} filtering={false} toggleArticle={this.props.togglePartnerArticle} />
-                <Articles articles={otherPartnerArticles} title="Bla bla bla" isEditing={true} selected={false} filtering={true} filterText={this.props.partnerArticleFilterText} onFilterChange={this.props.setPartnerArticleFilterText} toggleArticle={this.props.togglePartnerArticle} />
+                <Articles articles={this.props.chosenPartnerArticles} title="Bla bla bla" isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.togglePartnerArticle} />
+                <Articles articles={otherPartnerArticles} title="Bla bla bla" isEditing={true} selected={false} filtering={true} filterText={this.props.partnerArticleFilterText} onFilterChange={this.props.setPartnerArticleFilterText} onToggleArticle={this.props.togglePartnerArticle} />
             </div>
         );
     }
@@ -72,8 +72,8 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
-                <Articles articles={this.props.chosenUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={true} filtering={false} toggleArticle={this.props.toggleUserArticle} />
-                <Articles articles={otherUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={false} filtering={true} filterText={this.props.userArticleFilterText} onFilterChange={this.props.setUserArticleFilterText} toggleArticle={this.props.toggleUserArticle} />
+                <Articles articles={this.props.chosenUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.toggleUserArticle} />
+                <Articles articles={otherUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={false} filtering={true} filterText={this.props.userArticleFilterText} onFilterChange={this.props.setUserArticleFilterText} onToggleArticle={this.props.toggleUserArticle} />
             </div>
         );
     }

@@ -2,5 +2,6 @@
     {"ownerId": 0, "title": "Tisch", "description": "Antiker Tisch aus dem Jahr 1900", "photos": ["tisch.jpg"], "categoryIds": [0]},
     {"ownerId": 0, "title": "PC", "description": "Computer mit super Grafikkarte", "photos": [], "categoryIds": [1]},
     {"ownerId": 0, "title": "Fussballschuhe", "description": "Fussballschuhe, fast neu...", "photos": [], "categoryIds": [2, 3]},
-    {"ownerId": 1, "title": "Kinderwagen", "description": "Kind ist schon zu gross dafür", "photos": ["kinderwagen.jpg"], "categoryIds": [4]}
+    {"ownerId": 1, "title": "Kinderwagen", "description": "Kind ist schon zu gross dafür", "photos": ["kinderwagen.jpg"], "categoryIds": [4]},
+    {"ownerId": 1, "title": "Golfschläger", "description": "Schläger mit Stahl-Schaften", "photos": ["golfschlaeger.jpg"], "categoryIds": [3]}
 ]

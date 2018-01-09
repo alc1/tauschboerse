@@ -9,6 +9,8 @@ const photosController = require('./photosController');
 const ArticleStatus = require('../../shared/constants/ArticleStatus');
 const Photo = require('../model/Photo');
 
+const filterArticles = require('../../shared/filterArticles');
+
 const dataCache = require('../services/DataCache').dataCache;
 
 function getArticlesByOwner(req, res) {
@@ -102,8 +104,13 @@ async function updateArticle(req, res) {
 }
 
 function findArticles(req, res) {
+    const { text } = req.query;
+
+    // only available articles should be considered
+    let articles = dataCache.getAllArticles().filter(a => (a.status != ArticleStatus.STATUS_DEALED) && (a.status != ArticleStatus.STATUS_DELETED));
+
     res.json({
-        articles: dataCache.getAllArticles(),
+        articles: filterArticles(text, articles),
         version: 0
     });
 }

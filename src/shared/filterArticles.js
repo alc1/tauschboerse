@@ -1,7 +1,11 @@
 const split = require('split-string-words');
 
-function findArticles(text, articles) {
-    let tokens = split(text.toLowerCase());
+function filterArticles(text, articles) {
+    let tokens = split(text.toLowerCase()).filter(token => token.length > 0);
+
+    if (tokens.length === 0) {
+        return articles;
+    }
 
     let foundArticles = [];
 
@@ -28,11 +32,13 @@ function findArticles(text, articles) {
         updateFoundArticles(articles.filter(a => a.title.toLowerCase().indexOf(token) >= 0), 3);
 
         // search by description
-        updateFoundArticles(articlesWithRelevantDescriptions = articles.filter(a => a.description.toLowerCase().indexOf(token) >= 0), 1);
+        updateFoundArticles(articles.filter(a => a.description.toLowerCase().indexOf(token) >= 0), 1);
 
         // search by category
-        updateFoundArticles(articles.filter(a => a.categories.some(c => c.name.toLowerCase().indexOf(token) >= 0)), 2);
+        updateFoundArticles(articles.filter(a => a.categories.some(c => c.name.toLowerCase() === token)), 2);
     }
 
     return foundArticles.sort((a, b) => b.weighting - a.weighting).map(a => a.article);
 }
+
+module.exports = filterArticles;

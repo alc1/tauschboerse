@@ -4,7 +4,7 @@ import EditTradePage from '../components/EditTradePage/EditTradePage';
 
 import { initTradeEditor, loadTrade, saveTrade, loadUserArticles, loadPartnerArticles, toggleUserArticle, togglePartnerArticle, setStepIndex, setUserArticleFilterText, setPartnerArticleFilterText } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
-import { getTrade, getPartnerArticles, getUserArticles, getChosenPartnerArticles, getChosenUserArticles, getStepIndex, getUserArticleFilterText, getPartnerArticleFilterText } from '../store/selectors/trade';
+import { getTrade, getFilteredPartnerArticles, getFilteredUserArticles, getChosenPartnerArticles, getChosenUserArticles, getStepIndex, getUserArticleFilterText, getPartnerArticleFilterText } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
 import { isLoading } from '../store/selectors/application';
 
@@ -14,8 +14,8 @@ function mapStateToProps(theState) {
         user: getUser(theState),
         stepIndex: getStepIndex(theState),
         loading: isLoading(theState),
-        userArticles: getUserArticles(theState),
-        partnerArticles: getPartnerArticles(theState),
+        userArticles: getFilteredUserArticles(theState),
+        partnerArticles: getFilteredPartnerArticles(theState),
         chosenUserArticles: getChosenUserArticles(theState),
         chosenPartnerArticles: getChosenPartnerArticles(theState),
         userArticleFilterText: getUserArticleFilterText(theState),

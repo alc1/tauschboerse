@@ -40,6 +40,7 @@
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.1.2",
     "react-scripts": "^1.0.10",
+    "react-ultimate-pagination": "1.0.3",
     "recharts": "^0.22.4",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",

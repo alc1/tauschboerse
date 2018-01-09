@@ -10,6 +10,8 @@ import {
     TRADE_ARTICLE_FILTER_TEXT_SET
 } from '../actions/trade';
 
+import filterArticles from '../../../shared/filterArticles';
+
 export const initialState = {
     trade: null,
     notFound: false,
@@ -19,7 +21,9 @@ export const initialState = {
     userArticles: [],
     partnerArticles: [],
     chosenUserArticles: [],
-    chosenPartnerArticles: []
+    chosenPartnerArticles: [],
+    filteredUserArticles: [],
+    filteredPartnerArticles: []
 };
 
 function toggleArticle(article, chosenArticles) {
@@ -42,22 +46,38 @@ function toggleArticle(article, chosenArticles) {
     return newChosenArticles;
 }
 
+function filterAndSortArticles(text, articles) {
+    let filteredArticles = (text.length > 0) ? filterArticles(text, articles) : articles.slice();
+
+    return filteredArticles.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+}
+
 export default function trade(theState = initialState, theAction) {
+    let newState;
+
     switch (theAction.type) {
         case TRADE_EDITOR_INITIALISED:
             return {
                 ...theState,
                 stepIndex: 0,
                 userArticleFilterText: '',
-                partnerArticleFilterText: ''
+                partnerArticleFilterText: '',
+                filteredUserArticles: filterAndSortArticles('', theState.userArticles),
+                filteredPartnerArticles: filterAndSortArticles('', theState.partnerArticles)
             };
 
         case TRADE_ARTICLE_FILTER_TEXT_SET:
-            return {
-                ...theState,
-                userArticleFilterText: theAction.forUser ? theAction.text : theState.userArticleFilterText,
-                partnerArticleFilterText: theAction.forUser ? theState.partnerArticleFilterText : theAction.text
-            };
+            newState = { ...theState };
+
+            if (theAction.forUser) {
+                newState.userArticleFilterText = theAction.text;
+                newState.filteredUserArticles = filterAndSortArticles(theAction.text, theState.userArticles);
+            } else {
+                newState.partnerArticleFilterText = theAction.text;
+                newState.filteredPartnerArticles = filterAndSortArticles(theAction.text, theState.partnerArticles);
+            }
+
+            return newState;
 
         case TRADE_STEP_INDEX_SET:
             return {
@@ -99,11 +119,17 @@ export default function trade(theState = initialState, theAction) {
             }
 
         case TRADE_ARTICLES_FETCHED:
-            return {
-                ...theState,
-                partnerArticles: theAction.articles,
-                userArticles: theAction.articles
-            };
+            let newState = { ...theState };
+
+            if (theAction.forUser) {
+                newState.userArticles = theAction.articles;
+                newState.filteredUserArticles = filterAndSortArticles(theState.userArticleFilterText, theAction.articles);
+            } else {
+                newState.partnerArticles = theAction.articles;
+                newState.filteredPartnerArticles = filterAndSortArticles(theState.partnerArticleFilterText, theAction.articles);
+            }
+
+            return newState;
 
         default:
             return theState;

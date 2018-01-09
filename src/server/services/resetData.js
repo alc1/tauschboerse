@@ -1,40 +1,17 @@
-const fs = require("fs");
+const fs = require('fs');
 const path = require('path');
-const uuid = require("uuid");
+const uuid = require('uuid');
 
 const TradeState = require('../../shared/constants/TradeState');
 const OfferState = require('../../shared/constants/OfferState');
 const Gender = require('../../shared/constants/Gender');
 
 function resetData(dataCache) {
-    // const articles = [
-    //     {ownerId: 0, title: 'Tisch', description: 'Antiker Tisch aus dem Jahr 1900', photos: [], categoryIds: [0]},
-    //     {ownerId: 0, title: 'PC', description: 'Computer mit super Grafikkarte', photos: [], categoryIds: [1]},
-    //     {ownerId: 0, title: 'Fussballschuhe', description: 'Fussballschuhe, fast neu...', photos: [], categoryIds: [2, 3]},
-    //     {ownerId: 1, title: 'Kinderwagen', description: 'Kind ist schon zu gross dafür', photos: [], categoryIds: [4]},
-    // ];
-    // const categories = [
-    //     {name: 'Möbel'},
-    //     {name: 'Technik'},
-    //     {name: 'Fussball'},
-    //     {name: 'Sport'},
-    //     {name: 'Kindersachen'}
-    // ];
-    // const trades = [
-    //     { user1Id: 1, user2Id: 0, state: TradeState.TRADE_STATE_INIT, offers: [{ senderId: 1, state: OfferState.OFFER_STATE_INIT, articleIds: [0, 3] }], user1HasDelivered: false, user2HasDelivered: false }
-    // ];
-    // const users = [
-    //     {gender: Gender.MALE, email: 'calbiez@hsr.ch', name: 'Christian Albiez', address: '', newPassword: 'c', registration: new Date()},
-    //     {gender: Gender.MALE, email: 'stephen.atchison@hsr.ch', name: 'Stephen Atchison', address: '', newPassword: 'stephen', registration: new Date()},
-    //     {gender: Gender.MALE, email: 'max@mustermann.com', name: 'Max Mustermann', address: '', newPassword: 'max', registration: new Date()},
-    //     {gender: Gender.MALE, email: 'jamesbond007@agent.com', name: 'James Bond', address: '', newPassword: 'james', registration: new Date()}
-    // ];
-
     var articles, categories, trades, users;
     var photoFilenameMap = [];
 
     function loadJSONData(filename) {
-        var contents = fs.readFileSync(`./test/data/${filename}`);
+        var contents = fs.readFileSync(`./test/testdata/${filename}`);
         return JSON.parse(contents);
     }
 
@@ -53,31 +30,36 @@ function resetData(dataCache) {
     function copyFile(source, target, cb) {
         var cbCalled = false;
       
+        // open reader
         var rd = fs.createReadStream(source);
         rd.on("error", function(err) {
             done(err);
         });
 
+        // open writer
         var wr = fs.createWriteStream(target);
         wr.on("error", function(err) {
             done(err);
         });
 
-        wr.on("close", function(ex) {
-            done();
-        });
-
+        // copy the file
         rd.pipe(wr);
       
         function done(err) {
             if (!cbCalled) {
+
+                // close the streams manually (only required if an error occurs)
+                rd.destroy();
+                wr.destroy();
+
+                // notify caller
                 cb(err);
                 cbCalled = true;
             }
         }
     }
 
-    function removeDirForce(path) {
+    function emptyDirForce(path) {
         let files = fs.readdirSync(path);
         if (files.length > 0) {
             files.forEach(file => {
@@ -86,11 +68,11 @@ function resetData(dataCache) {
                 if (stats.isFile()) {
                     fs.unlinkSync(filePath);
                 } else if (stats.isDirectory()) {
-                    removeDirForce(filePath);
+                    emptyDirForce(filePath);
+                    fs.rmdirSync(filePath);
                 }
             });
         }
-        fs.rmdirSync(path);
     }
 
     function updatePhotoFilenameMap(article, newArticle) {
@@ -116,24 +98,28 @@ function resetData(dataCache) {
     }
 
     function createArticleImagesRootDirectory() {
+        createDirectory('./public');
         createDirectory('./public/images');
         createDirectory('./public/images/article');
     }
 
     function copyPhotos() {
-        // first delete all current photos
-        removeDirForce('./public/images/article/');
+        // first delete all current photos if necessary
+        let imgPath = './public/images/article/';
+        if (fs.existsSync(imgPath)) {
+            emptyDirForce(imgPath);
+        }
 
         // recreate images folder
-        createArticleImagesRootDirectory()
+        createArticleImagesRootDirectory(imgPath)
 
         // now copy the files to the correct folders
         if (photoFilenameMap.length > 0) {
             console.log('Copying article photos...');
             photoFilenameMap.forEach(rec => {
                 console.log(`copying ${rec.originalName} to .../${rec.article._id}/${rec.filename}...`);
-                createDirectory(`./public/images/article/${rec.article._id}`);
-                copyFile(`./test/data/images/${rec.originalName}`, `./public/images/article/${rec.article._id}/${rec.filename}`, err => console.log(err));
+                createDirectory(`${imgPath}${rec.article._id}`);
+                copyFile(`./test/testdata/images/${rec.originalName}`, `${imgPath}${rec.article._id}/${rec.filename}`, err => console.log(err));
             });
         }
     }
