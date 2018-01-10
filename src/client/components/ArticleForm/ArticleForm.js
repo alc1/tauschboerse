@@ -99,17 +99,19 @@ export default class ArticleForm extends React.Component {
                         {!isDisplayMode && <span className="article-form__hint-text">* Obligatorisches Feld</span>}
                     </div>
                 </Paper>
-                {article.trades && article.trades.allTrades.length > 0 && <Paper className="article-form__trades">
-                    <Toolbar>
-                        <ToolbarGroup>
-                            <ToolbarTitle style={toolbarTitleStyle} text="Involviert in:"/>
-                        </ToolbarGroup>
-                    </Toolbar>
-                    <div className="article-form__trades-container">
-                        {article.trades.allTrades.sort((trade1, trade2) => - moment(trade1.trade.createDate).format('YYYYMMDDHHmmss').localeCompare(moment(trade2.trade.createDate).format('YYYYMMDDHHmmss')))
-                            .map(trade => <TradeLink key={trade._id} trade={trade} loading={loading}/>)}
-                    </div>
-                </Paper>}
+                {article.trades && article.trades.allTrades.length > 0 &&
+                    <Paper className="article-form__trades">
+                        <Toolbar>
+                            <ToolbarGroup>
+                                <ToolbarTitle style={toolbarTitleStyle} text="Involviert in:"/>
+                            </ToolbarGroup>
+                        </Toolbar>
+                        <div className="article-form__trades-container">
+                            {article.trades.allTrades.sort((trade1, trade2) => - moment(trade1.trade.createDate).format('YYYYMMDDHHmmss').localeCompare(moment(trade2.trade.createDate).format('YYYYMMDDHHmmss')))
+                                .map(trade => <TradeLink key={trade._id} trade={trade} loading={loading}/>)}
+                        </div>
+                    </Paper>
+                }
             </div>
         );
     }

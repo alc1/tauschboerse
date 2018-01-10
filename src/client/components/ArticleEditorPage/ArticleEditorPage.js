@@ -26,7 +26,6 @@ export default class ArticleEditorPage extends React.Component {
         createArticle: PropTypes.func.isRequired,
         updateArticle: PropTypes.func.isRequired,
         removeSelectedArticle: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -51,7 +50,7 @@ export default class ArticleEditorPage extends React.Component {
         if (articleId) {
             this.props.loadArticle(articleId)
                 .then(() => {
-                    this.updateArticleInState(this.props);
+                    this.resetArticleInState(this.props.article);
                 })
                 .catch(() => {
                     this.setState({ articleFound: false });
@@ -59,26 +58,25 @@ export default class ArticleEditorPage extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.updateArticleInState(nextProps);
-    }
-
     componentWillUnmount() {
         this.props.removeSelectedArticle();
     }
 
-    updateArticleInState = (props) => {
-        const { article } = props;
-        const { modified, title, description, categories, photos, status, created, owner, trades } = this.state;
+    resetArticleInState = (theArticle) => {
+        const { title, description, categories, photos, status, created, owner, trades } = this.state;
         this.setState({
-            title: article && !modified ? article.title : title,
-            description: article && !modified ? article.description : description,
-            categories: article && !modified ? article.categories : categories,
-            photos: article && !modified ? article.photos : photos,
-            status: article && !modified ? article.status : status,
-            created: article && !modified ? article.created : created,
-            owner: article && !modified ? article.owner : owner,
-            trades: article && !modified ? article.trades : trades
+            title: theArticle ? theArticle.title : title,
+            description: theArticle ? theArticle.description : description,
+            categories: theArticle ? theArticle.categories : categories,
+            photos: theArticle ? theArticle.photos : photos,
+            status: theArticle ? theArticle.status : status,
+            created: theArticle ? theArticle.created : created,
+            owner: theArticle ? theArticle.owner : owner,
+            trades: theArticle ? theArticle.trades : trades,
+            errors: {},
+            modified: false,
+            addedPhotos: [],
+            removedPhotos: []
         });
     };
 
@@ -118,12 +116,14 @@ export default class ArticleEditorPage extends React.Component {
     };
 
     onRemovePhoto = (thePhotoToRemove) => {
+        // If the photo to remove is a new photo (not yet persisted), it should be removed from the list of added photos
         if (this.isNewPhoto(thePhotoToRemove)) {
             this.setState({
                 addedPhotos: this.state.addedPhotos.filter((photo) => photo.fileName !== thePhotoToRemove.fileName),
                 modified: true
             });
         }
+        // Otherwise it is a persisted photo, therefore add it to the list of the removed photos
         else {
             this.setState({
                 removedPhotos: [...this.state.removedPhotos, thePhotoToRemove],
@@ -133,6 +133,8 @@ export default class ArticleEditorPage extends React.Component {
     };
 
     onSelectMainPhoto = (theMainPhoto) => {
+        // If the new main photo is a new photo (not yet persisted), mark it as main photo in the list of added photos
+        // and remove all main photo states from the persisted photos (to be sure that there is only one main photo)
         if (this.isNewPhoto(theMainPhoto)) {
             this.setState({
                 addedPhotos: this.state.addedPhotos.map(photo => {
@@ -145,6 +147,8 @@ export default class ArticleEditorPage extends React.Component {
                 modified: true
             });
         }
+        // Otherwise it is a persisted photo, therefore mark it as main photo in the list of the persisted photos and
+        // remove all main photo states in the list of added photos (to be sure that there is only one main photo)
         else {
             this.setState({
                 photos: this.state.photos.map(photo => {
@@ -165,7 +169,6 @@ export default class ArticleEditorPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        this.props.setLoading(true);
         const { user } = this.props;
         const { title, description, categories, photos, status, created, addedPhotos, removedPhotos } = this.state;
         const { articleId } = this.props.match.params;
@@ -177,33 +180,26 @@ export default class ArticleEditorPage extends React.Component {
                 articleToSave._id = articleId;
                 articleToSave.status = status;
                 articleToSave.created = created;
-                articleSaveRequest = this.props.updateArticle(user._id, articleToSave, addedPhotos, removedPhotos);
+                articleSaveRequest = this.props.updateArticle(user._id, articleToSave, addedPhotos, removedPhotos)
+                    .then(response => {
+                        this.resetArticleInState(response.article);
+                        this.props.setGlobalMessage({
+                            messageText: 'Artikel wurde gespeichert.',
+                            messageType: OK_MESSAGE
+                        });
+                    });
             }
             else {
-                articleSaveRequest = this.props.createArticle(articleToSave, addedPhotos);
+                articleSaveRequest = this.props.createArticle(articleToSave, addedPhotos)
+                    .then(response => {
+                        this.props.history.replace(`/article/${response.article._id}`);
+                    });
             }
-            articleSaveRequest.then((res) => {
-                this.setState({
-                    errors: {},
-                    modified: false,
-                    addedPhotos: [],
-                    removedPhotos: []
-                });
-                this.props.setLoading(false);
-                this.props.setGlobalMessage({
-                    messageText: 'Artikel wurde gespeichert.',
-                    messageType: OK_MESSAGE
-                });
-                if (!articleId) {
-                    this.props.history.replace(`/article/${res.article._id}`);
-                }
-            }).catch((err) => {
-                this.props.setLoading(false);
+            articleSaveRequest.catch((err) => {
                 this.setState({ errors: err.response.data.errors || {} });
             });
         }
         else {
-            this.props.setLoading(false);
             this.setState({ errors: validation.errors });
         }
     };
@@ -270,9 +266,11 @@ export default class ArticleEditorPage extends React.Component {
                             onRemovePhoto={this.onRemovePhoto}
                             onSelectMainPhoto={this.onSelectMainPhoto}
                             loading={loading}/>
-                        {isEditAllowed && <PageButton isSubmit={true} disabled={loading || !modified}>
-                            <SaveIcon/>
-                        </PageButton>}
+                        {isEditAllowed &&
+                            <PageButton isSubmit={true} disabled={loading || !modified}>
+                                <SaveIcon/>
+                            </PageButton>
+                        }
                     </form>
                 ) : (
                     <Placeholder width={300} height={300} loading={loading} text="Artikel nicht gefunden" loadingText="... Artikel wird geladen ..."/>

@@ -1,8 +1,6 @@
-import axios from 'axios';
-
 import { handleError } from './common';
 import { getUser } from '../selectors/user';
-import { execute, GET, DELETE } from '../../util/api';
+import { execute, GET, DELETE, POST, PUT } from '../../util/api';
 
 import TradesModel from '../../model/TradesModel';
 
@@ -54,10 +52,10 @@ export const loadArticle = (theArticleId) => (dispatch, getState) =>
         .catch((err) => handleError(err, dispatch));
 
 export const createArticle = (article, photos) => dispatch =>
-    axios.post('/api/articles', { article })
+    execute(POST, '/api/articles', { article })
         .then(articleResponse => {
             if (photos.length > 0) {
-                const allPhotoRequests = photos.map(photo => wrapIgnorablePromise(axios.post(`/api/articles/${articleResponse.data.article._id}/photos`, { photo })));
+                const allPhotoRequests = photos.map(photo => wrapIgnorablePromise(execute(POST, `/api/articles/${articleResponse.data.article._id}/photos`, { photo })));
                 return Promise.all(allPhotoRequests)
                     .then(allResponses => {
                         let reverseResponses = allResponses.reverse();
@@ -76,12 +74,12 @@ export const createArticle = (article, photos) => dispatch =>
         .catch((err) => handleError(err, dispatch));
 
 export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (dispatch, getState) =>
-    axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
+    execute(PUT, `/api/users/${ownerId}/articles/${article._id}`, { article })
         .then(articleResponse => {
             if (addedPhotos.length > 0 || removedPhotos.length > 0) {
                 const allPhotoRequests = [
-                    ...addedPhotos.map(photo => wrapIgnorablePromise(axios.post(`/api/articles/${article._id}/photos`, { photo }))),
-                    ...removedPhotos.map(photo => wrapIgnorablePromise(axios.delete(`/api/articles/${article._id}/photos/${photo.fileName}`, { photo })))
+                    ...addedPhotos.map(photo => wrapIgnorablePromise(execute(POST, `/api/articles/${article._id}/photos`, { photo }))),
+                    ...removedPhotos.map(photo => wrapIgnorablePromise(execute(DELETE, `/api/articles/${article._id}/photos/${photo.fileName}`, { photo })))
                 ];
                 return Promise.all(allPhotoRequests)
                     .then(allResponses => {
