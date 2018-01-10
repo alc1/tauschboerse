@@ -27,6 +27,10 @@ class Offer {
             && ((this.trade.user1 === this.sender) || (this.trade.user2 === this.sender))
             && this.articles.every(article => ((article.owner === this.trade.user1) || (article.owner === this.trade.user2)));
     }
+
+    hasArticle(theArticleId) {
+        return this.articles.find(article => article._id === theArticleId) != null;
+    }
 }
 
 module.exports = Offer;

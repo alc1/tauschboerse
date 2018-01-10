@@ -5,31 +5,26 @@ const Offer = require('../model/Offer');
 const OfferState = require('../../shared/constants/OfferState');
 const Trade = require('../model/Trade');
 const TradeState = require('../../shared/constants/TradeState');
+const Article = require('../model/Article');
+const ArticleStatus = require('../../shared/constants/ArticleStatus');
 const ParameterValidationError = require('../utils/ParameterValidationError');
 
+// creates and adds a new trade to the db
 function addTrade(req, res) {
-    const { articleIds } = req.body;
-    let articles = dataCache.getArticlesById(articleIds);
+    try {
+        const { articleIds } = req.body;
 
-    // get a list of article owners (excluding the caller)
-    let articleOwners = getArticleOwners(articles, req.user);
+        // prepare new trade for the specified articles
+        let trade = prepareNewTrade(articleIds, req.user);
 
-    // if no trade-partner or more than one found, trade cannot be created
-    if (articleOwners.length !== 1) {
-        res.sendStatus(400);
-        return;
+        // save it and send it back to the caller
+        saveTrade(trade, res);
+    } catch(e) {
+        handleError(e);
     }
-
-    // create new trade
-    let trade = new Trade();
-    trade.user1 = req.user;
-    trade.user2 = articleOwners[0];
-    trade.addOffer(req.user, articles);
-
-    // save it and send response back to caller
-    saveTrade(trade, res);
 }
 
+// Sets the articles to be traded in the specified trade
 function setTradeArticles(req, res) {
     try {
         const { tradeId } = req.params;
@@ -67,7 +62,7 @@ function setTradeArticles(req, res) {
 
         // if more that one owner (trade partner) were found, send an error
         if (articleOwners.length > 1) {
-            throw new ParameterValidationError(400, 'All specified articles must belong to the same two users');
+            throw new ParameterValidationError(400, 'All specified articles must belong to the trade partners');
         }
 
         // if the article(s) owner is not a part of this trade, send an error
@@ -92,106 +87,154 @@ function setTradeArticles(req, res) {
         // save the changes and send response back to caller        
         saveTrade(trade, res);
     } catch(e) {
-        if (e instanceof ParameterValidationError) {
-            res.sendStatus(e.statusCode).json(e.message);
-        } else {
-            res.sendStatus(500).json(err);
-        }
+        handleError(e, res);
     }
 }
 
+// set the state of the trade with the given id
+// ---------------------------
+// POST /api/trades/{id}/state
+// ---------------------------
 function setTradeState(req, res) {
 
+    function prepareTradeCopy(trade, newState) {
+        let newTrade = makeShallowCopy(trade);
+        newTrade.state = newState;
+        newTrade.offers = trade.offers.slice();
+
+        return newTrade;
+    }
+
+    function setOfferState(offers, newState, idx = 0) {
+        let offer = makeShallowCopy(offers[idx]);
+        offer.state = newState;
+        offers[idx] = offer;
+
+        return offer;
+    }
+
+    function userHasPreparedCounteroffer(trade) {
+        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender === req.user) && (trade.offers.length > 1) && (trade.offers[1].state === OFFER_STATE_REQUESTED);
+    }
+
+    function currentOfferWasSentToUser(trade) {
+        return ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) || userHasPreparedCounteroffer(trade);
+    }
+
+    // TO DO: take counteroffer into account!!
+    function currentOfferWasMadeByUser(trade) {
+        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender === req.user);
+    }
+
+    // Sends a new offer to the trade partner, if the offer is valid
     function setStateToRequested(trade) {
-        if ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1 === req.user)) {
-            newTrade = makeShallowCopy(trade);
-            newTrade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
-            let offer = makeShallowCopy(trade.currentOffer);
-            offer.state = OfferState.OFFER_STATE_REQUESTED;
-            newTrade.offers = [offer];
-            saveTrade(newTrade, res);
-        } else if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
-            newTrade = makeShallowCopy(trade);
-            //newTrade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
-            newTrade.offers = trade.offers.slice();
-            let offer = makeShallowCopy(trade.currentOffer);
-            offer.state = OfferState.OFFER_STATE_REQUESTED;
-            newTrade.offers[0] = offer;
+        if ((trade.currentOffer.state === OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+            setOfferState(newTrade.offers, OfferState.OFFER_STATE_REQUESTED);
+
+            // If this isn't the first offer, and the last offer is still in the requested state, then the user is now sending a counteroffer.
+            // When a counteroffer is sent, the received offer should be declined  automatically.
             if ((newTrade.offers.length > 1) && (newTrade.offers[1].state === OfferState.OFFER_STATE_REQUESTED)) {
-                offer = makeShallowCopy(trade.offers[1]);
-                offer.state = OfferState.OFFER_STATE_DECLINED;
-                newTrade.offers[1] = offer;
+                setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED, 1);
             }
+
             saveTrade(newTrade, res);
         } else {
-            // trade state cannot be changed to REQUESTED
             throw new ParameterValidationError(403);
         }
     }
 
+    // Accepts a received trade
     function setStateToAccepted(trade) {
-        newTrade = makeShallowCopy(trade);
-        newTrade.state = TradeState.TRADE_STATE_COMPLETED;
-        newTrade.offers = trade.offers.slice();
-        let offer = makeShallowCopy(trade.currentOffer);
-        offer.state = OfferState.OFFER_STATE_ACCEPTED;
-        newTrade.offers[0] = offer;
-        saveTrade(newTrade, res);
+        if (currentOfferWasSentToUser(trade)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
+            setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
+            saveTrade(newTrade, res);
+            // TO DO: set the appropriate state of all traded articles
+            newTrade.currentOffer.articles.forEach(article => {
+                let copy = makeShallowCopy(article);
+                copy.state = ArticleStatus.STATUS_DEALED;
+                dataCache.saveArticle(copy);
+            });
+            // TO DO: set the appropriate state of all trades concerning any of the traded articles
+            let allTrades = [];
+            newTrade.currentOffer.articles.forEach(article => {
+                let trades = dataCache.getTradesByArticle(article._id, true);
+                trades.forEach(trade => {
+                    if ((trade._id !== newTrade._id) && (allTrades.indexOf(trade) < 0)) {
+                        allTrades.push(trade);
+                    }
+                });
+            });
+            allTrades.forEach(trade => {
+                let copy = makeShallowCopy(trade);
+                copy.removeCounteroffer();
+                setOfferState(copy.offers, OFFER_STATE_INVALIDATED);
+                dataCache.saveTrade(copy);
+            });
+        } else {
+            throw new ParameterValidationError(403);
+        }
     }
 
+    // Declines a received trade
     function setStateToDeclined(trade) {
-        if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_REQUESTED)) {
-            newTrade = makeShallowCopy(trade);
-            newTrade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
-            newTrade.offers = trade.offers.slice();
-            let offer = makeShallowCopy(trade.currentOffer);
-            offer.state = OfferState.OFFER_STATE_DECLINED;
-            newTrade.offers[0] = offer;
+        if (currentOfferWasSentToUser(trade)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+            setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
             saveTrade(newTrade, res);
         } else {
             throw new ParameterValidationError(403);
         }
     }
 
+    // Cancels the current offer
     function setStateToCanceled(trade) {
-        newTrade = makeShallowCopy(trade);
-        newTrade.state = TradeState.TRADE_STATE_CANCELED;
-        newTrade.offers = trade.offers.slice();
-        let offer = makeShallowCopy(trade.currentOffer);
-        offer.state = (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED;
-        newTrade.offers[0] = offer;
-        saveTrade(newTrade, res);
+        if (currentOfferWasMadeByUser(trade)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
+            setOfferState(newTrade.offers, (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED);
+            saveTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
     }
 
     try {
         const { tradeId } = req.params;
         const trade = dataCache.getTrade(tradeId);
         checkTradeExists(trade);
+        checkUserIsPartOfTrade(req.user);
 
         const newState = req.body.newState;
         checkNewStateIsValid(newState);
 
-        if (newState === 'REQUESTED') {
-            setStateToRequested(trade);
-        } else if ((newState === 'ACCEPTED') && (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) {
-            setStateToAccepted(trade);
-        } else if (newState === 'DECLINED') {
-            setStateToDeclined(trade);
-        } else if (newState === 'CANCELED') {
-            setStateToCanceled(trade);
+        switch(newState) {
+            case 'ACCEPTED':
+                setStateToAccepted(trade);
+                break;
+
+            case 'CANCELED':
+                setStateToCanceled(trade);
+                break;
+
+            case 'DECLINED':
+                setStateToDeclined(trade);
+                break;
+
+            case 'REQUESTED':
+                setStateToRequested(trade);
+                break;
+
+            default:
+                throw new ParameterValidationError(500, `The state [${newState}] hasn't been implemented yet`);
         }
     } catch(e) {
-        if (e instanceof ParameterValidationError) {
-            res.sendStatus(e.statusCode).json(e.message);
-        } else {
-            res.sendStatus(500).json(e);
-        }
+        handleError(e, res);
     }
 }
 
 
-function getTradesByUser(req, res) {
-    const { userId } = req.params;
+function getUserTrades(req, res, userId) {
     let trades = dataCache.getTradesByUser(userId)
         // if trade hasn't been started yet, it is only visible to user1
         .filter(trade => ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1 === req.user)) || (trade.state !== TradeState.TRADE_STATE_INIT))
@@ -207,36 +250,40 @@ function getTradesByUser(req, res) {
 }
 
 
+function getTradesByUser(req, res) {
+    const { userId } = req.params;
+    getUserTrades(req, res, userId);
+}
+
+
 function getTrades(req, res) {
-    res.json({ trades: dataCache.getAllTrades() });
+    getUserTrades(req, res, req.user._id);
 }
 
 
 function getTrade(req, res) {
-    const { tradeId } = req.params;
-    let trade = findTrade(tradeId);
-    if (trade) {
+    try {
+        const { tradeId } = req.params;
+        let trade = findTrade(tradeId);
+        checkTradeExists(trade);
+        checkUserIsPartOfTrade(req.user);
+
         res.json({ trade: trade });
-    } else {
-        res.sendStatus(404);
+    }
+    catch(e) {
+        handleError(e, res);
     }
 }
 
-
+// prepares a new trade for the given article and returns it to the caller without saving it in the db
 function getNewTrade(req, res) {
-    const { articleId } = req.params;
-    let article = dataCache.getArticleById(articleId);
-
-    if (article === null) {
-        res.sendStatus(404);
+    try {
+        const { articleId } = req.params;
+        let trade = prepareNewTrade([articleId], req.user);
+        res.json({ trade: trade });
+    } catch(e) {
+        handleError(e);
     }
-
-    let trade = new Trade();
-    trade.user1 = req.user;
-    trade.user2 = article.owner;
-    trade.addOffer(req.user, [article]);
-
-    res.json({ trade: trade });
 }
 
 /**********************************************************************************/
@@ -253,11 +300,38 @@ function findTrade(id, userId) {
     return trade;
 }
 
+function prepareNewTrade(articleIds, user) {
+    let articles = dataCache.getArticlesById(articleIds);
+
+    // get a list of article owners (excluding the caller)
+    let articleOwners = getArticleOwners(articles, user);
+
+    // if no trade-partner or more than one found, trade cannot be created
+    if (articleOwners.length > 1) {
+        throw new ParameterValidationError(400, 'All articles must belong to either the caller or one potential trade partner');
+    }
+
+    // if no trade-partner or more than one found, trade cannot be created
+    if (articleOwners.length === 0) {
+        throw new ParameterValidationError(400, 'At least one article must belong to someone other than the caller');
+    }
+
+    // create new trade
+    let trade = new Trade();
+    trade.user1 = user;
+    trade.user2 = articleOwners[0];
+    trade.addOffer(user, articles);
+
+    return trade;
+}
+
 function makeShallowCopy(obj) {
     if (obj instanceof Trade) {
         return new Trade(obj);
     } else if (obj instanceof Offer) {
         return new Offer(obj);
+    } else if (obj instanceof Article) {
+        return new Article(obj);
     } else {
         return Object.assign({}, obj);
     }
@@ -279,6 +353,14 @@ function saveTrade(trade, res) {
     dataCache.saveTrade(trade)
         .then(newTrade => { res.json(newTrade); })
         .catch(err => { res.sendStatus(500).json(err); });
+}
+
+function handleError(e, res) {
+    if (e instanceof ParameterValidationError) {
+        res.sendStatus(e.statusCode).json(e.message);
+    } else {
+        res.sendStatus(500).json(e);
+    }
 }
 
 function checkTradeExists(trade) {

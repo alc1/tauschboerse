@@ -183,12 +183,8 @@ class TradeCache {
         return this.trades.filter(t => (t.user1._id === userId) || (t.user2._id === userId));
     }
 
-    findByArticleId(theArticleId) {
-        return this.trades.filter(trade => {
-            return trade.offers.some(offer => {
-                return offer.articles.some(article => article._id === theArticleId);
-            });
-        });
+    findByArticleId(theArticleId, onlyInCurrentOffer) {
+        return this.trades.filter(trade => onlyInCurrentOffer ? trade.hasCurrentRequestedOffer && trade.currentRequestedOffer.hasArticle(theArticleId) : trade.offers.some(offer => offer.hasArticle(theArticleId)));
     }
 }
 

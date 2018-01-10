@@ -107,8 +107,8 @@ class DataCache {
         return this.trades.findByUserId(theUserId);
     }
 
-    getTradesByArticle(theArticleId) {
-        return this.trades.findByArticleId(theArticleId);
+    getTradesByArticle(theArticleId, onlyInCurrentOffer = false) {
+        return this.trades.findByArticleId(theArticleId, onlyInCurrentOffer);
     }
 
     getTrade(id) {

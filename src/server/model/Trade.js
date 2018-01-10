@@ -1,6 +1,7 @@
 const utils = require('../utils/modelUtils');
 
 const TradeState = require('../../shared/constants/TradeState');
+const OfferState = require('../../shared/constants/OfferState');
 const Offer = require('./Offer');
 
 class Trade {
@@ -27,8 +28,24 @@ class Trade {
         }
     }
 
+    get hasCounteroffer() {
+        return (this.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.offers[0].state === OfferState.OFFER_STATE_INIT) && (this.offers.length > 1);
+    }
+
+    get currentCounterOffer() {
+        return this.hasCounteroffer ? this.currentOffer : null;
+    }
+
     get currentOffer() {
         return this.offers[0];
+    }
+
+    get hasCurrentRequestedOffer() {
+        return this.hasCounteroffer || ((this.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED));
+    }
+
+    get currentRequestedOffer() {
+        return (this.state === TradeState.TRADE_STATE_IN_NEGOTIATION) ? this.hasCounteroffer ? this.offers[1] : this.currentOffer : null;
     }
 
     addOffer(sender, articles) {
