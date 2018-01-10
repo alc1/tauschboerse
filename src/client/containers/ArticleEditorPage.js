@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import ArticleEditorPage from '../components/ArticleEditorPage/ArticleEditorPage';
 
-import { setLoading, setGlobalMessage } from '../store/actions/application';
+import { setGlobalMessage } from '../store/actions/application';
 import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../store/actions/article';
 import { isLoading } from '../store/selectors/application';
 import { getArticle } from '../store/selectors/article';
@@ -21,6 +21,5 @@ export default connect(mapStateToProps, {
     createArticle,
     updateArticle,
     removeSelectedArticle,
-    setLoading,
     setGlobalMessage
 })(ArticleEditorPage);

@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 
 import PhotoAddIcon from 'material-ui/svg-icons/image/add-a-photo';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import FavoriteSelectedIcon from 'material-ui/svg-icons/action/favorite';
 import FavoriteUnselectedIcon from 'material-ui/svg-icons/action/favorite-border';
+import HelpIcon from 'material-ui/svg-icons/action/help-outline';
 
 import { cyan500 } from 'material-ui/styles/colors';
 
@@ -122,12 +124,22 @@ export default class PhotosComponent extends React.Component {
                                     disabled={loading}
                                     primary/>
                             }
-                            <input
-                                className="photos-component__file-input"
-                                ref={element => this.fileInputElement = element}
-                                type="file"
-                                accept="image/*"
-                                multiple/>
+                            {showAddPhotoButton &&
+                                <input
+                                    className="photos-component__file-input"
+                                    ref={element => this.fileInputElement = element}
+                                    type="file"
+                                    accept="image/*"
+                                    multiple/>
+                            }
+                            {showAddPhotoButton &&
+                                <IconButton
+                                    tooltip="Erlaubte Maximalgrösse eines Bildes: 10MB"
+                                    touch={true}
+                                    tooltipPosition="bottom-left">
+                                    <HelpIcon/>
+                                </IconButton>
+                            }
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="photos-component__images-container">
