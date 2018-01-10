@@ -5,172 +5,190 @@ const Offer = require('../model/Offer');
 const OfferState = require('../../shared/constants/OfferState');
 const Trade = require('../model/Trade');
 const TradeState = require('../../shared/constants/TradeState');
+const ParameterValidationError = require('../utils/ParameterValidationError');
 
 function addTrade(req, res) {
     const { articleIds } = req.body;
     let articles = dataCache.getArticlesById(articleIds);
 
-    let articleOwners = [];
-    articles.forEach(article => {
-        if ((article.owner !== req.user) && (articleOwners.indexOf(article.owner) < 0)) {
-            articleOwners.push(article.owner);
-        }
-    });
+    // get a list of article owners (excluding the caller)
+    let articleOwners = getArticleOwners(articles, req.user);
 
-    if (articleOwners.length < 2) {
-        let trade = new Trade();
-        trade.user1 = req.user;
-
-        if (articleOwners.length === 1) {
-            trade.user2 = articleOwners[0];
-            trade.addOffer(req.user, articles);
-        } else {
-            trade.user2 = null;
-        }
-        dataCache.saveTrade(trade)
-            .then((newTrade) => { res.json(newTrade); })
-            .catch((err) => { res.sendStatus(500).json(err); });
-    } else {
+    // if no trade-partner or more than one found, trade cannot be created
+    if (articleOwners.length !== 1) {
         res.sendStatus(400);
+        return;
     }
+
+    // create new trade
+    let trade = new Trade();
+    trade.user1 = req.user;
+    trade.user2 = articleOwners[0];
+    trade.addOffer(req.user, articles);
+
+    // save it and send response back to caller
+    saveTrade(trade, res);
 }
 
 function setTradeArticles(req, res) {
-    const { tradeId } = req.params;
-    let trade = dataCache.getTrade(tradeId);
+    try {
+        const { tradeId } = req.params;
+        let trade = dataCache.getTrade(tradeId);
+        checkTradeExists(trade);
+        checkUserIsPartOfTrade(req.user);
 
-    let requestStatus = 200;
-    if (trade != null) {
-        const { articleIds } = req.body;
-        let articles = dataCache.getArticlesById(articleIds);
-
-        let articleOwners = [];
-        articles.forEach(article => {
-            if ((article.owner !== req.user) && (articleOwners.indexOf(article.owner) < 0)) {
-                articleOwners.push(article.owner);
+        // For trades being initialised the user can only change the articles if he or she created the trade
+        if (trade.state === TradeState.TRADE_STATE_INIT) {
+            if (trade.offers[0].sender !== req.user) {
+                throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
             }
-        });
-
-        if (articleOwners.length === 1) {
-            if ((trade.user1 == articleOwners[0]) || (trade.user2 == articleOwners[0])) {
-                if ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.offers[0].sender === req.user)) {
-                    trade = makeShallowCopy(trade);
-                    trade.setArticles(articles);
-                } else if (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
-                    if ((trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender === req.user)) {
-                        trade = makeShallowCopy(trade);
-                        trade.setArticles(articles);
-                    } else if ((trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) {
-                        trade = makeShallowCopy(trade);
-                        trade.addOffer(articles);
-                    } else if ((trade.currentOffer.state === OfferState.OFFER_STATE_DECLINED) && (trade.currentOffer.sender === req.user)) {
-                        trade = makeShallowCopy(trade);
-                        trade.addOffer(articles);
-                    } else {
-                        requestStatus = 403;
-                    }
-
-                    if (requestStatus === 200) {
-                        dataCache.saveTrade(trade);
-                    }
-                } else {
-                    // trade is not in a state where the articles can be changed
-                    requestStatus = 403;
+        }
+        // For trades in negotiation the user can only change the articles of new offers, declined offers, invalidated offers and offers sent to him or her (counter offer)
+        else if (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
+            if (trade.currentOffer.sender === req.user) {
+                if ((trade.currentOffer.state !== OfferState.OFFER_STATE_INIT) && (trade.currentOffer.state !== OfferState.OFFER_STATE_DECLINED) && (trade.currentOffer.state !== OfferState.OFFER_STATE_INVALIDATED)) {
+                    throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
                 }
             } else {
-                // articles don't belong to any of the trade partners
-                requestStatus = 400;
+                if (trade.currentOffer.state !== OfferState.OFFER_STATE_REQUESTED) {
+                    throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+                }
             }
-        } else {
-            // articles given that don't belong either to more than 2 different people
-            requestStatus = 400;
         }
-    } else {
-        // trade was not found
-        requestStatus = 404;
-    }
+        // Trades in all other states cannot have their articles changed
+        else {
+            throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+        }
 
-    if (requestStatus === 200) {
-        res.json(trade);
-    } else {
-        res.sendStatus(requestStatus);
+        // collect a list of owners for all articles passed in who aren't the calling user
+        const { articleIds } = req.body;
+        let articles = dataCache.getArticlesById(articleIds);
+        let articleOwners = getArticleOwners(articles, req.user);
+
+        // if more that one owner (trade partner) were found, send an error
+        if (articleOwners.length > 1) {
+            throw new ParameterValidationError(400, 'All specified articles must belong to the same two users');
+        }
+
+        // if the article(s) owner is not a part of this trade, send an error
+        checkUserIsPartOfTrade(articleOwners[0]);
+
+        // the user can modify the trade - first make a new copy
+        trade = makeShallowCopy(trade);
+
+        // if the trade is still being initialised, update the articles
+        if (trade.state === TradeState.TRADE_STATE_INIT) {
+            trade.setArticles(articles);
+        }
+        // For trades in negotiation with offers being initialised change the articles, otherwise create a new offer
+        else if (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
+            if (trade.currentOffer.state === OfferState.OFFER_STATE_INIT) {
+                trade.setArticles(articles);
+            } else {
+                trade.addOffer(articles);
+            }
+        }
+
+        // save the changes and send response back to caller        
+        saveTrade(trade, res);
+    } catch(e) {
+        if (e instanceof ParameterValidationError) {
+            res.sendStatus(e.statusCode).json(e.message);
+        } else {
+            res.sendStatus(500).json(err);
+        }
     }
 }
 
 function setTradeState(req, res) {
-    const { tradeId } = req.params;
-    let trade = dataCache.getTrade(tradeId);
 
-    const newState = req.body.newState;
-
-    let requestStatus = 200;
-    if (trade != null) {
-        if (newState === 'REQUESTED') {
-            if ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1 === req.user)) {
-                trade = makeShallowCopy(trade);
-                trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
-                let offer = makeShallowCopy(trade.currentOffer);
-                offer.state = OfferState.OFFER_STATE_REQUESTED;
-                trade.offers = [offer];
-                dataCache.saveTrade(trade);
-            } else if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
-                trade = makeShallowCopy(trade);
-                //trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
-                trade.offers = trade.offers.slice();
-                let offer = makeShallowCopy(trade.currentOffer);
-                offer.state = OfferState.OFFER_STATE_REQUESTED;
-                trade.offers[0] = offer;
-                if ((trade.offers.length > 1) && (trade.offers[1].state === OfferState.OFFER_STATE_REQUESTED)) {
-                    offer = makeShallowCopy(trade.offers[1]);
-                    offer.state = OfferState.OFFER_STATE_DECLINED;
-                    trade.offers[1] = offer;
-                }
-                dataCache.saveTrade(trade);
-            } else {
-                // trade state cannot be changed to REQUESTED
-                requestStatus = 403;
-            }
-        } else if ((newState === 'ACCEPTED') && (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) {
-            trade = makeShallowCopy(trade);
-            trade.state = TradeState.TRADE_STATE_COMPLETED;
-            trade.offers = trade.offers.slice();
+    function setStateToRequested(trade) {
+        if ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1 === req.user)) {
+            newTrade = makeShallowCopy(trade);
+            newTrade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
             let offer = makeShallowCopy(trade.currentOffer);
-            offer.state = OfferState.OFFER_STATE_ACCEPTED;
-            trade.offers[0] = offer;
-            dataCache.saveTrade(trade);
-        } else if (newState === 'DECLINED') {
-            if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_REQUESTED)) {
-                trade = makeShallowCopy(trade);
-                trade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
-                trade.offers = trade.offers.slice();
-                let offer = makeShallowCopy(trade.currentOffer);
+            offer.state = OfferState.OFFER_STATE_REQUESTED;
+            newTrade.offers = [offer];
+            saveTrade(newTrade, res);
+        } else if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
+            newTrade = makeShallowCopy(trade);
+            //newTrade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
+            newTrade.offers = trade.offers.slice();
+            let offer = makeShallowCopy(trade.currentOffer);
+            offer.state = OfferState.OFFER_STATE_REQUESTED;
+            newTrade.offers[0] = offer;
+            if ((newTrade.offers.length > 1) && (newTrade.offers[1].state === OfferState.OFFER_STATE_REQUESTED)) {
+                offer = makeShallowCopy(trade.offers[1]);
                 offer.state = OfferState.OFFER_STATE_DECLINED;
-                trade.offers[0] = offer;
-                dataCache.saveTrade(trade);
-            } else {
-                requestStatus = 403;
+                newTrade.offers[1] = offer;
             }
-        } else if (newState === 'CANCELED') {
-            trade = makeShallowCopy(trade);
-            trade.state = TradeState.TRADE_STATE_CANCELED;
-            trade.offers = trade.offers.slice();
-            let offer = makeShallowCopy(trade.currentOffer);
-            offer.state = (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED;
-            trade.offers[0] = offer;
-            dataCache.saveTrade(trade);
+            saveTrade(newTrade, res);
         } else {
-            requestStatus = 403;
+            // trade state cannot be changed to REQUESTED
+            throw new ParameterValidationError(403);
         }
-    } else {
-        requestStatus = 404;
     }
 
-    if (requestStatus === 200) {
-        res.json(trade);
-    } else {
-        res.sendStatus(requestStatus);
+    function setStateToAccepted(trade) {
+        newTrade = makeShallowCopy(trade);
+        newTrade.state = TradeState.TRADE_STATE_COMPLETED;
+        newTrade.offers = trade.offers.slice();
+        let offer = makeShallowCopy(trade.currentOffer);
+        offer.state = OfferState.OFFER_STATE_ACCEPTED;
+        newTrade.offers[0] = offer;
+        saveTrade(newTrade, res);
+    }
+
+    function setStateToDeclined(trade) {
+        if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OFFER_STATE_REQUESTED)) {
+            newTrade = makeShallowCopy(trade);
+            newTrade.state = TradeState.TRADE_STATE_IN_NEGOTIATION;
+            newTrade.offers = trade.offers.slice();
+            let offer = makeShallowCopy(trade.currentOffer);
+            offer.state = OfferState.OFFER_STATE_DECLINED;
+            newTrade.offers[0] = offer;
+            saveTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    function setStateToCanceled(trade) {
+        newTrade = makeShallowCopy(trade);
+        newTrade.state = TradeState.TRADE_STATE_CANCELED;
+        newTrade.offers = trade.offers.slice();
+        let offer = makeShallowCopy(trade.currentOffer);
+        offer.state = (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED;
+        newTrade.offers[0] = offer;
+        saveTrade(newTrade, res);
+    }
+
+    try {
+        const { tradeId } = req.params;
+        const trade = dataCache.getTrade(tradeId);
+        checkTradeExists(trade);
+
+        const newState = req.body.newState;
+        checkNewStateIsValid(newState);
+
+        if (newState === 'REQUESTED') {
+            setStateToRequested(trade);
+        } else if ((newState === 'ACCEPTED') && (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) {
+            setStateToAccepted(trade);
+        } else if (newState === 'DECLINED') {
+            setStateToDeclined(trade);
+        } else if (newState === 'CANCELED') {
+            setStateToCanceled(trade);
+        }
+    } catch(e) {
+        if (e instanceof ParameterValidationError) {
+            res.sendStatus(e.statusCode).json(e.message);
+        } else {
+            res.sendStatus(500).json(e);
+        }
     }
 }
+
 
 function getTradesByUser(req, res) {
     const { userId } = req.params;
@@ -188,9 +206,11 @@ function getTradesByUser(req, res) {
     res.json({ trades: trades });
 }
 
+
 function getTrades(req, res) {
     res.json({ trades: dataCache.getAllTrades() });
 }
+
 
 function getTrade(req, res) {
     const { tradeId } = req.params;
@@ -201,6 +221,7 @@ function getTrade(req, res) {
         res.sendStatus(404);
     }
 }
+
 
 function getNewTrade(req, res) {
     const { articleId } = req.params;
@@ -218,6 +239,9 @@ function getNewTrade(req, res) {
     res.json({ trade: trade });
 }
 
+/**********************************************************************************/
+/* Helper Functions                                                               */
+/**********************************************************************************/
 function findTrade(id, userId) {
     let trade = dataCache.getTrade(id);
     if (trade) {
@@ -236,6 +260,45 @@ function makeShallowCopy(obj) {
         return new Offer(obj);
     } else {
         return Object.assign({}, obj);
+    }
+}
+
+function getArticleOwners(articles, user) {
+    let articleOwners = [];
+
+    articles.forEach(article => {
+        if ((article.owner !== user) && (articleOwners.indexOf(article.owner) < 0)) {
+            articleOwners.push(article.owner);
+        }
+    });
+
+    return articleOwners;
+}
+
+function saveTrade(trade, res) {
+    dataCache.saveTrade(trade)
+        .then(newTrade => { res.json(newTrade); })
+        .catch(err => { res.sendStatus(500).json(err); });
+}
+
+function checkTradeExists(trade) {
+    if (trade == null) {
+        throw new ParameterValidationError(404, `The specified trade does not exist`);
+    }
+}
+
+function checkUserIsPartOfTrade(trade, user) {
+    if ((trade.user1 !== user) && (trade.user2 !== user)) {
+        throw new ParameterValidationError(400, 'Only trade partners can modify the trade');
+    }
+}
+
+// Valid states
+const validStates = ['ACCEPTED', 'CANCELED', 'DECLINED', 'REQUESTED'];
+
+function checkNewStateIsValid(value) {
+    if (validStates.indexOf(value.toUpperCase()) < 0) {
+        throw new ParameterValidationError(400, `The given state [${value}] is not recognized`);
     }
 }
 
