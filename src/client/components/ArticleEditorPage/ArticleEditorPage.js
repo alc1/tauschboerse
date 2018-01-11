@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
 
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
@@ -9,8 +8,6 @@ import Placeholder from '../../containers/Placeholder';
 import ArticleForm from '../ArticleForm/ArticleForm';
 import PhotosComponent from '../PhotosComponent/PhotosComponent';
 import PageButton from '../PageButton/PageButton';
-
-import { OK_MESSAGE } from '../../store/actions/application';
 
 import articleDetailsValidator from '../../../shared/validations/articleDetails';
 
@@ -104,7 +101,7 @@ export default class ArticleEditorPage extends React.Component {
 
     onPhotoLoaded = (theEvent, theFile) => {
         const newPhoto = {
-            fileName: uuid.v1() + theFile.name.substr(theFile.name.lastIndexOf('.')),
+            fileName: theFile.name,
             fileContent: theEvent.target.result,
             isNew: true,
             isMain: this.state.photos.length - this.state.removedPhotos.length + this.state.addedPhotos.length === 0
@@ -119,7 +116,7 @@ export default class ArticleEditorPage extends React.Component {
         // If the photo to remove is a new photo (not yet persisted), it should be removed from the list of added photos
         if (this.isNewPhoto(thePhotoToRemove)) {
             this.setState({
-                addedPhotos: this.state.addedPhotos.filter((photo) => photo.fileName !== thePhotoToRemove.fileName),
+                addedPhotos: this.state.addedPhotos.filter((photo) => photo !== thePhotoToRemove),
                 modified: true
             });
         }
@@ -138,7 +135,7 @@ export default class ArticleEditorPage extends React.Component {
         if (this.isNewPhoto(theMainPhoto)) {
             this.setState({
                 addedPhotos: this.state.addedPhotos.map(photo => {
-                    return { ...photo, isMain: photo.fileName === theMainPhoto.fileName };
+                    return { ...photo, isMain: photo === theMainPhoto };
                 }),
                 photos: this.state.photos.map(photo => {
                     photo.isMain = false;
@@ -152,7 +149,7 @@ export default class ArticleEditorPage extends React.Component {
         else {
             this.setState({
                 photos: this.state.photos.map(photo => {
-                    return { ...photo, isMain: photo.fileName === theMainPhoto.fileName };
+                    return { ...photo, isMain: photo === theMainPhoto };
                 }),
                 addedPhotos: this.state.addedPhotos.map(photo => {
                     photo.isMain = false;
@@ -164,7 +161,7 @@ export default class ArticleEditorPage extends React.Component {
     };
 
     isNewPhoto = (thePhoto) => {
-        return this.state.addedPhotos.some(photo => photo.fileName === thePhoto.fileName);
+        return this.state.addedPhotos.some(photo => photo === thePhoto);
     };
 
     onSubmit = (theEvent) => {
@@ -183,10 +180,6 @@ export default class ArticleEditorPage extends React.Component {
                 articleSaveRequest = this.props.updateArticle(user._id, articleToSave, addedPhotos, removedPhotos)
                     .then(response => {
                         this.resetArticleInState(response.article);
-                        this.props.setGlobalMessage({
-                            messageText: 'Artikel wurde gespeichert.',
-                            messageType: OK_MESSAGE
-                        });
                     });
             }
             else {
@@ -239,7 +232,7 @@ export default class ArticleEditorPage extends React.Component {
         const { user, loading } = this.props;
         const { title, description, categories, photos, status, created, owner, trades, errors, modified, articleFound, addedPhotos, removedPhotos } = this.state;
         let isEditAllowed = this.isEditAllowed(owner, user);
-        let photosToRender = photos.filter(photo => !removedPhotos.some(removedPhoto => removedPhoto.fileName === photo.fileName));
+        let photosToRender = photos.filter(photo => !removedPhotos.some(removedPhoto => removedPhoto === photo));
         addedPhotos.forEach(photo => {
             photosToRender.push(photo);
         });

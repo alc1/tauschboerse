@@ -10,6 +10,8 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+import SwapIcon from 'material-ui/svg-icons/action/swap-horiz';
+import ArticlesIcon from 'material-ui/svg-icons/action/list';
 import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
@@ -93,6 +95,8 @@ export default class ApplicationBar extends React.Component {
         if (theUser) {
             return (
                 <IconMenu iconButtonElement={this.createUserMenuElement(theUser)}>
+                    <MenuItem primaryText="Meine Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/trades`)}/>
+                    <MenuItem primaryText="Meine Artikel" leftIcon={<ArticlesIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/articles`)}/>
                     <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/details`)}/>
                     <Divider/>
                     <MenuItem primaryText="Abmelden" leftIcon={<ExitIcon/>} onClick={this.logout}/>

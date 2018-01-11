@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { handleError } from './common';
-import { loadingStateReceived } from './application';
+import { loadingStateReceived, globalMessageReceived, OK_MESSAGE, WARNING_MESSAGE } from './application';
 import { getUser } from '../selectors/user';
 
 import TradesModel from '../../model/TradesModel';
@@ -59,11 +59,21 @@ export const createArticle = (article, photos) => dispatch => {
         .then(async articleResponse => {
             if (photos.length > 0) {
                 let lastSuccessfulResult;
+                let failedPhotos = [];
                 for (let photo of photos) {
                     let currentResult = await handlePromiseErrorAsNull(axios.post(`/api/articles/${articleResponse.data.article._id}/photos`, { photo }));
                     if (currentResult) {
                         lastSuccessfulResult = currentResult;
                     }
+                    else {
+                        failedPhotos.push(photo.fileName);
+                    }
+                }
+                if (failedPhotos.length > 0) {
+                    dispatchSavedWithWarningsMessage(dispatch, failedPhotos);
+                }
+                else {
+                    dispatchSuccessfullySavedMessage(dispatch);
                 }
                 if (lastSuccessfulResult) {
                     return dispatch(articleCreated(lastSuccessfulResult.data.article));
@@ -73,6 +83,7 @@ export const createArticle = (article, photos) => dispatch => {
                 }
             }
             else {
+                dispatchSuccessfullySavedMessage(dispatch);
                 return dispatch(articleCreated(articleResponse.data.article));
             }
         })
@@ -92,10 +103,14 @@ export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (
         .then(async articleResponse => {
             if (addedPhotos.length > 0 || removedPhotos.length > 0) {
                 let lastSuccessfulResult;
+                let failedPhotos = [];
                 for (let photo of addedPhotos) {
                     let currentResult = await handlePromiseErrorAsNull(axios.post(`/api/articles/${article._id}/photos`, { photo }));
                     if (currentResult) {
                         lastSuccessfulResult = currentResult;
+                    }
+                    else {
+                        failedPhotos.push(photo.fileName);
                     }
                 }
                 for (let photo of removedPhotos) {
@@ -103,6 +118,15 @@ export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (
                     if (currentResult) {
                         lastSuccessfulResult = currentResult;
                     }
+                    else {
+                        failedPhotos.push(photo.fileName);
+                    }
+                }
+                if (failedPhotos.length > 0) {
+                    dispatchSavedWithWarningsMessage(dispatch, failedPhotos);
+                }
+                else {
+                    dispatchSuccessfullySavedMessage(dispatch);
                 }
                 if (lastSuccessfulResult) {
                     return dispatch(articleUpdated(extendArticleWithTrades(lastSuccessfulResult.data.article, lastSuccessfulResult.data.trades, getUser(getState()))));
@@ -112,6 +136,7 @@ export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (
                 }
             }
             else {
+                dispatchSuccessfullySavedMessage(dispatch);
                 return dispatch(articleUpdated(extendArticleWithTrades(articleResponse.data.article, articleResponse.data.trades, getUser(getState()))));
             }
         })
@@ -151,10 +176,24 @@ const extendArticleWithTrades = (theArticle, theTrades, theUser) => {
     return article;
 };
 
-async function handlePromiseErrorAsNull(theRequestPromise) {
+const handlePromiseErrorAsNull = async (theRequestPromise) => {
     try {
         return await theRequestPromise;
     } catch (error) {
         return null;
     }
-}
+};
+
+const dispatchSavedWithWarningsMessage = (dispatch, failedPhotos) => {
+    dispatch(globalMessageReceived({
+        messageText: 'Folgende Bilder konnten nicht gespeichert werden:\n' + failedPhotos.join('\n'),
+        messageType: WARNING_MESSAGE
+    }));
+};
+
+const dispatchSuccessfullySavedMessage = (dispatch) => {
+    dispatch(globalMessageReceived({
+        messageText: 'Artikel wurde gespeichert.',
+        messageType: OK_MESSAGE
+    }));
+};
