@@ -134,6 +134,17 @@ class TradeDetail extends React.Component {
     }
 
     generateContentForCanceledTrade() {
+        let tradePartnerArticlesTitle = `Du wolltest folgende Artikel von ${this.props.trade.tradePartner.name}:`;
+        
+        return (            
+            <div>
+                <section>
+                    Dieses Tauschgeschäft wurde abgebrochen
+                </section>
+                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
+                <Articles articles={this.props.trade.userArticles} title="Dafür botst Du folgende Artikel an:" />
+            </div>
+        );
     }
 
     generateContentForUnforeseenState() {
