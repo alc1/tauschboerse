@@ -59,6 +59,12 @@ class TradeCache {
         return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
+    dump() {
+        console.log('Trades:')
+        console.log(JSON.stringify(this.trades, null, 2));
+        console.log('');
+    }
+
     save(trade) {
         let rec;
         let saveOp;
@@ -184,7 +190,7 @@ class TradeCache {
     }
 
     findByArticleId(theArticleId, onlyInCurrentOffer) {
-        return this.trades.filter(trade => onlyInCurrentOffer ? trade.hasCurrentRequestedOffer && trade.currentRequestedOffer.hasArticle(theArticleId) : trade.offers.some(offer => offer.hasArticle(theArticleId)));
+        return this.trades.filter(trade => onlyInCurrentOffer ? trade.hasCurrentRequestedOffer && trade.currentOffer.hasArticle(theArticleId) : trade.offers.some(offer => offer.hasArticle(theArticleId)));
     }
 }
 

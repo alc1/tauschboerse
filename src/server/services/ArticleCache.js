@@ -52,6 +52,12 @@ class ArticleCache {
         return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
+    dump() {
+        console.log('Articles:')
+        console.log(JSON.stringify(this.articles, null, 2));
+        console.log('');
+    }
+
     save(theArticle) {
         let foundLogicalArticle;
         let saveOp;

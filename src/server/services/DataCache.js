@@ -41,6 +41,13 @@ class DataCache {
             .then(() => this.users.clear());
     }
 
+    dump() {
+        this.users.dump();
+        this.categories.dump();
+        this.articles.dump();
+        this.trades.dump();
+    }
+
     /*
      * Article
      */

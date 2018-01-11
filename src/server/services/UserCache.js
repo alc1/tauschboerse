@@ -54,6 +54,12 @@ class UserCache {
         return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
+    dump() {
+        console.log('Users:')
+        console.log(JSON.stringify(this.users, null, 2));
+        console.log('');
+    }
+
     prepare(obj) {
         return new User(obj);
     }

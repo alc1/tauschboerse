@@ -54,6 +54,12 @@ class CategoryCache {
         return new Promise(clearOp).then(() => new Promise(compactOp));
     }
 
+    dump() {
+        console.log('Categories:')
+        console.log(JSON.stringify(this.categories, null, 2));
+        console.log('');
+    }
+
     save(theCategory) {
         let foundLogicalCategory;
         let saveOp;
