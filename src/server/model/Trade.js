@@ -29,23 +29,19 @@ class Trade {
     }
 
     get hasCounteroffer() {
-        return (this.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.offers[0].state === OfferState.OFFER_STATE_INIT) && (this.offers.length > 1);
+        return (this.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.offers[0].state === OfferState.OFFER_STATE_INIT);
     }
 
-    get currentCounterOffer() {
-        return this.hasCounteroffer ? this.currentOffer : null;
+    get counteroffer() {
+        return this.hasCounteroffer ? this.offers[0] : null;
     }
 
     get currentOffer() {
-        return this.offers[0];
+        return this.offers[this.hasCounteroffer ? 1 : 0];
     }
 
     get hasCurrentRequestedOffer() {
-        return this.hasCounteroffer || ((this.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED));
-    }
-
-    get currentRequestedOffer() {
-        return (this.state === TradeState.TRADE_STATE_IN_NEGOTIATION) ? this.hasCounteroffer ? this.offers[1] : this.currentOffer : null;
+        return (this.state === TradeState.TRADE_STATE_IN_NEGOTIATION);
     }
 
     addOffer(sender, articles) {

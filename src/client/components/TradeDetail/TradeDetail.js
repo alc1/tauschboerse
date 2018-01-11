@@ -18,6 +18,8 @@ class TradeDetail extends React.Component {
         submitTrade: PropTypes.func.isRequired,
         acceptTrade: PropTypes.func.isRequired,
         declineTrade: PropTypes.func.isRequired,
+        withdrawTrade: PropTypes.func.isRequired,
+        deleteTrade: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 
@@ -34,19 +36,23 @@ class TradeDetail extends React.Component {
     }
 
     handleDeleteOffer = () => {
+        this.props.deleteTrade();
+    }
 
+    handleWithdrawOffer = () => {
+        this.props.withdrawTrade();
     }
 
     handleAccept = () => {
-
+        this.props.acceptTrade();
     }
 
     handleDecline = () => {
-
+        this.props.declineTrade();
     }
 
     handleMakeCounteroffer = () => {
-
+        this.handleEditOffer();
     }
 
     generateContentForNewTrade() {

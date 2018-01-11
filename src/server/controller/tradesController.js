@@ -20,7 +20,29 @@ function addTrade(req, res) {
         // save it and send it back to the caller
         saveAndSendTrade(trade, res);
     } catch(e) {
-        handleError(e);
+        handleError(e, res);
+    }
+}
+
+// Deletes trade from database
+function deleteTrade(req, res) {
+    try {
+        const { tradeId } = req.params;
+        let trade = dataCache.getTrade(tradeId);
+        checkTradeExists(trade);
+
+        // trade can only be deleted if it hasn't been submitted
+        if ((trade.state !== TradeState.TRADE_STATE_INIT) || (trade.currentOffer.sender !== req.user)) {
+            throw new ParameterValidationError(403);
+        }
+
+        // delete trade from db
+        dataCache.deleteTrade(tradeId)
+            .then(() => res.sendStatus(200))
+            .catch(err => res.status(500).json(err));
+
+    } catch(e) {
+        handleError(e, res);
     }
 }
 
@@ -40,8 +62,10 @@ function setTradeArticles(req, res) {
         }
         // For trades in negotiation the user can only change the articles of new offers, declined offers, invalidated offers and offers sent to him or her (counter offer)
         else if (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
-            if (trade.currentOffer.sender === req.user) {
-                if ((trade.currentOffer.state !== OfferState.OFFER_STATE_INIT) && (trade.currentOffer.state !== OfferState.OFFER_STATE_DECLINED) && (trade.currentOffer.state !== OfferState.OFFER_STATE_INVALIDATED)) {
+            if (trade.hasCounteroffer && (trade.counteroffer.sender !== req.user)) {
+                throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+            } else if (trade.currentOffer.sender === req.user) {
+                if ((trade.currentOffer.state !== OfferState.OFFER_STATE_DECLINED) && (trade.currentOffer.state !== OfferState.OFFER_STATE_INVALIDATED)) {
                     throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
                 }
             } else {
@@ -77,7 +101,7 @@ function setTradeArticles(req, res) {
         }
         // For trades in negotiation with offers being initialised change the articles, otherwise create a new offer
         else if (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
-            if (trade.currentOffer.state === OfferState.OFFER_STATE_INIT) {
+            if (trade.hasCounteroffer) {
                 trade.setArticles(articles);
             } else {
                 trade.addOffer(articles);
@@ -131,7 +155,7 @@ function setTradeState(req, res) {
 
     // Sends a new offer to the trade partner, if the offer is valid
     function setStateToRequested(trade) {
-        if ((trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
+        if ((trade.hasCounteroffer && trade.counteroffer.sender === req.user) || ((trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender === req.user))) {
             let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
             setOfferState(newTrade.offers, OfferState.OFFER_STATE_REQUESTED);
 
@@ -185,7 +209,12 @@ function setTradeState(req, res) {
     function setStateToCanceled(trade) {
         if (currentOfferWasMadeByUser(trade)) {
             let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
-            setOfferState(newTrade.offers, (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED);
+            setOfferState(newTrade.offers, OfferState.OFFER_STATE_WITHDRAWN);
+
+            // reset article states, now that trade has been canceled
+            let articlesToReset = newTrade.currentOffer.articles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 1));
+            setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
+
             saveAndSendTrade(newTrade, res);
         } else {
             throw new ParameterValidationError(403);
@@ -250,14 +279,13 @@ function setTradeState(req, res) {
     }
 
     function userHasPreparedCounteroffer(trade) {
-        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender === req.user) && (trade.offers.length > 1) && (trade.offers[1].state === OFFER_STATE_REQUESTED);
+        return (trade.hasCounteroffer && (trade.counteroffer.sender === req.user));
     }
 
     function currentOfferWasSentToUser(trade) {
-        return ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) || userHasPreparedCounteroffer(trade);
+        return ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user));
     }
 
-    // TO DO: take counteroffer into account!!
     function currentOfferWasMadeByUser(trade) {
         return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender === req.user);
     }
@@ -312,7 +340,7 @@ function getNewTrade(req, res) {
         let trade = prepareNewTrade([articleId], req.user);
         res.json({ trade: trade });
     } catch(e) {
-        handleError(e);
+        handleError(e, res);
     }
 }
 
@@ -416,6 +444,7 @@ function checkNewStateIsValid(value) {
 
 module.exports = {
     addTrade,
+    deleteTrade,
     setTradeArticles,
     setTradeState,
     getTradesByUser,

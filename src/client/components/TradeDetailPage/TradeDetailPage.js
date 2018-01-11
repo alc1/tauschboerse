@@ -15,6 +15,8 @@ export default class TradeDetailPage extends React.Component {
         submitTrade: PropTypes.func.isRequired,
         acceptTrade: PropTypes.func.isRequired,
         declineTrade: PropTypes.func.isRequired,
+        withdrawTrade: PropTypes.func.isRequired,
+        deleteTrade: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     };
 

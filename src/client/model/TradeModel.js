@@ -30,6 +30,10 @@ class TradeModel {
         return (this.trade.state === TradeState.TRADE_STATE_COMPLETED) || (this.trade.state === TradeState.TRADE_STATE_CANCELED);
     }
 
+    get isCanceled() {
+        return (this.trade.state === TradeState.TRADE_STATE_CANCELED);
+    }
+
     get isNew() {
         return (this.trade.state === TradeState.TRADE_STATE_INIT) && (this.currentOffer.state === OfferState.OFFER_STATE_INIT);
     }

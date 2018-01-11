@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import TradeDetailPage from '../components/TradeDetailPage/TradeDetailPage';
 
-import { acceptTrade, declineTrade, loadTrade, submitTrade } from '../store/actions/trade';
+import { acceptTrade, declineTrade, loadTrade, submitTrade, withdrawTrade, deleteTrade } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
 import { getTrade } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
@@ -21,5 +21,7 @@ export default connect(mapStateToProps, {
     setLoading,
     submitTrade,
     acceptTrade,
-    declineTrade
+    declineTrade,
+    withdrawTrade,
+    deleteTrade
 })(TradeDetailPage);

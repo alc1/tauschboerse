@@ -13,6 +13,7 @@ import { getUser } from '../selectors/user';
 export const TRADE_FETCHED = 'TRADE_FETCHED';
 export const TRADE_FETCHING = 'TRADE_FETCHING';
 export const TRADE_NOT_FOUND = 'TRADE_NOT_FOUND';
+export const TRADE_DELETED = 'TRADE_DELETED';
 export const TRADE_ARTICLES_SAVED = 'TRADE_ARTICLES_SAVED';
 export const TRADE_ARTICLES_FETCHED = 'TRADE_ARTICLES_FETCHED';
 export const TRADE_ARTICLE_TOGGLED = 'TRADE_ARTICLE_TOGGLED';
@@ -35,6 +36,10 @@ const tradeIsBeingFetched = () => ({
 
 const tradeNotFound = () => ({
     type: TRADE_NOT_FOUND
+});
+
+const tradeDeleted = () => ({
+    type: TRADE_DELETED
 });
 
 const articlesFetched = (theArticles, forUser) => ({
@@ -118,6 +123,13 @@ export const saveTrade = () => (dispatch, getState) => {
         .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, user))))
         .catch(err => handleError(err, dispatch));
 };
+
+export const deleteTrade = () => (dispatch, getState) => {
+    let trade = getTrade(getState());
+    return axios.delete(`/api/trades/${trade._id}`)
+        .then(response => dispatch(tradeDeleted()))
+        .catch(err => handleError(err, dispatch))
+}
 
 export const toggleUserArticle = (theArticle) => dispatch => {
     dispatch(articleToggled(theArticle, true));
