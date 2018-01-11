@@ -9,6 +9,8 @@ const Article = require('../model/Article');
 const ArticleStatus = require('../../shared/constants/ArticleStatus');
 const ParameterValidationError = require('../utils/ParameterValidationError');
 
+const commonController = require('./commonController');
+
 // creates and adds a new trade to the db
 function addTrade(req, res) {
     try {
@@ -93,7 +95,7 @@ function setTradeArticles(req, res) {
         checkUserIsPartOfTrade(trade, articleOwners[0]);
 
         // the user can modify the trade - first make a new copy
-        trade = makeShallowCopy(trade);
+        trade = commonController.makeShallowCopy(trade);
 
         // if the trade is still being initialised, update the articles
         if (trade.state === TradeState.TRADE_STATE_INIT) {
@@ -156,13 +158,13 @@ function setTradeState(req, res) {
     // Sends a new offer to the trade partner, if the offer is valid
     function setStateToRequested(trade) {
         if ((trade.hasCounteroffer && trade.counteroffer.sender === req.user) || ((trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender === req.user))) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
-            setOfferState(newTrade.offers, OfferState.OFFER_STATE_REQUESTED);
+            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_REQUESTED);
 
             // If this isn't the first offer, and the last offer is still in the requested state, then the user is now sending a counteroffer.
             // When a counteroffer is sent, the received offer should be declined  automatically.
             if ((newTrade.offers.length > 1) && (newTrade.offers[1].state === OfferState.OFFER_STATE_REQUESTED)) {
-                setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED, 1);
+                commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED, 1);
             }
 
             // set state of all involved articles to 'DEALING'
@@ -182,11 +184,11 @@ function setTradeState(req, res) {
     // Accepts a received trade
     function setStateToAccepted(trade) {
         if (currentOfferWasSentToUser(trade)) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
-            setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
+            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
+            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
 
             setArticlesState(newTrade.currentOffer.articles, ArticleStatus.STATUS_DEALED);
-            findAndFlagInvalidTrades(newTrade.currentOffer.articles);
+            commonController.findAndFlagInvalidTrades(newTrade.currentOffer.articles);
 
             saveAndSendTrade(newTrade, res);
         } else {
@@ -197,8 +199,8 @@ function setTradeState(req, res) {
     // Declines a received trade
     function setStateToDeclined(trade) {
         if (currentOfferWasSentToUser(trade)) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
-            setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
+            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
             saveAndSendTrade(newTrade, res);
         } else {
             throw new ParameterValidationError(403);
@@ -208,8 +210,8 @@ function setTradeState(req, res) {
     // Cancels the current offer
     function setStateToCanceled(trade) {
         if (currentOfferWasMadeByUser(trade)) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
-            setOfferState(newTrade.offers, OfferState.OFFER_STATE_WITHDRAWN);
+            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
+            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_WITHDRAWN);
 
             // reset article states, now that trade has been canceled
             let articlesToReset = newTrade.currentOffer.articles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 1));
@@ -221,28 +223,12 @@ function setTradeState(req, res) {
         }
     }
 
-    function prepareTradeCopy(trade, newState) {
-        let newTrade = makeShallowCopy(trade);
-        newTrade.state = newState;
-        newTrade.offers = trade.offers.slice();
-
-        return newTrade;
-    }
-
-    function setOfferState(offers, newState, idx = 0) {
-        let offer = makeShallowCopy(offers[idx]);
-        offer.state = newState;
-        offers[idx] = offer;
-
-        return offer;
-    }
-
     function setArticlesState(articles, newStatus) {
         let copy;
 
         articles.forEach(async article => {
             if (article.status !== newStatus) {
-                copy = makeShallowCopy(article);
+                copy = commonController.makeShallowCopy(article);
                 copy.status = newStatus;
                 try {
                     await dataCache.saveArticle(copy);
@@ -251,35 +237,6 @@ function setTradeState(req, res) {
                 }
             }
         });
-    }
-
-    function findAndFlagInvalidTrades(articles, ignoreTradeId) {
-        let invalidTrades = [];
-
-        // get list of trades with open offers for any of the given articles
-        articles.forEach(article => {
-            let trades = dataCache.getTradesByArticle(article._id, true);
-            trades.forEach(trade => {
-                if ((trade._id !== ignoreTradeId) && (invalidTrades.indexOf(trade) < 0)) {
-                    invalidTrades.push(trade);
-                }
-            });
-        });
-
-        // invalidate the open offers
-        invalidTrades.forEach(async trade => {
-            let copy = makeShallowCopy(trade);
-            setOfferState(copy.offers, OFFER_STATE_INVALIDATED, trade.hasCounteroffer ? 1 : 0);
-            try {
-                await dataCache.saveTrade(copy);
-            } catch(e) {
-                console.log(e);
-            }
-        });
-    }
-
-    function userHasPreparedCounteroffer(trade) {
-        return (trade.hasCounteroffer && (trade.counteroffer.sender === req.user));
     }
 
     function currentOfferWasSentToUser(trade) {
@@ -299,7 +256,7 @@ function getUserTrades(req, res, userId) {
         // offers that haven't been made yet are only visible to the sender
         .map(trade => {
             if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && trade.offers.some(offer => (offer.state === OfferState.OFFER_STATE_INIT) && (offer.sender !== req.user))) {
-                return makeShallowCopy(trade).offers.filter(offer => (offer.state !== OfferState.INIT) || (offer.sender === req.user));
+                return commonController.makeShallowCopy(trade).offers.filter(offer => (offer.state !== OfferState.OFFER_STATE_INIT) || (offer.sender === req.user));
             } else {
                 return trade;
             }
@@ -383,18 +340,6 @@ function prepareNewTrade(articleIds, user) {
     return trade;
 }
 
-function makeShallowCopy(obj) {
-    if (obj instanceof Trade) {
-        return new Trade(obj);
-    } else if (obj instanceof Offer) {
-        return new Offer(obj);
-    } else if (obj instanceof Article) {
-        return new Article(obj);
-    } else {
-        return Object.assign({}, obj);
-    }
-}
-
 function getArticleOwners(articles, user) {
     let articleOwners = [];
 
@@ -422,7 +367,7 @@ function handleError(e, res) {
 }
 
 function checkTradeExists(trade) {
-    if (trade == null) {
+    if (!trade) {
         throw new ParameterValidationError(404, `The specified trade does not exist`);
     }
 }

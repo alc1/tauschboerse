@@ -50,6 +50,10 @@ class TradeModel {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION);
     }
 
+    get isDeclined() {
+        return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_DECLINED);
+    }
+
     get isMakingCounteroffer() {
         return this.hasCounteroffer && this.isUserSender;
     }

@@ -3,8 +3,8 @@
 const articleCreatorValidator = require('./articleCreatorValidator');
 const articleUpdaterValidator = require('./articleUpdaterValidator');
 
-const categoriesController = require('./categoriesController');
 const photosController = require('./photosController');
+const commonController = require('./commonController');
 
 const ArticleStatus = require('../../shared/constants/ArticleStatus');
 const Photo = require('../model/Photo');
@@ -33,12 +33,12 @@ async function deleteArticleById(req, res) {
     const { articleId } = req.params;
     const article = dataCache.getArticleById(articleId);
     if (article) {
-        if (isArticleUsed(article) && article.status !== ArticleStatus.STATUS_DEALED && article.status !== ArticleStatus.STATUS_DELETED) {
+        if (dataCache.isArticleUsed(article._id) && article.status !== ArticleStatus.STATUS_DEALED && article.status !== ArticleStatus.STATUS_DELETED) {
             let articleToSave = dataCache.prepareArticle(article, req.user);
             articleToSave.status = ArticleStatus.STATUS_DELETED;
             const savedArticle = await dataCache.saveArticle(articleToSave);
             if (savedArticle) {
-                // TODO Trades invalidieren
+                commonController.findAndFlagInvalidTrades([savedArticle]);
                 res.json({ isDeleted: true, article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
             }
             else {
@@ -68,7 +68,7 @@ async function createArticle(req, res) {
     const { article } = req.body;
     const validation = articleCreatorValidator.validate(article);
     if (validation.success) {
-        await categoriesController.createNewCategories(article);
+        await createNewCategories(article);
         const preparedArticle = dataCache.prepareArticle(article, req.user);
         const savedArticle = await dataCache.saveArticle(preparedArticle);
         if (savedArticle) {
@@ -88,7 +88,7 @@ async function updateArticle(req, res) {
     const { article } = req.body;
     const validation = articleUpdaterValidator.validate(articleId, article);
     if (validation.success) {
-        await categoriesController.createNewCategories(article);
+        await createNewCategories(article);
         const preparedArticle = dataCache.prepareArticle(article, req.user);
         const savedArticle = await dataCache.saveArticle(preparedArticle);
         if (savedArticle) {
@@ -171,9 +171,18 @@ async function deletePhoto(req, res) {
     }
 }
 
-function isArticleUsed(theArticle) {
-    const trades = dataCache.getTradesByArticle(theArticle._id);
-    return trades && trades.length > 0;
+async function createNewCategories(theArticle) {
+    const existingCategories = theArticle.categories.filter(category => category.hasOwnProperty('_id'));
+    const newCategories = theArticle.categories.filter(category => !category.hasOwnProperty('_id'));
+    theArticle.categories = [...existingCategories, ...await createCategories(newCategories)];
+}
+
+async function createCategories(theCategories) {
+    const allSaveRequests = theCategories.map(category => {
+        const preparedCategory = dataCache.prepareCategory(category);
+        return dataCache.saveCategory(preparedCategory);
+    });
+    return await Promise.all(allSaveRequests);
 }
 
 function getTradesIfAllowed(theRequestingUser, theArticleId) {

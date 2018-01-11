@@ -130,6 +130,10 @@ class DataCache {
         return this.trades.delete(tradeId);
     }
 
+    isArticleUsed(theArticleId) {
+        return this.trades.isArticleUsed(theArticleId);
+    }
+
     /*
      * User
      */

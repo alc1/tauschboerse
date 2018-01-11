@@ -62,6 +62,10 @@ class Trade {
         return (this.offers.length > 1) ? this.offers[1].articles.filter(article => this.offers[0].articles.indexOf(article) < 0) : [];
     }
 
+    isArticleUsed(theArticleId) {
+        return this.offers.some(offer => offer.articles.some(article => article._id === theArticleId));
+    }
+
     update(obj) {
         let modified = false;
 

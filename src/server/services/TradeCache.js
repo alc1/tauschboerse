@@ -192,6 +192,10 @@ class TradeCache {
     findByArticleId(theArticleId, onlyInCurrentOffer) {
         return this.trades.filter(trade => onlyInCurrentOffer ? trade.hasCurrentRequestedOffer && trade.currentOffer.hasArticle(theArticleId) : trade.offers.some(offer => offer.hasArticle(theArticleId)));
     }
+
+    isArticleUsed(theArticleId) {
+        return this.trades.some(trade => trade.isArticleUsed(theArticleId));
+    }
 }
 
 module.exports = TradeCache;
