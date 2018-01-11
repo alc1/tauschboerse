@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import TradeDetail from '../TradeDetail/TradeDetail';
-import TradeModel from '../../model/TradeModel';
-import TradeAction from '../../constants/TradeAction';
 
 export default class TradeDetailPage extends React.Component {
 

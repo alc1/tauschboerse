@@ -62,6 +62,10 @@ class Trade {
         this.currentOffer.articles = articles;
     }
 
+    getArticlesRemovedForCurentOffer() {
+        return (this.offers.length > 1) ? this.offers[1].articles.filter(article => this.offers[0].articles.indexOf(article) < 0) : [];
+    }
+
     update(obj) {
         let modified = false;
 

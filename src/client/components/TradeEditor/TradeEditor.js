@@ -5,9 +5,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 
 import Articles from '../Articles/Articles';
-import TradeDetail from '../TradeDetail/TradeDetail';
-import TradeModel from '../../model/TradeModel';
-import TradeAction from '../../constants/TradeAction';
 
 import './TradeEditor.css';
 

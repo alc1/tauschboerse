@@ -119,7 +119,7 @@ export default function trade(theState = initialState, theAction) {
             }
 
         case TRADE_ARTICLES_FETCHED:
-            let newState = { ...theState };
+            newState = { ...theState };
 
             if (theAction.forUser) {
                 newState.userArticles = theAction.articles;

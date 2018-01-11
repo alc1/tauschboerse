@@ -4,7 +4,7 @@ import NewTradePage from '../components/NewTradePage/NewTradePage';
 
 import { initTradeEditor, loadNewTrade, loadUserArticles, loadPartnerArticles, saveTrade, toggleUserArticle, togglePartnerArticle, setStepIndex, setUserArticleFilterText, setPartnerArticleFilterText } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
-import { getTrade, getArticle, getFilteredPartnerArticles, getFilteredUserArticles, getChosenPartnerArticles, getChosenUserArticles, getStepIndex, getUserArticleFilterText, getPartnerArticleFilterText } from '../store/selectors/trade';
+import { getTrade, getFilteredPartnerArticles, getFilteredUserArticles, getChosenPartnerArticles, getChosenUserArticles, getStepIndex, getUserArticleFilterText, getPartnerArticleFilterText } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
 import { isLoading } from '../store/selectors/application';
 

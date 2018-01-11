@@ -15,15 +15,26 @@ function resetData(dataCache) {
         return JSON.parse(contents);
     }
 
+    function getDate(val) {
+        return (val === 'NOW') ? new Date() : new Date(val);
+    }
+
     function loadData() {
         articles = loadJSONData('articles.json');
         categories = loadJSONData('categories.json');
         trades = loadJSONData('trades.json');
         users = loadJSONData('users.json');
 
-        // initialize registration date
+        // initialize registration date for users
         users.forEach(user => {
-            user.registration = new Date()
+            user.registration = getDate(user.registration);
+        });
+
+        // initialize created date for articles
+        articles.forEach(article => {
+            if (article.hasOwnProperty('created')) {
+                article.created = getDate(article.created);
+            }
         });
     }
 

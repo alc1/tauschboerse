@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import TradeAction from '../../constants/TradeAction';
 import Articles from '../Articles/Articles';
 import ActionBox from '../ActionBox/ActionBox';
 
@@ -28,7 +26,7 @@ class TradeDetail extends React.Component {
     };
 
     handleMakeOffer = () => {
-
+        this.props.submitTrade();
     };
 
     handleEditOffer = () => {

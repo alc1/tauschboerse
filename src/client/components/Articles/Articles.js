@@ -6,7 +6,6 @@ import Paper from 'material-ui/Paper';
 import SearchBar from 'material-ui-search-bar';
 
 import ArticleRowList from '../ArticleRowList/ArticleRowList';
-import ArticleSearchInput from '../ArticleSearchInput/ArticleSearchInput';
 
 import './Articles.css';
 

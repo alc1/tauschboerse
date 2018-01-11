@@ -18,7 +18,7 @@ function addTrade(req, res) {
         let trade = prepareNewTrade(articleIds, req.user);
 
         // save it and send it back to the caller
-        saveTrade(trade, res);
+        saveAndSendTrade(trade, res);
     } catch(e) {
         handleError(e);
     }
@@ -30,7 +30,7 @@ function setTradeArticles(req, res) {
         const { tradeId } = req.params;
         let trade = dataCache.getTrade(tradeId);
         checkTradeExists(trade);
-        checkUserIsPartOfTrade(req.user);
+        checkUserIsPartOfTrade(trade, req.user);
 
         // For trades being initialised the user can only change the articles if he or she created the trade
         if (trade.state === TradeState.TRADE_STATE_INIT) {
@@ -66,7 +66,7 @@ function setTradeArticles(req, res) {
         }
 
         // if the article(s) owner is not a part of this trade, send an error
-        checkUserIsPartOfTrade(articleOwners[0]);
+        checkUserIsPartOfTrade(trade, articleOwners[0]);
 
         // the user can modify the trade - first make a new copy
         trade = makeShallowCopy(trade);
@@ -85,7 +85,7 @@ function setTradeArticles(req, res) {
         }
 
         // save the changes and send response back to caller        
-        saveTrade(trade, res);
+        saveAndSendTrade(trade, res);
     } catch(e) {
         handleError(e, res);
     }
@@ -96,116 +96,13 @@ function setTradeArticles(req, res) {
 // POST /api/trades/{id}/state
 // ---------------------------
 function setTradeState(req, res) {
-
-    function prepareTradeCopy(trade, newState) {
-        let newTrade = makeShallowCopy(trade);
-        newTrade.state = newState;
-        newTrade.offers = trade.offers.slice();
-
-        return newTrade;
-    }
-
-    function setOfferState(offers, newState, idx = 0) {
-        let offer = makeShallowCopy(offers[idx]);
-        offer.state = newState;
-        offers[idx] = offer;
-
-        return offer;
-    }
-
-    function userHasPreparedCounteroffer(trade) {
-        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender === req.user) && (trade.offers.length > 1) && (trade.offers[1].state === OFFER_STATE_REQUESTED);
-    }
-
-    function currentOfferWasSentToUser(trade) {
-        return ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) || userHasPreparedCounteroffer(trade);
-    }
-
-    // TO DO: take counteroffer into account!!
-    function currentOfferWasMadeByUser(trade) {
-        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender === req.user);
-    }
-
-    // Sends a new offer to the trade partner, if the offer is valid
-    function setStateToRequested(trade) {
-        if ((trade.currentOffer.state === OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
-            setOfferState(newTrade.offers, OfferState.OFFER_STATE_REQUESTED);
-
-            // If this isn't the first offer, and the last offer is still in the requested state, then the user is now sending a counteroffer.
-            // When a counteroffer is sent, the received offer should be declined  automatically.
-            if ((newTrade.offers.length > 1) && (newTrade.offers[1].state === OfferState.OFFER_STATE_REQUESTED)) {
-                setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED, 1);
-            }
-
-            saveTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
-    }
-
-    // Accepts a received trade
-    function setStateToAccepted(trade) {
-        if (currentOfferWasSentToUser(trade)) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
-            setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
-            saveTrade(newTrade, res);
-            // TO DO: set the appropriate state of all traded articles
-            newTrade.currentOffer.articles.forEach(article => {
-                let copy = makeShallowCopy(article);
-                copy.state = ArticleStatus.STATUS_DEALED;
-                dataCache.saveArticle(copy);
-            });
-            // TO DO: set the appropriate state of all trades concerning any of the traded articles
-            let allTrades = [];
-            newTrade.currentOffer.articles.forEach(article => {
-                let trades = dataCache.getTradesByArticle(article._id, true);
-                trades.forEach(trade => {
-                    if ((trade._id !== newTrade._id) && (allTrades.indexOf(trade) < 0)) {
-                        allTrades.push(trade);
-                    }
-                });
-            });
-            allTrades.forEach(trade => {
-                let copy = makeShallowCopy(trade);
-                copy.removeCounteroffer();
-                setOfferState(copy.offers, OFFER_STATE_INVALIDATED);
-                dataCache.saveTrade(copy);
-            });
-        } else {
-            throw new ParameterValidationError(403);
-        }
-    }
-
-    // Declines a received trade
-    function setStateToDeclined(trade) {
-        if (currentOfferWasSentToUser(trade)) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
-            setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
-            saveTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
-    }
-
-    // Cancels the current offer
-    function setStateToCanceled(trade) {
-        if (currentOfferWasMadeByUser(trade)) {
-            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
-            setOfferState(newTrade.offers, (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED);
-            saveTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
-    }
-
     try {
         const { tradeId } = req.params;
         const trade = dataCache.getTrade(tradeId);
         checkTradeExists(trade);
-        checkUserIsPartOfTrade(req.user);
+        checkUserIsPartOfTrade(trade, req.user);
 
-        const newState = req.body.newState;
+        const newState = req.body.state;
         checkNewStateIsValid(newState);
 
         switch(newState) {
@@ -230,6 +127,139 @@ function setTradeState(req, res) {
         }
     } catch(e) {
         handleError(e, res);
+    }
+
+    // Sends a new offer to the trade partner, if the offer is valid
+    function setStateToRequested(trade) {
+        if ((trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender = req.user)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+            setOfferState(newTrade.offers, OfferState.OFFER_STATE_REQUESTED);
+
+            // If this isn't the first offer, and the last offer is still in the requested state, then the user is now sending a counteroffer.
+            // When a counteroffer is sent, the received offer should be declined  automatically.
+            if ((newTrade.offers.length > 1) && (newTrade.offers[1].state === OfferState.OFFER_STATE_REQUESTED)) {
+                setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED, 1);
+            }
+
+            // set state of all involved articles to 'DEALING'
+            setArticlesState(newTrade.currentOffer.articles, ArticleStatus.STATUS_DEALING);
+
+            // reset state of articles that were removed to make the current offer
+            let removedArticles = newTrade.getArticlesRemovedForCurentOffer();
+            let articlesToReset = removedArticles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 0));
+            setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
+
+            saveAndSendTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    // Accepts a received trade
+    function setStateToAccepted(trade) {
+        if (currentOfferWasSentToUser(trade)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
+            setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
+
+            setArticlesState(newTrade.currentOffer.articles, ArticleStatus.STATUS_DEALED);
+            findAndFlagInvalidTrades(newTrade.currentOffer.articles);
+
+            saveAndSendTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    // Declines a received trade
+    function setStateToDeclined(trade) {
+        if (currentOfferWasSentToUser(trade)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+            setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
+            saveAndSendTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    // Cancels the current offer
+    function setStateToCanceled(trade) {
+        if (currentOfferWasMadeByUser(trade)) {
+            let newTrade = prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
+            setOfferState(newTrade.offers, (offer.sender === req.user) ? OfferState.OFFER_STATE_WITHDRAWN : OfferState.OFFER_STATE_DECLINED);
+            saveAndSendTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    function prepareTradeCopy(trade, newState) {
+        let newTrade = makeShallowCopy(trade);
+        newTrade.state = newState;
+        newTrade.offers = trade.offers.slice();
+
+        return newTrade;
+    }
+
+    function setOfferState(offers, newState, idx = 0) {
+        let offer = makeShallowCopy(offers[idx]);
+        offer.state = newState;
+        offers[idx] = offer;
+
+        return offer;
+    }
+
+    function setArticlesState(articles, newStatus) {
+        let copy;
+
+        articles.forEach(async article => {
+            if (article.status !== newStatus) {
+                copy = makeShallowCopy(article);
+                copy.status = newStatus;
+                try {
+                    await dataCache.saveArticle(article);
+                } catch(e) {
+                    console.log(e);
+                }
+            }
+        });
+    }
+
+    function findAndFlagInvalidTrades(articles, ignoreTradeId) {
+        let invalidTrades = [];
+
+        // get list of trades with open offers for any of the given articles
+        articles.forEach(article => {
+            let trades = dataCache.getTradesByArticle(article._id, true);
+            trades.forEach(trade => {
+                if ((trade._id !== ignoreTradeId) && (invalidTrades.indexOf(trade) < 0)) {
+                    invalidTrades.push(trade);
+                }
+            });
+        });
+
+        // invalidate the open offers
+        invalidTrades.forEach(async trade => {
+            let copy = makeShallowCopy(trade);
+            setOfferState(copy.offers, OFFER_STATE_INVALIDATED, trade.hasCounteroffer ? 1 : 0);
+            try {
+                await dataCache.saveTrade(copy);
+            } catch(e) {
+                console.log(e);
+            }
+        });
+    }
+
+    function userHasPreparedCounteroffer(trade) {
+        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_INIT) && (trade.currentOffer.sender === req.user) && (trade.offers.length > 1) && (trade.offers[1].state === OFFER_STATE_REQUESTED);
+    }
+
+    function currentOfferWasSentToUser(trade) {
+        return ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user)) || userHasPreparedCounteroffer(trade);
+    }
+
+    // TO DO: take counteroffer into account!!
+    function currentOfferWasMadeByUser(trade) {
+        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender === req.user);
     }
 }
 
@@ -266,7 +296,7 @@ function getTrade(req, res) {
         const { tradeId } = req.params;
         let trade = findTrade(tradeId);
         checkTradeExists(trade);
-        checkUserIsPartOfTrade(req.user);
+        checkUserIsPartOfTrade(trade, req.user);
 
         res.json({ trade: trade });
     }
@@ -349,17 +379,17 @@ function getArticleOwners(articles, user) {
     return articleOwners;
 }
 
-function saveTrade(trade, res) {
+function saveAndSendTrade(trade, res) {
     dataCache.saveTrade(trade)
         .then(newTrade => { res.json(newTrade); })
-        .catch(err => { res.sendStatus(500).json(err); });
+        .catch(err => { res.status(500).json(err); });
 }
 
 function handleError(e, res) {
     if (e instanceof ParameterValidationError) {
-        res.sendStatus(e.statusCode).json(e.message);
+        res.status(e.statusCode).json(e.message);
     } else {
-        res.sendStatus(500).json(e);
+        res.status(500).json(e);
     }
 }
 

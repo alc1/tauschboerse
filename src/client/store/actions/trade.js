@@ -1,12 +1,10 @@
 import axios from 'axios';
 
 import { handleError } from './common';
-import TradeState from '../../../shared/constants/TradeState';
 import TradeModel from '../../model/TradeModel';
 
 import { getChosenPartnerArticles, getChosenUserArticles, getTrade } from '../selectors/trade.js';
 import { getUser } from '../selectors/user';
-import { execute, GET, DELETE, POST } from '../../util/api';
 
 /*
  * Action Type Constants
@@ -37,11 +35,6 @@ const tradeIsBeingFetched = () => ({
 
 const tradeNotFound = () => ({
     type: TRADE_NOT_FOUND
-});
-
-const articlesSaved = (theTrade) => ({
-    type: TRADE_ARTICLES_SAVED,
-    trade: theTrade
 });
 
 const articlesFetched = (theArticles, forUser) => ({
@@ -171,7 +164,7 @@ function setTradeState(theNewTradeState, dispatch, getState) {
     let trade = getTrade(currentState);
     let user = getUser(currentState);
 
-    return axios.put(`/api/trades/${trade._id}/state`, { state: theNewTradeState })
+    return axios.post(`/api/trades/${trade._id}/state`, { state: theNewTradeState })
         .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, user))))
         .catch(err => handleError(err, dispatch));
 }

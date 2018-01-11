@@ -4,7 +4,7 @@ import TradeDetailPage from '../components/TradeDetailPage/TradeDetailPage';
 
 import { acceptTrade, declineTrade, loadTrade, submitTrade } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
-import { getTrade, getPartnerArticles, getUserArticles } from '../store/selectors/trade';
+import { getTrade } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
 import { isLoading } from '../store/selectors/application';
 
