@@ -134,6 +134,7 @@ export default class PhotosComponent extends React.Component {
                             }
                             {showAddPhotoButton &&
                                 <IconButton
+                                    iconStyle={{ color: cyan500 }}
                                     tooltip="Erlaubte Maximalgrösse eines Bildes: 10MB"
                                     touch={true}
                                     tooltipPosition="bottom-left">

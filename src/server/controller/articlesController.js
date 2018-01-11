@@ -120,6 +120,13 @@ async function addPhoto(req, res) {
     const { photo } = req.body;
     let article = dataCache.getArticleById(articleId);
     if (article) {
+        let newFileName;
+        try {
+            newFileName = photosController.addPhotoForArticle(articleId, photo);
+        } catch (error) {
+            res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
+            return;
+        }
         const isNewMainPhoto = photo.isMain;
         let photos = article.photos.map(photo => {
             if (isNewMainPhoto) {
@@ -127,12 +134,11 @@ async function addPhoto(req, res) {
             }
             return photo;
         });
-        photos.push(new Photo(photo, articleId));
+        photos.push(new Photo(newFileName, isNewMainPhoto, articleId));
         let articleToSave = dataCache.prepareArticle(article, req.user);
         articleToSave.photos = photos;
         const savedArticle = await dataCache.saveArticle(articleToSave);
         if (savedArticle) {
-            photosController.addPhotoForArticle(articleId, photo);
             res.json({ article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
         }
         else {

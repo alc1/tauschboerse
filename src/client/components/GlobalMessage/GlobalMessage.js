@@ -6,6 +6,9 @@ import { orange500 } from 'material-ui/styles/colors';
 
 import { GO_TO_LOGIN, OK_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE } from '../../store/actions/application';
 
+const bodyStyle = { height: 'auto' };
+const contentStyle = { whiteSpace: 'pre-wrap' };
+
 export default class GlobalMessage extends React.Component {
 
     static propTypes = {
@@ -51,18 +54,22 @@ export default class GlobalMessage extends React.Component {
         else if (messageType === ERROR_MESSAGE) {
             borderColor = this.props.muiTheme.palette.accent1Color;
         }
-        const style = { border: `3px solid ${borderColor}`, borderRadius: '5px' };
+        const style = {
+            border: `3px solid ${borderColor}`,
+            borderRadius: '5px'
+        };
 
         return (
             <Snackbar
                 style={style}
+                bodyStyle={bodyStyle}
+                contentStyle={contentStyle}
                 open={openSnackbar}
                 message={messageText}
                 action={actionText}
                 onActionClick={action}
                 onRequestClose={this.props.removeGlobalMessage}
-                autoHideDuration={messageType === OK_MESSAGE ? 2000 : 0}
-            />
+                autoHideDuration={messageType === OK_MESSAGE ? 2000 : 0}/>
         );
     }
 }

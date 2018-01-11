@@ -2,11 +2,14 @@
 
 const fs = require('fs');
 const path = require('path');
+const uuid = require('uuid');
 
 function addPhotoForArticle(theArticleId, thePhoto) {
     const directory = getOrCreateArticleImagesDirectory(theArticleId);
     let imageBuffer = new Buffer(thePhoto.fileContent.substr(thePhoto.fileContent.indexOf(',') + 1), 'base64');
-    fs.writeFileSync(path.join(directory, thePhoto.fileName), imageBuffer);
+    const newUniqueFileName = createUniqueFileName(directory, thePhoto.fileName);
+    fs.writeFileSync(path.join(directory, newUniqueFileName), imageBuffer);
+    return newUniqueFileName;
 }
 
 function deletePhotoForArticle(theArticleId, theFileName) {
@@ -49,6 +52,17 @@ function getOrCreateArticleImagesRootDirectory() {
         fs.mkdirSync(articleImagesDirectory);
     }
     return articleImagesDirectory;
+}
+
+function createUniqueFileName(theArticleDirectory, theFileName) {
+    let newFileName;
+    let foundFile;
+    const files = fs.readdirSync(theArticleDirectory);
+    do {
+        newFileName = uuid.v1() + theFileName.substr(theFileName.lastIndexOf('.'));
+        foundFile = files.find(file => file === newFileName);
+    } while (foundFile);
+    return newFileName;
 }
 
 module.exports = {
