@@ -216,7 +216,7 @@ function setTradeState(req, res) {
                 copy = makeShallowCopy(article);
                 copy.status = newStatus;
                 try {
-                    await dataCache.saveArticle(article);
+                    await dataCache.saveArticle(copy);
                 } catch(e) {
                     console.log(e);
                 }
@@ -381,7 +381,7 @@ function getArticleOwners(articles, user) {
 
 function saveAndSendTrade(trade, res) {
     dataCache.saveTrade(trade)
-        .then(newTrade => { res.json(newTrade); })
+        .then(newTrade => { res.json({ trade: newTrade }); })
         .catch(err => { res.status(500).json(err); });
 }
 

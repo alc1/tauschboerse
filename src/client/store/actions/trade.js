@@ -115,7 +115,7 @@ export const saveTrade = () => (dispatch, getState) => {
     }
 
     return op
-        .then(response => dispatch(tradeFetched(new TradeModel(response.data, user))))
+        .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, user))))
         .catch(err => handleError(err, dispatch));
 };
 
