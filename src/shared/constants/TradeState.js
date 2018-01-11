@@ -36,7 +36,7 @@ function getDescription(theStatus) {
 function getColor(theStatus) {
     switch (theStatus) {
         case TRADE_STATE_INIT:
-            return '#9E9E9E';
+            return '#82B1FF';
         case TRADE_STATE_IN_NEGOTIATION:
             return '#FFA000';
         case TRADE_STATE_COMPLETED:

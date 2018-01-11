@@ -36,7 +36,7 @@ function getDescription(theStatus) {
 function getColor(theStatus) {
     switch (theStatus) {
         case STATUS_FREE:
-            return '#9E9E9E';
+            return '#82B1FF';
         case STATUS_DEALING:
             return '#FFA000';
         case STATUS_DEALED:

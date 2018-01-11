@@ -18,6 +18,10 @@ class TradeModel {
         return this.trade._id;
     }
 
+    get state() {
+        return this.trade.state;
+    }
+
     get createDate() {
         return this.trade.createDate;
     }
