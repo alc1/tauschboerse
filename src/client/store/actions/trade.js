@@ -6,7 +6,6 @@ import TradeModel from '../../model/TradeModel';
 
 import { getChosenPartnerArticles, getChosenUserArticles, getTrade } from '../selectors/trade.js';
 import { getUser } from '../selectors/user';
-import { execute, GET, DELETE, POST } from '../../util/api';
 
 /*
  * Action Type Constants

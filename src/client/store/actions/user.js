@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { globalMessageReceived, OK_MESSAGE } from './application';
 import { JWT_TOKEN_KEY } from '../../constants/jwt';
 import { handleError } from './common';
-import { execute, GET, POST, PUT } from '../../util/api';
+import { setApiToken, removeApiToken } from '../../util/serverApi';
 
 /*
  * Action Type Constants
@@ -68,7 +68,7 @@ const userTradesSectionOpened = (theUserTradesSectionIndex) => ({
  */
 
 export const login = (user) => dispatch =>
-    execute(POST, '/api/users/auth', { user })
+    axios.post('/api/users/auth', { user })
         .then(response => onTokenReceived(response.data.token, dispatch, userLoggedIn))
         .catch(err => handleError(err, dispatch));
 
@@ -77,22 +77,22 @@ export const logout = () => dispatch => {
 };
 
 export const createUser = (user) => dispatch =>
-    execute(POST, '/api/users', { user })
+    axios.post('/api/users', { user })
         .then(response => onTokenReceived(response.data.token, dispatch, userCreated))
         .catch(err => handleError(err, dispatch));
 
 export const updateUser = (user) => dispatch =>
-    execute(PUT, `/api/users/${user._id}`, { user })
+    axios.put(`/api/users/${user._id}`, { user })
         .then(response => onTokenReceived(response.data.token, dispatch, userUpdated))
         .catch(err => handleError(err, dispatch));
 
 export const loadUserArticles = (theUserId) => dispatch =>
-    execute(GET, `/api/users/${theUserId}/articles`)
+    axios.get(`/api/users/${theUserId}/articles`)
         .then(response => dispatch(userArticlesFetched(response.data.articles)))
         .catch(err => handleError(err, dispatch));
 
 export const loadUserTrades = (theUserId) => dispatch =>
-    execute(GET, `/api/users/${theUserId}/trades`)
+    axios.get(`/api/users/${theUserId}/trades`)
         .then(response => dispatch(userTradesFetched(response.data.trades)))
         .catch(err => handleError(err, dispatch));
 
@@ -113,7 +113,7 @@ const onTokenReceived = (token, dispatch, actionCreator) => {
 };
 
 export const setToken = (token, dispatch, actionCreator) => {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    setApiToken(token);
     const user = jwt.decode(token);
     dispatch(actionCreator(user));
 };
@@ -121,7 +121,7 @@ export const setToken = (token, dispatch, actionCreator) => {
 export const removeToken = (dispatch, showLogoutMessage) => {
     localStorage.removeItem(JWT_TOKEN_KEY);
     sessionStorage.removeItem(JWT_TOKEN_KEY);
-    delete axios.defaults.headers.common['Authorization'];
+    removeApiToken();
     dispatch(userLoggedOut());
     if (showLogoutMessage) {
         dispatch(globalMessageReceived({
