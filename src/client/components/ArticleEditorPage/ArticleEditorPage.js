@@ -196,7 +196,7 @@ export default class ArticleEditorPage extends React.Component {
                     });
             }
             articleSaveRequest.catch((err) => {
-                this.setState({ errors: err.response.data.errors || {} });
+                this.setState({ errors: err.response || err.response.data || err.response.data.errors || {} });
             });
         }
         else {

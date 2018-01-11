@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { handleError } from './common';
+import { loadingStateReceived } from './application';
 import { getUser } from '../selectors/user';
 
 import TradesModel from '../../model/TradesModel';
@@ -50,54 +51,79 @@ export const selectedArticleRemoved = () => ({
 export const loadArticle = (theArticleId) => (dispatch, getState) =>
     axios.get(`/api/articles/${theArticleId}`)
         .then(response => dispatch(articleFetched(extendArticleWithTrades(response.data.article, response.data.trades, getUser(getState())))))
-        .catch((err) => handleError(err, dispatch));
+        .catch(err => handleError(err, dispatch));
 
-export const createArticle = (article, photos) => dispatch =>
-    axios.post('/api/articles', { article })
-        .then(articleResponse => {
+export const createArticle = (article, photos) => dispatch => {
+    dispatch(loadingStateReceived(true));
+    return axios.post('/api/articles', { article })
+        .then(async articleResponse => {
             if (photos.length > 0) {
-                const allPhotoRequests = photos.map(photo => wrapIgnorablePromise(axios.post(`/api/articles/${articleResponse.data.article._id}/photos`, { photo })));
-                return Promise.all(allPhotoRequests)
-                    .then(allResponses => {
-                        let reverseResponses = allResponses.reverse();
-                        for (let lastSuccessfulResponse of reverseResponses) {
-                            if (lastSuccessfulResponse) {
-                                return dispatch(articleCreated(lastSuccessfulResponse.data.article));
-                            }
-                        }
-                        return dispatch(articleCreated(articleResponse.data.article));
-                    });
+                let lastSuccessfulResult;
+                for (let photo of photos) {
+                    let currentResult = await handlePromiseErrorAsNull(axios.post(`/api/articles/${articleResponse.data.article._id}/photos`, { photo }));
+                    if (currentResult) {
+                        lastSuccessfulResult = currentResult;
+                    }
+                }
+                if (lastSuccessfulResult) {
+                    return dispatch(articleCreated(lastSuccessfulResult.data.article));
+                }
+                else {
+                    return dispatch(articleCreated(articleResponse.data.article));
+                }
             }
             else {
                 return dispatch(articleCreated(articleResponse.data.article));
             }
         })
-        .catch((err) => handleError(err, dispatch));
+        .then(response => {
+            dispatch(loadingStateReceived(false));
+            return response;
+        })
+        .catch(err => {
+            dispatch(loadingStateReceived(false));
+            handleError(err, dispatch);
+        });
+};
 
-export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (dispatch, getState) =>
-    axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
-        .then(articleResponse => {
+export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (dispatch, getState) => {
+    dispatch(loadingStateReceived(true));
+    return axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
+        .then(async articleResponse => {
             if (addedPhotos.length > 0 || removedPhotos.length > 0) {
-                const allPhotoRequests = [
-                    ...addedPhotos.map(photo => wrapIgnorablePromise(axios.post(`/api/articles/${article._id}/photos`, { photo }))),
-                    ...removedPhotos.map(photo => wrapIgnorablePromise(axios.delete(`/api/articles/${article._id}/photos/${photo.fileName}`, { photo })))
-                ];
-                return Promise.all(allPhotoRequests)
-                    .then(allResponses => {
-                        let reverseResponses = allResponses.reverse();
-                        for (let lastSuccessfulResponse of reverseResponses) {
-                            if (lastSuccessfulResponse) {
-                                return dispatch(articleUpdated(extendArticleWithTrades(lastSuccessfulResponse.data.article, lastSuccessfulResponse.data.trades, getUser(getState()))));
-                            }
-                        }
-                        return dispatch(articleUpdated(extendArticleWithTrades(articleResponse.data.article, articleResponse.data.trades, getUser(getState()))));
-                    });
+                let lastSuccessfulResult;
+                for (let photo of addedPhotos) {
+                    let currentResult = await handlePromiseErrorAsNull(axios.post(`/api/articles/${article._id}/photos`, { photo }));
+                    if (currentResult) {
+                        lastSuccessfulResult = currentResult;
+                    }
+                }
+                for (let photo of removedPhotos) {
+                    let currentResult = await handlePromiseErrorAsNull(axios.delete(`/api/articles/${article._id}/photos/${photo.fileName}`, { photo }));
+                    if (currentResult) {
+                        lastSuccessfulResult = currentResult;
+                    }
+                }
+                if (lastSuccessfulResult) {
+                    return dispatch(articleUpdated(extendArticleWithTrades(lastSuccessfulResult.data.article, lastSuccessfulResult.data.trades, getUser(getState()))));
+                }
+                else {
+                    return dispatch(articleUpdated(extendArticleWithTrades(articleResponse.data.article, articleResponse.data.trades, getUser(getState()))));
+                }
             }
             else {
                 return dispatch(articleUpdated(extendArticleWithTrades(articleResponse.data.article, articleResponse.data.trades, getUser(getState()))));
             }
         })
-        .catch((err) => handleError(err, dispatch));
+        .then(response => {
+            dispatch(loadingStateReceived(false));
+            return response;
+        })
+        .catch(err => {
+            dispatch(loadingStateReceived(false));
+            handleError(err, dispatch);
+        });
+};
 
 export const deleteArticle = (ownerId, articleId) => (dispatch, getState) =>
     axios.delete(`/api/users/${ownerId}/articles/${articleId}`)
@@ -111,7 +137,7 @@ export const deleteArticle = (ownerId, articleId) => (dispatch, getState) =>
                 }
             }
         })
-        .catch((err) => handleError(err, dispatch));
+        .catch(err => handleError(err, dispatch));
 
 export const removeSelectedArticle = () => dispatch => {
     dispatch(selectedArticleRemoved());
@@ -125,21 +151,10 @@ const extendArticleWithTrades = (theArticle, theTrades, theUser) => {
     return article;
 };
 
-/*
- * Wraps the given Promise into a Promise which ignores an error. Goal is to use it with Promise.all where
- * one failing Promise must not break the others. In other words it makes a failing Promise to a successful
- * Promise with the return value of null which can be handled later.
- */
-function wrapIgnorablePromise(thePromiseToIgnoreIfFailing) {
-    return new Promise((resolve, reject) => {
-        thePromiseToIgnoreIfFailing
-            .then(result => {
-                resolve(result);
-            })
-            .catch((err) => {
-                reject(null);
-            });
-    }).catch((err) => {
-        return err;
-    });
+async function handlePromiseErrorAsNull(theRequestPromise) {
+    try {
+        return await theRequestPromise;
+    } catch (error) {
+        return null;
+    }
 }
