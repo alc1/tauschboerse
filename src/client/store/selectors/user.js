@@ -19,16 +19,22 @@ export const getFilteredUserArticles = (theState) => {
     return sortUserArticles(filteredArticles);
 };
 
-export const getUserTrades = (theState) => theState[USER_SLICE_NAME].trades || initialUserTrades;
+export const getUserTrades = (theState) => {
+    return theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].trades || initialUserTrades : initialUserTrades;
+};
 
-export const getUser = (theState) => theState[USER_SLICE_NAME].user || initialUser;
+export const getUser = (theState) => {
+    return theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].user : initialUser;
+};
 
 export const getUserId = (theState) => {
     const user = getUser(theState);
     return user ? user._id : null;
 };
 
-export const getUserArticlesFilter = (theState) => theState[USER_SLICE_NAME].userArticlesFilter || initialUserArticlesFilter;
+export const getUserArticlesFilter = (theState) => {
+    return theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].userArticlesFilter || initialUserArticlesFilter : initialUserArticlesFilter;
+};
 
 export const getUserTradesSectionIndex = (theState) => {
     const trades = new TradesModel(getUserTrades(theState), getUser(theState));
@@ -36,7 +42,7 @@ export const getUserTradesSectionIndex = (theState) => {
 };
 
 const getCurrentUserTradesSectionIndex = (theState, hasNewTrades, hasReceivedTrades, hasSentTrades, hasCompletedTrades, hasCanceledTrades) => {
-    let storedUserTradesSectionIndex = theState[USER_SLICE_NAME].userTradesSectionIndex || null;
+    let storedUserTradesSectionIndex = theState[USER_SLICE_NAME] ? theState[USER_SLICE_NAME].userTradesSectionIndex : null;
     if (typeof storedUserTradesSectionIndex === 'number') {
         return storedUserTradesSectionIndex;
     }
@@ -60,7 +66,9 @@ const getCurrentUserTradesSectionIndex = (theState, hasNewTrades, hasReceivedTra
     }
 };
 
-const getUserArticlesInternal = (theState) => theState[USER_SLICE_NAME].articles || initialUserArticles;
+const getUserArticlesInternal = (theState) => {
+    return theState[USER_SLICE_NAME] && theState[USER_SLICE_NAME].articles ? theState[USER_SLICE_NAME].articles : initialUserArticles;
+};
 
 const applyArticleFilter = (theArticles, theUserArticlesFilter) => {
     if (!theUserArticlesFilter) {
