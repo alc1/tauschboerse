@@ -103,8 +103,7 @@ class TradeModel {
     }
 
     get cannotSubmit() {
-        return (this.isNew && ((this.currentOffer.userArticles.length === 0) || (this.currentOffer.tradePartnerArticles.length === 0)))
-            || (this.isMakingCounteroffer && ((this.counteroffer.userArticles.length === 0) || (this.counteroffer.tradePartnerArticles.length === 0)));
+        return (this.isNew && this.currentOffer.isValid) || (this.isMakingCounteroffer && this.counteroffer.isValid);
     }
 
     get requiresInputFromUser() {

@@ -8,6 +8,12 @@ import Articles from '../Articles/Articles';
 
 import './TradeEditor.css';
 
+const STEP_IDX_PARTNER_ARTICLES = 0;
+const STEP_IDX_USER_ARTICLES = 1;
+const STEP_IDX_SUMMARY = 2;
+
+const STEP_LAST_IDX = 2;
+
 export default class TradeEditor extends React.Component {
 
     static propTypes = {
@@ -30,12 +36,12 @@ export default class TradeEditor extends React.Component {
     };
 
     static defaultProps = {
-        stepIndex: 0,
+        stepIndex: 0
     }
 
-    canGoToPreviousStep = () => this.props.stepIndex > 0
+    canGoToPreviousStep = () => this.props.stepIndex > 0;
 
-    canGotoNextStep = () => this.props.stepIndex < 3
+    canGotoNextStep = () => this.props.stepIndex < STEP_LAST_IDX;
 
     handlePrev = () => {
         if (this.canGoToPreviousStep()) {
@@ -49,8 +55,36 @@ export default class TradeEditor extends React.Component {
         }
     };
 
-    renderIntro() {
-        return <p>Intro</p>;
+    getStepTitle() {
+        switch(this.props.stepIndex) {
+            case STEP_IDX_PARTNER_ARTICLES:
+                return 'Auswahl der gewünschten Artikel';
+
+            case STEP_IDX_USER_ARTICLES:
+                return 'Auswahl der eigenen Artikel';
+
+            case STEP_IDX_SUMMARY:
+                return 'Zusammenfassung';
+
+            default:
+                return 'INFO: Unbekannter Schritt!';
+        }
+    }
+
+    getStepDescription() {
+        switch(this.props.stepIndex) {
+            case STEP_IDX_PARTNER_ARTICLES:
+                return `Du kannst ein oder mehrere Artikel zum Tauschen auswählen. Du kannst aber nur Artikel von ${this.props.trade.tradePartner.name} auswählen.`;
+
+            case STEP_IDX_USER_ARTICLES:
+                return 'Du kannst ein oder mehrere eigenen Artikel zum Tauschen auswählen.';
+
+            case STEP_IDX_SUMMARY:
+                return 'Hier kannst Du sehen, welche Artikel Du ausgewählt hast. Wenn alles in Ordnung ist, kannst Du Deine Änderungen speichern.';
+
+            default:
+                return '';
+        }
     }
 
     renderPartnerArticleChooser() {
@@ -58,8 +92,8 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
-                <Articles articles={this.props.chosenPartnerArticles} title="Bla bla bla" isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.togglePartnerArticle} />
-                <Articles articles={otherPartnerArticles} title="Bla bla bla" isEditing={true} selected={false} filtering={true} filterText={this.props.partnerArticleFilterText} onFilterChange={this.props.setPartnerArticleFilterText} onToggleArticle={this.props.togglePartnerArticle} />
+                <Articles articles={this.props.chosenPartnerArticles} title={this.props.trade.partnerArticlesListTitle} isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.togglePartnerArticle} />
+                <Articles articles={otherPartnerArticles} title={`Weitere Artikel von ${this.props.trade.tradePartner.name}, die Du auswählen könntest`} isEditing={true} selected={false} filtering={true} filterText={this.props.partnerArticleFilterText} onFilterChange={this.props.setPartnerArticleFilterText} onToggleArticle={this.props.togglePartnerArticle} />
             </div>
         );
     }
@@ -69,18 +103,17 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
-                <Articles articles={this.props.chosenUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.toggleUserArticle} />
-                <Articles articles={otherUserArticles} title="Du bietest dafür folgende Artikel an:" isEditing={true} selected={false} filtering={true} filterText={this.props.userArticleFilterText} onFilterChange={this.props.setUserArticleFilterText} onToggleArticle={this.props.toggleUserArticle} />
+                <Articles articles={this.props.chosenUserArticles} title={this.props.trade.userArticlesListTitle} isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.toggleUserArticle} />
+                <Articles articles={otherUserArticles} title="Weitere Artikel, die Du anbieten könntest:" isEditing={true} selected={false} filtering={true} filterText={this.props.userArticleFilterText} onFilterChange={this.props.setUserArticleFilterText} onToggleArticle={this.props.toggleUserArticle} />
             </div>
         );
     }
 
-    renderSaveChanges() {
+    renderSummary() {
         return (
             <div>
-                <Articles articles={this.props.chosenPartnerArticles} title="Bla bla bla" />
-                <Articles articles={this.props.chosenUserArticles} title="Du bietest dafür folgende Artikel an:" />
-                <RaisedButton label="Speichern" primary={true} onClick={this.props.onSave} />
+                <Articles articles={this.props.chosenPartnerArticles} title={this.props.trade.partnerArticlesListTitle} />
+                <Articles articles={this.props.chosenUserArticles} title={this.props.trade.userArticlesListTitle} />
             </div>
         );
     }
@@ -91,17 +124,14 @@ export default class TradeEditor extends React.Component {
 
     renderStep() {
         switch(this.props.stepIndex) {
-            case 0:
-                return this.renderIntro();
-
-            case 1:
+            case STEP_IDX_PARTNER_ARTICLES:
                 return this.renderPartnerArticleChooser();
 
-            case 2:
+            case STEP_IDX_USER_ARTICLES:
                 return this.renderUserArticleChooser();
 
-            case 3:
-                return this.renderSaveChanges();
+            case STEP_IDX_SUMMARY:
+                return this.renderSummary();
 
             default:
                 return this.renderError();
@@ -109,12 +139,22 @@ export default class TradeEditor extends React.Component {
     }
 
     render() {
-        let title = this.props.trade ? `Tauschgeschäft mit ${this.props.trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft';
+        let title = this.props.trade ? `Tauschgeschäft mit ${this.props.trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft bearbeiten';
+        let stepTitle = this.getStepTitle();
+        let stepDescription = this.getStepDescription();
+
+        let nextButton;
+        if (this.props.stepIndex === STEP_LAST_IDX) {
+            nextButton = <RaisedButton label="Speichern" secondary={true} onClick={this.props.onSave} />;
+        } else {
+            nextButton = <RaisedButton label="Nächster Schritt" primary={true} onClick={this.handleNext} />;
+        }
+
         let navigation = (
             <div className="trade-editor__navigation-buttons">
+                <FlatButton label="Abbrechen" onClick={this.props.onCancel} style={{marginRight: '48px'}} />
                 <FlatButton label="Voriger Schritt" disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: '12px'}} />
-                <RaisedButton label="Nächster Schritt" disabled={!this.canGotoNextStep()} primary={true} onClick={this.handleNext} style={{marginRight: '48px'}} />
-                <FlatButton label="Abbrechen" onClick={this.props.onCancel} />
+                {nextButton}
             </div>
         );
 
@@ -124,27 +164,28 @@ export default class TradeEditor extends React.Component {
                     <h1 className="nowrap">{title}</h1>
                     <Stepper linear={false} activeStep={this.props.stepIndex}>
                         <Step>
-                            <StepButton onClick={() => this.props.setStepIndex(0)}>
-                                Intro
-                            </StepButton>
-                        </Step>
-                        <Step>
-                            <StepButton onClick={() => this.props.setStepIndex(1)}>
+                            <StepButton onClick={() => this.props.setStepIndex(STEP_IDX_PARTNER_ARTICLES)}>
                                 Gewünschte Artikel auswählen
                             </StepButton>
                         </Step>
                         <Step>
-                            <StepButton onClick={() => this.props.setStepIndex(2)}>
+                            <StepButton onClick={() => this.props.setStepIndex(STEP_IDX_USER_ARTICLES)}>
                                 Artikel um Tauschen
                             </StepButton>
                         </Step>
                         <Step>
-                            <StepButton onClick={() => this.props.setStepIndex(3)}>
-                                Speichern
+                            <StepButton onClick={() => this.props.setStepIndex(STEP_IDX_SUMMARY)}>
+                                Zusammenfassung
                             </StepButton>
                         </Step>
                     </Stepper>
                     {navigation}
+                </div>
+                <div className="trade-editor__info-container">
+                    <div>
+                        <div>{stepTitle}</div>
+                        <div>{stepDescription}</div>
+                    </div>
                 </div>
                 <div className="trade-editor__step-container">
                     {this.renderStep()}

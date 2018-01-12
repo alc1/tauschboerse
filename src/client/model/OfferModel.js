@@ -1,3 +1,5 @@
+const ArticleStatus = require('../../shared/constants/ArticleStatus');
+
 class OfferModel {
     constructor(offer, user) {
         this.offer = offer;
@@ -31,6 +33,10 @@ class OfferModel {
     get userArticles() {
         this.prepareArticleLists();
         return this._userArticles;
+    }
+
+    get isValid() {
+        return this.articles.every(article => (article.status === ArticleStatus.STATUS_FREE) || (article.status === ArticleStatus.STATUS_DEALING)) && (this.userArticles.length > 0) && (this.tradePartnerArticles.length > 0);
     }
 
     prepareArticleLists() {
