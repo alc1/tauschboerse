@@ -101,11 +101,13 @@ export default function trade(theState = initialState, theAction) {
             };
 
         case TRADE_FETCHED:
+            let offer = theAction.trade.isMakingCounteroffer ? theAction.trade.counteroffer : theAction.trade.currentOffer;
+
             return {
                 ...theState,
                 trade: theAction.trade,
-                chosenUserArticles: theAction.trade.userArticles.slice(),
-                chosenPartnerArticles: theAction.trade.tradePartnerArticles.slice()
+                chosenUserArticles: offer.userArticles.slice(),
+                chosenPartnerArticles: offer.tradePartnerArticles.slice()
             };
 
         case TRADE_NOT_FOUND:

@@ -55,14 +55,82 @@ class TradeDetail extends React.Component {
         this.handleEditOffer();
     }
 
-    generateContentForNewTrade() {
-        let tradePartnerArticlesTitle = `Du möchtest folgende Artikel von ${this.props.trade.tradePartner.name}:`;
+    renderDescription(trade) {
+        let content;
+        
+        if (trade) {
+            if (trade.isNew) {
+                content = `Dieses Tauschgeschäft ist neu. Sobald Du die gewünschten Artikel und die Artikel, die Du hergeben willst, zusammengestellt hast, kannst Du den Tauschvorschlag ${trade.tradePartner.name} unterbreiten.`;
+            } else if (trade.isUserSender) {
+                if (trade.isDeclined) {
 
-        return (
-            <div>
-                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
-                <Articles articles={this.props.trade.userArticles} title="Du bietest dafür folgende Artikel an:" />
-                <section>
+                } else if (trade.isInvalidated) {
+
+                } else {
+
+                }
+            } else {
+                if (trade.isDeclined) {
+
+                } else if (trade.isInvalidated) {
+
+                } else {
+
+                }
+            }
+        } else {
+            content = 'Es gibt kein Tauschgeschäft mit der angegebenen Id.';
+        }
+
+        return content;
+    }
+
+    renderHints(trade) {
+        let content = null;
+
+        if (trade) {
+            if (trade.isUserSender) {
+
+            } else {
+
+            }
+        }
+
+        return content;
+    }
+
+    renderArticles(trade) {
+        let content = null;
+
+        if (trade) {
+            let offer = trade.isMakingCounteroffer ? trade.counteroffer : trade.currentOffer;
+
+            if (trade.isUserSender) {
+                content = (
+                    <div>
+                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle} />
+                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle} />
+                    </div>
+                );
+            } else if (trade.isUserReceiver) {
+                content = (
+                    <div>
+                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle} />
+                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle} />
+                    </div>
+                );
+            }
+        }
+
+        return content;
+    }
+
+    renderActions(trade) {
+        let content = null;
+
+        if (trade) {
+            if (trade.isNew) {
+                content = (
                     <div className="trade-detail__actions-container">
                         <ActionBox title="Senden" text="Sie können ">
                             <RaisedButton data-button-id="makeOffer" label="Senden" disabled={this.props.trade.cannotSubmit} onClick={this.handleMakeOffer} />
@@ -74,111 +142,101 @@ class TradeDetail extends React.Component {
                             <RaisedButton data-button-id="editOffer" label="Löschen" onClick={this.handleDeleteOffer} />
                         </ActionBox>
                     </div>
-                </section>
-            </div>
-        );
-    }
-    
-    generateContentForMadeOffer() {
-        let tradePartnerArticlesTitle = `Du möchtest folgende Artikel von ${this.props.trade.tradePartner.name}:`;
+                );
+            } else if (trade.isUserSender) {
+                if (trade.isInvalidated || trade.isDeclined) {
+                    if (trade.isMakingCounteroffer) {
+                        content = (
+                            <div className="trade-detail__actions-container">
+                                <ActionBox title="Senden" text="Sie können ">
+                                    <RaisedButton data-button-id="makeOffer" label="Senden" disabled={this.props.trade.cannotSubmit} onClick={this.handleMakeOffer} />
+                                </ActionBox>
+                                <ActionBox title="Bearbeiten" text="Sie haben den Handel [xy] nocht nicht unterbreitet. Sie können den Vorschlag bearbeiten.">
+                                    <RaisedButton data-button-id="editOffer" label="Bearbeiten" onClick={this.handleEditOffer} />
+                                </ActionBox>
+                                <ActionBox title="Löschen" text="Sie haben den Handel [xy] noch nicht unterbreitet. Sie können den Vorschlag löschen.">
+                                    <RaisedButton data-button-id="editOffer" label="Löschen" onClick={this.handleDeleteOffer} />
+                                </ActionBox>
+                            </div>
+                        );
+                    } else {
+                        content = (
+                            <div className="trade-detail__actions-container">
+                                <ActionBox title="Den Angebot zurückziehen" text="Tauschvorschlag zurückziehen">
+                                    <RaisedButton data-button-id="withdrawOffer" label="Zurückziehen" onClick={this.handleWithdrawOffer}/>
+                                </ActionBox>
+                                <ActionBox title="Ein Gegenangebot machen" text="Angebot machen">
+                                    <RaisedButton data-button-id="makeCounteroffer" label="Gegenangebot erstellen" onClick={this.handleMakeCounteroffer}/>
+                                </ActionBox>
+                            </div>
+                        );
+                    }
+                } else {
+                    content = (
+                        <div className="trade-detail__actions-container">
+                            <ActionBox title="Den Angebot zurückziehen" text="Tauschvorschlag zurückziehen">
+                                <RaisedButton data-button-id="withdrawOffer" label="Zurückziehen" onClick={this.handleWithdrawOffer}/>
+                            </ActionBox>
+                        </div>
+                    );
+                }
+            } else if (trade.isUserReceiver) {
+                if (!(trade.isDeclined || trade.isInvalidated)) {
+                    if (trade.isMakingCounteroffer) {
+                        content = (
+                            <div className="trade-detail__actions-container">
+                                <ActionBox title="Senden" text="Sie können ">
+                                    <RaisedButton data-button-id="makeOffer" label="Senden" disabled={this.props.trade.cannotSubmit} onClick={this.handleMakeOffer} />
+                                </ActionBox>
+                                <ActionBox title="Bearbeiten" text="Sie haben den Handel [xy] nocht nicht unterbreitet. Sie können den Vorschlag bearbeiten.">
+                                    <RaisedButton data-button-id="editOffer" label="Bearbeiten" onClick={this.handleEditOffer} />
+                                </ActionBox>
+                                <ActionBox title="Löschen" text="Sie haben den Handel [xy] noch nicht unterbreitet. Sie können den Vorschlag löschen.">
+                                    <RaisedButton data-button-id="editOffer" label="Löschen" onClick={this.handleDeleteOffer} />
+                                </ActionBox>
+                            </div>
+                        );
+                    } else {
+                        content = (
+                            <div className="trade-detail__actions-container">
+                                <ActionBox title="Den Handel zustimmen" text="Zustimmen">
+                                    <RaisedButton data-button-id="accept" label="Zustimmen" onClick={this.handleAccept}/>
+                                </ActionBox>
+                                <ActionBox title="Den Angebot ablehnen" text="Ablehnen">
+                                    <RaisedButton data-button-id="decline" label="Ablehnen" onClick={this.handleDecline}/>
+                                </ActionBox>
+                                <ActionBox title="Ein Gegenangebot machen" text="Angebot machen">
+                                    <RaisedButton data-button-id="makeCounteroffer" label="Gegenangebot erstellen" onClick={this.handleMakeCounteroffer}/>
+                                </ActionBox>
+                            </div>
+                        );
+                    }
+                }
+            } else {
 
-        return (
-            <div>
-                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
-                <Articles articles={this.props.trade.userArticles} title="Du hast dafür folgende Artikel angeboten:" />
-                <section>
-                    <div className="trade-detail__actions-container">
-                        <ActionBox title="Den Angebot zurückziehen" text="Tauschvorschlag zurückziehen">
-                            <RaisedButton data-button-id="withdrawOffer" label="Zurückziehen" onClick={this.handleWithdrawOffer}/>
-                        </ActionBox>
-                    </div>
-                </section>
-            </div>
-        );
-    }
+            }
+        }
 
-    generateContentForReceivedOffer() {
-        let tradePartnerArticlesTitle = `${this.props.trade.tradePartner.name} möchte folgende Artikel von Dir:`;
-        
-        return (
-            <div>
-                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
-                <Articles articles={this.props.trade.userArticles} title="Dafür bietet er/sie Dir folgende Artikel an:" />
-                <section>
-                    <div className="trade-detail__actions-container">
-                        <ActionBox title="Den Handel zustimmen" text="Zustimmen">
-                            <RaisedButton data-button-id="accept" label="Zustimmen" onClick={this.handleAccept}/>
-                        </ActionBox>
-                        <ActionBox title="Den Angebot machen" text="Ablehnen">
-                            <RaisedButton data-button-id="decline" label="Ablehnen" onClick={this.handleDecline}/>
-                        </ActionBox>
-                        <ActionBox title="Den Angebot machen" text="Angebot machen">
-                            <RaisedButton data-button-id="makeCounteroffer" label="Gegenangebot erstellen" onClick={this.handleMakeCounteroffer}/>
-                        </ActionBox>
-                    </div>
-                </section>
-            </div>
-        );
-    }
-
-    generateContentForCounterOffer() {
-
-    }
-
-    generateContentForDeclinedOffer() {
-
-    }
-
-    generateContentForCompletedTrade() {
-
-    }
-
-    generateContentForCanceledTrade() {
-        let tradePartnerArticlesTitle = `Du wolltest folgende Artikel von ${this.props.trade.tradePartner.name}:`;
-        
-        return (            
-            <div>
-                <section>
-                    Dieses Tauschgeschäft wurde abgebrochen
-                </section>
-                <Articles articles={this.props.trade.tradePartnerArticles} title={tradePartnerArticlesTitle} />
-                <Articles articles={this.props.trade.userArticles} title="Dafür botst Du folgende Artikel an:" />
-            </div>
-        );
-    }
-
-    generateContentForUnforeseenState() {
-        return (
-            <div>Das Tauschgeschäft ist in einem unvorhergesehenen Zustand geraten - die Entwickler müssen wieder 'ran!</div>
-        );
+        return content;
     }
 
     render() {
-        let title = this.props.trade ? <h1>Tauschgeschäft mit {this.props.trade.tradePartner.name}</h1> : <h1>Unbekanntes Tauschgeschäft</h1>;
-
-        let content = null;
-        if (this.props.trade.isNew) {
-            content = this.generateContentForNewTrade();
-        } else if (this.props.trade.hasMadeCurrentOffer) {
-            content = this.generateContentForMadeOffer();
-        } else if (this.props.trade.requiresInputFromUser) {
-            content = this.generateContentForReceivedOffer();
-        } else if (this.props.trade.isMakingCounteroffer) {
-            content = this.generateContentForCounterOffer();
-        } else if (this.props.trade.isDeclined) {
-            content = this.generateContentForDeclinedOffer();
-        } else if (this.props.trade.isCompleted) {
-            content = this.generateContentForCompletedTrade();
-        } else if (this.props.trade.isCanceled) {
-            content = this.generateContentForCanceledTrade();
-        } else {
-            content = this.generateContentForUnforeseenState();
-        }
+        const { trade } = this.props;
+        const title = trade ? `Tauschgeschäft mit ${trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft';
+        const description = this.renderDescription(trade);
+        const hints = this.renderHints(trade);
+        const articles = this.renderArticles(trade);
+        const actions = this.renderActions(trade);
 
         return (
             <div className="base-page">
-                {title}
-                {content}
+                <h1>{title}</h1>
+                <div className="trade-detail__info-container">
+                    <div className="trade-detail__description">{description}</div>
+                    <div className="trade-detail__hints">{hints}</div>
+                </div>
+                {articles}
+                {actions}
             </div>
         );
     }

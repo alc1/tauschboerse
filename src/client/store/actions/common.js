@@ -24,6 +24,7 @@ export const handleError = (error, dispatch) => {
         }
     }
     else if (error.message) {
+        console.log(error);
         dispatch(globalMessageReceived({
             messageText: error.message,
             messageType: ERROR_MESSAGE
