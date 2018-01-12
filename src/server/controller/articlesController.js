@@ -15,7 +15,15 @@ const dataCache = require('../services/DataCache').dataCache;
 
 function getArticlesByOwner(req, res) {
     const { userId } = req.params;
-    res.json({ articles: dataCache.getArticlesByOwner(userId) || [] });
+    const { onlyAvailable } = req.query;
+
+    let articles = dataCache.getArticlesByOwner(userId) || [];
+
+    if (onlyAvailable === '1') {
+        articles = articles.filter(article => (article.status === ArticleStatus.STATUS_FREE) || (article.status === ArticleStatus.STATUS_DEALING));
+    }
+
+    res.json({ articles: articles });
 }
 
 function getArticleById(req, res) {
@@ -107,7 +115,7 @@ function findArticles(req, res) {
     const { text } = req.query;
 
     // only available articles should be considered
-    let articles = dataCache.getAllArticles().filter(a => (a.status != ArticleStatus.STATUS_DEALED) && (a.status != ArticleStatus.STATUS_DELETED));
+    let articles = dataCache.getAllArticles().filter(a => (a.status !== ArticleStatus.STATUS_DEALED) && (a.status !== ArticleStatus.STATUS_DELETED));
 
     res.json({
         articles: filterArticles(text, articles),

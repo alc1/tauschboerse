@@ -182,7 +182,7 @@ function setTradeState(theNewTradeState, dispatch, getState) {
 }
 
 function loadArticlesByUserId(theUserId, forUser, dispatch) {
-    return axios.get(`/api/users/${theUserId}/articles`)
+    return axios.get(`/api/users/${theUserId}/articles?onlyAvailable=1`)
         .then(response => dispatch(articlesFetched(response.data.articles, forUser)))
         .catch(err => handleError(err, dispatch));
 }

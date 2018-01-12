@@ -58,7 +58,7 @@ class TradeModel {
     }
 
     get isMakingCounteroffer() {
-        return this.hasCounteroffer && this.isUserReceiver;
+        return this.hasCounteroffer && ((this.isUserReceiver && !(this.isDeclined || this.isInvalidated)) || (this.isUserSender && (this.isDeclined || this.isInvalidated)));
     }
 
     get hasMadeCurrentOffer() {
@@ -102,6 +102,11 @@ class TradeModel {
         return (this.trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
     }
 
+    get cannotSubmit() {
+        return (this.isNew && ((this.currentOffer.userArticles.length === 0) || (this.currentOffer.tradePartnerArticles.length === 0)))
+            || (this.isMakingCounteroffer && ((this.counteroffer.userArticles.length === 0) || (this.counteroffer.tradePartnerArticles.length === 0)));
+    }
+
     get requiresInputFromUser() {
         return this.hasCounteroffer || this.canMakeCounteroffer;
     }
@@ -114,6 +119,14 @@ class TradeModel {
         return !this.isUserSender;
     }
 
+    get userHasDelivered() {
+        return this.isUser(this.trade.user1) ? this.trade.user1HasDelivered : this.trade.user2HasDelivered;
+    }
+
+    get tradePartnerHasDelivered() {
+        return this.isUser(this.trade.user1) ? this.trade.user2HasDelivered : this.trade.user1HasDelivered;
+    }
+
     get userArticlesListTitle() {
         let text;
 
@@ -121,7 +134,11 @@ class TradeModel {
             if (this.isNew) {
                 text = (this.currentOffer.userArticles.length === 1) ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
             } else if (this.isCompleted) {
-                text = (this.currentOffer.userArticles.length === 1) ? `Du hast ${this.tradePartner.name} das folgende Artikel gegeben` : `Du hast ${this.tradePartner.name} die folgenden Artikel gegeben`;
+                if (this.userHasDelivered) {
+                    text = (this.currentOffer.userArticles.length === 1) ? `Du hast ${this.tradePartner.name} das folgende Artikel gegeben` : `Du hast ${this.tradePartner.name} die folgenden Artikel gegeben`;
+                } else {
+                    text = (this.currentOffer.userArticles.length === 1) ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
+                }
             } else if (this.isCanceled) {
                 text = (this.currentOffer.userArticles.length === 1) ? `Du hast ${this.tradePartner.name} das folgende Artikel angeboten` : `Du hast ${this.tradePartner.name} die folgenden Artikel angeboten`;
             } else if (this.isOpen) {
@@ -131,7 +148,11 @@ class TradeModel {
             }
         } else {
             if (this.isCompleted) {
-                text = (this.currentOffer.userArticles.length === 1) ? `${this.tradePartner.name} hat das folgende Artikel von Dir erhalten` : `${this.tradePartner.name} hat die folgenden Artikel von Dir erhalten`;
+                if (this.tradePartnerHasDelivered) {
+                    text = (this.currentOffer.userArticles.length === 1) ? `${this.tradePartner.name} hat das folgende Artikel von Dir erhalten` : `${this.tradePartner.name} hat die folgenden Artikel von Dir erhalten`;
+                } else {
+                    text = (this.currentOffer.userArticles.length === 1) ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
+                }
             } else if (this.isCanceled) {
                 text = (this.currentOffer.userArticles.length === 1) ? `${this.tradePartner.name} hat sich das folgende Artikel von Dir gewünscht` : `${this.tradePartner.name} hat sich die folgenden Artikel von Dir gewünscht`;
             } else if (this.isOpen) {
@@ -151,7 +172,11 @@ class TradeModel {
             if (this.isNew) {
                 text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
             } else if (this.isCompleted) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du hast das folgende Artikel von ${this.tradePartner.name} erhalten` : `Du hast die folgenden Artikel von ${this.tradePartner.name} erhalten`;
+                if (this.tradePartnerHasDelivered) {
+                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du hast das folgende Artikel von ${this.tradePartner.name} erhalten` : `Du hast die folgenden Artikel von ${this.tradePartner.name} erhalten`;
+                } else {
+                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du erhälst das folgende Artikel von ${this.tradePartner.name}` : `Du erhälst die folgenden Artikel von ${this.tradePartner.name}`;
+                }
             } else if (this.isCanceled) {
                 text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du hast Dir das folgende Artikel von ${this.tradePartner.name} gewünscht` : `Du hast Dir die folgenden Artikel von ${this.tradePartner.name} gewünscht`;
             } else if (this.isOpen) {
@@ -161,13 +186,17 @@ class TradeModel {
             }
         } else {
             if (this.isCompleted) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du hast das folgende Artikel von ${this.tradePartner.name} erhalten` : `Du hast die folgenden Artikel von ${this.tradePartner.name} erhalten`;
+                if (this.tradePartnerHasDelivered) {
+                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} hat Dir das folgende Artikel gegeben` : `${this.tradePartner.name} hat Dir die folgenden Artikel gegeben`;
+                } else {
+                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} gibt Dir das folgende Artikel` : `${this.tradePartner.name}  gibt Dir die folgenden Artikel`;
+                }
             } else if (this.isCanceled) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du hast Dir das folgende Artikel von ${this.tradePartner.name} gewünscht` : `Du hast Dir die folgenden Artikel von ${this.tradePartner.name} gewünscht`;
+                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} hat Dir das folgende Artikel angeboten` : `${this.tradePartner.name} hat Dir die folgenden Artikel angeboten`;
             } else if (this.isOpen) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
             } else {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
             }
         }
 

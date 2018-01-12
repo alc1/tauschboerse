@@ -55,6 +55,10 @@ class TradeDetail extends React.Component {
         this.handleEditOffer();
     }
 
+    handleDelivered = () => {
+
+    }
+
     renderDescription(trade) {
         let content;
         
@@ -144,7 +148,17 @@ class TradeDetail extends React.Component {
                     </div>
                 );
             } else if (trade.isUserSender) {
-                if (trade.isInvalidated || trade.isDeclined) {
+                if (trade.isFinished) {
+                    if (trade.isCompleted && !trade.userHasDelivered) {
+                        content = (
+                            <div className="trade-detail__actions-container">
+                                <ActionBox title="Die Artikel abgeben" text={`Wenn Du Deine Artikel ${trade.tradePartner.name} gesendet hast, kannst Du hier angeben, dass sie auf dem Weg sind.`}>
+                                    <RaisedButton data-button-id="delivered" label="Artikel abgegeben" onClick={this.handleDelivered}/>
+                                </ActionBox>
+                            </div>
+                        );
+                    }
+                } else if (trade.isInvalidated || trade.isDeclined) {
                     if (trade.isMakingCounteroffer) {
                         content = (
                             <div className="trade-detail__actions-container">
@@ -181,7 +195,17 @@ class TradeDetail extends React.Component {
                     );
                 }
             } else if (trade.isUserReceiver) {
-                if (!(trade.isDeclined || trade.isInvalidated)) {
+                if (trade.isFinished) {
+                    if (trade.isCompleted && !trade.userHasDelivered) {
+                        content = (
+                            <div className="trade-detail__actions-container">
+                                <ActionBox title="Die Artikel abgeben" text={`Wenn Du Deine Artikel ${trade.tradePartner.name} gesendet hast, kannst Du hier angeben, dass sie auf dem Weg sind.`}>
+                                    <RaisedButton data-button-id="delivered" label="Artikel abgegeben" onClick={this.handleDelivered}/>
+                                </ActionBox>
+                            </div>
+                        );
+                    }
+                } else if (!(trade.isDeclined || trade.isInvalidated)) {
                     if (trade.isMakingCounteroffer) {
                         content = (
                             <div className="trade-detail__actions-container">
