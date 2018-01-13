@@ -144,6 +144,10 @@ function setTradeState(req, res) {
                 setStateToDeclined(trade);
                 break;
 
+            case 'DELIVERED':
+                setStateToDelivered(trade);
+                break;
+
             case 'REQUESTED':
                 setStateToRequested(trade);
                 break;
@@ -153,6 +157,78 @@ function setTradeState(req, res) {
         }
     } catch(e) {
         handleError(e, res);
+    }
+
+    // Accepts a received trade
+    function setStateToAccepted(trade) {
+        if (currentOfferWasSentToUser(trade)) {
+            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
+            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
+
+            setArticlesState(newTrade.currentOffer.articles, ArticleStatus.STATUS_DEALED);
+            commonController.findAndFlagInvalidTrades(newTrade.currentOffer.articles);
+
+            saveAndSendTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    // Cancels the current offer
+    function setStateToCanceled(trade) {
+        if (currentOfferWasMadeByUser(trade)) {
+            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
+            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_WITHDRAWN);
+
+            // reset article states, now that trade has been canceled
+            let articlesToReset = newTrade.currentOffer.articles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 1));
+            setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
+
+            saveAndSendTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    // Declines a received trade
+    function setStateToDeclined(trade) {
+        if (currentOfferWasSentToUser(trade)) {
+            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
+            saveAndSendTrade(newTrade, res);
+        } else {
+            throw new ParameterValidationError(403);
+        }
+    }
+
+    //
+    function setStateToDelivered(trade) {
+        checkTradeIsCompleted(trade);
+
+        let skipSave, newTrade;
+
+        // check if flag has to be set
+        if (req.user === trade.user1) {
+            skipSave = trade.user1HasDelivered;
+        } else {
+            skipSave = trade.user2HasDelivered;
+        }
+
+        // if flag must be set do it
+        if (!skipSave) {
+            newTrade = commonController.prepareTradeCopy(trade, trade.state);
+            if (req.user === trade.user1) {
+                newTrade.user1HasDelivered = true;
+            } else {
+                newTrade.user2HasDelivered = true;
+            }
+        } else {
+            // although no changes were made, the method returns the trade to the caller
+            newTrade = trade;
+        }
+
+        // return to caller after saving changes if required
+        saveAndSendTrade(newTrade, res, skipSave);
     }
 
     // Sends a new offer to the trade partner, if the offer is valid
@@ -173,48 +249,6 @@ function setTradeState(req, res) {
             // reset state of articles that were removed to make the current offer
             let removedArticles = newTrade.getArticlesRemovedForCurentOffer();
             let articlesToReset = removedArticles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 0));
-            setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
-
-            saveAndSendTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
-    }
-
-    // Accepts a received trade
-    function setStateToAccepted(trade) {
-        if (currentOfferWasSentToUser(trade)) {
-            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
-            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
-
-            setArticlesState(newTrade.currentOffer.articles, ArticleStatus.STATUS_DEALED);
-            commonController.findAndFlagInvalidTrades(newTrade.currentOffer.articles);
-
-            saveAndSendTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
-    }
-
-    // Declines a received trade
-    function setStateToDeclined(trade) {
-        if (currentOfferWasSentToUser(trade)) {
-            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
-            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
-            saveAndSendTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
-    }
-
-    // Cancels the current offer
-    function setStateToCanceled(trade) {
-        if (currentOfferWasMadeByUser(trade)) {
-            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
-            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_WITHDRAWN);
-
-            // reset article states, now that trade has been canceled
-            let articlesToReset = newTrade.currentOffer.articles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 1));
             setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
 
             saveAndSendTrade(newTrade, res);
@@ -290,6 +324,19 @@ function getTrade(req, res) {
     }
 }
 
+function getTradeVersion(req, res) {
+    try {
+        const { tradeId } = req.params;
+        let trade = findTrade(tradeId);
+        checkTradeExists(trade);
+        checkUserIsPartOfTrade(trade, req.user);
+
+        res.json({ versionstamp: trade.versionstamp });
+    } catch(e) {
+        handleError(e, res);
+    }
+}
+
 // prepares a new trade for the given article and returns it to the caller without saving it in the db
 function getNewTrade(req, res) {
     try {
@@ -352,10 +399,16 @@ function getArticleOwners(articles, user) {
     return articleOwners;
 }
 
-function saveAndSendTrade(trade, res) {
-    dataCache.saveTrade(trade)
-        .then(newTrade => { res.json({ trade: newTrade }); })
-        .catch(err => { res.status(500).json(err); });
+function saveAndSendTrade(trade, res, skipSave = false) {
+    if (skipSave) {
+        res.json({ trade: trade });
+    } else {
+        dataCache.saveTrade(trade)
+            .then(newTrade => {
+                res.json({ trade: newTrade });
+            })
+            .catch(err => { res.status(500).json(err); });
+    }
 }
 
 function handleError(e, res) {
@@ -378,8 +431,14 @@ function checkUserIsPartOfTrade(trade, user) {
     }
 }
 
+function checkTradeIsCompleted(trade) {
+    if (trade.state !== TradeState.TRADE_STATE_COMPLETED) {
+        throw new ParameterValidationError(403, 'Delivered can only be set on a completed trade');
+    }
+}
+
 // Valid states
-const validStates = ['ACCEPTED', 'CANCELED', 'DECLINED', 'REQUESTED'];
+const validStates = ['ACCEPTED', 'CANCELED', 'DECLINED', 'DELIVERED', 'REQUESTED'];
 
 function checkNewStateIsValid(value) {
     if (validStates.indexOf(value.toUpperCase()) < 0) {
@@ -395,5 +454,6 @@ module.exports = {
     getTradesByUser,
     getTrades,
     getTrade,
+    getTradeVersion,
     getNewTrade
 };
