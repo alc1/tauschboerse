@@ -23,3 +23,11 @@
     display: flex;
     flex-flow: row wrap;
 }
+
+.trade-detail__update-message {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    color: red;
+}

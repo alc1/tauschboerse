@@ -21,6 +21,7 @@ export const TRADE_STEP_INDEX_SET = 'TRADE_STEP_INDEX_SET';
 export const TRADE_PAGE_NUM_SET = 'TRADE_PAGE_NUM_SET';
 export const TRADE_ARTICLE_FILTER_TEXT_SET = 'TRADE_ARTICLE_FILTERTEXT_SET';
 export const TRADE_EDITOR_INITIALISED = 'TRADE_EDITOR_INITIALISED';
+export const TRADE_NEW_VERSION_AVAILABLE = 'TRADE_NEW_VERSION_AVAILABLE';
 
 /*
  * Action Creators
@@ -37,6 +38,10 @@ const tradeIsBeingFetched = () => ({
 
 const tradeNotFound = () => ({
     type: TRADE_NOT_FOUND
+});
+
+const newTradeVersionAvailable = () => ({
+    type: TRADE_NEW_VERSION_AVAILABLE
 });
 
 const tradeDeleted = () => ({
@@ -90,12 +95,25 @@ export const loadTrade = (theTradeId) => (dispatch, getState) => {
         });
 };
 
+export const checkForUpdatedTrade = () => (dispatch, getState) => {
+    let trade = getTrade(getState());
+
+    axios.get(`/api/trades/${trade._id}/version`, { headers: { 'x-no-set-loading': true }})
+        .then(response => {
+            if (trade.isOutOfDate(response.data.versionstamp)) {
+                dispatch(newTradeVersionAvailable());
+            }
+        })
+        .catch((err) => {
+            // not important, just ignore it
+            console.log(err);
+        });
+}
+
 export const loadNewTrade = (theArticleId) => (dispatch, getState) => {
     dispatch(tradeIsBeingFetched());
     return axios.get(`/api/trades/new/${theArticleId}`)
-        .then(
-            response => dispatch(tradeFetched(new TradeModel(response.data.trade, getUser(getState()))))
-         )
+        .then(response => dispatch(tradeFetched(new TradeModel(response.data.trade, getUser(getState())))))
         .catch((err) => {
             handleError(err, dispatch);
             return dispatch(tradeNotFound());
@@ -153,6 +171,10 @@ export const acceptTrade = () => (dispatch, getState) => {
 export const declineTrade = () => (dispatch, getState) => {
     return setTradeState('DECLINED', dispatch, getState);
 };
+
+export const setDelivered = () => (dispatch, getState) => {
+    return setTradeState('DELIVERED', dispatch, getState);
+}
 
 export const setStepIndex = (theStepIndex) => (dispatch) => {
     return dispatch(stepIndexSet(theStepIndex));

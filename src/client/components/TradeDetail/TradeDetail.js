@@ -10,25 +10,30 @@ import './TradeDetail.css';
 class TradeDetail extends React.Component {
 
     static propTypes = {
+        history: PropTypes.object.isRequired,
+        newVersionAvailable: PropTypes.bool.isRequired,
+        onAcceptTrade: PropTypes.func.isRequired,
+        onDeclineTrade: PropTypes.func.isRequired,
+        onDeleteTrade: PropTypes.func.isRequired,
+        onRefresh: PropTypes.func.isRequired,
+        onSetDelivered: PropTypes.func.isRequired,
+        onSubmitTrade: PropTypes.func.isRequired,
+        onWithdrawTrade: PropTypes.func.isRequired,
         trade: PropTypes.object,
-        user: PropTypes.object.isRequired,
-        loading: PropTypes.bool.isRequired,
-        loadTrade: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
-        submitTrade: PropTypes.func.isRequired,
-        acceptTrade: PropTypes.func.isRequired,
-        declineTrade: PropTypes.func.isRequired,
-        withdrawTrade: PropTypes.func.isRequired,
-        deleteTrade: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired
+        user: PropTypes.object.isRequired
     };
 
     static defaultProps = {
-        trade: null
+        trade: null,
+        newVersionAvailable: false
     };
 
+    handleUpdate = () => {
+        this.props.onRefresh();
+    }
+
     handleMakeOffer = () => {
-        this.props.submitTrade();
+        this.props.onSubmitTrade();
     };
 
     handleEditOffer = () => {
@@ -36,19 +41,19 @@ class TradeDetail extends React.Component {
     }
 
     handleDeleteOffer = () => {
-        this.props.deleteTrade();
+        this.props.onDeleteTrade();
     }
 
     handleWithdrawOffer = () => {
-        this.props.withdrawTrade();
+        this.props.onWithdrawTrade();
     }
 
     handleAccept = () => {
-        this.props.acceptTrade();
+        this.props.onAcceptTrade();
     }
 
     handleDecline = () => {
-        this.props.declineTrade();
+        this.props.onDeclineTrade();
     }
 
     handleMakeCounteroffer = () => {
@@ -56,7 +61,7 @@ class TradeDetail extends React.Component {
     }
 
     handleDelivered = () => {
-
+        this.props.onSetDelivered();
     }
 
     renderDescription(trade) {
@@ -244,23 +249,34 @@ class TradeDetail extends React.Component {
         return content;
     }
 
+    renderUpdateMessage() {
+        let content = null;
+
+        if (this.props.newVersionAvailable) {
+            content = (
+                <div className="trade-detail__update-message">
+                    <RaisedButton label="Aktualisieren" onClick={this.handleUpdate} /><span style={{marginLeft: '20px'}}>Das Tauschgeschäft wurde verändert - Du kannst die Anzeige aktualisieren</span>
+                </div>
+            );
+        }
+
+        return content;
+    }
+
     render() {
         const { trade } = this.props;
         const title = trade ? `Tauschgeschäft mit ${trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft';
-        const description = this.renderDescription(trade);
-        const hints = this.renderHints(trade);
-        const articles = this.renderArticles(trade);
-        const actions = this.renderActions(trade);
 
         return (
             <div className="base-page">
                 <h1>{title}</h1>
+                {this.renderUpdateMessage()}
                 <div className="trade-detail__info-container">
-                    <div className="trade-detail__description">{description}</div>
-                    <div className="trade-detail__hints">{hints}</div>
+                    <div className="trade-detail__description">{this.renderDescription(trade)}</div>
+                    <div className="trade-detail__hints">{this.renderHints(trade)}</div>
                 </div>
-                {articles}
-                {actions}
+                {this.renderArticles(trade)}
+                {this.renderActions(trade)}
             </div>
         );
     }

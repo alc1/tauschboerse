@@ -1,15 +1,16 @@
 import {
+    TRADE_ARTICLE_FILTER_TEXT_SET,
+    TRADE_ARTICLE_TOGGLED,
+    TRADE_ARTICLES_FETCHED,
+    TRADE_ARTICLES_SAVED,
+    TRADE_DELETED,
+    TRADE_EDITOR_INITIALISED,
     TRADE_FETCHED,
     TRADE_FETCHING,
+    TRADE_NEW_VERSION_AVAILABLE,
     TRADE_NOT_FOUND,
-    TRADE_DELETED,
-    TRADE_ARTICLES_SAVED,
-    TRADE_ARTICLES_FETCHED,
-    TRADE_ARTICLE_TOGGLED,
-    TRADE_STEP_INDEX_SET,
     TRADE_PAGE_NUM_SET,
-    TRADE_EDITOR_INITIALISED,
-    TRADE_ARTICLE_FILTER_TEXT_SET
+    TRADE_STEP_INDEX_SET
 } from '../actions/trade';
 
 import ArticlesInfo from '../../model/ArticlesInfo';
@@ -17,6 +18,7 @@ import ArticlesInfo from '../../model/ArticlesInfo';
 export const initialState = {
     trade: null,
     notFound: false,
+    newVersionAvailable: false,
     stepIndex: 0,
     userArticlesInfo: new ArticlesInfo(),
     partnerArticlesInfo: new ArticlesInfo()
@@ -77,7 +79,8 @@ export default function trade(theState = initialState, theAction) {
             return {
                 ...theState,
                 trade: null,
-                notFound: false
+                notFound: false,
+                newVersionAvailable: false
             };
 
         case TRADE_FETCHED:
@@ -120,6 +123,12 @@ export default function trade(theState = initialState, theAction) {
             }
 
             return newState;
+
+        case TRADE_NEW_VERSION_AVAILABLE:
+            return {
+                ...theState,
+                newVersionAvailable: true
+            };
 
         default:
             return theState;

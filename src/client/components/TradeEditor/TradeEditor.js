@@ -169,7 +169,7 @@ export default class TradeEditor extends React.Component {
     }
 
     render() {
-        let title = this.props.trade ? `Tauschgeschäft mit ${this.props.trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft bearbeiten';
+        let title = this.props.trade ? `Tauschgeschäft mit ${this.props.trade.tradePartner.name} bearbeiten` : 'Unbekanntes Tauschgeschäft bearbeiten';
         let stepTitle = this.getStepTitle();
         let stepDescription = this.getStepDescription();
 

@@ -103,7 +103,11 @@ class TradeModel {
     }
 
     get cannotSubmit() {
-        return (this.isNew && this.currentOffer.isValid) || (this.isMakingCounteroffer && this.counteroffer.isValid);
+        return !((this.isNew && this.currentOffer.isValid) || (this.isMakingCounteroffer && this.counteroffer.isValid));
+    }
+
+    get watchForUpdates() {
+        return this.isOpen || (this.isCompleted && !this.tradePartnerHasDelivered);
     }
 
     get requiresInputFromUser() {
@@ -124,6 +128,14 @@ class TradeModel {
 
     get tradePartnerHasDelivered() {
         return this.isUser(this.trade.user1) ? this.trade.user2HasDelivered : this.trade.user1HasDelivered;
+    }
+
+    get canEdit() {
+        return this.isNew || this.isMakingCounteroffer;
+    }
+
+    isOutOfDate(versionstamp) {
+        return this.trade.versionstamp !== versionstamp;
     }
 
     userArticlesListTitle(onlyOneArticle) {
@@ -208,10 +220,6 @@ class TradeModel {
         }
 
         return text;
-    }
-
-    get canEdit() {
-        return this.isNew || this.isMakingCounteroffer;
     }
 
     isUser(user) {
