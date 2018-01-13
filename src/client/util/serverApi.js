@@ -5,17 +5,23 @@ import store from '../store/store';
 
 export const setupApiInterceptors = () => {
     axios.interceptors.request.use((config) => {
-        store.dispatch(loadingStateReceived(true));
+        if (!(config.headers && config.headers['x-no-set-loading'])) {
+            store.dispatch(loadingStateReceived(true));
+        }
         return config;
     }, (error) => {
         return Promise.reject(error);
     });
 
     axios.interceptors.response.use((response) => {
-        store.dispatch(loadingStateReceived(false));
+        if (!(response.config.headers && response.config.headers['x-no-set-loading'])) {
+            store.dispatch(loadingStateReceived(false));
+        }
         return response;
     }, (error) => {
-        store.dispatch(loadingStateReceived(false));
+        if (!(error.config && error.config.headers && error.config.headers['x-no-set-loading'])) {
+            store.dispatch(loadingStateReceived(false));
+        }
         return Promise.reject(error);
     });
 };
