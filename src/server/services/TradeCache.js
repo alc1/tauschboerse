@@ -140,7 +140,9 @@ class TradeCache {
         rec.user1HasDelivered = trade.user1HasDelivered;
         rec.user2HasDelivered = trade.user2HasDelivered;
         
+        // change versionstamp to next available value and update the cached record too
         rec.versionstamp = this.getNextVersionstamp();
+        trade.versionstamp = rec.versionstamp;
 
         return rec;
     }
