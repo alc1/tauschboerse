@@ -2,9 +2,9 @@ import { connect } from 'react-redux';
 
 import NewTradePage from '../components/NewTradePage/NewTradePage';
 
-import { initTradeEditor, loadNewTrade, loadUserArticles, loadPartnerArticles, saveTrade, toggleUserArticle, togglePartnerArticle, setStepIndex, setUserArticleFilterText, setPartnerArticleFilterText } from '../store/actions/trade';
+import { initTradeEditor, loadNewTrade, loadPartnerArticles, loadUserArticles, saveTrade, setFilterText, setPageNum, setStepIndex, toggleArticle } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
-import { getTrade, getFilteredPartnerArticles, getFilteredUserArticles, getChosenPartnerArticles, getChosenUserArticles, getStepIndex, getUserArticleFilterText, getPartnerArticleFilterText } from '../store/selectors/trade';
+import { getPartnerArticlesInfo, getStepIndex, getTrade, getUserArticlesInfo } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
 import { isLoading } from '../store/selectors/application';
 
@@ -14,25 +14,20 @@ function mapStateToProps(theState) {
         user: getUser(theState),
         stepIndex: getStepIndex(theState),
         loading: isLoading(theState),
-        userArticles: getFilteredUserArticles(theState),
-        partnerArticles: getFilteredPartnerArticles(theState),
-        chosenUserArticles: getChosenUserArticles(theState),
-        chosenPartnerArticles: getChosenPartnerArticles(theState),
-        userArticleFilterText: getUserArticleFilterText(theState),
-        partnerArticleFilterText: getPartnerArticleFilterText(theState)
+        userArticlesInfo: getUserArticlesInfo(theState),
+        partnerArticlesInfo: getPartnerArticlesInfo(theState)
     };
 }
 
 export default connect(mapStateToProps, {
-    loadNewTrade,
-    saveTrade,
-    setLoading,
     initTradeEditor,
-    loadUserArticles,
+    loadNewTrade,
     loadPartnerArticles,
-    toggleUserArticle,
-    togglePartnerArticle,
+    loadUserArticles,
+    saveTrade,
+    setFilterText,
+    setLoading,
+    setPageNum,
     setStepIndex,
-    setUserArticleFilterText,
-    setPartnerArticleFilterText
+    toggleArticle
 })(NewTradePage);

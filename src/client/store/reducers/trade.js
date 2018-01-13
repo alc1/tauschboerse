@@ -7,51 +7,20 @@ import {
     TRADE_ARTICLES_FETCHED,
     TRADE_ARTICLE_TOGGLED,
     TRADE_STEP_INDEX_SET,
+    TRADE_PAGE_NUM_SET,
     TRADE_EDITOR_INITIALISED,
     TRADE_ARTICLE_FILTER_TEXT_SET
 } from '../actions/trade';
 
-import filterArticles from '../../../shared/filterArticles';
+import ArticlesInfo from '../../model/ArticlesInfo';
 
 export const initialState = {
     trade: null,
     notFound: false,
     stepIndex: 0,
-    userArticleFilterText: '',
-    partnerArticleFilterText: '',
-    userArticles: [],
-    partnerArticles: [],
-    chosenUserArticles: [],
-    chosenPartnerArticles: [],
-    filteredUserArticles: [],
-    filteredPartnerArticles: []
+    userArticlesInfo: new ArticlesInfo(),
+    partnerArticlesInfo: new ArticlesInfo()
 };
-
-function toggleArticle(article, chosenArticles) {
-    let idx = chosenArticles.findIndex(a => a._id === article._id);
-
-    let newChosenArticles;
-
-    if (idx < 0) {
-        newChosenArticles = [
-            ...chosenArticles,
-            article
-        ];
-    } else {
-        newChosenArticles = [
-            ...chosenArticles.slice(0, idx),
-            ...chosenArticles.slice(idx + 1)
-        ];
-    }
-
-    return newChosenArticles;
-}
-
-function filterAndSortArticles(text, articles) {
-    let filteredArticles = (text.length > 0) ? filterArticles(text, articles) : articles.slice();
-
-    return filteredArticles.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
-}
 
 export default function trade(theState = initialState, theAction) {
     let newState;
@@ -61,21 +30,17 @@ export default function trade(theState = initialState, theAction) {
             return {
                 ...theState,
                 stepIndex: 0,
-                userArticleFilterText: '',
-                partnerArticleFilterText: '',
-                filteredUserArticles: filterAndSortArticles('', theState.userArticles),
-                filteredPartnerArticles: filterAndSortArticles('', theState.partnerArticles)
+                userArticlesInfo: new ArticlesInfo(theState.userArticlesInfo).setFiltertext(''),
+                partnerArticlesInfo: new ArticlesInfo(theState.partnerArticlesInfo).setFiltertext('')
             };
 
         case TRADE_ARTICLE_FILTER_TEXT_SET:
             newState = { ...theState };
 
             if (theAction.forUser) {
-                newState.userArticleFilterText = theAction.text;
-                newState.filteredUserArticles = filterAndSortArticles(theAction.text, theState.userArticles);
+                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).setFiltertext(theAction.text);
             } else {
-                newState.partnerArticleFilterText = theAction.text;
-                newState.filteredPartnerArticles = filterAndSortArticles(theAction.text, theState.partnerArticles);
+                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).setFiltertext(theAction.text);
             }
 
             return newState;
@@ -86,12 +51,27 @@ export default function trade(theState = initialState, theAction) {
                 stepIndex: theAction.stepIndex
             };
 
+        case TRADE_PAGE_NUM_SET:
+            newState = { ...theState };
+
+            if (theAction.forUser) {
+                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).setPageNum(theAction.pageNum);
+            } else {
+                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).setPageNum(theAction.pageNum);
+            }
+
+            return newState;
+
         case TRADE_ARTICLE_TOGGLED:
-            return {
-                ...theState,
-                chosenPartnerArticles: theAction.forUser ? theState.chosenPartnerArticles : toggleArticle(theAction.article, theState.chosenPartnerArticles),
-                chosenUserArticles: theAction.forUser ? toggleArticle(theAction.article, theState.chosenUserArticles) : theState.chosenUserArticles
-            };
+            newState = { ...theState };
+
+            if (theAction.forUser) {
+                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).toggleArticle(theAction.article);
+            } else {
+                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).toggleArticle(theAction.article);
+            }
+
+            return newState;
 
         case TRADE_FETCHING:
             return {
@@ -106,8 +86,8 @@ export default function trade(theState = initialState, theAction) {
             return {
                 ...theState,
                 trade: theAction.trade,
-                chosenUserArticles: offer.userArticles.slice(),
-                chosenPartnerArticles: offer.tradePartnerArticles.slice()
+                userArticlesInfo: new ArticlesInfo(theState.userArticlesInfo).setChosenArticles(offer.userArticles.slice()),
+                partnerArticlesInfo: new ArticlesInfo(theState.partnerArticlesInfo).setChosenArticles(offer.tradePartnerArticles.slice())
             };
 
         case TRADE_NOT_FOUND:
@@ -121,8 +101,8 @@ export default function trade(theState = initialState, theAction) {
                 ...theState,
                 trade: null,
                 notFound: true,
-                chosenUserArticles: [],
-                chosenPartnerArticles: [],
+                userArticlesInfo: new ArticlesInfo(),
+                partnerArticlesInfo: new ArticlesInfo()
             };
 
         case TRADE_ARTICLES_SAVED:
@@ -134,11 +114,9 @@ export default function trade(theState = initialState, theAction) {
             newState = { ...theState };
 
             if (theAction.forUser) {
-                newState.userArticles = theAction.articles;
-                newState.filteredUserArticles = filterAndSortArticles(theState.userArticleFilterText, theAction.articles);
+                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).setArticles(theAction.articles);
             } else {
-                newState.partnerArticles = theAction.articles;
-                newState.filteredPartnerArticles = filterAndSortArticles(theState.partnerArticleFilterText, theAction.articles);
+                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).setArticles(theAction.articles);
             }
 
             return newState;

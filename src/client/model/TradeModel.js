@@ -126,76 +126,84 @@ class TradeModel {
         return this.isUser(this.trade.user1) ? this.trade.user2HasDelivered : this.trade.user1HasDelivered;
     }
 
-    get userArticlesListTitle() {
+    userArticlesListTitle(onlyOneArticle) {
         let text;
+
+        if (typeof onlyOneArticle === 'undefined') {
+            onlyOneArticle = this.currentOffer.userArticles.length === 1;
+        }
 
         if (this.isUserSender) {
             if (this.isNew) {
-                text = (this.currentOffer.userArticles.length === 1) ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
+                text = onlyOneArticle ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
             } else if (this.isCompleted) {
                 if (this.userHasDelivered) {
-                    text = (this.currentOffer.userArticles.length === 1) ? `Du hast ${this.tradePartner.name} das folgende Artikel gegeben` : `Du hast ${this.tradePartner.name} die folgenden Artikel gegeben`;
+                    text = onlyOneArticle ? `Du hast ${this.tradePartner.name} das folgende Artikel gegeben` : `Du hast ${this.tradePartner.name} die folgenden Artikel gegeben`;
                 } else {
-                    text = (this.currentOffer.userArticles.length === 1) ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
+                    text = onlyOneArticle ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
                 }
             } else if (this.isCanceled) {
-                text = (this.currentOffer.userArticles.length === 1) ? `Du hast ${this.tradePartner.name} das folgende Artikel angeboten` : `Du hast ${this.tradePartner.name} die folgenden Artikel angeboten`;
+                text = onlyOneArticle ? `Du hast ${this.tradePartner.name} das folgende Artikel angeboten` : `Du hast ${this.tradePartner.name} die folgenden Artikel angeboten`;
             } else if (this.isOpen) {
-                text = (this.currentOffer.userArticles.length === 1) ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
+                text = onlyOneArticle ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
             } else {
-                text = (this.currentOffer.userArticles.length === 1) ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
+                text = onlyOneArticle ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
             }
         } else {
             if (this.isCompleted) {
                 if (this.tradePartnerHasDelivered) {
-                    text = (this.currentOffer.userArticles.length === 1) ? `${this.tradePartner.name} hat das folgende Artikel von Dir erhalten` : `${this.tradePartner.name} hat die folgenden Artikel von Dir erhalten`;
+                    text = onlyOneArticle ? `${this.tradePartner.name} hat das folgende Artikel von Dir erhalten` : `${this.tradePartner.name} hat die folgenden Artikel von Dir erhalten`;
                 } else {
-                    text = (this.currentOffer.userArticles.length === 1) ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
+                    text = onlyOneArticle ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
                 }
             } else if (this.isCanceled) {
-                text = (this.currentOffer.userArticles.length === 1) ? `${this.tradePartner.name} hat sich das folgende Artikel von Dir gewünscht` : `${this.tradePartner.name} hat sich die folgenden Artikel von Dir gewünscht`;
+                text = onlyOneArticle ? `${this.tradePartner.name} hat sich das folgende Artikel von Dir gewünscht` : `${this.tradePartner.name} hat sich die folgenden Artikel von Dir gewünscht`;
             } else if (this.isOpen) {
-                text = (this.currentOffer.userArticles.length === 1) ? `${this.tradePartner.name} möchte das folgende Artikel von Dir` : `${this.tradePartner.name} möchte die folgenden Artikel von Dir`;
+                text = onlyOneArticle ? `${this.tradePartner.name} möchte das folgende Artikel von Dir` : `${this.tradePartner.name} möchte die folgenden Artikel von Dir`;
             } else {
-                text = (this.currentOffer.userArticles.length === 1) ? `${this.tradePartner.name} möchte das folgende Artikel von Dir` : `${this.tradePartner.name} möchte die folgenden Artikel von Dir`;
+                text = onlyOneArticle ? `${this.tradePartner.name} möchte das folgende Artikel von Dir` : `${this.tradePartner.name} möchte die folgenden Artikel von Dir`;
             }
         }
 
         return text;
     }
 
-    get partnerArticlesListTitle() {
+    partnerArticlesListTitle(onlyOneArticle) {
         let text;
+
+        if (typeof onlyOneArticle === 'undefined') {
+            onlyOneArticle = this.currentOffer.tradePartnerArticles.length === 1;
+        }
 
         if (this.isUserSender) {
             if (this.isNew) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = onlyOneArticle ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
             } else if (this.isCompleted) {
                 if (this.tradePartnerHasDelivered) {
-                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du hast das folgende Artikel von ${this.tradePartner.name} erhalten` : `Du hast die folgenden Artikel von ${this.tradePartner.name} erhalten`;
+                    text = onlyOneArticle ? `Du hast das folgende Artikel von ${this.tradePartner.name} erhalten` : `Du hast die folgenden Artikel von ${this.tradePartner.name} erhalten`;
                 } else {
-                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du erhälst das folgende Artikel von ${this.tradePartner.name}` : `Du erhälst die folgenden Artikel von ${this.tradePartner.name}`;
+                    text = onlyOneArticle ? `Du erhälst das folgende Artikel von ${this.tradePartner.name}` : `Du erhälst die folgenden Artikel von ${this.tradePartner.name}`;
                 }
             } else if (this.isCanceled) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du hast Dir das folgende Artikel von ${this.tradePartner.name} gewünscht` : `Du hast Dir die folgenden Artikel von ${this.tradePartner.name} gewünscht`;
+                text = onlyOneArticle ? `Du hast Dir das folgende Artikel von ${this.tradePartner.name} gewünscht` : `Du hast Dir die folgenden Artikel von ${this.tradePartner.name} gewünscht`;
             } else if (this.isOpen) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = onlyOneArticle ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
             } else {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = onlyOneArticle ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
             }
         } else {
             if (this.isCompleted) {
                 if (this.tradePartnerHasDelivered) {
-                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} hat Dir das folgende Artikel gegeben` : `${this.tradePartner.name} hat Dir die folgenden Artikel gegeben`;
+                    text = onlyOneArticle ? `${this.tradePartner.name} hat Dir das folgende Artikel gegeben` : `${this.tradePartner.name} hat Dir die folgenden Artikel gegeben`;
                 } else {
-                    text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} gibt Dir das folgende Artikel` : `${this.tradePartner.name}  gibt Dir die folgenden Artikel`;
+                    text = onlyOneArticle ? `${this.tradePartner.name} gibt Dir das folgende Artikel` : `${this.tradePartner.name}  gibt Dir die folgenden Artikel`;
                 }
             } else if (this.isCanceled) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} hat Dir das folgende Artikel angeboten` : `${this.tradePartner.name} hat Dir die folgenden Artikel angeboten`;
+                text = onlyOneArticle ? `${this.tradePartner.name} hat Dir das folgende Artikel angeboten` : `${this.tradePartner.name} hat Dir die folgenden Artikel angeboten`;
             } else if (this.isOpen) {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
+                text = onlyOneArticle ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
             } else {
-                text = (this.currentOffer.tradePartnerArticles.length === 1) ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
+                text = onlyOneArticle ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
             }
         }
 

@@ -17,22 +17,17 @@ const STEP_LAST_IDX = 2;
 export default class TradeEditor extends React.Component {
 
     static propTypes = {
+        onCancel: PropTypes.func.isRequired,
+        onSave: PropTypes.func.isRequired,
+        partnerArticlesInfo: PropTypes.object,
+        setFilterText: PropTypes.func.isRequired,
+        setPageNum: PropTypes.func.isRequired,
+        setStepIndex: PropTypes.func.isRequired,
+        stepIndex: PropTypes.number.isRequired,
+        toggleArticle: PropTypes.func.isRequired,
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
-        stepIndex: PropTypes.number.isRequired,
-        userArticles: PropTypes.array,
-        partnerArticles: PropTypes.array,
-        chosenUserArticles: PropTypes.array,
-        chosenPartnerArticles: PropTypes.array,
-        userArticleFilterText: PropTypes.string.isRequired,
-        partnerArticleFilterText: PropTypes.string.isRequired,
-        onSave: PropTypes.func.isRequired,
-        onCancel: PropTypes.func.isRequired,
-        toggleUserArticle: PropTypes.func.isRequired,
-        togglePartnerArticle: PropTypes.func.isRequired,
-        setStepIndex: PropTypes.func.isRequired,
-        setUserArticleFilterText: PropTypes.func.isRequired,
-        setPartnerArticleFilterText: PropTypes.func.isRequired
+        userArticlesInfo: PropTypes.object
     };
 
     static defaultProps = {
@@ -87,33 +82,68 @@ export default class TradeEditor extends React.Component {
         }
     }
 
-    renderPartnerArticleChooser() {
-        let otherPartnerArticles = this.props.partnerArticles.filter(article => !this.props.chosenPartnerArticles.some(a => a._id === article._id));
-
+    renderArticleChooser(availableArticles, chosenArticles, filterText, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle) {
         return (
             <div>
-                <Articles articles={this.props.chosenPartnerArticles} title={this.props.trade.partnerArticlesListTitle} isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.togglePartnerArticle} />
-                <Articles articles={otherPartnerArticles} title={`Weitere Artikel von ${this.props.trade.tradePartner.name}, die Du auswählen könntest`} isEditing={true} selected={false} filtering={true} filterText={this.props.partnerArticleFilterText} onFilterChange={this.props.setPartnerArticleFilterText} onToggleArticle={this.props.togglePartnerArticle} />
+                <Articles
+                    articles={chosenArticles}
+                    title={chosenTitle}
+                    isEditing={true}
+                    selected={true}
+                    onToggleArticle={toggleArticle}
+                />
+                <Articles
+                    articles={availableArticles}
+                    title={availableTitle}
+                    isEditing={true}
+                    selected={false}
+                    filtering={true}
+                    filterText={filterText}
+                    pageNum={pageNum}
+                    pageCount={pageCount}
+                    onFilterChange={setFilterText}
+                    onPageChange={setPageNum}
+                    onToggleArticle={toggleArticle}
+                />
             </div>
         );
+    }
+
+    renderPartnerArticleChooser() {
+        const { trade, partnerArticlesInfo } = this.props;
+        const { visibleArticles, chosenArticles, filterText, pageCount, pageNum } = partnerArticlesInfo;
+
+        let setFilterText = this.props.setFilterText.bind(this, false);
+        let setPageNum = this.props.setPageNum.bind(this, false);
+        let toggleArticle = this.props.toggleArticle.bind(this, false);
+
+        let chosenTitle = trade.partnerArticlesListTitle(chosenArticles.length === 1);
+        let availableTitle = `Weitere Artikel von ${trade.tradePartner.name}, die Du auswählen könntest`;
+
+        return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
     }
 
     renderUserArticleChooser() {
-        let otherUserArticles = this.props.userArticles.filter(article => !this.props.chosenUserArticles.some(a => a._id === article._id));
+        const { trade, userArticlesInfo } = this.props;
+        const { visibleArticles, chosenArticles, filterText, pageCount, pageNum } = userArticlesInfo;
 
-        return (
-            <div>
-                <Articles articles={this.props.chosenUserArticles} title={this.props.trade.userArticlesListTitle} isEditing={true} selected={true} filtering={false} onToggleArticle={this.props.toggleUserArticle} />
-                <Articles articles={otherUserArticles} title="Weitere Artikel, die Du anbieten könntest:" isEditing={true} selected={false} filtering={true} filterText={this.props.userArticleFilterText} onFilterChange={this.props.setUserArticleFilterText} onToggleArticle={this.props.toggleUserArticle} />
-            </div>
-        );
+        let setFilterText = this.props.setFilterText.bind(this, true);
+        let setPageNum = this.props.setPageNum.bind(this, true);
+        let toggleArticle = this.props.toggleArticle.bind(this, true);
+
+        let chosenTitle = trade.userArticlesListTitle(chosenArticles.length === 1);
+        let availableTitle = `Weitere Artikel, die Du anbieten könntest`;
+        
+        return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
     }
 
     renderSummary() {
+        const { trade, partnerArticlesInfo, userArticlesInfo } = this.props;
+
         return (
             <div>
-                <Articles articles={this.props.chosenPartnerArticles} title={this.props.trade.partnerArticlesListTitle} />
-                <Articles articles={this.props.chosenUserArticles} title={this.props.trade.userArticlesListTitle} />
+                <Articles articles={partnerArticlesInfo.chosenArticles} title={trade.partnerArticlesListTitle(partnerArticlesInfo.chosenArticles.length === 1)} />
+                <Articles articles={userArticlesInfo.chosenArticles} title={trade.userArticlesListTitle(userArticlesInfo.chosenArticles.length === 1)} />
             </div>
         );
     }

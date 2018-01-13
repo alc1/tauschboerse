@@ -9,34 +9,27 @@ import './NewTradePage.css';
 export default class NewTradePage extends React.Component {
 
     static propTypes = {
+        history: PropTypes.object.isRequired,
+        initTradeEditor: PropTypes.func.isRequired,
+        loading: PropTypes.bool.isRequired,
+        loadNewTrade: PropTypes.func.isRequired,
+        loadPartnerArticles: PropTypes.func.isRequired,
+        loadUserArticles: PropTypes.func.isRequired,
+        partnerArticlesInfo: PropTypes.object,
+        saveTrade: PropTypes.func.isRequired,
+        setFilterText: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired,
+        setPageNum: PropTypes.func.isRequired,
+        setStepIndex: PropTypes.func.isRequired,
+        stepIndex: PropTypes.number.isRequired,
+        toggleArticle: PropTypes.func.isRequired,
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
-        stepIndex: PropTypes.number.isRequired,
-        userArticles: PropTypes.array,
-        partnerArticles: PropTypes.array,
-        chosenUserArticles: PropTypes.array,
-        chosenPartnerArticles: PropTypes.array,
-        userArticleFilterText: PropTypes.string.isRequired,
-        partnerArticleFilterText: PropTypes.string.isRequired,
-        loadNewTrade: PropTypes.func.isRequired,
-        saveTrade: PropTypes.func.isRequired,
-        toggleUserArticle: PropTypes.func.isRequired,
-        togglePartnerArticle: PropTypes.func.isRequired,
-        loadUserArticles: PropTypes.func.isRequired,
-        loadPartnerArticles: PropTypes.func.isRequired,
-        setStepIndex: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
-        loading: PropTypes.bool.isRequired,
-        setUserArticleFilterText: PropTypes.func.isRequired,
-        setPartnerArticleFilterText: PropTypes.func.isRequired,
-        initTradeEditor: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired
+        userArticlesInfo: PropTypes.object
     };
 
     static defaultProps = {
-        stepIndex: 0,
-        userArticleFilterText: '',
-        partnerArticleFilterText: ''
+        stepIndex: 0
     }
 
     componentDidMount() {
@@ -56,14 +49,12 @@ export default class NewTradePage extends React.Component {
     }
 
     handleSave = () => {
-        this.props.setLoading(true);
         this.props.saveTrade()
             .then(() => {
-                this.props.setLoading(false);
                 this.props.history.push(`/trade/show/${this.props.trade._id}`);
             })
-            .catch(() => {
-                this.props.setLoading(false);
+            .catch((err) => {
+                console.log(err);
             });
     };
 
@@ -75,7 +66,23 @@ export default class NewTradePage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Neues Tauschgeschäft erstellen" />
-                {this.props.trade && <TradeEditor {...this.props} onSave={this.handleSave} onCancel={this.handleCancel} />}
+                <div className="base-page">
+                    {this.props.trade &&
+                        <TradeEditor
+                            onSave={this.handleSave}
+                            onCancel={this.handleCancel}
+                            partnerArticlesInfo={this.props.partnerArticlesInfo}
+                            setFilterText={this.props.setFilterText}
+                            setPageNum={this.props.setPageNum}
+                            setStepIndex={this.props.setStepIndex}
+                            stepIndex={this.props.stepIndex}
+                            toggleArticle={this.props.toggleArticle}
+                            trade={this.props.trade}
+                            user={this.props.user}
+                            userArticlesInfo={this.props.userArticlesInfo}
+                        />
+                    }
+                </div>
             </div>
         );
     }

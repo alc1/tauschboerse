@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import SearchBar from 'material-ui-search-bar';
+import UltimatePaginationMaterialUi from 'react-ultimate-pagination-material-ui';
 
 import ArticleRowList from '../ArticleRowList/ArticleRowList';
 
@@ -19,7 +20,10 @@ export default class Articles extends React.Component {
         filterText: PropTypes.string.isRequired,
         isEditing: PropTypes.bool.isRequired,
         onFilterChange: PropTypes.func,
-        pageSize: PropTypes.number.isRequired,
+        onPageChange: PropTypes.func,
+        pageCount: PropTypes.number.isRequired,
+        paging: PropTypes.bool.isRequired,
+        pageNum: PropTypes.number.isRequired,
         selected: PropTypes.bool.isRequired,
         title: PropTypes.string.isRequired,
         onToggleArticle: PropTypes.func
@@ -27,9 +31,11 @@ export default class Articles extends React.Component {
 
     static defaultProps = {
         filtering: false,
-        isEditing: false,
         filterText: '',
-        pageSize: 20,
+        isEditing: false,
+        pageCount: 1,
+        paging: false,
+        pageNum: 1,
         selected: false
     }
 
@@ -43,14 +49,21 @@ export default class Articles extends React.Component {
         if (typeof this.props.onFilterChange === 'function') {
             this.props.onFilterChange(theText);
         }
-    }
+    };
 
     handleRequestSearch = (theText) => {
+        // intentionally empty, not required as filtering takes place automatically on every key press
+    };
 
-    }
+    handlePageChange = (pageNum) => {
+        if (typeof this.props.onPageChange === 'function') {
+            this.props.onPageChange(pageNum);
+        }
+    };
 
     render() {
         let articles = this.props.articles;
+        let paging = this.props.paging && (this.props.pageCount > 1);
 
         return (
             <div className="articles__container">
@@ -67,6 +80,7 @@ export default class Articles extends React.Component {
                             onRequestSearch={this.handleRequestSearch}
                             value={this.props.filterText} />}
                         <ArticleRowList articles={articles} isEditing={this.props.isEditing} selected={this.props.selected} onToggleArticle={this.handleToggleArticle} />
+                        {paging && <UltimatePaginationMaterialUi currentPage={this.props.pageNum} totalPages={this.props.pageCount} onChange={this.handlePageChange} />}
                     </div>
                 </Paper>
             </div>

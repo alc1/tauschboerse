@@ -26,12 +26,16 @@ class OfferModel {
     }
 
     get tradePartnerArticles() {
-        this.prepareArticleLists();
+        if (!this._tradePartnerArticles) {
+            this._tradePartnerArticles = this.offer.articles.filter(article => !this.isUser(article.owner));
+        }
         return this._tradePartnerArticles;
     }
 
     get userArticles() {
-        this.prepareArticleLists();
+        if (!this._userArticles) {
+            this._userArticles = this.offer.articles.filter(article => this.isUser(article.owner));
+        }
         return this._userArticles;
     }
 
@@ -39,12 +43,28 @@ class OfferModel {
         return this.articles.every(article => (article.status === ArticleStatus.STATUS_FREE) || (article.status === ArticleStatus.STATUS_DEALING)) && (this.userArticles.length > 0) && (this.tradePartnerArticles.length > 0);
     }
 
-    prepareArticleLists() {
-        if (!this._userArticles) {
-            this._userArticles = this.offer.articles.filter(article => this.isUser(article.owner));
-            this._tradePartnerArticles = this.offer.articles.filter(article => !this.isUser(article.owner));
-        }
-    }
+    // addArticle(theArticle) {
+    //     if (!this.articles.some(article => article._id === theArticle._id)) {
+    //         this.articles.push(theArticle);
+    //         this.invalidateAffectedArticleArray(theArticle.owner);
+    //     }
+    // }
+
+    // removeArticle(theArticle) {
+    //     let idx = this.articles.findIndex(article => article._id === theArticle._id);
+    //     if (idx >= 0) {
+    //         this.articles.splice(idx, 1);
+    //         this.invalidateAffectedArticleArray(theArticle.owner);
+    //     }
+    // }
+
+    // invalidateAffectedArticleArray(articleOwner) {
+    //     if (this.isUser(articleOwner)) {
+    //         this._userArticles = null;
+    //     } else {
+    //         this._tradePartnerArticles = null;
+    //     }
+    // }
 
     isUser(user) {
         return user._id === this.user._id;

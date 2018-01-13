@@ -3,7 +3,7 @@ import axios from 'axios';
 import { handleError } from './common';
 import TradeModel from '../../model/TradeModel';
 
-import { getChosenPartnerArticles, getChosenUserArticles, getTrade } from '../selectors/trade.js';
+import { getPartnerArticlesInfo, getTrade, getUserArticlesInfo } from '../selectors/trade.js';
 import { getUser } from '../selectors/user';
 
 /*
@@ -18,6 +18,7 @@ export const TRADE_ARTICLES_SAVED = 'TRADE_ARTICLES_SAVED';
 export const TRADE_ARTICLES_FETCHED = 'TRADE_ARTICLES_FETCHED';
 export const TRADE_ARTICLE_TOGGLED = 'TRADE_ARTICLE_TOGGLED';
 export const TRADE_STEP_INDEX_SET = 'TRADE_STEP_INDEX_SET';
+export const TRADE_PAGE_NUM_SET = 'TRADE_PAGE_NUM_SET';
 export const TRADE_ARTICLE_FILTER_TEXT_SET = 'TRADE_ARTICLE_FILTERTEXT_SET';
 export const TRADE_EDITOR_INITIALISED = 'TRADE_EDITOR_INITIALISED';
 
@@ -59,6 +60,12 @@ const stepIndexSet = (stepIndex) => ({
     stepIndex: stepIndex
 });
 
+const pageNumSet = (val, forUser) => ({
+    type: TRADE_PAGE_NUM_SET,
+    forUser: forUser,
+    pageNum: val
+});
+
 const tradeEditorInitialised = () => ({
     type: TRADE_EDITOR_INITIALISED
 });
@@ -96,18 +103,18 @@ export const loadNewTrade = (theArticleId) => (dispatch, getState) => {
 };
 
 export const loadUserArticles = () => (dispatch, getState) => {
-    return loadArticlesByUserId(getUser(getState())._id, true, dispatch);
+    return loadArticlesByUserId(true, getUser(getState())._id, dispatch);
 };
 
 export const loadPartnerArticles = () => (dispatch, getState) => {
     let currentState = getState();
     let trade = getTrade(currentState);
-    return loadArticlesByUserId(trade.tradePartner._id, false, dispatch);
+    return loadArticlesByUserId(false, trade.tradePartner._id, dispatch);
 };
 
 export const saveTrade = () => (dispatch, getState) => {
     let currentState = getState();
-    let articles = getChosenUserArticles(currentState).concat(getChosenPartnerArticles(currentState)).map(a => a._id);
+    let articles = getUserArticlesInfo(currentState).chosenArticles.concat(getPartnerArticlesInfo(currentState).chosenArticles).map(a => a._id);
     let trade = getTrade(currentState);
     let user = getUser(currentState);
 
@@ -131,14 +138,6 @@ export const deleteTrade = () => (dispatch, getState) => {
         .catch(err => handleError(err, dispatch))
 }
 
-export const toggleUserArticle = (theArticle) => dispatch => {
-    dispatch(articleToggled(theArticle, true));
-};
-
-export const togglePartnerArticle = (theArticle) => dispatch => {
-    dispatch(articleToggled(theArticle, false));
-};
-
 export const submitTrade = () => (dispatch, getState) => {
     return setTradeState('REQUESTED', dispatch, getState);
 };
@@ -157,19 +156,23 @@ export const declineTrade = () => (dispatch, getState) => {
 
 export const setStepIndex = (theStepIndex) => (dispatch) => {
     return dispatch(stepIndexSet(theStepIndex));
-}
+};
+
+export const toggleArticle = (forUser, theArticle) => dispatch => {
+    dispatch(articleToggled(theArticle, forUser));
+};
+
+export const setPageNum = (forUser, thePageNum) => (dispatch) => {
+    return dispatch(pageNumSet(thePageNum, true));
+};
+
+export const setFilterText = (forUser, theText) => (dispatch) => {
+    return dispatch(articleFilterTextSet(theText, forUser));
+};
 
 export const initTradeEditor = () => (dispatch) => {
     return dispatch(tradeEditorInitialised());
-}
-
-export const setUserArticleFilterText = (theText) => (dispatch) => {
-    return dispatch(articleFilterTextSet(theText, true));
-}
-
-export const setPartnerArticleFilterText = (theText) => (dispatch) => {
-    return dispatch(articleFilterTextSet(theText, false));
-}
+};
 
 function setTradeState(theNewTradeState, dispatch, getState) {
     let currentState = getState();
@@ -181,7 +184,7 @@ function setTradeState(theNewTradeState, dispatch, getState) {
         .catch(err => handleError(err, dispatch));
 }
 
-function loadArticlesByUserId(theUserId, forUser, dispatch) {
+function loadArticlesByUserId(forUser, theUserId, dispatch) {
     return axios.get(`/api/users/${theUserId}/articles?onlyAvailable=1`)
         .then(response => dispatch(articlesFetched(response.data.articles, forUser)))
         .catch(err => handleError(err, dispatch));
