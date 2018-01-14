@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ApplicationBar from '../../containers/ApplicationBar';
-import TradeEditor from '../TradeEditor/TradeEditor';
+import TradeEditor from '../../containers/TradeEditor';
 import ContentContainer from '../ContentContainer/ContentContainer';
 
 import './EditTradePage.css';
@@ -39,7 +39,6 @@ export default class EditTradePage extends React.Component {
         this.props.setLoading(true);
         this.props.initTradeEditor();
 
-        const { tradeId } = this.props.match.params;
         const id = this.props.match.params[this.props.idParamName];
 
         let loadPromises = [

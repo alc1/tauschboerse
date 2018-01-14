@@ -16,6 +16,7 @@ export default class Articles extends React.Component {
 
     static propTypes = {
         articles: PropTypes.array.isRequired,
+        emptyText: PropTypes.string.isRequired,
         filtering: PropTypes.bool.isRequired,
         filterText: PropTypes.string.isRequired,
         isEditing: PropTypes.bool.isRequired,
@@ -30,6 +31,7 @@ export default class Articles extends React.Component {
     };
 
     static defaultProps = {
+        emptyText: 'Keine Artikel vorhanden',
         filtering: false,
         filterText: '',
         isEditing: false,
@@ -79,7 +81,7 @@ export default class Articles extends React.Component {
                             onChange={this.handleFilterChange}
                             onRequestSearch={this.handleRequestSearch}
                             value={this.props.filterText} />}
-                        <ArticleRowList articles={articles} isEditing={this.props.isEditing} selected={this.props.selected} onToggleArticle={this.handleToggleArticle} />
+                        <ArticleRowList articles={articles} emptyText={this.props.emptyText} isEditing={this.props.isEditing} selected={this.props.selected} onToggleArticle={this.handleToggleArticle} />
                         {paging && <UltimatePaginationMaterialUi currentPage={this.props.pageNum} totalPages={this.props.pageCount} onChange={this.handlePageChange} />}
                     </div>
                 </Paper>

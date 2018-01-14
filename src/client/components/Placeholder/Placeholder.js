@@ -11,6 +11,7 @@ export default class Placeholder extends React.Component {
     static propTypes = {
         width: PropTypes.number.isRequired,
         height: PropTypes.number.isRequired,
+        isVertical: PropTypes.bool.isRequired,
         loading: PropTypes.bool.isRequired,
         text: PropTypes.string.isRequired,
         loadingText: PropTypes.string.isRequired,
@@ -21,7 +22,8 @@ export default class Placeholder extends React.Component {
 
     static defaultProps = {
         loading: false,
-        loadingText: ''
+        loadingText: '',
+        isVertical: true
     };
 
     render() {
@@ -30,12 +32,12 @@ export default class Placeholder extends React.Component {
         return (
             <div>
                 {loading ? (
-                    <div className="placeholder__container">
+                    <div className={`placeholder__container ${this.props.isVertical ? 'placeholder__container--vertical' : 'placeholder__container--horizontal'}`}>
                         <Loading fill="#E1E1E1" width={width} height={height}/>
                         <span className="placeholder__text" style={{ fontFamily: fontFamily }}>{loadingText}</span>
                     </div>
                 ) : (
-                    <div className="placeholder__container">
+                    <div className={`placeholder__container ${this.props.isVertical ? 'placeholder__container--vertical' : 'placeholder__container--horizontal'}`}>
                         <Info fill="#E1E1E1" width={width} height={height}/>
                         <span className="placeholder__text" style={{ fontFamily: fontFamily }}>{text}</span>
                     </div>
