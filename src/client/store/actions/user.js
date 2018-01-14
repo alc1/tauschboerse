@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { globalMessageReceived, OK_MESSAGE } from './application';
 import { JWT_TOKEN_KEY } from '../../utils/constants';
 import { handleError } from './common';
-import { setApiToken, removeApiToken } from '../../util/serverApi';
+import { setApiToken, removeApiToken } from '../../utils/serverApi';
 
 /*
  * Action Type Constants

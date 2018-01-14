@@ -60,7 +60,7 @@ export const setLoading = (isLoading) => dispatch =>
     dispatch(loadingStateReceived(isLoading));
 
 export const setPageSize = (pageSize) => dispatch =>
-    dispatch(pageSizeReceived(pageSize));
+    dispatch(pageSizeChanged(pageSize));
 /*
  * Follow-up Actions from within the global message snackbar
  */

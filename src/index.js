@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { setToken, userLoggedIn } from './client/store/actions/user';
 import { JWT_TOKEN_KEY } from './client/utils/constants';
 import store from './client/store/store';
-import { setupApiInterceptors } from './client/util/serverApi';
+import { setupApiInterceptors } from './client/utils/serverApi';
 
 import App from './client/App';
 import registerServiceWorker from './client/registerServiceWorker';
