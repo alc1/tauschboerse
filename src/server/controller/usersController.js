@@ -28,7 +28,10 @@ function login(req, res) {
     const passwordToCheck = (req.isNewUser) ? user.newPassword: user.currentPassword;
     const acceptedUser = dataCache.authenticateUser(user.email, passwordToCheck);
     if (acceptedUser) {
-        res.json({ token: createToken(acceptedUser._id, acceptedUser.gender, acceptedUser.name, acceptedUser.email, acceptedUser.address, acceptedUser.registration) });
+        res.json({
+            token: createToken(acceptedUser._id, acceptedUser.gender, acceptedUser.name, acceptedUser.email, acceptedUser.address, acceptedUser.registration),
+            user: acceptedUser
+        });
     }
     else {
         res.status(400).json({

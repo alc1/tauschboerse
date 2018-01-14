@@ -146,6 +146,7 @@ class UserCache {
         physicalRecord.name = theUser.name;
         physicalRecord.address = theUser.address;
         physicalRecord.registration = new Date(theUser.registration);
+        physicalRecord.pageSize = theUser.pageSize;
 
         return physicalRecord;
     }
@@ -159,6 +160,7 @@ class UserCache {
         user.name = thePhysicalRecord.name;
         user.address = thePhysicalRecord.address;
         user.registration = thePhysicalRecord.registration;
+        user.pageSize = thePhysicalRecord.pageSize;
 
         delete user.currentPassword;
         delete user.newPassword;

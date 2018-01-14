@@ -15,6 +15,10 @@ import {
     ARTICLE_DELETED
 } from '../actions/article';
 
+import {
+    PAGE_SIZE_CHANGED
+} from '../actions/application';
+
 export const initialState = null;
 
 export default function user(theState = initialState, theAction) {
@@ -67,6 +71,27 @@ export default function user(theState = initialState, theAction) {
             return {
                 ...theState,
                 userTradesSectionIndex: theAction.userTradesSectionIndex
+            };
+        case PAGE_SIZE_CHANGED:
+            if (theState === initialState) {
+                return initialState;
+            }
+
+            let newSettings;
+            if (typeof theState.settings === 'undefined') {
+                newSettings = {
+                    pageSize: theAction.pageSize
+                };
+            } else {
+                newSettings = {
+                    ...theState.settings,
+                    pageSize: theAction.pageSize
+                };
+            }
+
+            return {
+                ...theState,
+                settings: newSettings
             };
         default:
             return theState;

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
-import { globalMessageReceived, OK_MESSAGE } from './application';
-import { JWT_TOKEN_KEY } from '../../utils/constants';
+import { globalMessageReceived, OK_MESSAGE, pageSizeChanged } from './application';
+import { JWT_TOKEN_KEY, DEFAULT_PAGE_SIZE } from '../../utils/constants';
 import { handleError } from './common';
 import { setApiToken, removeApiToken } from '../../utils/serverApi';
 
@@ -69,11 +69,17 @@ const userTradesSectionOpened = (theUserTradesSectionIndex) => ({
 
 export const login = (user) => dispatch =>
     axios.post('/api/users/auth', { user })
-        .then(response => onTokenReceived(response.data.token, dispatch, userLoggedIn))
+        .then(response => {
+            onTokenReceived(response.data.token, dispatch, userLoggedIn);
+            // apply user settings
+            dispatch(pageSizeChanged(response.data.user.pageSize));
+        })
         .catch(err => handleError(err, dispatch));
 
 export const logout = () => dispatch => {
     removeToken(dispatch, true);
+    // apply system default settings
+    dispatch(pageSizeChanged(DEFAULT_PAGE_SIZE));
 };
 
 export const createUser = (user) => dispatch =>

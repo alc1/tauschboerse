@@ -11,6 +11,7 @@ class User {
             utils.setValue(this, 'currentPassword', obj, null);
             utils.setValue(this, 'newPassword', obj, null);
             utils.setValue(this, 'passwordConfirmation', obj, null);
+            utils.setValue(this, 'pageSize', obj, 20);
 
             utils.transferId(obj, this);
         } else {
@@ -22,6 +23,7 @@ class User {
             this.currentPassword = null;
             this.newPassword = null;
             this.passwordConfirmation = null;
+            this.pageSize = 20;
         }
     }
 
@@ -33,6 +35,7 @@ class User {
         modified = utils.updateValue(this, 'name', obj) || modified;
         modified = utils.updateValue(this, 'address', obj) || modified;
         modified = utils.updateValue(this, 'registration', obj) || modified;
+        modified = utils.updateValue(this, 'pageSize', obj) || modified;
 
         return modified;
     }
