@@ -12,7 +12,7 @@ import {
     TRADE_PAGE_NUM_SET,
     TRADE_STEP_INDEX_SET
 } from '../actions/trade';
-
+import { PAGE_SIZE_CHANGED } from '../actions/application';
 import ArticlesInfo from '../../model/ArticlesInfo';
 
 export const initialState = {
@@ -28,6 +28,13 @@ export default function trade(theState = initialState, theAction) {
     let newState;
 
     switch (theAction.type) {
+        case PAGE_SIZE_CHANGED:
+            return {
+                ...theState,
+                userArticlesInfo: new ArticlesInfo(theState.userArticlesInfo).setPageSize(theAction.pageSize),
+                partnerArticlesInfo: new ArticlesInfo(theState.partnerArticlesInfo).setPageSize(theAction.pageSize)
+            };
+
         case TRADE_EDITOR_INITIALISED:
             return {
                 ...theState,

@@ -1,4 +1,5 @@
 import filterArticles from '../../shared/filterArticles';
+import { DEFAULT_PAGE_SIZE } from '../utils/constants';
 
 export default class ArticlesInfo {
     constructor(articlesInfo) {
@@ -6,7 +7,7 @@ export default class ArticlesInfo {
             this.articles = [];
             this.filterText = '';
             this.filteredArticles = [];
-            this.pageSize = 20;
+            this.pageSize = DEFAULT_PAGE_SIZE;
             this.pageNum = 1;
             this.pageCount = 1;
             this.visibleArticles = [];

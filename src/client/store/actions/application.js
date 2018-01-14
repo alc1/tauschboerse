@@ -7,6 +7,7 @@ import { removeToken } from './user';
 export const GLOBAL_MESSAGE_RECEIVED = 'GLOBAL_MESSAGE_RECEIVED';
 export const GLOBAL_MESSAGE_REMOVED = 'GLOBAL_MESSAGE_REMOVED';
 export const LOADING_STATE_RECEIVED = 'LOADING_STATE_RECEIVED';
+export const PAGE_SIZE_CHANGED = 'APP_SET_PAGE_SIZE';
 
 /*
  * Global Message Types
@@ -40,6 +41,11 @@ export const loadingStateReceived = (isLoading) => ({
     isLoading: isLoading
 });
 
+export const pageSizeChanged = (pageSize) => ({
+    type: PAGE_SIZE_CHANGED,
+    pageSize: pageSize
+});
+
 /*
  * Thunk Actions
  */
@@ -53,6 +59,8 @@ export const removeGlobalMessage = () => dispatch =>
 export const setLoading = (isLoading) => dispatch =>
     dispatch(loadingStateReceived(isLoading));
 
+export const setPageSize = (pageSize) => dispatch =>
+    dispatch(pageSizeReceived(pageSize));
 /*
  * Follow-up Actions from within the global message snackbar
  */
