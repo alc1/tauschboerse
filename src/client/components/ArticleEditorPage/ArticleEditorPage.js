@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import uuid from 'uuid';
 
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
@@ -102,6 +103,7 @@ export default class ArticleEditorPage extends React.Component {
 
     onPhotoLoaded = (theEvent, theFile) => {
         const newPhoto = {
+            id: uuid.v1(),
             fileName: theFile.name,
             fileContent: theEvent.target.result,
             isNew: true,

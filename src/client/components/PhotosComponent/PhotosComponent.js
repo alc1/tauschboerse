@@ -76,7 +76,7 @@ export default class PhotosComponent extends React.Component {
         const showDeletePhotoButton = !isDisplayMode && onRemovePhoto;
         const showMainPhotoCheckbox = !isDisplayMode && onSelectMainPhoto;
         return (
-            <div className="photos-component__image-wrapper" key={thePhoto.fileName} style={{ border: thePhoto.isMain ? overwritingMainPhotoBorder : undefined }}>
+            <div className="photos-component__image-wrapper" key={thePhoto.id || thePhoto.fileName} style={{ border: thePhoto.isMain ? overwritingMainPhotoBorder : undefined }}>
                 <Photo
                     imageClassName="photos-component__image"
                     imageStyle={{ borderRadius: isDisplayMode ? overwritingImageBorderRadius : undefined }}
