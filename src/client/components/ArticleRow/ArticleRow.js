@@ -11,6 +11,7 @@ import Photo from '../Photo/Photo';
 import AvatarTag from '../AvatarTag/AvatarTag';
 import ArticleStatusTag from '../ArticleStatusTag/ArticleStatusTag';
 import PhotoPlaceholder from '../PhotoPlaceholder/PhotoPlaceholder';
+import CategoryChip from '../CategoryChip/CategoryChip';
 
 import './ArticleRow.css';
 
@@ -49,7 +50,7 @@ export default class ArticleRow extends React.Component {
         const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus } = this.props;
         const { title, description, status, created, owner, categories, photos } = article;
         const name = (owner) ? owner.name : '';
-        const categoryNames = (categories) ? categories.map(category => category.name).join(', ') : '';
+        const categoryChips = (categories) ? categories.map(category => <CategoryChip category={category}/>) : [];
         const mainPhoto = (photos && photos.length > 0) ? photos.find(photo => photo.isMain) : null;
         const mainPhotoIndex = (photos && photos.length > 0) ? photos.reduce((mainPhotoIndex, photo, index) => photo.isMain ? index : mainPhotoIndex, 0) : 0;
         const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
@@ -67,8 +68,12 @@ export default class ArticleRow extends React.Component {
                 </div>
                 <div className="article-row__text-column">
                     <span className="article-row__title">{title}</span>
-                    {!hideCategories && <span className="article-row__categories">{categoryNames}</span>}
                     {!hideDescription && <span className="article-row__description">{description}</span>}
+                    {!hideCategories && categoryChips.length > 0 &&
+                        <div className="article-row__categories">
+                            {categoryChips}
+                        </div>
+                    }
                 </div>
                 <div className="article-row__properties">
                     {!hideOwner && <AvatarTag text={name} icon={<AccountIcon/>}/>}

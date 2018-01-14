@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import TradeDetail from '../TradeDetail/TradeDetail';
+import ContentContainer from '../ContentContainer/ContentContainer';
 
 export default class TradeDetailPage extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -31,7 +33,7 @@ export default class TradeDetailPage extends React.Component {
     static defaultProps = {
         loading: false,
         newVersionAvailable: false
-    }
+    };
 
     componentDidMount() {
         const { tradeId } = this.props.match.params;
@@ -75,12 +77,12 @@ export default class TradeDetailPage extends React.Component {
     handleAcceptTrade = () => {
         this.stopIntervalTimer();
         this.props.acceptTrade();
-    }
+    };
 
     handleDeclineTrade = () => {
         this.stopIntervalTimer();
         this.props.declineTrade();
-    }
+    };
 
     handleDeleteTrade = () => {
         this.stopIntervalTimer();
@@ -88,46 +90,48 @@ export default class TradeDetailPage extends React.Component {
             .then(() => {
                 this.props.history.push('/');
             });
-    }
+    };
 
     handleRefresh = () => {
         this.loadTrade(this.props.trade._id);
-    }
+    };
 
     handleSetDelivered = () => {
         this.stopIntervalTimer();
         this.props.setDelivered();
-    }
+    };
 
     handleSubmitTrade = () => {
         this.stopIntervalTimer();
         this.props.submitTrade();
-    }
+    };
 
     handleWithdrawTrade = () => {
         this.stopIntervalTimer();
         this.props.withdrawTrade();
-    }
+    };
 
     render() {
         return (
             <div>
                 <ApplicationBar subtitle="Tauschgeschäft verwalten"/>
-                {this.props.trade &&
-                    <TradeDetail
-                        history={this.props.history}
-                        newVersionAvailable={this.props.newVersionAvailable}
-                        onAcceptTrade={this.handleAcceptTrade}
-                        onDeclineTrade={this.handleDeclineTrade}
-                        onDeleteTrade={this.handleDeleteTrade}
-                        onRefresh={this.handleRefresh}
-                        onSetDelivered={this.handleSetDelivered}
-                        onSubmitTrade={this.handleSubmitTrade}
-                        onWithdrawTrade={this.handleWithdrawTrade}
-                        trade={this.props.trade}
-                        user={this.props.user}
-                    />
-                }
+                <ContentContainer>
+                    {this.props.trade &&
+                        <TradeDetail
+                            history={this.props.history}
+                            newVersionAvailable={this.props.newVersionAvailable}
+                            onAcceptTrade={this.handleAcceptTrade}
+                            onDeclineTrade={this.handleDeclineTrade}
+                            onDeleteTrade={this.handleDeleteTrade}
+                            onRefresh={this.handleRefresh}
+                            onSetDelivered={this.handleSetDelivered}
+                            onSubmitTrade={this.handleSubmitTrade}
+                            onWithdrawTrade={this.handleWithdrawTrade}
+                            trade={this.props.trade}
+                            user={this.props.user}
+                        />
+                    }
+                </ContentContainer>
             </div>
         );
     }

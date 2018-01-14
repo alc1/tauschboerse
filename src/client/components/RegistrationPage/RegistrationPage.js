@@ -6,6 +6,7 @@ import RegistrationIcon from 'material-ui/svg-icons/social/person-add';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
+import ContentContainer from '../ContentContainer/ContentContainer';
 
 import { OK_MESSAGE } from '../../store/actions/application';
 
@@ -70,24 +71,26 @@ export default class RegistrationPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Registrierung"/>
-                <RegistrationForm
-                    gender={gender}
-                    name={name}
-                    email={email}
-                    address={address}
-                    newPassword={newPassword}
-                    passwordConfirmation={passwordConfirmation}
-                    errors={errors}
-                    loading={loading}
-                    onChange={this.onChange}
-                    onGenderSelectionChange={this.onGenderSelectionChange}
-                    onSubmit={this.onSubmit}>
-                    <div className="registration-page__buttonbar">
-                        <div className="registration-page__button">
-                            <RaisedButton type="submit" label="Registrieren" icon={<RegistrationIcon/>} disabled={loading} primary/>
+                <ContentContainer>
+                    <RegistrationForm
+                        gender={gender}
+                        name={name}
+                        email={email}
+                        address={address}
+                        newPassword={newPassword}
+                        passwordConfirmation={passwordConfirmation}
+                        errors={errors}
+                        loading={loading}
+                        onChange={this.onChange}
+                        onGenderSelectionChange={this.onGenderSelectionChange}
+                        onSubmit={this.onSubmit}>
+                        <div className="registration-page__buttonbar">
+                            <div className="registration-page__button">
+                                <RaisedButton type="submit" label="Registrieren" icon={<RegistrationIcon/>} disabled={loading} primary/>
+                            </div>
                         </div>
-                    </div>
-                </RegistrationForm>
+                    </RegistrationForm>
+                </ContentContainer>
             </div>
         );
     }

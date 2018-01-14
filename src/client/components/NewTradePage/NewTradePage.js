@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import TradeEditor from '../TradeEditor/TradeEditor';
+import ContentContainer from '../ContentContainer/ContentContainer';
 
 import './NewTradePage.css';
 
@@ -30,7 +31,7 @@ export default class NewTradePage extends React.Component {
 
     static defaultProps = {
         stepIndex: 0
-    }
+    };
 
     componentDidMount() {
         this.props.setLoading(true);
@@ -38,7 +39,7 @@ export default class NewTradePage extends React.Component {
 
         const { articleId } = this.props.match.params;
 
-        var loadPromises = [
+        let loadPromises = [
             this.props.loadNewTrade(articleId),
             this.props.loadUserArticles()
         ];
@@ -60,13 +61,13 @@ export default class NewTradePage extends React.Component {
 
     handleCancel = () => {
         this.props.history.goBack();
-    }
+    };
 
     render() {
         return (
             <div>
                 <ApplicationBar subtitle="Neues Tauschgeschäft erstellen" />
-                <div className="base-page">
+                <ContentContainer>
                     {this.props.trade &&
                         <TradeEditor
                             onSave={this.handleSave}
@@ -82,7 +83,7 @@ export default class NewTradePage extends React.Component {
                             userArticlesInfo={this.props.userArticlesInfo}
                         />
                     }
-                </div>
+                </ContentContainer>
             </div>
         );
     }

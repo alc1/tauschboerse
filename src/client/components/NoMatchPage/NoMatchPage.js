@@ -2,11 +2,14 @@ import React from 'react';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import Placeholder from '../../containers/Placeholder';
+import ContentContainer from '../ContentContainer/ContentContainer';
 
 const NoMatchPage = ({ location }) => (
     <div>
         <ApplicationBar/>
-        <Placeholder width={300} height={300} text={`Seite nicht gefunden: ${location.pathname}`}/>
+        <ContentContainer>
+            <Placeholder width={300} height={300} text={`Seite nicht gefunden: ${location.pathname}`}/>
+        </ContentContainer>
     </div>
 );
 

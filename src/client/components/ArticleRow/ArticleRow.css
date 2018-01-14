@@ -45,14 +45,17 @@
 
 .article-row__title {
     font-size: 1.5em;
+    margin: 5px;
 }
 
 .article-row__categories {
-    font-style: italic;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .article-row__description {
     white-space: pre-wrap;
+    margin: 5px;
 }
 
 .article-row__properties {
@@ -74,5 +77,9 @@
 
     .article-row__properties {
         align-items: center;
+    }
+
+    .article-row__categories {
+        justify-content: center;
     }
 }
