@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Step, Stepper, StepButton } from 'material-ui/Stepper';
+import Paper from 'material-ui/Paper';
+import { Step, Stepper, StepButton, StepLabel } from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 
@@ -14,9 +15,18 @@ const STEP_IDX_SUMMARY = 2;
 
 const STEP_LAST_IDX = 2;
 
+const stepButtonStyle = {fontSize: '1.25rem'};
+
 export default class TradeEditor extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.orientation = 'horizontal';
+    }
+
     static propTypes = {
+        height: PropTypes.number.isRequired,
         isCreating: PropTypes.bool.isRequired,
         onCancel: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
@@ -28,12 +38,35 @@ export default class TradeEditor extends React.Component {
         toggleArticle: PropTypes.func.isRequired,
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
-        userArticlesInfo: PropTypes.object
+        userArticlesInfo: PropTypes.object,
+        width: PropTypes.number.isRequired
     };
 
     static defaultProps = {
         stepIndex: 0
     }
+
+    componentDidMount() {
+        this.orientation = this.props.width <= 750 ? 'vertical' : 'horizontal';
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (newProps.width !== this.props.width) {
+            let orientation = this.props.width <= 750 ? 'vertical' : 'horizontal';
+            if (this.orientation !== orientation) {
+                this.orientation = orientation;
+            }
+        }
+    }
+
+    // componentDidUpdate(previousProps, previousState) {
+    //     if (previousProps.width !== this.props.width) {
+    //         let isVertical = this.width <= 750;
+    //         if (this.isVertical !== isVertical) {
+    //             this.isVertical = isVertical;
+    //         }
+    //     }
+    // }
 
     canGoToPreviousStep = () => this.props.stepIndex > 0;
 
@@ -89,6 +122,7 @@ export default class TradeEditor extends React.Component {
                 <Articles
                     articles={chosenArticles}
                     title={chosenTitle}
+                    emptyText="Bisher keine Artikel ausgewählt"
                     isEditing={true}
                     selected={true}
                     onToggleArticle={toggleArticle}
@@ -96,6 +130,7 @@ export default class TradeEditor extends React.Component {
                 <Articles
                     articles={availableArticles}
                     title={availableTitle}
+                    emptyText="Alle verfügbaren Artikel sind ausgewählt"
                     isEditing={true}
                     selected={false}
                     filtering={true}
@@ -191,35 +226,37 @@ export default class TradeEditor extends React.Component {
             </div>
         );
 
+        let useLongLabel = (this.props.width <= 750) || (this.props.width > 1100);
+
         return (
             <div>
-                <div className="trade-editor__navigation">
-                    <h1 className="nowrap">{title}</h1>
-                    <Stepper linear={false} activeStep={this.props.stepIndex}>
+                <Paper className="trade-editor__navigation">
+                    <h1>{title}</h1>
+                    <Stepper key={this.orientation} linear={false} activeStep={this.props.stepIndex} orientation={this.orientation}>
                         <Step>
                             <StepButton onClick={() => this.props.setStepIndex(STEP_IDX_PARTNER_ARTICLES)}>
-                                Gewünschte Artikel auswählen
+                                <StepLabel style={stepButtonStyle}>{useLongLabel ? 'Gewünschte Artikel auswählen' : 'Gewünschte Artikel'}</StepLabel>
                             </StepButton>
                         </Step>
                         <Step>
                             <StepButton onClick={() => this.props.setStepIndex(STEP_IDX_USER_ARTICLES)}>
-                                Artikel um Tauschen
+                                <StepLabel style={stepButtonStyle}>{useLongLabel ? 'Artikel zum Tauschen' : 'Deine Artikel'}</StepLabel>
                             </StepButton>
                         </Step>
                         <Step>
                             <StepButton onClick={() => this.props.setStepIndex(STEP_IDX_SUMMARY)}>
-                                Zusammenfassung
+                                <StepLabel style={stepButtonStyle}>Zusammenfassung</StepLabel>
                             </StepButton>
                         </Step>
                     </Stepper>
                     {navigation}
-                </div>
-                <div className="trade-editor__info-container">
+                </Paper>
+                <Paper className="trade-editor__info-container">
                     <div>
-                        <div>{stepTitle}</div>
-                        <div>{stepDescription}</div>
+                        <div className="trade-editor__step-title">{stepTitle}</div>
+                        <div className="trade-editor__step-description">{stepDescription}</div>
                     </div>
-                </div>
+                </Paper>
                 <div className="trade-editor__step-container">
                     {this.renderStep()}
                 </div>

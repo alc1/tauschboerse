@@ -42,6 +42,7 @@
     "react-router-dom": "^4.1.2",
     "react-scripts": "^1.0.10",
     "react-ultimate-pagination-material-ui": "1.0.3",
+    "react-window-dimensions": "1.0.1",
     "recharts": "^0.22.4",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
