@@ -1,7 +1,13 @@
 [
     {"ownerId": 0, "title": "Tisch", "description": "Antiker Tisch aus dem Jahr 1900", "photos": ["tisch.jpg"], "categoryIds": [0], "created": "2018-01-08T00:00:00Z"},
-    {"ownerId": 0, "title": "PC", "description": "Computer mit super Grafikkarte", "photos": [], "categoryIds": [1]},
-    {"ownerId": 0, "title": "Fussballschuhe", "description": "Fussballschuhe, fast neu...", "photos": [], "categoryIds": [2, 3]},
+    {"ownerId": 0, "title": "PC", "description": "Computer mit super Grafikkarte", "photos": ["pc.jpg"], "categoryIds": [1]},
+    {"ownerId": 0, "title": "Fussballschuhe", "description": "Fussballschuhe, fast neu...", "photos": ["fussballschuhe.jpg"], "categoryIds": [2, 3]},
     {"ownerId": 1, "title": "Kinderwagen", "description": "Kind ist schon zu gross dafür", "photos": ["kinderwagen.jpg"], "categoryIds": [4]},
-    {"ownerId": 1, "title": "Golfschläger", "description": "Schläger mit Stahl-Schaften", "photos": ["golfschlaeger.jpg"], "categoryIds": [3]}
+    {"ownerId": 1, "title": "Golfschläger", "description": "Schläger mit Stahl-Schaften", "photos": ["golfschlaeger.jpg"], "categoryIds": [3]},
+    {"ownerId": 1, "title": "Radio", "description": "Schläger mit Stahl-Schaften", "photos": ["radio.jpg"], "categoryIds": [1]},
+    {"ownerId": 1, "title": "Tennisschläger", "description": "Schläger mit Stahl-Schaften", "photos": ["tennisschlaeger.jpg"], "categoryIds": [2]},
+    {"ownerId": 1, "title": "Hockeyschläger", "description": "Schläger mit Stahl-Schaften", "photos": ["hockeyschlaeger.jpg"], "categoryIds": [2]},
+    {"ownerId": 1, "title": "Fire HD 8 Tablet", "description": "Schläger mit Stahl-Schaften", "photos": ["tablet.jpg"], "categoryIds": [1]},
+    {"ownerId": 1, "title": "Nuggi", "description": "Nuggi mit Lautstärkerregler", "photos": ["nuggi.jpg"], "categoryIds": [4]},
+    {"ownerId": 2, "title": "Katze Verkleidung", "description": "Viel benutzt, aber immer noch im guten Zustand", "photos": ["catcostume.jpg"], "categoryIds": [5]}
 ]
