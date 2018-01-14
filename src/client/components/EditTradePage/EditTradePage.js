@@ -11,7 +11,9 @@ export default class EditTradePage extends React.Component {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
+        idParamName: PropTypes.string.isRequired,
         initTradeEditor: PropTypes.func.isRequired,
+        isCreating: PropTypes.bool.isRequired,
         loading: PropTypes.bool.isRequired,
         loadPartnerArticles: PropTypes.func.isRequired,
         loadTrade: PropTypes.func.isRequired,
@@ -38,9 +40,10 @@ export default class EditTradePage extends React.Component {
         this.props.initTradeEditor();
 
         const { tradeId } = this.props.match.params;
+        const id = this.props.match.params[this.props.idParamName];
 
         let loadPromises = [
-            this.props.loadTrade(tradeId),
+            this.props.loadTrade(id),
             this.props.loadUserArticles()
         ];
         Promise.all(loadPromises)
@@ -66,10 +69,11 @@ export default class EditTradePage extends React.Component {
     render() {
         return (
             <div>
-                <ApplicationBar subtitle="Tauschgeschäft bearbeiten" />
+                <ApplicationBar subtitle={this.props.isCreating ? 'Neues Tauschgeschäft erstellen' : 'Tauschgeschäft bearbeiten'} />
                 <ContentContainer>
                     {this.props.trade &&
                         <TradeEditor
+                            isCreating={this.props.isCreating}
                             onSave={this.handleSave}
                             onCancel={this.handleCancel}
                             partnerArticlesInfo={this.props.partnerArticlesInfo}

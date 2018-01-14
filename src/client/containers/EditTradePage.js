@@ -15,7 +15,9 @@ function mapStateToProps(theState) {
         stepIndex: getStepIndex(theState),
         loading: isLoading(theState),
         userArticlesInfo: getUserArticlesInfo(theState),
-        partnerArticlesInfo: getPartnerArticlesInfo(theState)
+        partnerArticlesInfo: getPartnerArticlesInfo(theState),
+        idParamName: 'tradeId',
+        isCreating: false,
     };
 }
 

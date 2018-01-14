@@ -17,6 +17,7 @@ const STEP_LAST_IDX = 2;
 export default class TradeEditor extends React.Component {
 
     static propTypes = {
+        isCreating: PropTypes.bool.isRequired,
         onCancel: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
         partnerArticlesInfo: PropTypes.object,
@@ -170,7 +171,8 @@ export default class TradeEditor extends React.Component {
     }
 
     render() {
-        let title = this.props.trade ? `Tauschgeschäft mit ${this.props.trade.tradePartner.name} bearbeiten` : 'Unbekanntes Tauschgeschäft bearbeiten';
+        let titleVerb = this.props.isCreating ? 'erstellen' : 'bearbeiten';
+        let title = this.props.trade ? `Tauschgeschäft mit ${this.props.trade.tradePartner.name} ${titleVerb}` : `Unbekanntes Tauschgeschäft ${titleVerb}`;
         let stepTitle = this.getStepTitle();
         let stepDescription = this.getStepDescription();
 

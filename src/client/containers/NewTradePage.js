@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import NewTradePage from '../components/NewTradePage/NewTradePage';
+import EditTradePage from '../components/EditTradePage/EditTradePage';
 
 import { initTradeEditor, loadNewTrade, loadPartnerArticles, loadUserArticles, saveTrade, setFilterText, setPageNum, setStepIndex, toggleArticle } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
@@ -15,14 +15,16 @@ function mapStateToProps(theState) {
         stepIndex: getStepIndex(theState),
         loading: isLoading(theState),
         userArticlesInfo: getUserArticlesInfo(theState),
-        partnerArticlesInfo: getPartnerArticlesInfo(theState)
+        partnerArticlesInfo: getPartnerArticlesInfo(theState),
+        idParamName: 'articleId',
+        isCreating: true
     };
 }
 
 export default connect(mapStateToProps, {
     initTradeEditor,
-    loadNewTrade,
     loadPartnerArticles,
+    loadTrade: loadNewTrade,
     loadUserArticles,
     saveTrade,
     setFilterText,
@@ -30,4 +32,4 @@ export default connect(mapStateToProps, {
     setPageNum,
     setStepIndex,
     toggleArticle
-})(NewTradePage);
+})(EditTradePage);
