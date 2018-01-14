@@ -6,6 +6,10 @@
     width: 100%;
 }
 
+.trade-summary + .trade-summary {
+    margin-top: 10px;
+}
+
 .trade-summary__trade-container {
     display: flex;
     flex-direction: row;
@@ -24,15 +28,17 @@
 }
 
 .trade-summary__articles-title {
-    color: #555;
+    color: black;
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.4em;
     margin: 10px;
 }
 
 .trade-summary__swap-image-wrapper {
     align-self: center;
     margin: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .trade-summary__swap-image {
