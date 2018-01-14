@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
 
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
@@ -55,7 +54,7 @@ export default class ArticleRow extends React.Component {
         const mainPhotoIndex = (photos && photos.length > 0) ? photos.reduce((mainPhotoIndex, photo, index) => photo.isMain ? index : mainPhotoIndex, 0) : 0;
         const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
         return (
-            <Paper className="article-row">
+            <div className="article-row">
                 <div className="article-row__checkbox-column">
                     {!hideCheckbox && <Checkbox checked={selected} disabled={!selectable} onCheck={this.onSelectionToggled}/>}
                 </div>
@@ -76,7 +75,7 @@ export default class ArticleRow extends React.Component {
                     {!hideCreationDate && <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>}
                     {!hideStatus && <ArticleStatusTag status={status}/>}
                 </div>
-            </Paper>
+            </div>
         );
     }
 }

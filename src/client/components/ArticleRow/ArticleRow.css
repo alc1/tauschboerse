@@ -7,6 +7,10 @@
     min-height: 100px;
 }
 
+.article-row:nth-child(2n+1) {
+    background-color: #fcfcfc;
+}
+
 .article-row__checkbox-column {
     display: flex;
     flex-direction: row;
@@ -22,6 +26,8 @@
     border: 1px solid lightgrey;
     border-radius: 10px;
     margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .article-row__image--clickable {

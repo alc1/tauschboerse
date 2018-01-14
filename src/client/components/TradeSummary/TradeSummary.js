@@ -26,7 +26,7 @@ export default class TradeSummary extends React.Component {
             <Paper className="trade-summary">
                 <div className="trade-summary__trade-container">
                     <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{trade.userArticleListTitle}</span>
+                        <span className="trade-summary__articles-title">{trade.userArticlesListTitle()}</span>
                         <ArticleList articles={trade.currentOffer.userArticles} loading={loading} hideCheckbox hideDescription hideOwner hideCreationDate hideStatus/>
                     </div>
                     <div className="trade-summary__swap-image-wrapper">
@@ -35,7 +35,7 @@ export default class TradeSummary extends React.Component {
                         </Paper>
                     </div>
                     <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{trade.partnerArticleListTitle}</span>
+                        <span className="trade-summary__articles-title">{trade.partnerArticlesListTitle()}</span>
                         <ArticleList articles={trade.currentOffer.tradePartnerArticles} loading={loading} hideCheckbox hideDescription hideOwner hideCreationDate hideStatus/>
                     </div>
                 </div>
