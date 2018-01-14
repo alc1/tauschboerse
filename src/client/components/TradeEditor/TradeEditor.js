@@ -99,6 +99,7 @@ export default class TradeEditor extends React.Component {
                     selected={false}
                     filtering={true}
                     filterText={filterText}
+                    paging={true}
                     pageNum={pageNum}
                     pageCount={pageCount}
                     onFilterChange={setFilterText}

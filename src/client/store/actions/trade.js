@@ -185,7 +185,7 @@ export const toggleArticle = (forUser, theArticle) => dispatch => {
 };
 
 export const setPageNum = (forUser, thePageNum) => (dispatch) => {
-    return dispatch(pageNumSet(thePageNum, true));
+    return dispatch(pageNumSet(thePageNum, forUser));
 };
 
 export const setFilterText = (forUser, theText) => (dispatch) => {

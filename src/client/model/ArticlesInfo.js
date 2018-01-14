@@ -30,36 +30,36 @@ export default class ArticlesInfo {
         return this.chosenArticles.length === 1;
     }
 
-    setArticles(articles) {
+    setArticles = (articles) => {
         this.articles = articles.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
         this.updateAvailableArticles();
 
         return this;
-    }
+    };
 
-    setChosenArticles(articles) {
+    setChosenArticles = (articles) => {
         this.chosenArticles = articles;
         this.updateAvailableArticles();
 
         return this;
-    }
+    };
 
-    setFiltertext(text) {
+    setFiltertext = (text) => {
         this.filterText = text;
         this.updateFilteredArticles();
 
         return this;
-    }
+    };
 
-    setPageSize(val) {
+    setPageSize = (val) => {
         this.pageSize = val;
         this.updatePageCount();
         this.updateVisibleArticles();
 
         return this;
-    }
+    };
 
-    setPageNum(val) {
+    setPageNum = (val) => {
         if (val < 1) {
             val = 1;
         } else if (val > this.pageCount) {
@@ -70,9 +70,9 @@ export default class ArticlesInfo {
         this.updateVisibleArticles();
 
         return this;
-    }
+    };
 
-    toggleArticle(theArticle) {
+    toggleArticle = (theArticle) => {
         let idx = this.chosenArticles.findIndex(article => article._id === theArticle._id);
     
         if (idx < 0) {
@@ -90,7 +90,7 @@ export default class ArticlesInfo {
         this.updateAvailableArticles();
 
         return this;
-    }
+    };
 
     updatePageCount() {
         this.pageCount = Math.floor(this.filteredArticles.length / this.pageSize);
@@ -116,6 +116,7 @@ export default class ArticlesInfo {
 
     updateVisibleArticles() {
         let startIdx = (this.pageNum - 1) * this.pageSize;
-        this.visibleArticles = this.filteredArticles.slice(startIdx, startIdx + this.pageSize);
+        let endIdx = startIdx + this.pageSize;
+        this.visibleArticles = this.filteredArticles.slice(startIdx, endIdx);
     }
 }
