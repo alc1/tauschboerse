@@ -50,7 +50,7 @@ export default class ArticleRow extends React.Component {
         const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus } = this.props;
         const { title, description, status, created, owner, categories, photos } = article;
         const name = (owner) ? owner.name : '';
-        const categoryChips = (categories) ? categories.map(category => <CategoryChip category={category}/>) : [];
+        const categoryChips = (categories) ? categories.map(category => <CategoryChip key={category._id} categoryName={category.name}/>) : [];
         const mainPhoto = (photos && photos.length > 0) ? photos.find(photo => photo.isMain) : null;
         const mainPhotoIndex = (photos && photos.length > 0) ? photos.reduce((mainPhotoIndex, photo, index) => photo.isMain ? index : mainPhotoIndex, 0) : 0;
         const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
