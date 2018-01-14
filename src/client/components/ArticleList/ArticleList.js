@@ -65,7 +65,7 @@ export default class ArticleList extends React.Component {
 
     render() {
         const { loading } = this.props;
-        let articleList = this.hasArticles() ? this.generateArticleList() : <Placeholder width={300} height={300} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>;
+        let articleList = this.hasArticles() ? this.generateArticleList() : <Placeholder width={100} height={100} isVertical={true} loading={loading} text="Keine Artikel gefunden" loadingText="... Artikel werden geladen ..."/>;
         return (
             <div className="article-list">
                 {articleList}
