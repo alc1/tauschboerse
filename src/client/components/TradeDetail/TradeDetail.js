@@ -268,7 +268,7 @@ class TradeDetail extends React.Component {
         const title = trade ? `Tauschgeschäft mit ${trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft';
 
         return (
-            <div className="base-page">
+            <div>
                 <h1>{title}</h1>
                 {this.renderUpdateMessage()}
                 <div className="trade-detail__info-container">

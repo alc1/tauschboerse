@@ -10,6 +10,8 @@ import PageButton from '../PageButton/PageButton';
 
 import { OK_MESSAGE } from '../../store/actions/application';
 
+import ContentContainer from '../ContentContainer/ContentContainer';
+
 import userDetailsValidator from '../../../shared/validations/userDetails';
 import Gender from '../../../shared/constants/Gender';
 
@@ -114,25 +116,27 @@ export default class UserDetailsPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Mein Konto verwalten"/>
-                <form className="user-editor__container" onSubmit={this.onSubmit}>
-                    <UserDetailsForm
-                        userDetails={userDetails}
-                        errors={errors}
-                        loading={loading}
-                        onChange={this.onChange}
-                        onGenderSelectionChange={this.onGenderSelectionChange}
-                        onSubmit={this.onSubmit}/>
-                    <UserPasswordForm
-                        userDetails={userDetails}
-                        errors={errors}
-                        loading={loading}
-                        onChange={this.onChange}
-                        onPasswordChangeChecked={this.onPasswordChangeToggled}
-                        onSubmit={this.onSubmit}/>
-                    <PageButton isSubmit={true} disabled={loading || !modified}>
-                        <SaveIcon/>
-                    </PageButton>
-                </form>
+                <ContentContainer>
+                    <form className="user-editor__container" onSubmit={this.onSubmit}>
+                        <UserDetailsForm
+                            userDetails={userDetails}
+                            errors={errors}
+                            loading={loading}
+                            onChange={this.onChange}
+                            onGenderSelectionChange={this.onGenderSelectionChange}
+                            onSubmit={this.onSubmit}/>
+                        <UserPasswordForm
+                            userDetails={userDetails}
+                            errors={errors}
+                            loading={loading}
+                            onChange={this.onChange}
+                            onPasswordChangeChecked={this.onPasswordChangeToggled}
+                            onSubmit={this.onSubmit}/>
+                        <PageButton isSubmit={true} disabled={loading || !modified}>
+                            <SaveIcon/>
+                        </PageButton>
+                    </form>
+                </ContentContainer>
             </div>
         );
     }

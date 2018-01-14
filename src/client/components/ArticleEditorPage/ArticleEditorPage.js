@@ -8,6 +8,7 @@ import Placeholder from '../../containers/Placeholder';
 import ArticleForm from '../ArticleForm/ArticleForm';
 import PhotosComponent from '../PhotosComponent/PhotosComponent';
 import PageButton from '../PageButton/PageButton';
+import ContentContainer from '../ContentContainer/ContentContainer';
 
 import articleDetailsValidator from '../../../shared/validations/articleDetails';
 
@@ -239,35 +240,37 @@ export default class ArticleEditorPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle={this.getSubTitle(isEditAllowed)}/>
-                {articleFound ? (
-                    <form className="article-editor__container" onSubmit={this.onSubmit}>
-                        <ArticleForm
-                            isDisplayMode={!isEditAllowed}
-                            article={{title, description, categories, status, created, owner, trades}}
-                            errors={errors}
-                            loading={loading}
-                            onChange={this.onChange}
-                            onSubmit={this.onSubmit}
-                            onAddCategory={this.onAddCategory}
-                            onRemoveCategory={this.onRemoveCategory}
-                            onPhotoLoaded={this.onPhotoLoaded}
-                            onRemovePhoto={this.onRemovePhoto}/>
-                        <PhotosComponent
-                            isDisplayMode={!isEditAllowed}
-                            photos={photosToRender}
-                            onPhotoLoaded={this.onPhotoLoaded}
-                            onRemovePhoto={this.onRemovePhoto}
-                            onSelectMainPhoto={this.onSelectMainPhoto}
-                            loading={loading}/>
-                        {isEditAllowed &&
-                            <PageButton isSubmit={true} disabled={loading || !modified}>
-                                <SaveIcon/>
-                            </PageButton>
-                        }
-                    </form>
-                ) : (
-                    <Placeholder width={300} height={300} loading={loading} text="Artikel nicht gefunden" loadingText="... Artikel wird geladen ..."/>
-                )}
+                <ContentContainer>
+                    {articleFound ? (
+                        <form className="article-editor__container" onSubmit={this.onSubmit}>
+                            <ArticleForm
+                                isDisplayMode={!isEditAllowed}
+                                article={{title, description, categories, status, created, owner, trades}}
+                                errors={errors}
+                                loading={loading}
+                                onChange={this.onChange}
+                                onSubmit={this.onSubmit}
+                                onAddCategory={this.onAddCategory}
+                                onRemoveCategory={this.onRemoveCategory}
+                                onPhotoLoaded={this.onPhotoLoaded}
+                                onRemovePhoto={this.onRemovePhoto}/>
+                            <PhotosComponent
+                                isDisplayMode={!isEditAllowed}
+                                photos={photosToRender}
+                                onPhotoLoaded={this.onPhotoLoaded}
+                                onRemovePhoto={this.onRemovePhoto}
+                                onSelectMainPhoto={this.onSelectMainPhoto}
+                                loading={loading}/>
+                            {isEditAllowed &&
+                                <PageButton isSubmit={true} disabled={loading || !modified}>
+                                    <SaveIcon/>
+                                </PageButton>
+                            }
+                        </form>
+                    ) : (
+                        <Placeholder width={300} height={300} loading={loading} text="Artikel nicht gefunden" loadingText="... Artikel wird geladen ..."/>
+                    )}
+                </ContentContainer>
             </div>
         );
     }

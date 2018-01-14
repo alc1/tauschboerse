@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import ApplicationBar from '../../containers/ApplicationBar';
 import Dashboard from '../../containers/Dashboard';
 import Intro from '../../containers/Intro';
+import ContentContainer from '../ContentContainer/ContentContainer';
 
 export default class HomePage extends React.Component {
 
@@ -16,11 +17,13 @@ export default class HomePage extends React.Component {
         return (
             <div>
                 <ApplicationBar/>
-                {!user ? (
-                    <Intro/>
-                ) : (
-                    <Dashboard user={user}/>
-                )}
+                <ContentContainer>
+                    {!user ? (
+                        <Intro/>
+                    ) : (
+                        <Dashboard user={user}/>
+                    )}
+                </ContentContainer>
             </div>
         );
     }
