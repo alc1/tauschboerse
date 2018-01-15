@@ -69,7 +69,7 @@ class TradeModel {
         return this.isOpen && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
     }
 
-    get counterOffer() {
+    get counteroffer() {
         return this.hasCounteroffer ? this.offers[0] : null;
     }
 
