@@ -14,36 +14,32 @@ import ApplicationBar from '../../containers/ApplicationBar';
 import ArticleGridList from '../ArticleGridList/ArticleGridList';
 import ArticleSearchInput from '../ArticleSearchInput/ArticleSearchInput';
 
+import './MarketplacePage.css';
+
 export default class MarketplacePage extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.newSearch = false;
         this.currentSearch = '';
+        this.pristine = true;
     }
 
     static propTypes = {
-        lastSearch: PropTypes.object,
-        user: PropTypes.object,
-        trade: PropTypes.object,
-        marketplaceSectionIndex: PropTypes.number.isRequired,
-        findArticles: PropTypes.func.isRequired,
         clearLastSearch: PropTypes.func.isRequired,
-        createTrade: PropTypes.func.isRequired,
-        openMarketplaceSection: PropTypes.func.isRequired,
-        loading: PropTypes.bool.isRequired,
+        findArticles: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
+        loading: PropTypes.bool.isRequired,
+        marketplaceSectionIndex: PropTypes.number.isRequired,
         muiTheme: PropTypes.shape({
             palette: PropTypes.shape({
                 primary1Color: PropTypes.string.isRequired,
             }).isRequired
-        }).isRequired
-    };
-
-    state = {
-        searchText: '',
-        userArticles: [],
-        notUserArticles: []
+        }).isRequired,
+        openMarketplaceSection: PropTypes.func.isRequired,
+        searchInfo: PropTypes.object,
+        user: PropTypes.object
     };
 
     getSearchText(location) {
@@ -91,32 +87,9 @@ export default class MarketplacePage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //
         if (this.newSearch) {
             this.doSearch(nextProps.history.location);
             this.newSearch = false;
-        }
-
-        //
-        if (nextProps.lastSearch) {
-            if ((!this.props.lastSearch) || (nextProps.lastSearch !== this.props.lastSearch)) {
-                let userArticles, notUserArticles;
-                if (this.props.user) {
-                    userArticles = nextProps.lastSearch.articles.filter(article => article.owner._id === this.props.user._id);
-                    notUserArticles = nextProps.lastSearch.articles.filter(article => article.owner._id !== this.props.user._id);
-                } else {
-                    userArticles = [];
-                    notUserArticles = nextProps.lastSearch.articles;
-                }
-                this.setState({ userArticles: userArticles, notUserArticles: notUserArticles });
-            }
-        } else {
-            this.setState({ userArticles: [], notUserArticles: [] });
-        }
-
-        //
-        if (nextProps.trade && (nextProps.trade !== this.props.trade)) {
-            this.props.history.push(`/trade/edit/${nextProps.trade._id}`);
         }
     }
 
@@ -131,7 +104,6 @@ export default class MarketplacePage extends React.Component {
 
     startTrade = (theArticle) => {
         this.props.history.push(`/trade/new/${theArticle._id}`);
-        // this.props.createTrade(theArticle);
     };
 
     showArticleDetails = (theArticle) => {
@@ -192,20 +164,24 @@ export default class MarketplacePage extends React.Component {
     };
 
     render() {
-        const { marketplaceSectionIndex } = this.props;
-        const { searchText, notUserArticles, userArticles } = this.state;
+        const { marketplaceSectionIndex, searchInfo } = this.props;
+        const { hasSearched, text, articles, userArticles } = searchInfo;
 
         return (
             <div>
                 <ApplicationBar subtitle="Auf dem Marktplatz"/>
-                <ArticleSearchInput text={searchText} onSearch={this.onSearch}/>
-                <Stepper
-                    activeStep={marketplaceSectionIndex}
-                    linear={false}
-                    orientation="vertical">
-                    {this.createMarketplaceSection(0, marketplaceSectionIndex, notUserArticles, this.createFirstSectionText(notUserArticles.length), false)}
-                    {this.props.user && this.createMarketplaceSection(1, marketplaceSectionIndex, userArticles, this.createSecondSectionText(userArticles.length), true)}
-                </Stepper>
+                <div className="marketplace__search-container">
+                    <ArticleSearchInput text={text} onSearch={this.onSearch}/>
+                </div>
+                {hasSearched &&
+                    <Stepper
+                        activeStep={marketplaceSectionIndex}
+                        linear={false}
+                        orientation="vertical">
+                        {this.createMarketplaceSection(0, marketplaceSectionIndex, articles, this.createFirstSectionText(articles.length), false)}
+                        {this.props.user && this.createMarketplaceSection(1, marketplaceSectionIndex, userArticles, this.createSecondSectionText(userArticles.length), true)}
+                    </Stepper>
+                }
             </div>
         );
     }
