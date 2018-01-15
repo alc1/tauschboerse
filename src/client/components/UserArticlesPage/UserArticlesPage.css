@@ -3,3 +3,7 @@
     flex-direction: row;
     padding: 10px;
 }
+
+.user-articles-page__filter-container {
+    margin: 10px 24px;
+}

@@ -137,26 +137,28 @@ export default class UserArticlesPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Meine Artikel verwalten"/>
-                <SearchBar
-                    ref={element => this.filterField = element}
-                    hintText="Nach Titel / Beschreibung / Kategorie filtern ..."
-                    onChange={this.onFilterTextChange}
-                    onRequestSearch={this.onFilterRequested}
-                    value={userArticlesFilter.filterText}
-                    disabled={loading}/>
-                <Paper>
-                    <RadioButtonGroup
-                        className="user-articles-page__status-container"
-                        name="status"
-                        valueSelected={userArticlesFilter.filterStatus}
-                        onChange={this.onFilterStatusChange}>
-                        <RadioButton style={statusRadioButtonStyle} disabled={loading} value={''} label="Alle Artikel"/>
-                        <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_FREE} label="Freie Artikel"/>
-                        <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DEALING} label="Artikel in Verhandlung"/>
-                        <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DEALED} label="Getauschte Artikel"/>
-                        <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DELETED} label="Gelöschte Artikel"/>
-                    </RadioButtonGroup>
-                </Paper>
+                <div className="user-articles-page__filter-container">
+                    <SearchBar
+                        ref={element => this.filterField = element}
+                        hintText="Nach Titel / Beschreibung / Kategorie filtern ..."
+                        onChange={this.onFilterTextChange}
+                        onRequestSearch={this.onFilterRequested}
+                        value={userArticlesFilter.filterText}
+                        disabled={loading}/>
+                    <Paper>
+                        <RadioButtonGroup
+                            className="user-articles-page__status-container"
+                            name="status"
+                            valueSelected={userArticlesFilter.filterStatus}
+                            onChange={this.onFilterStatusChange}>
+                            <RadioButton style={statusRadioButtonStyle} disabled={loading} value={''} label="Alle Artikel"/>
+                            <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_FREE} label="Freie Artikel"/>
+                            <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DEALING} label="Artikel in Verhandlung"/>
+                            <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DEALED} label="Getauschte Artikel"/>
+                            <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DELETED} label="Gelöschte Artikel"/>
+                        </RadioButtonGroup>
+                    </Paper>
+                </div>
                 <ArticleGridList articles={filteredArticles} articleActions={this.createArticleActions()} loading={loading}/>
                 <PageButton onClick={this.createNewArticle}>
                     <PlusIcon/>
