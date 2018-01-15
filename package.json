@@ -69,7 +69,7 @@
     "dump-data": "node ./src/server/dumpData.js",
     "start": "react-scripts start",
     "start-server": "node ./src/server/index.js",
-    "start-prod": "node ./src/server/index.js",
+    "start-prod": "node ./src/server/index.js prod",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test-e2e": "./node_modules/.bin/wdio ./test/config/wdio.conf.js",
