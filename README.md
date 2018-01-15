@@ -17,6 +17,11 @@
       * [Tests für die React-Komponenten](#tests-für-die-react-komponenten)
     * [b) End-to-End Tests](#b-end-to-end-tests)
     * [c) CSS Style Tests](#c-css-style-tests)
+    * [d) Echte Benutzertests](#d-echte-benutzertests)
+* [Rückblick](#rückblick)
+  * [Gut gelöst](#gut-gelöst)
+  * [Das nächste Mal anders](#das-nächste-mal-anders)
+  * [Gelernt](#gelernt)
 
 # Tauschbörse
 
@@ -82,13 +87,16 @@ Funktionserweiterungen:
 
 Das Tolle an diesem Projekt ist, dass es fast beliebig erweiterbar mit zusätzlichen Modulen/Funktionen ist. Die folgenden Punkte wurden zusätzlich zu den oben genannten Minimalanforderungen implementiert:
 
-* Startseite/Dashboard
-  * Die Startseite für einen nicht angemeldeten Benutzer zeigt eine tolle Animation, um die Applikation attraktiv zu machen.
-  * Durch die entsprechenden Optionen, was der Benutzer jetzt machen kann, wird er zu den Funktionen der Applikation geführt.
-  * Ist der Benutzer angemeldet, erscheint sein persönliches Dashboard.
-  * Darauf erscheinen sofort die eingehenden Tauschanfragen, welche er noch nicht beantwortet hat (falls vorhanden).
-  * Mit Hilfe von Pie-Charts hat er einen sofortigen Überblick über den Status seiner Artikel und Tauschgeschäfte.
-  * Zudem wird der angemeldete Benutzer per Links zu den weiteren Funktionen geführt.
+* Module
+  * Startseite/Dashboard
+    * Die Startseite für einen nicht angemeldeten Benutzer zeigt eine tolle Animation, um die Applikation attraktiv zu machen.
+    * Durch die entsprechenden Optionen, was der Benutzer jetzt machen kann, wird er zu den Funktionen der Applikation geführt.
+    * Ist der Benutzer angemeldet, erscheint sein persönliches Dashboard.
+    * Darauf erscheinen sofort die eingehenden Tauschanfragen, welche er noch nicht beantwortet hat (falls solche vorhanden sind).
+    * Mit Hilfe von Pie-Charts hat er einen sofortigen Überblick über den Status seiner Artikel und Tauschgeschäfte.
+    * Zudem wird der angemeldete Benutzer per Links zu den weiteren Funktionen geführt.
+* Funktionen:
+  * Innerhalb seines Artikels sieht ein angemeldeter Benutzer, in welchen Tauschgeschäften dieser Artikel involviert ist. Mit einem Klick kann er direkt in das Tauschgeschäft springen.
 
 ## Setup
 
@@ -179,3 +187,55 @@ Die Stylelint Tests können auch manuell mit folgendem Kommando ausgeführt werd
 ```bash
 npm run test-css
 ```
+
+### d) Echte Benutzertests
+
+Wir liessen die Applikation auch von echten Benutzern testen. Folgende Punkte waren das Resultat aus den Benutzertests:
+* Eine Testperson fand sich zuerst nicht so zurecht, was er jetzt wo machen kann. Darauf hin haben wir die Benutzerführung verbessert.
+* Das Kategorie-Eingabefeld auf der Artikelerfassungsseite hat zuerst die eingegebene Kategorie nur übernommen wenn man die Enter-Taste betätigt hat. Die Testperson hat jedoch nicht die Enter-Taste betätigt, sondern direkt den Speichern-Button geklickt. Somit wurde die Kategorie nicht gespeichert. Wir haben dies dann so geändert, dass die Kategorie beim Verlassen des Feldes (focus lost) übernommen wird.
+* Eine Testperson hätte erwartet, dass ein Klick auf das Logo bzw. den Applikationstitel auf die Startseite springt, wie es auch bei anderen Webseiten der Fall ist. Dies war bei uns zu diesem Zeitpunkt noch nicht so.
+* Dass ein angemeldeter Benutzer auf dem Marktplatz nach seinen eigenen Artikeln sucht, ist wohl eher unwahrscheinlich, weil er ja seinen eigenen Bereich "Artikelverwaltung" hat. Eine Testperson möchte aber gerne seine Artikel auch über den Marktplatz sehen, um zu schauen, wie sie im "öffentlichen" Bereich der Applikation den anderen Benutzern präsentiert werden.
+
+# Rückblick
+
+## Gut gelöst
+
+* **Komponenten-Strukturierung (technisch):**
+  * Aufteilung in sinnvolle Komponenten
+  * Und dadurch starke Kohäsion (Single Responsibility Prinzip) 
+* **Route Protection (Authentication):**
+  * Mit generischen Routing-Komponenten sind die Routen abgesichert, so dass nur der richtige Benutzer die Seite anschauen darf.
+  * Greift Benutzer auf einen Link zu, dessen Inhalt er nicht sehen darf, erscheint eine Meldung und er wird auf sein Dashboard umgeleitet.
+  * Greift ein nicht angemeldeter Benutzer auf einen Link zu, dessen Inhalt er nicht sehen darf, wird er auf die Login-Seite umgeleitet, wo er sich anmelden muss. Meldet er sich nun mit dem richtigen Benutzer an, wird er automatisch auf die ursprüngliche Seite umgeleitet, auf die er nun Zugriff hat.
+* **Einsatz von UI-Libraries/Packages (npm):**
+  * Man muss das Rad nicht neu erfinden, darum haben wir in einige Fällen (Bildgalerie, Kuchendiagramme, Paging-Mechanismuss, Chip-Eingabefeld...) diverse Libraries aus "npm" evaluiert und jeweils die passendsten davon in unserem Projekt eingebungen.
+* **Benutzerführung:**
+  * Von Beginn weg (Startseite/Dashboard) wird der Benutzer geführt. Es wird ihm erklärt, wo er was machen kann.
+  * Je nach Zustand des Tauschgeschäfts wird dem Benutzer erklärt, was er nun machen kann/muss.
+* **Lauffähig "out-of-the-box":**
+  * Wir haben uns bewusst auf JavaScript/Node.js beschränkt, so dass die Applikation nicht abhängig von weiteren Technologien oder Sprachen ist.
+  * Beispielsweise benötigt man keinen zusätzlichen DB-Server (MySQL).
+  * Dadurch ist die Applikation einfach zu installieren.
+* **Umgang mit Daten (Server):**
+  * "Objektstrukturfilterung"
+  * Data Cache (zusätzliche "in-memory" Datenbank)
+  * Testdaten / DB-Reset
+
+## Das nächste Mal anders
+
+* **Wahl des Frontend-Framework besser auf das Projekt abstimmen:**
+  * Material-UI ist ohne Zweifel ein gutes Framework. Dennoch sind wir in die "Pitfalls" von Frontend-Frameworks gefallen. Im Falle vom Material-UI-Framework war es vorallem das Styling von Komponenten. In der verwendeten Version kann man Styles aus externen Stylesheets nur via <code>class</code>-Attribut (bzw. <code>className</code> in React-Applikationen mit JSX) auf die Komponente anwenden, sofern diese alle mit <code>!important</code> versehen sind, was natürlich gar nicht schön ist. Die zweite Variante zum Stylen der Komponenten waren Inline-Styles zum Überschreiben der vordefinierten Styles. Letztere Variante haben wir angewendet. Gemäss Dokumentation von Material-UI wird sich dies in der nächsten Version ändern.
+* **Aufteilung der Daten in Redux-Store vs. Component-State besser abwägen:**
+  * Wann verwaltet man die Daten lieber im Redux-Store als im lokalen State einer Komponente? Bezüglich Wiederverwendbarkeit/Unabhängigkeit der Komponente muss man sich da gewisse Überlegungen machen.
+* **Design/Struktur im Redux-Store:**
+  * Auch in welcher Struktur die Daten im Redux-Store abgelegt werden, sollte man sich genug früh überlegen.
+* **Design-Vorschläge:**
+  * Auch die Design-Vorschläge müssen früh gemacht werden.
+  * Und diese sollten keinesfalls unterschätzt oder auf die leichte Schulter genommen werden.
+
+## Gelernt
+
+* **React, Redux, Material-UI, etc.**
+* **Teufel steckt nach wie vor im Detail**
+* **Aufwand bleibt nach wie vor gross ...**
+  * ... um solche Webapplikationen zu erstellen, obwohl inzwischen sehr gute Tools und Technologien vorhanden sind.
