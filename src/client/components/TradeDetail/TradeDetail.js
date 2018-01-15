@@ -281,7 +281,7 @@ class TradeDetail extends React.Component {
                     }
                 } else if (!(trade.isDeclined || trade.isInvalidated)) {
                     if (trade.isMakingCounteroffer) {
-                        actions = this.createCreatingOfferActions(trade);
+                        actions = this.createRequestActions(trade);
                     } else {
                         actions = this.createResponseActions(trade);
                     }
