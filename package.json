@@ -68,7 +68,7 @@
     "start": "react-scripts start",
     "reset-data": "node ./src/server/resetData.js",
     "start-server": "node ./src/server/index.js",
-    "reset_data-prod": "node ./src/server/resetData.js prod",
+    "reset-data-prod": "node ./src/server/resetData.js prod",
     "start-server-prod": "node ./src/server/index.js prod",
     "dump-data": "node ./src/server/dumpData.js",
     "build": "react-scripts build",
