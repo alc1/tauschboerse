@@ -45,6 +45,10 @@ export default class TradeDetailPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.trade && (nextProps.trade !== this.props.trade) && !nextProps.newVersionAvailable) {
+            this.startIntervalTimer(nextProps.trade);
+        }
+
         if (nextProps.newVersionAvailable) {
             this.stopIntervalTimer();
         }
@@ -52,16 +56,12 @@ export default class TradeDetailPage extends React.Component {
 
     loadTrade(tradeId) {
         this.stopIntervalTimer();
-        this.props.loadTrade(tradeId)
-            .then(() => {
-                // start an interval timer to check for changes in the displayed trade if required
-                this.startIntervalTimer();
-            });
+        this.props.loadTrade(tradeId);
     }
 
-    startIntervalTimer() {
+    startIntervalTimer(trade) {
         if (typeof this.props.checkForUpdatedTrade === 'function') {
-            if (this.props.trade.watchForUpdates) {
+            if (trade.watchForUpdates) {
                 this.intervalId = setInterval(() => { this.props.checkForUpdatedTrade(); }, 1000);
             }
         }
