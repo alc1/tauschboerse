@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Divider from 'material-ui/Divider';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import SearchBar from 'material-ui-search-bar';
@@ -76,11 +77,16 @@ export default class Articles extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="articles__articles-container">
-                        {this.props.filtering && <SearchBar ref={element => this.filterField = element}
-                            hintText="Nach Titel / Beschreibung / Kategorie filtern ..."
-                            onChange={this.handleFilterChange}
-                            onRequestSearch={this.handleRequestSearch}
-                            value={this.props.filterText} />}
+                        {this.props.filtering &&
+                            <div className="articles__filterContainer">
+                                <SearchBar ref={element => this.filterField = element}
+                                    hintText="Nach Titel / Beschreibung / Kategorie filtern ..."
+                                    onChange={this.handleFilterChange}
+                                    onRequestSearch={this.handleRequestSearch}
+                                    value={this.props.filterText} />
+                                <Divider />
+                            </div>
+                        }
                         <ArticleRowList articles={articles} emptyText={this.props.emptyText} isEditing={this.props.isEditing} selected={this.props.selected} onToggleArticle={this.handleToggleArticle} />
                         {paging && <UltimatePaginationMaterialUi currentPage={this.props.pageNum} totalPages={this.props.pageCount} onChange={this.handlePageChange} />}
                     </div>
