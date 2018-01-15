@@ -95,23 +95,23 @@ function setTradeArticles(req, res) {
         checkUserIsPartOfTrade(trade, articleOwners[0]);
 
         // the user can modify the trade - first make a new copy
-        trade = commonController.makeShallowCopy(trade);
+        let newTrade = commonController.makeShallowCopy(trade);
 
         // if the trade is still being initialised, update the articles
-        if (trade.state === TradeState.TRADE_STATE_INIT) {
-            trade.setArticles(articles);
+        if (newTrade.state === TradeState.TRADE_STATE_INIT) {
+            newTrade.setArticles(articles);
         }
         // For trades in negotiation with offers being initialised change the articles, otherwise create a new offer
-        else if (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
-            if (trade.hasCounteroffer) {
-                trade.setArticles(articles);
+        else if (newTrade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
+            if (newTrade.hasCounteroffer) {
+                newTrade.setArticles(articles);
             } else {
-                trade.addOffer(req.user, articles);
+                newTrade.addOffer(req.user, articles);
             }
         }
 
         // save the changes and send response back to caller        
-        saveAndSendTrade(trade, res);
+        saveAndSendTrade(newTrade, res);
     } catch(e) {
         handleError(e, res);
     }
