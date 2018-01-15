@@ -13,15 +13,15 @@ import {
     TRADE_STEP_INDEX_SET
 } from '../actions/trade';
 import { PAGE_SIZE_CHANGED } from '../actions/application';
-import ArticlesInfo from '../../model/ArticlesInfo';
+import ArticlesDisplayInfo from '../../model/ArticlesDisplayInfo';
 
 export const initialState = {
     trade: null,
     notFound: false,
     newVersionAvailable: false,
     stepIndex: 0,
-    userArticlesInfo: new ArticlesInfo(),
-    partnerArticlesInfo: new ArticlesInfo()
+    userArticlesInfo: new ArticlesDisplayInfo(),
+    partnerArticlesInfo: new ArticlesDisplayInfo()
 };
 
 export default function trade(theState = initialState, theAction) {
@@ -31,25 +31,25 @@ export default function trade(theState = initialState, theAction) {
         case PAGE_SIZE_CHANGED:
             return {
                 ...theState,
-                userArticlesInfo: new ArticlesInfo(theState.userArticlesInfo).setPageSize(theAction.pageSize),
-                partnerArticlesInfo: new ArticlesInfo(theState.partnerArticlesInfo).setPageSize(theAction.pageSize)
+                userArticlesInfo: new ArticlesDisplayInfo(theState.userArticlesInfo).setPageSize(theAction.pageSize),
+                partnerArticlesInfo: new ArticlesDisplayInfo(theState.partnerArticlesInfo).setPageSize(theAction.pageSize)
             };
 
         case TRADE_EDITOR_INITIALISED:
             return {
                 ...theState,
                 stepIndex: 0,
-                userArticlesInfo: new ArticlesInfo(theState.userArticlesInfo).setFiltertext(''),
-                partnerArticlesInfo: new ArticlesInfo(theState.partnerArticlesInfo).setFiltertext('')
+                userArticlesInfo: new ArticlesDisplayInfo(theState.userArticlesInfo).setFiltertext(''),
+                partnerArticlesInfo: new ArticlesDisplayInfo(theState.partnerArticlesInfo).setFiltertext('')
             };
 
         case TRADE_ARTICLE_FILTER_TEXT_SET:
             newState = { ...theState };
 
             if (theAction.forUser) {
-                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).setFiltertext(theAction.text);
+                newState.userArticlesInfo = new ArticlesDisplayInfo(theState.userArticlesInfo).setFiltertext(theAction.text);
             } else {
-                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).setFiltertext(theAction.text);
+                newState.partnerArticlesInfo = new ArticlesDisplayInfo(theState.partnerArticlesInfo).setFiltertext(theAction.text);
             }
 
             return newState;
@@ -64,9 +64,9 @@ export default function trade(theState = initialState, theAction) {
             newState = { ...theState };
 
             if (theAction.forUser) {
-                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).setPageNum(theAction.pageNum);
+                newState.userArticlesInfo = new ArticlesDisplayInfo(theState.userArticlesInfo).setPageNum(theAction.pageNum);
             } else {
-                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).setPageNum(theAction.pageNum);
+                newState.partnerArticlesInfo = new ArticlesDisplayInfo(theState.partnerArticlesInfo).setPageNum(theAction.pageNum);
             }
 
             return newState;
@@ -75,9 +75,9 @@ export default function trade(theState = initialState, theAction) {
             newState = { ...theState };
 
             if (theAction.forUser) {
-                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).toggleArticle(theAction.article);
+                newState.userArticlesInfo = new ArticlesDisplayInfo(theState.userArticlesInfo).toggleArticle(theAction.article);
             } else {
-                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).toggleArticle(theAction.article);
+                newState.partnerArticlesInfo = new ArticlesDisplayInfo(theState.partnerArticlesInfo).toggleArticle(theAction.article);
             }
 
             return newState;
@@ -96,8 +96,8 @@ export default function trade(theState = initialState, theAction) {
             return {
                 ...theState,
                 trade: theAction.trade,
-                userArticlesInfo: new ArticlesInfo(theState.userArticlesInfo).setChosenArticles(offer.userArticles.slice()),
-                partnerArticlesInfo: new ArticlesInfo(theState.partnerArticlesInfo).setChosenArticles(offer.tradePartnerArticles.slice())
+                userArticlesInfo: new ArticlesDisplayInfo(theState.userArticlesInfo).setChosenArticles(offer.userArticles.slice()),
+                partnerArticlesInfo: new ArticlesDisplayInfo(theState.partnerArticlesInfo).setChosenArticles(offer.tradePartnerArticles.slice())
             };
 
         case TRADE_NOT_FOUND:
@@ -111,8 +111,8 @@ export default function trade(theState = initialState, theAction) {
                 ...theState,
                 trade: null,
                 notFound: true,
-                userArticlesInfo: new ArticlesInfo(),
-                partnerArticlesInfo: new ArticlesInfo()
+                userArticlesInfo: new ArticlesDisplayInfo(),
+                partnerArticlesInfo: new ArticlesDisplayInfo()
             };
 
         case TRADE_ARTICLES_SAVED:
@@ -124,9 +124,9 @@ export default function trade(theState = initialState, theAction) {
             newState = { ...theState };
 
             if (theAction.forUser) {
-                newState.userArticlesInfo = new ArticlesInfo(theState.userArticlesInfo).setArticles(theAction.articles);
+                newState.userArticlesInfo = new ArticlesDisplayInfo(theState.userArticlesInfo).setArticles(theAction.articles);
             } else {
-                newState.partnerArticlesInfo = new ArticlesInfo(theState.partnerArticlesInfo).setArticles(theAction.articles);
+                newState.partnerArticlesInfo = new ArticlesDisplayInfo(theState.partnerArticlesInfo).setArticles(theAction.articles);
             }
 
             return newState;

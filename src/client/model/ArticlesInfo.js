@@ -1,7 +1,7 @@
 import filterArticles from '../../shared/filterArticles';
 import { DEFAULT_PAGE_SIZE } from '../utils/constants';
 
-export default class ArticlesInfo {
+export default class ArticlesDisplayInfo {
     constructor(articlesInfo) {
         if (typeof articlesInfo === 'undefined') {
             this.articles = [];
@@ -28,6 +28,10 @@ export default class ArticlesInfo {
 
     get hasOnlyOneChosenArticle() {
         return this.chosenArticles.length === 1;
+    }
+
+    get hasAvailableArticles() {
+        return this.availableArticles.length > 0;
     }
 
     setArticles = (articles) => {
