@@ -106,7 +106,7 @@ function setTradeArticles(req, res) {
             if (trade.hasCounteroffer) {
                 trade.setArticles(articles);
             } else {
-                trade.addOffer(articles);
+                trade.addOffer(req.user, articles);
             }
         }
 
