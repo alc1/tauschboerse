@@ -36,8 +36,8 @@ export default class ArticleRow extends React.Component {
         hideCheckbox: false,
         hideCategories: false,
         hideDescription: false,
-        hideOwner: false,
-        hideCreationDate: false,
+        hideOwner: true,
+        hideCreationDate: true,
         hideStatus: false
     };
 
