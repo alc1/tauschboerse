@@ -5,7 +5,7 @@ const articlesController = require('../controller/articlesController');
 const authenticationMiddleware = require('../middleware/authentication');
 const requestingUserProviderMiddleware = require('../middleware/requestingUserProvider');
 
-router.get('/', articlesController.findArticles);
+router.get('/', requestingUserProviderMiddleware, articlesController.findArticles);
 router.post('/', authenticationMiddleware, articlesController.createArticle);
 router.get('/:articleId', requestingUserProviderMiddleware, articlesController.getArticleById);
 router.post('/:articleId/photos', authenticationMiddleware, articlesController.addPhoto);

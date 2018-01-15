@@ -115,11 +115,23 @@ function findArticles(req, res) {
     const { text } = req.query;
 
     // only available articles should be considered
-    let articles = dataCache.getAllArticles().filter(a => (a.status !== ArticleStatus.STATUS_DEALED) && (a.status !== ArticleStatus.STATUS_DELETED));
+    let allArticles = dataCache.getAllArticles().filter(a => (a.status !== ArticleStatus.STATUS_DEALED) && (a.status !== ArticleStatus.STATUS_DELETED));
+
+    // find articles using the given text
+    let articles, userArticles;
+    let foundArticles = filterArticles(text, allArticles);
+    if (req.user) {
+        let userId = req.user._id;
+        userArticles = foundArticles.filter(article => article.owner._id === userId);
+        articles = foundArticles.filter(article => article.owner._id !== userId);
+    } else {
+        articles = foundArticles;
+        userArticles = [];
+    }
 
     res.json({
-        articles: filterArticles(text, articles),
-        version: 0
+        articles: articles,
+        userArticles: userArticles
     });
 }
 
