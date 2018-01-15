@@ -5,7 +5,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Articles from '../Articles/Articles';
 import ActionBox from '../ActionBox/ActionBox';
 
+import ActionDescriptor from '../../model/ActionDescriptor';
+
 import './TradeDetail.css';
+
+// overridden styles on buttons in ActionBoxes
+const buttonStyle = { marginLeft: '10px', marginRight: '10px', marginBottom: '10px' };
 
 class TradeDetail extends React.Component {
 
@@ -134,119 +139,117 @@ class TradeDetail extends React.Component {
         return content;
     }
 
+    // turns a list of ActionDescriptors into a list ActionBoxes in a container for displaying
+    renderActionBoxes(actions) {
+        return (
+            <div className="trade-detail__actions-container">
+                {actions.map(action => (
+                    <ActionBox title={action.title} text={action.text}>
+                        <RaisedButton data-button-id={action.buttonId} style={buttonStyle} label={action.label} disabled={action.disabled} onClick={action.onClick} />
+                    </ActionBox>
+                ))}
+            </div>
+        );
+    }
+
+    createMakeCounterofferAction(trade) {
+        return (
+            new ActionDescriptor('Ein Gegenangebot machen', this.handleMakeCounteroffer, 'makeCounteroffer')
+                .setText('Angebot machen')
+                .setLabel('Gegenangebot erstellen')
+        );
+    }
+
+    createRequestActions(trade) {
+        return [
+            new ActionDescriptor('Senden', this.handleMakeOffer, 'makeOffer')
+                .setText('')
+                .setDisabled(this.props.trade.cannotSubmit),
+
+            new ActionDescriptor('Bearbeiten', this.handleEditOffer, 'editOffer')
+                .setText('')
+                .setDisabled(this.props.trade.cannotSubmit),
+
+            new ActionDescriptor('Löschen', this.handleDeleteOffer, 'deleteOffer')
+                .setText('')
+                .setDisabled(this.props.trade.cannotSubmit),
+        ];
+    }
+
+    createResponseActions(trade) {
+        return [
+            new ActionDescriptor('Den Handel zustimmen', this.handleAccept, 'accept')
+                .setText('Zustimmen')
+                .setLabel('Zustimmen'),
+
+            new ActionDescriptor('Den Angebot ablehnen', this.handleDecline, 'decline')
+                .setText('Ablehnen')
+                .setLabel('Ablehnen'),
+
+            this.createMakeCounterofferAction(trade)
+        ];
+    }
+
+    createDeliverActions(trade) {
+        return [
+            new ActionDescriptor('Die Artikel abgeben', this.handleDelivered, 'delivered')
+                .setText(`Wenn Du Deine Artikel ${trade.tradePartner.name} gesendet hast, kannst Du hier angeben, dass sie auf dem Weg sind.`)
+                .setLabel('Artikel abgeben')
+        ];
+    }
+
+    createWithrawActions(trade, canMakeCounteroffer) {
+        let actions = [
+            new ActionDescriptor('Den Angebot zurückziehen', this.handleWithdrawOffer, 'withdrawOffer')
+                .setText('Tauschvorschlag zurückziehen')
+                .setLabel('Zurückziehen')
+        ];
+
+        if (canMakeCounteroffer) {
+            actions.push(this.createMakeCounterofferAction(trade));
+        }
+
+        return actions;
+    }
+
     renderActions(trade) {
-        let content = null;
+        let actions;
 
         if (trade) {
+            // define the actions relevant to the trades state and the user's role in the trade
             if (trade.isNew) {
-                content = (
-                    <div className="trade-detail__actions-container">
-                        <ActionBox title="Senden" text="Sie können ">
-                            <RaisedButton data-button-id="makeOffer" label="Senden" disabled={this.props.trade.cannotSubmit} onClick={this.handleMakeOffer} />
-                        </ActionBox>
-                        <ActionBox title="Bearbeiten" text="Sie haben den Handel [xy] nocht nicht unterbreitet. Sie können den Vorschlag bearbeiten.">
-                            <RaisedButton data-button-id="editOffer" label="Bearbeiten" onClick={this.handleEditOffer} />
-                        </ActionBox>
-                        <ActionBox title="Löschen" text="Sie haben den Handel [xy] noch nicht unterbreitet. Sie können den Vorschlag löschen.">
-                            <RaisedButton data-button-id="editOffer" label="Löschen" onClick={this.handleDeleteOffer} />
-                        </ActionBox>
-                    </div>
-                );
+                actions = this.createRequestActions(trade);
             } else if (trade.isUserSender) {
                 if (trade.isFinished) {
                     if (trade.isCompleted && !trade.userHasDelivered) {
-                        content = (
-                            <div className="trade-detail__actions-container">
-                                <ActionBox title="Die Artikel abgeben" text={`Wenn Du Deine Artikel ${trade.tradePartner.name} gesendet hast, kannst Du hier angeben, dass sie auf dem Weg sind.`}>
-                                    <RaisedButton data-button-id="delivered" label="Artikel abgegeben" onClick={this.handleDelivered}/>
-                                </ActionBox>
-                            </div>
-                        );
+                        actions = this.createDeliverActions(trade);
                     }
                 } else if (trade.isInvalidated || trade.isDeclined) {
                     if (trade.isMakingCounteroffer) {
-                        content = (
-                            <div className="trade-detail__actions-container">
-                                <ActionBox title="Senden" text="Sie können ">
-                                    <RaisedButton data-button-id="makeOffer" label="Senden" disabled={this.props.trade.cannotSubmit} onClick={this.handleMakeOffer} />
-                                </ActionBox>
-                                <ActionBox title="Bearbeiten" text="Sie haben den Handel [xy] nocht nicht unterbreitet. Sie können den Vorschlag bearbeiten.">
-                                    <RaisedButton data-button-id="editOffer" label="Bearbeiten" onClick={this.handleEditOffer} />
-                                </ActionBox>
-                                <ActionBox title="Löschen" text="Sie haben den Handel [xy] noch nicht unterbreitet. Sie können den Vorschlag löschen.">
-                                    <RaisedButton data-button-id="editOffer" label="Löschen" onClick={this.handleDeleteOffer} />
-                                </ActionBox>
-                            </div>
-                        );
+                        actions = this.createRequestActions(trade);
                     } else {
-                        content = (
-                            <div className="trade-detail__actions-container">
-                                <ActionBox title="Den Angebot zurückziehen" text="Tauschvorschlag zurückziehen">
-                                    <RaisedButton data-button-id="withdrawOffer" label="Zurückziehen" onClick={this.handleWithdrawOffer}/>
-                                </ActionBox>
-                                <ActionBox title="Ein Gegenangebot machen" text="Angebot machen">
-                                    <RaisedButton data-button-id="makeCounteroffer" label="Gegenangebot erstellen" onClick={this.handleMakeCounteroffer}/>
-                                </ActionBox>
-                            </div>
-                        );
+                        actions = this.createWithrawActions(trade, true);
                     }
                 } else {
-                    content = (
-                        <div className="trade-detail__actions-container">
-                            <ActionBox title="Den Angebot zurückziehen" text="Tauschvorschlag zurückziehen">
-                                <RaisedButton data-button-id="withdrawOffer" label="Zurückziehen" onClick={this.handleWithdrawOffer}/>
-                            </ActionBox>
-                        </div>
-                    );
+                    actions = this.createWithrawActions(trade, false)
                 }
             } else if (trade.isUserReceiver) {
                 if (trade.isFinished) {
                     if (trade.isCompleted && !trade.userHasDelivered) {
-                        content = (
-                            <div className="trade-detail__actions-container">
-                                <ActionBox title="Die Artikel abgeben" text={`Wenn Du Deine Artikel ${trade.tradePartner.name} gesendet hast, kannst Du hier angeben, dass sie auf dem Weg sind.`}>
-                                    <RaisedButton data-button-id="delivered" label="Artikel abgegeben" onClick={this.handleDelivered}/>
-                                </ActionBox>
-                            </div>
-                        );
+                        actions = this.createDeliverActions(trade);
                     }
                 } else if (!(trade.isDeclined || trade.isInvalidated)) {
                     if (trade.isMakingCounteroffer) {
-                        content = (
-                            <div className="trade-detail__actions-container">
-                                <ActionBox title="Senden" text="Sie können ">
-                                    <RaisedButton data-button-id="makeOffer" label="Senden" disabled={this.props.trade.cannotSubmit} onClick={this.handleMakeOffer} />
-                                </ActionBox>
-                                <ActionBox title="Bearbeiten" text="Sie haben den Handel [xy] nocht nicht unterbreitet. Sie können den Vorschlag bearbeiten.">
-                                    <RaisedButton data-button-id="editOffer" label="Bearbeiten" onClick={this.handleEditOffer} />
-                                </ActionBox>
-                                <ActionBox title="Löschen" text="Sie haben den Handel [xy] noch nicht unterbreitet. Sie können den Vorschlag löschen.">
-                                    <RaisedButton data-button-id="editOffer" label="Löschen" onClick={this.handleDeleteOffer} />
-                                </ActionBox>
-                            </div>
-                        );
+                        actions = this.createCreatingOfferActions(trade);
                     } else {
-                        content = (
-                            <div className="trade-detail__actions-container">
-                                <ActionBox title="Den Handel zustimmen" text="Zustimmen">
-                                    <RaisedButton data-button-id="accept" label="Zustimmen" onClick={this.handleAccept}/>
-                                </ActionBox>
-                                <ActionBox title="Den Angebot ablehnen" text="Ablehnen">
-                                    <RaisedButton data-button-id="decline" label="Ablehnen" onClick={this.handleDecline}/>
-                                </ActionBox>
-                                <ActionBox title="Ein Gegenangebot machen" text="Angebot machen">
-                                    <RaisedButton data-button-id="makeCounteroffer" label="Gegenangebot erstellen" onClick={this.handleMakeCounteroffer}/>
-                                </ActionBox>
-                            </div>
-                        );
+                        actions = this.createResponseActions(trade);
                     }
                 }
-            } else {
-
             }
         }
 
-        return content;
+        // if any actions defined render the corresponding ActionBoxes
+        return (actions) ? this.renderActionBoxes(actions) : null;
     }
 
     renderUpdateMessage() {
