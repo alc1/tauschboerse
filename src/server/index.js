@@ -25,7 +25,8 @@ function startServer(port) {
 env(path.join(__dirname, 'config.env'));
 
 const port = isProd ? process.env.PORT_PROD : process.env.PORT;
-const webroot = isProd ? process.env.WEBROOT_PROD : process.env.WEBROOT;
+const webroot = path.join(__dirname, isProd ? process.env.WEBROOT_PROD : process.env.WEBROOT);
+const indexHtml = path.join(webroot, '/index.html');
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -37,11 +38,18 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json({limit: '10mb'}));
 
-app.use('/', express.static(path.join(__dirname, webroot)));
+app.use('/', express.static(webroot));
+
 app.use('/api/articles', articlesRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/trades', tradesRoutes);
 app.use('/api/users', usersRoutes);
+
+// catch-all: send back index.html for all requests that nake it this far
+app.get('*', (request, response) => {
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.sendFile(indexHtml);
+});
 
 initDataCache(false)
     .then(() => {
