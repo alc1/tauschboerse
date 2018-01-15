@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 
 import Articles from '../Articles/Articles';
+import PageTitle from '../../containers/PageTitle';
 
 import './TradeEditor.css';
 
@@ -44,7 +45,7 @@ export default class TradeEditor extends React.Component {
 
     static defaultProps = {
         stepIndex: 0
-    }
+    };
 
     componentDidMount() {
         this.orientation = this.props.width <= 750 ? 'vertical' : 'horizontal';
@@ -130,7 +131,7 @@ export default class TradeEditor extends React.Component {
                 <Articles
                     articles={availableArticles}
                     title={availableTitle}
-                    emptyText={hasAvailableArticles ? 'keine Artikel entsprechen den Filtertext' : 'Alle verfügbaren Artikel sind ausgewählt'}
+                    emptyText={hasAvailableArticles ? 'Keine Artikel entsprechen dem Filtertext' : 'Alle verfügbaren Artikel sind ausgewählt'}
                     isEditing={true}
                     selected={false}
                     filtering={true}
@@ -230,8 +231,8 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
+                <PageTitle>{title}</PageTitle>
                 <Paper className="trade-editor__navigation">
-                    <h1>{title}</h1>
                     <Stepper key={this.orientation} linear={false} activeStep={this.props.stepIndex} orientation={this.orientation}>
                         <Step>
                             <StepButton onClick={() => this.props.setStepIndex(STEP_IDX_PARTNER_ARTICLES)}>
