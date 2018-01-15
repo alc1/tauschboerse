@@ -168,13 +168,13 @@ class DataCache {
 
 const dataCache = new DataCache();
 
-function initDataCache(reset) {
+function initDataCache(reset, webroot) {
     console.log('Initialising data cache...');
 
     let promise = dataCache.init();
 
-    if (reset) {
-        promise = promise.then(() => resetData(dataCache));
+    if (reset, webroot) {
+        promise = promise.then(() => resetData(dataCache, webroot));
     }
 
     return promise;

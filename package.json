@@ -65,11 +65,12 @@
     "webdriverio": "^4.9.11"
   },
   "scripts": {
-    "reset-data": "node ./src/server/resetData.js",
-    "dump-data": "node ./src/server/dumpData.js",
     "start": "react-scripts start",
+    "reset-data": "node ./src/server/resetData.js",
     "start-server": "node ./src/server/index.js",
-    "start-prod": "node ./src/server/index.js prod",
+    "reset_data-prod": "node ./src/server/resetData.js prod",
+    "start-server-prod": "node ./src/server/index.js prod",
+    "dump-data": "node ./src/server/dumpData.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test-e2e": "./node_modules/.bin/wdio ./test/config/wdio.conf.js",

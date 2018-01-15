@@ -6,7 +6,7 @@ const TradeState = require('../../shared/constants/TradeState');
 const OfferState = require('../../shared/constants/OfferState');
 const Gender = require('../../shared/constants/Gender');
 
-function resetData(dataCache) {
+function resetData(dataCache, webroot) {
     var articles, categories, trades, users;
     var photoFilenameMap = [];
 
@@ -101,22 +101,25 @@ function resetData(dataCache) {
         return newFilename;
     }
     
-    function createDirectory(dir) {
+    function createDirectory(dir, addToLog) {
         const dirPath = path.join(dir);
         if (!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath);
+            if (addToLog) {
+                console.log(`Directory ${dirPath} created`);
+            }
         }
     }
 
     function createArticleImagesRootDirectory() {
-        createDirectory('./public');
-        createDirectory('./public/images');
-        createDirectory('./public/images/article');
+        createDirectory(webroot, true);
+        createDirectory(`${webroot}/images`, true);
+        createDirectory(`${webroot}/images/article`, true);
     }
 
     function copyPhotos() {
         // first delete all current photos if necessary
-        let imgPath = './public/images/article/';
+        let imgPath = `${webroot}/images/article/`;
         if (fs.existsSync(imgPath)) {
             emptyDirForce(imgPath);
         }
@@ -129,7 +132,7 @@ function resetData(dataCache) {
             console.log('Copying article photos...');
             photoFilenameMap.forEach(rec => {
                 console.log(`copying ${rec.originalName} to .../${rec.article._id}/${rec.filename}...`);
-                createDirectory(`${imgPath}${rec.article._id}`);
+                createDirectory(`${imgPath}${rec.article._id}`, false);
                 copyFile(`./test/testdata/images/${rec.originalName}`, `${imgPath}${rec.article._id}/${rec.filename}`, err => console.log(err));
             });
         }
