@@ -116,7 +116,7 @@ export default class TradeEditor extends React.Component {
         }
     }
 
-    renderArticleChooser(availableArticles, chosenArticles, filterText, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle) {
+    renderArticleChooser(availableArticles, chosenArticles, filterText, hasAvailableArticles, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle) {
         return (
             <div>
                 <Articles
@@ -130,7 +130,7 @@ export default class TradeEditor extends React.Component {
                 <Articles
                     articles={availableArticles}
                     title={availableTitle}
-                    emptyText="Alle verfügbaren Artikel sind ausgewählt"
+                    emptyText={hasAvailableArticles ? 'keine Artikel entsprechen den Filtertext' : 'Alle verfügbaren Artikel sind ausgewählt'}
                     isEditing={true}
                     selected={false}
                     filtering={true}
@@ -148,7 +148,7 @@ export default class TradeEditor extends React.Component {
 
     renderPartnerArticleChooser() {
         const { trade, partnerArticlesInfo } = this.props;
-        const { visibleArticles, chosenArticles, filterText, pageCount, pageNum } = partnerArticlesInfo;
+        const { visibleArticles, chosenArticles, filterText, hasAvailableArticles, pageCount, pageNum } = partnerArticlesInfo;
 
         let setFilterText = this.props.setFilterText.bind(this, false);
         let setPageNum = this.props.setPageNum.bind(this, false);
@@ -157,12 +157,12 @@ export default class TradeEditor extends React.Component {
         let chosenTitle = trade.partnerArticlesListTitle(chosenArticles.length === 1);
         let availableTitle = `Weitere Artikel von ${trade.tradePartner.name}, die Du auswählen könntest`;
 
-        return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
+        return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, hasAvailableArticles, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
     }
 
     renderUserArticleChooser() {
         const { trade, userArticlesInfo } = this.props;
-        const { visibleArticles, chosenArticles, filterText, pageCount, pageNum } = userArticlesInfo;
+        const { visibleArticles, chosenArticles, filterText, hasAvailableArticles, pageCount, pageNum } = userArticlesInfo;
 
         let setFilterText = this.props.setFilterText.bind(this, true);
         let setPageNum = this.props.setPageNum.bind(this, true);
@@ -171,7 +171,7 @@ export default class TradeEditor extends React.Component {
         let chosenTitle = trade.userArticlesListTitle(chosenArticles.length === 1);
         let availableTitle = `Weitere Artikel, die Du anbieten könntest`;
         
-        return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
+        return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, hasAvailableArticles, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
     }
 
     renderSummary() {
