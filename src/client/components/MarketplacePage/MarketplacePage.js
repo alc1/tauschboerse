@@ -13,6 +13,8 @@ import SectionOpenedIcon from 'material-ui/svg-icons/navigation/arrow-drop-down-
 import ApplicationBar from '../../containers/ApplicationBar';
 import ArticleGridList from '../ArticleGridList/ArticleGridList';
 import ArticleSearchInput from '../ArticleSearchInput/ArticleSearchInput';
+import ContentContainer from '../ContentContainer/ContentContainer';
+import Placeholder from '../../containers/Placeholder';
 
 import './MarketplacePage.css';
 
@@ -173,14 +175,17 @@ export default class MarketplacePage extends React.Component {
                 <div className="marketplace__search-container">
                     <ArticleSearchInput text={text} onSearch={this.onSearch}/>
                 </div>
-                {hasSearched &&
+                {hasSearched ?
                     <Stepper
                         activeStep={marketplaceSectionIndex}
                         linear={false}
                         orientation="vertical">
                         {this.createMarketplaceSection(0, marketplaceSectionIndex, articles, this.createFirstSectionText(articles.length), false)}
                         {this.props.user && this.createMarketplaceSection(1, marketplaceSectionIndex, userArticles, this.createSecondSectionText(userArticles.length), true)}
-                    </Stepper>
+                    </Stepper> :
+                    <ContentContainer>
+                        <Placeholder width={200} height={200} isVertical={true} text="Suche nach Artikeln, die Du gerne eintauschen möchtest"/>
+                    </ContentContainer>
                 }
             </div>
         );
