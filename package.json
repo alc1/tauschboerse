@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/alc-hsr/tauschboerse/issues"
   },
-  "homepage": "https://github.com/alc-hsr/tauschboerse#readme",
+  "homepage": "https://github.com/",
   "jest": {
     "collectCoverageFrom": [
       "src/client/**/*.{js,jsx}",
@@ -69,6 +69,7 @@
     "dump-data": "node ./src/server/dumpData.js",
     "start": "react-scripts start",
     "start-server": "node ./src/server/index.js",
+    "start-prod": "node ./src/server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test-e2e": "./node_modules/.bin/wdio ./test/config/wdio.conf.js",
