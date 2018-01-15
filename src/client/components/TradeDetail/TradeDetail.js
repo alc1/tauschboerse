@@ -167,12 +167,10 @@ class TradeDetail extends React.Component {
                 .setDisabled(this.props.trade.cannotSubmit),
 
             new ActionDescriptor('Bearbeiten', this.handleEditOffer, 'editOffer')
-                .setText('')
-                .setDisabled(this.props.trade.cannotSubmit),
+                .setText(''),
 
             new ActionDescriptor('Löschen', this.handleDeleteOffer, 'deleteOffer')
                 .setText('')
-                .setDisabled(this.props.trade.cannotSubmit),
         ];
     }
 
