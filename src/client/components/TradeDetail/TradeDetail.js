@@ -71,25 +71,68 @@ class TradeDetail extends React.Component {
 
     renderDescription(trade) {
         let content;
-        
+
+        // @Christian - eventuall können einige der Zustände zusammengefasst, d.h. bei gewissen Trade-Zuständen ist es vielleicht
+        // egal, ob der User Sender oder Receiver ist. Am besten machen ein Refactoring, wenn die Texts erfasst sind.
+
         if (trade) {
             if (trade.isNew) {
                 content = `Dieses Tauschgeschäft ist neu. Sobald Du die gewünschten Artikel und die Artikel, die Du hergeben willst, zusammengestellt hast, kannst Du den Tauschvorschlag ${trade.tradePartner.name} unterbreiten.`;
             } else if (trade.isUserSender) {
-                if (trade.isDeclined) {
-
+                if (trade.isCompleted) {
+                    if (trade.userHasDelivered) {
+                        // trade was completed successfully and the user has sent the traded items
+                        content = '';
+                    } else {
+                        // trade was completed successfully but the user hasn't sent the traded items yet
+                        content = '';
+                    }
+                } else if (trade.isCanceled) {
+                    content = '';
+                } else if (trade.isDeclined) {
+                    if (trade.isMakingCounteroffer) {
+                        // Offer was declined by the trade partner, the user has now prepared a counteroffer, but hasn't sent it yet
+                        content = '';
+                    } else {
+                        // Offer was declined by the trade partner, the user must now decide whether to make a counteroffer or cancel the trade
+                        content = '';
+                    }
                 } else if (trade.isInvalidated) {
-
+                    if (trade.isMakingCounteroffer) {
+                        // Offer was invalidated and the user has now prepared a counteroffer, but hasn't sent it yet
+                        content = '';
+                    } else {
+                        // Offer was invalidated and the user must now decide whether to make a counteroffer or cancel the trade
+                        content = '';
+                    }
                 } else {
-
+                    // the user has sent a request and is waiting for an answer/reaction
+                    content = '';
                 }
-            } else {
-                if (trade.isDeclined) {
-
+            } else if (trade.isUserReceiver) {
+                if (trade.isCompleted) {
+                    if (trade.userHasDelivered) {
+                        // trade was completed successfully and the user has sent the traded items
+                        content = '';
+                    } else {
+                        // trade was completed successfully but the user hasn't sent the traded items yet
+                        content = '';
+                    }
+                } else if (trade.isCanceled) {
+                    content = '';
+                } else if (trade.isDeclined) {
+                    // user has declined offer and is now waiting for a reaction from the other person
+                    content = '';
                 } else if (trade.isInvalidated) {
-
+                    // the offer was invalidated - the user has to wait to see what the other person (the sender) is going to do
+                    content = '';
                 } else {
-
+                    if (trade.isMakingCounteroffer) {
+                        // user has received a request and has prepared a counteroffer, but hasn't sent it yet
+                        content = '';
+                    } else {
+                        // user has received a request and must now decide how to respond/react
+                    }
                 }
             }
         } else {
