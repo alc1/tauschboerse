@@ -9,3 +9,7 @@ export const getStepIndex = (theState) => theState[TRADE_SLICE_NAME].stepIndex;
 export const getTrade = (theState) => theState[TRADE_SLICE_NAME].trade;
 
 export const getUserArticlesInfo = (theState) => theState[TRADE_SLICE_NAME].userArticlesInfo;
+
+export const getTradeNotFound = (theState) => theState[TRADE_SLICE_NAME].notFound;
+
+export const getTradeDeleted = (theState) => theState[TRADE_SLICE_NAME].deleted;

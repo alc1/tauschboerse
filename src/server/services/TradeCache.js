@@ -101,12 +101,12 @@ class TradeCache {
         return new Promise(saveOp);
     }
 
-    delete(id) {
+    delete(theTradeId) {
         let deleteOp = (function(resolve, reject) {
-            let trade = this.find(id);
-            if (trade) {
-                this.trades.remove(trade);
-                this.db.remove({ _id: trade._id }, function(err, numRemoved) {
+            let foundTrade = this.find(theTradeId);
+            if (foundTrade) {
+                this.trades = this.trades.filter(trade => trade._id !== theTradeId);
+                this.db.remove({ _id: theTradeId }, function(err, numRemoved) {
                     err ? reject(err) : resolve(true);
                 });
             } else {

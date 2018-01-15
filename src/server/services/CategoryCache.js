@@ -98,10 +98,10 @@ class CategoryCache {
 
     deleteById(theCategoryId) {
         let deleteOp = (function(resolve, reject) {
-            let category = this.findById(theCategoryId);
-            if (category) {
-                this.categories.remove(category);
-                this.db.remove({ _id: category._id }, function(err, numRemoved) {
+            let foundCategory = this.findById(theCategoryId);
+            if (foundCategory) {
+                this.categories = this.categories.filter(category => category._id !== theCategoryId);
+                this.db.remove({ _id: theCategoryId }, function(err, numRemoved) {
                     err ? reject(err) : resolve(true);
                 });
             } else {

@@ -153,9 +153,12 @@ export const saveTrade = () => (dispatch, getState) => {
 };
 
 export const deleteTrade = () => (dispatch, getState) => {
-    let trade = getTrade(getState());
+    let currentState = getState();
+    let trade = getTrade(currentState);
+    let user = getUser(currentState);
+
     return axios.delete(`/api/trades/${trade._id}`)
-        .then(response => dispatch(tradeDeleted()))
+        .then(response => dispatch(response.data.trade ? tradeFetched(new TradeModel(response.data.trade, user)) : tradeDeleted()))
         .catch(err => handleError(err, dispatch))
 }
 

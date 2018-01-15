@@ -32,8 +32,21 @@ function findAndFlagInvalidTrades(articles, ignoreTradeId) {
 }
 
 function setOfferState(offers, newState, idx = 0) {
-    let offer = makeShallowCopy(offers[idx]);
+    let offer = prepareOfferCopy(offers, idx);
     offer.state = newState;
+
+    return offer;
+}
+
+function setOfferArticles(offers, newArticles, idx = 0) {
+    let offer = prepareOfferCopy(offers, idx);
+    offer.articles = newArticles;
+
+    return offer;
+}
+
+function prepareOfferCopy(offers, idx = 0) {
+    let offer = makeShallowCopy(offers[idx]);
     offers[idx] = offer;
 
     return offer;
@@ -41,8 +54,11 @@ function setOfferState(offers, newState, idx = 0) {
 
 function prepareTradeCopy(trade, newState) {
     let newTrade = makeShallowCopy(trade);
-    newTrade.state = newState;
     newTrade.offers = trade.offers.slice();
+
+    if (typeof newState !== 'undefined') {
+        newTrade.state = newState;
+    }
 
     return newTrade;
 }
@@ -62,6 +78,8 @@ function makeShallowCopy(obj) {
 module.exports = {
     findAndFlagInvalidTrades,
     setOfferState,
+    setOfferArticles,
+    prepareOfferCopy,
     prepareTradeCopy,
     makeShallowCopy
 };

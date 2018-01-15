@@ -18,6 +18,7 @@ import ArticlesDisplayInfo from '../../model/ArticlesDisplayInfo';
 export const initialState = {
     trade: null,
     notFound: false,
+    deleted: false,
     newVersionAvailable: false,
     stepIndex: 0,
     userArticlesInfo: new ArticlesDisplayInfo(),
@@ -87,6 +88,7 @@ export default function trade(theState = initialState, theAction) {
                 ...theState,
                 trade: null,
                 notFound: false,
+                deleted: false,
                 newVersionAvailable: false
             };
 
@@ -96,6 +98,8 @@ export default function trade(theState = initialState, theAction) {
             return {
                 ...theState,
                 trade: theAction.trade,
+                notFound: false,
+                deleted: false,
                 userArticlesInfo: new ArticlesDisplayInfo(theState.userArticlesInfo).setChosenArticles(offer.userArticles.slice()),
                 partnerArticlesInfo: new ArticlesDisplayInfo(theState.partnerArticlesInfo).setChosenArticles(offer.tradePartnerArticles.slice())
             };
@@ -111,6 +115,7 @@ export default function trade(theState = initialState, theAction) {
                 ...theState,
                 trade: null,
                 notFound: true,
+                deleted: true,
                 userArticlesInfo: new ArticlesDisplayInfo(),
                 partnerArticlesInfo: new ArticlesDisplayInfo()
             };

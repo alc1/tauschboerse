@@ -4,7 +4,7 @@ import TradeDetailPage from '../components/TradeDetailPage/TradeDetailPage';
 
 import { acceptTrade, checkForUpdatedTrade, declineTrade, loadTrade, setDelivered, submitTrade, withdrawTrade, deleteTrade } from '../store/actions/trade';
 import { setLoading } from '../store/actions/application';
-import { getNewVersionAvailable, getTrade } from '../store/selectors/trade';
+import { getNewVersionAvailable, getTrade, getTradeDeleted, getTradeNotFound } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
 import { isLoading } from '../store/selectors/application';
 
@@ -14,6 +14,8 @@ function mapStateToProps(theState) {
         newVersionAvailable: getNewVersionAvailable(theState),
         trade: getTrade(theState),
         user: getUser(theState),
+        notFound: getTradeNotFound(theState),
+        deleted: getTradeDeleted(theState)
     };
 }
 

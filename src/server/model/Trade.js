@@ -54,8 +54,10 @@ class Trade {
         return offer;
     }
 
-    setArticles(articles) {
-        this.currentOffer.articles = articles;
+    deleteCounteroffer() {
+        if (this.hasCounteroffer) {
+            this.offers.splice(0, 1);
+        }
     }
 
     getArticlesRemovedForCurentOffer() {

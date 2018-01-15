@@ -17,11 +17,13 @@ export default class TradeDetailPage extends React.Component {
         acceptTrade: PropTypes.func.isRequired,
         checkForUpdatedTrade: PropTypes.func,
         declineTrade: PropTypes.func.isRequired,
+        deleted: PropTypes.bool.isRequired,
         deleteTrade: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         loadTrade: PropTypes.func.isRequired,
         newVersionAvailable: PropTypes.bool.isRequired,
+        notFound: PropTypes.bool.isRequired,
         setDelivered: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         submitTrade: PropTypes.func.isRequired,
@@ -31,8 +33,10 @@ export default class TradeDetailPage extends React.Component {
     };
 
     static defaultProps = {
+        deleted: false,
         loading: false,
-        newVersionAvailable: false
+        newVersionAvailable: false,
+        notFound: false
     };
 
     componentDidMount() {
@@ -45,6 +49,10 @@ export default class TradeDetailPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.deleted) {
+            this.props.history.push(`/user/${this.props.user._id}/trades`);
+        }
+
         if (nextProps.trade && (nextProps.trade !== this.props.trade) && !nextProps.newVersionAvailable) {
             this.startIntervalTimer(nextProps.trade);
         }
@@ -86,10 +94,7 @@ export default class TradeDetailPage extends React.Component {
 
     handleDeleteTrade = () => {
         this.stopIntervalTimer();
-        this.props.deleteTrade()
-            .then(() => {
-                this.props.history.push('/');
-            });
+        this.props.deleteTrade();
     };
 
     handleRefresh = () => {

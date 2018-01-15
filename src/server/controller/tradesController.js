@@ -33,16 +33,21 @@ function deleteTrade(req, res) {
         let trade = dataCache.getTrade(tradeId);
         checkTradeExists(trade);
 
-        // trade can only be deleted if it hasn't been submitted
-        if ((trade.state !== TradeState.TRADE_STATE_INIT) || (trade.currentOffer.sender !== req.user)) {
+        // if trade hasn't been submitted and the caller is the owner - delete it
+        if ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.currentOffer.sender === req.user)) {
+            dataCache.deleteTrade(tradeId)
+                .then(() => res.status(200).json({ trade: null }))
+                .catch(err => res.status(500).json(err));
+        } else if (trade.hasCounteroffer && (trade.counteroffer.sender === req.user)) {
+            // the trade has a counteroffer being prepared - the counteroffer will be deleted
+            let newTrade = commonController.prepareTradeCopy(trade, trade.state);
+            newTrade.deleteCounteroffer();
+
+            // save it and send it back to the caller
+            saveAndSendTrade(newTrade, res);
+        } else {
             throw new ParameterValidationError(403);
         }
-
-        // delete trade from db
-        dataCache.deleteTrade(tradeId)
-            .then(() => res.sendStatus(200))
-            .catch(err => res.status(500).json(err));
-
     } catch(e) {
         handleError(e, res);
     }
@@ -95,16 +100,16 @@ function setTradeArticles(req, res) {
         checkUserIsPartOfTrade(trade, articleOwners[0]);
 
         // the user can modify the trade - first make a new copy
-        let newTrade = commonController.makeShallowCopy(trade);
+        let newTrade = commonController.prepareTradeCopy(trade, trade.state);
 
         // if the trade is still being initialised, update the articles
         if (newTrade.state === TradeState.TRADE_STATE_INIT) {
-            newTrade.setArticles(articles);
+            commonController.setOfferArticles(newTrade.offers, articles);
         }
         // For trades in negotiation with offers being initialised change the articles, otherwise create a new offer
         else if (newTrade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
             if (newTrade.hasCounteroffer) {
-                newTrade.setArticles(articles);
+                commonController.setOfferArticles(newTrade.offers, articles);
             } else {
                 newTrade.addOffer(req.user, articles);
             }

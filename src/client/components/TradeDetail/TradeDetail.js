@@ -186,8 +186,8 @@ class TradeDetail extends React.Component {
     renderActionBoxes(actions) {
         return (
             <div className="trade-detail__actions-container">
-                {actions.map(action => (
-                    <ActionBox title={action.title} text={action.text}>
+                {actions.map((action, idx) => (
+                    <ActionBox key={idx} title={action.title} text={action.text}>
                         <RaisedButton data-button-id={action.buttonId} style={buttonStyle} label={action.label} disabled={action.disabled} onClick={action.onClick} />
                     </ActionBox>
                 ))}
