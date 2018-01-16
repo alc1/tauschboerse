@@ -166,44 +166,38 @@ function setTradeState(req, res) {
 
     // Accepts a received trade
     function setStateToAccepted(trade) {
-        if (currentOfferWasSentToUser(trade)) {
-            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
-            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
+        checkOfferCanBeAcceptedOrDeclinedByUser(trade);
 
-            setArticlesState(newTrade.currentOffer.articles, ArticleStatus.STATUS_DEALED);
-            commonController.findAndFlagInvalidTrades(newTrade.currentOffer.articles);
+        let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_COMPLETED);
+        commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_ACCEPTED);
 
-            saveAndSendTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
+        setArticlesState(newTrade.currentOffer.articles, ArticleStatus.STATUS_DEALED);
+        commonController.findAndFlagInvalidTrades(newTrade.currentOffer.articles);
+
+        saveAndSendTrade(newTrade, res);
     }
 
     // Cancels the current offer
     function setStateToCanceled(trade) {
-        if (currentOfferWasMadeByUser(trade)) {
-            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
-            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_WITHDRAWN);
+        checkOfferWasSentByUser(trade);
 
-            // reset article states, now that trade has been canceled
-            let articlesToReset = newTrade.currentOffer.articles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 1));
-            setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
+        let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_CANCELED);
+        commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_WITHDRAWN);
 
-            saveAndSendTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
+        // reset article states, now that trade has been canceled
+        let articlesToReset = newTrade.currentOffer.articles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 1));
+        setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
+
+        saveAndSendTrade(newTrade, res);
     }
 
     // Declines a received trade
     function setStateToDeclined(trade) {
-        if (currentOfferWasSentToUser(trade)) {
-            let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
-            commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
-            saveAndSendTrade(newTrade, res);
-        } else {
-            throw new ParameterValidationError(403);
-        }
+        checkOfferCanBeAcceptedOrDeclinedByUser(trade);
+
+        let newTrade = commonController.prepareTradeCopy(trade, TradeState.TRADE_STATE_IN_NEGOTIATION);
+        commonController.setOfferState(newTrade.offers, OfferState.OFFER_STATE_DECLINED);
+        saveAndSendTrade(newTrade, res);
     }
 
     //
@@ -278,12 +272,14 @@ function setTradeState(req, res) {
         });
     }
 
-    function currentOfferWasSentToUser(trade) {
-        return ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user));
+    function checkOfferCanBeAcceptedOrDeclinedByUser(trade) {
+        if (!((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user))) {
+            throw new ParameterValidationError(403, 'The specified trade cannot be accepted or declined by the user');
+        }
     }
 
-    function currentOfferWasMadeByUser(trade) {
-        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender === req.user);
+    function checkOfferWasSentByUser(trade) {
+        return (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.sender === req.user);
     }
 }
 
