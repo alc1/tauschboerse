@@ -179,7 +179,7 @@ function initDataCache(reset, webroot) {
 
     let promise = dataCache.init(webroot);
 
-    if (reset, webroot) {
+    if (reset) {
         promise = promise.then(() => resetData(dataCache, webroot));
     }
 
