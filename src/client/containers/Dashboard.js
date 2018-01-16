@@ -4,16 +4,18 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import Dashboard from '../components/Dashboard/Dashboard';
 
-import { loadUserArticles, loadUserTrades } from '../store/actions/user';
-import { isLoading } from '../store/selectors/application';
-import { getUserArticles, getUserTrades } from '../store/selectors/user';
+import { checkForNewTrades, loadUserArticles, loadUserTrades } from '../store/actions/user';
+import { isLoading, getPollingInterval } from '../store/selectors/application';
+import { getReloadTrades, getUserArticles, getUserTrades } from '../store/selectors/user';
 
 function mapStateToProps(theState) {
     return {
         articles: getUserArticles(theState),
+        loading: isLoading(theState),
+        pollingInterval: getPollingInterval(theState),
         trades: getUserTrades(theState),
-        loading: isLoading(theState)
+        canReloadTrades: getReloadTrades(theState)
     };
 }
 
-export default connect(mapStateToProps, { loadUserArticles, loadUserTrades })(muiThemeable()(Dashboard));
+export default connect(mapStateToProps, { checkForNewTrades, loadUserArticles, loadUserTrades })(muiThemeable()(Dashboard));

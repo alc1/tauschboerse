@@ -7,35 +7,78 @@ import DashboardChart from '../DashboardChart/DashboardChart';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
 import TradeState from '../../../shared/constants/TradeState';
-import TradesModel from '../../model/TradesModel';
 
 import './Dashboard.css';
 
 export default class Dashboard extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.watcherIntervalid = null;
+    }
+
     static propTypes = {
         articles: PropTypes.array.isRequired,
-        trades: PropTypes.array.isRequired,
-        user: PropTypes.object.isRequired,
+        canReloadTrades: PropTypes.bool.isRequired,
+        checkForNewTrades: PropTypes.func,
         loading: PropTypes.bool.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         loadUserTrades: PropTypes.func.isRequired,
         muiTheme: PropTypes.shape({
             fontFamily: PropTypes.string.isRequired
-        }).isRequired
+        }).isRequired,
+        pollingInterval: PropTypes.number.isRequired,
+        trades: PropTypes.object.isRequired,
+        user: PropTypes.object.isRequired,
     };
 
     componentDidMount() {
         Promise.all([
-            this.props.loadUserArticles(this.props.user._id),
-            this.props.loadUserTrades(this.props.user._id)
+            this.props.loadUserArticles(),
+            this.props.loadUserTrades()
         ]);
+
+        this.startTradeWatcher();
     }
 
+    componentWillUnmount() {
+        this.stopTradeWatcher();
+    }
+
+    componentWillReceiveProps(newProps) {
+        if ((newProps.canReloadTrades !== this.props.canReloadTrades) && newProps.canReloadTrades) {
+            this.props.loadUserTrades();
+        }
+
+        if (newProps.pollingInterval !== this.props.pollingInterval) {
+            this.stopTradeWatcher();
+            this.startTradeWatcher();
+        }
+    }
+
+    startTradeWatcher() {
+        if (typeof this.props.checkForNewTrades === 'function') {
+            this.watcherIntervalId = setInterval(this.checkIfNewTradesAvailable, this.props.pollingInterval);
+        }
+    }
+
+    stopTradeWatcher() {
+        if (this.watcherIntervalId) {
+            clearInterval(this.watcherIntervalId);
+            this.watcherIntervalId = null;
+        }
+    }
+
+    checkIfNewTradesAvailable = () => {
+        if (typeof this.props.checkForNewTrades === 'function') {
+            this.props.checkForNewTrades();
+        }
+    };
+
     render() {
-        const { user, articles, loading } = this.props;
+        const { user, articles, loading, trades } = this.props;
         const { fontFamily } = this.props.muiTheme;
-        const trades = new TradesModel(this.props.trades, user);
         const countArticlesFree = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_FREE ? sum + 1 : sum, 0);
         const countArticlesInNegotiation = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALING ? sum + 1 : sum, 0);
         const countArticlesDealed = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALED ? sum + 1 : sum, 0);

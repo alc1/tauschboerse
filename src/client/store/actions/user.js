@@ -5,6 +5,8 @@ import { globalMessageReceived, OK_MESSAGE, pageSizeChanged } from './applicatio
 import { JWT_TOKEN_KEY, DEFAULT_PAGE_SIZE } from '../../utils/constants';
 import { handleError } from './common';
 import { setApiToken, removeApiToken } from '../../utils/serverApi';
+import { getUser } from '../selectors/user';
+import TradesModel from '../../model/TradesModel';
 
 /*
  * Action Type Constants
@@ -16,6 +18,7 @@ export const USER_CREATED = 'USER_CREATED';
 export const USER_UPDATED = 'USER_UPDATED';
 export const USER_ARTICLES_FETCHED = 'USER_ARTICLES_FETCHED';
 export const USER_TRADES_FETCHED = 'USER_TRADES_FETCHED';
+export const USER_TRADES_VERSION_FETCHED = 'USER_TRADES_VERSION_FETCHED';
 export const USER_ARTICLES_FILTERED = 'USER_ARTICLES_FILTERED';
 export const USER_TRADES_SECTION_OPENED = 'USER_TRADES_SECTION_OPENED';
 
@@ -50,6 +53,11 @@ export const userArticlesFetched = (theArticles) => ({
 export const userTradesFetched = (theTrades) => ({
     type: USER_TRADES_FETCHED,
     trades: theTrades
+});
+
+export const userTradesVersionFetched = (theVersionstamp) => ({
+    type: USER_TRADES_VERSION_FETCHED,
+    versionstamp: theVersionstamp
 });
 
 export const userArticlesFiltered = (theFilterText, theFilterStatus) => ({
@@ -92,15 +100,29 @@ export const updateUser = (user) => dispatch =>
         .then(response => onTokenReceived(response.data.token, dispatch, userUpdated))
         .catch(err => handleError(err, dispatch));
 
-export const loadUserArticles = (theUserId) => dispatch =>
-    axios.get(`/api/users/${theUserId}/articles`)
+export const loadUserArticles = () => (dispatch, getState) => {
+    let user = getUser(getState());
+
+    return axios.get(`/api/users/${user._id}/articles`)
         .then(response => dispatch(userArticlesFetched(response.data.articles)))
         .catch(err => handleError(err, dispatch));
+};
 
-export const loadUserTrades = (theUserId) => dispatch =>
-    axios.get(`/api/users/${theUserId}/trades`)
-        .then(response => dispatch(userTradesFetched(response.data.trades)))
+export const loadUserTrades = () => (dispatch, getState) => {
+    let user = getUser(getState());
+
+    return axios.get(`/api/users/${user._id}/trades`)
+        .then(response => dispatch(userTradesFetched(new TradesModel(response.data.trades, user))))
         .catch(err => handleError(err, dispatch));
+}
+
+export const checkForNewTrades = () => (dispatch, getState) => {
+    let user = getUser(getState());
+
+    return axios.get(`/api/users/${user._id}/trades/version`, { headers: { 'x-no-set-loading': true }})
+        .then(response => dispatch(userTradesVersionFetched(response.data.versionstamp)))
+        .catch(err => handleError(err, dispatch));
+}
 
 export const filterUserArticles = (theFilterText, theFilterStatus) => dispatch =>
     dispatch(userArticlesFiltered(theFilterText, theFilterStatus));

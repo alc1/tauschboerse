@@ -11,6 +11,8 @@ class TradesModel {
         this.__finishedTrades = null;
         this.__sentTrades = null;
         this.__receivedTrades = null;
+
+        this.__highestVersionstamp = -1;
     }
 
     get count() {
@@ -96,6 +98,14 @@ class TradesModel {
 
     get hasFinishedTrades() {
         return this.finishedTrades.length > 0;
+    }
+
+    get highestVersionstamp() {
+        if (this.__highestVersionstamp < 0) {
+            this.__highestVersionstamp = this.__trades.reduce((highest, trade) => Math.max(trade.versionstamp, highest), 0);
+        }
+
+        return this.__highestVersionstamp;
     }
 }
 

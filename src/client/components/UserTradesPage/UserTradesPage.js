@@ -11,12 +11,10 @@ import ApplicationBar from '../../containers/ApplicationBar';
 import Placeholder from '../../containers/Placeholder';
 import TradesList from '../TradesList/TradesList';
 
-import TradesModel from '../../model/TradesModel';
-
 export default class UserTradesPage extends React.Component {
 
     static propTypes = {
-        trades: PropTypes.array.isRequired,
+        trades: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
         userTradesSectionIndex: PropTypes.number.isRequired,
         loadUserTrades: PropTypes.func.isRequired,
@@ -31,7 +29,7 @@ export default class UserTradesPage extends React.Component {
     };
 
     componentDidMount() {
-        this.props.loadUserTrades(this.props.match.params.userId);
+        this.props.loadUserTrades();
     }
 
     showTradeDetails = (theTrade) => {
@@ -67,8 +65,7 @@ export default class UserTradesPage extends React.Component {
     };
 
     render() {
-        const { user, loading, userTradesSectionIndex } = this.props;
-        const trades = new TradesModel(this.props.trades, user);
+        const { user, loading, userTradesSectionIndex, trades } = this.props;
 
         return (
             <div>

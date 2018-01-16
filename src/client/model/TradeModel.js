@@ -21,6 +21,10 @@ class TradeModel {
         return this.trade.state;
     }
 
+    get versionstamp() {
+        return this.trade.versionstamp;
+    }
+
     get createDate() {
         return this.trade.createDate;
     }
