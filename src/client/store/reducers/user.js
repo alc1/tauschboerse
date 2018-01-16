@@ -61,7 +61,7 @@ export default function user(theState = initialState, theAction) {
                 ...theState,
                 trades: theAction.trades,
                 reloadTrades: false,
-                userTradesSectionIndex: getCurrentUserTradesSectionIndex(theAction.trades, theState.userTradesSectionIndex)
+                userTradesSectionIndex: getCurrentUserTradesSectionIndex(theAction.trades, -1)
             };
         case USER_TRADES_VERSION_FETCHED:
             newState = theState;
