@@ -17,7 +17,9 @@ class DataCache {
         this.trades = new TradeCache(db.dbTrades, this.users, this.articles);
     }
 
-    init() {
+    init(webroot) {
+        this.__webrootDir = webroot;
+
         return Promise.all([
                 this.users.init(),
                 this.categories.init()
@@ -46,6 +48,10 @@ class DataCache {
         this.categories.dump();
         this.articles.dump();
         this.trades.dump();
+    }
+
+    get webrootDir() {
+        return this.__webrootDir;
     }
 
     /*
@@ -171,7 +177,7 @@ const dataCache = new DataCache();
 function initDataCache(reset, webroot) {
     console.log('Initialising data cache...');
 
-    let promise = dataCache.init();
+    let promise = dataCache.init(webroot);
 
     if (reset, webroot) {
         promise = promise.then(() => resetData(dataCache, webroot));

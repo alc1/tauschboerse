@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const uuid = require('uuid');
 
+const dataCache = require('../services/DataCache').dataCache;
+
 function addPhotoForArticle(theArticleId, thePhoto) {
     const directory = getOrCreateArticleImagesDirectory(theArticleId);
     let imageBuffer = new Buffer(thePhoto.fileContent.substr(thePhoto.fileContent.indexOf(',') + 1), 'base64');
@@ -43,7 +45,7 @@ function getOrCreateArticleImagesDirectory(theArticleId) {
 }
 
 function getOrCreateArticleImagesRootDirectory() {
-    const imagesDirectory = path.join(__dirname, './../../../public/images');
+    const imagesDirectory = path.join(dataCache.webrootDir, 'images');
     if (!fs.existsSync(imagesDirectory)) {
         fs.mkdirSync(imagesDirectory);
     }

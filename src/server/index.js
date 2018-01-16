@@ -51,7 +51,7 @@ app.get('*', (request, response) => {
     response.sendFile(indexHtml);
 });
 
-initDataCache(false)
+initDataCache(false, webroot)
     .then(() => {
         console.log('Data Cache initialised');
         startServer(Number(port));
