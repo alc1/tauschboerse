@@ -1,15 +1,18 @@
 import {
     GLOBAL_MESSAGE_RECEIVED,
     GLOBAL_MESSAGE_REMOVED,
-    LOADING_STATE_RECEIVED
+    LOADING_STATE_RECEIVED,
+    GLOBAL_POLLING_INTERVAL_CHANGED
 } from '../actions/application';
 
 const initialGlobalMessage = {};
 const initialLoadingCounter = 0;
+const initialPollingInterval = 1000;
 
 export const initialState = {
     globalMessage: initialGlobalMessage,
-    loadingCounter: initialLoadingCounter
+    loadingCounter: initialLoadingCounter,
+    pollingInterval: initialPollingInterval
 };
 
 export default function application(theState = initialState, theAction) {
@@ -33,6 +36,11 @@ export default function application(theState = initialState, theAction) {
             return {
                 ...theState,
                 loadingCounter: theAction.isLoading ? theState.loadingCounter + 1 : (theState.loadingCounter <= 0 ? 0 : theState.loadingCounter - 1)
+            };
+        case GLOBAL_POLLING_INTERVAL_CHANGED:
+            return {
+                ...theState,
+                pollingInterval: theAction.interval
             };
         default:
             return theState;

@@ -7,7 +7,8 @@ import { removeToken } from './user';
 export const GLOBAL_MESSAGE_RECEIVED = 'GLOBAL_MESSAGE_RECEIVED';
 export const GLOBAL_MESSAGE_REMOVED = 'GLOBAL_MESSAGE_REMOVED';
 export const LOADING_STATE_RECEIVED = 'LOADING_STATE_RECEIVED';
-export const PAGE_SIZE_CHANGED = 'APP_SET_PAGE_SIZE';
+export const GLOBAL_PAGE_SIZE_CHANGED = 'GLOBAL_SET_PAGE_SIZE';
+export const GLOBAL_POLLING_INTERVAL_CHANGED = 'GLOBAL_POLLING_INTERVAL_CHANGED';
 
 /*
  * Global Message Types
@@ -42,8 +43,13 @@ export const loadingStateReceived = (isLoading) => ({
 });
 
 export const pageSizeChanged = (pageSize) => ({
-    type: PAGE_SIZE_CHANGED,
+    type: GLOBAL_PAGE_SIZE_CHANGED,
     pageSize: pageSize
+});
+
+export const pollingIntervalChanged = (interval) => ({
+    type: GLOBAL_POLLING_INTERVAL_CHANGED,
+    interval: interval
 });
 
 /*
@@ -61,6 +67,9 @@ export const setLoading = (isLoading) => dispatch =>
 
 export const setPageSize = (pageSize) => dispatch =>
     dispatch(pageSizeChanged(pageSize));
+
+export const setPollingInterval = (milliseconds) => dispatch =>
+    dispatch(pollingIntervalChanged(milliseconds));
 /*
  * Follow-up Actions from within the global message snackbar
  */
