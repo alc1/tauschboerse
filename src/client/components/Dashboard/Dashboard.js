@@ -36,10 +36,8 @@ export default class Dashboard extends React.Component {
     componentDidMount() {
         Promise.all([
             this.props.loadUserArticles(),
-            this.props.loadUserTrades()
+            this.loadUserTrades()
         ]);
-
-        this.startTradeWatcher();
     }
 
     componentWillUnmount() {
@@ -49,11 +47,9 @@ export default class Dashboard extends React.Component {
     componentWillReceiveProps(newProps) {
         if ((newProps.canReloadTrades !== this.props.canReloadTrades) && newProps.canReloadTrades) {
             this.props.loadUserTrades();
-        }
-
-        if (newProps.pollingInterval !== this.props.pollingInterval) {
+        } else if (newProps.pollingInterval !== this.props.pollingInterval) {
             this.stopTradeWatcher();
-            this.startTradeWatcher();
+            this.startTradeWatcher(newProps.pollingInterval);
         }
     }
 
@@ -75,6 +71,12 @@ export default class Dashboard extends React.Component {
             this.props.checkForNewTrades();
         }
     };
+
+    loadUserTrades() {
+        this.stopTradeWatcher();
+        return this.props.loadUserTrades()
+            .then(() => { this.startTradeWatcher(this.props.pollingInterval); });
+    }
 
     render() {
         const { user, articles, loading, trades } = this.props;
