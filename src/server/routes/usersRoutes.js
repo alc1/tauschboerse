@@ -15,6 +15,7 @@ router.get('/:userId/articles', authenticationMiddleware, articlesController.get
 router.put('/:userId/articles/:articleId', [authenticationMiddleware, resourceUserValidatorMiddleware], articlesController.updateArticle);
 router.delete('/:userId/articles/:articleId', [authenticationMiddleware, resourceUserValidatorMiddleware], articlesController.deleteArticleById);
 router.get('/:userId/trades', authenticationMiddleware, tradesController.getTradesByUser);
+router.get('/:userId/trades/version', authenticationMiddleware, tradesController.getTradesVersionByUser);
 router.post('/auth', usersController.login);
 
 module.exports = router;

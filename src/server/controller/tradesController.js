@@ -288,30 +288,43 @@ function setTradeState(req, res) {
 }
 
 
-function getUserTrades(req, res, userId) {
+function getUserTrades(userId, tailorOffers = true) {
     let trades = dataCache.getTradesByUser(userId)
         // if trade hasn't been started yet, it is only visible to user1
-        .filter(trade => ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1 === req.user)) || (trade.state !== TradeState.TRADE_STATE_INIT))
-        // offers that haven't been made yet are only visible to the sender
-        .map(trade => {
-            if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && trade.offers.some(offer => (offer.state === OfferState.OFFER_STATE_INIT) && (offer.sender !== req.user))) {
-                return commonController.makeShallowCopy(trade).offers.filter(offer => (offer.state !== OfferState.OFFER_STATE_INIT) || (offer.sender === req.user));
+        .filter(trade => ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1._id === userId)) || (trade.state !== TradeState.TRADE_STATE_INIT));
+
+    // offers that haven't been made yet are only visible to the sender - remove if required and user isn't sender
+    if (tailorOffers) {
+        trades = trades.map(trade => {
+            if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && trade.offers.some(offer => (offer.state === OfferState.OFFER_STATE_INIT) && (offer.sender._id !== userId))) {
+                return commonController.makeShallowCopy(trade).offers.filter(offer => (offer.state !== OfferState.OFFER_STATE_INIT) || (offer.sender._id === userId));
             } else {
                 return trade;
             }
         });
-    res.json({ trades: trades });
+    }
+
+    return trades;
 }
 
 
 function getTradesByUser(req, res) {
     const { userId } = req.params;
-    getUserTrades(req, res, userId);
+    let trades = getUserTrades(userId);
+    res.json({ trades: trades });
+}
+
+
+function getTradesVersionByUser(req, res) {
+    const { userId } = req.params;
+    let trades = getUserTrades(userId, false);
+    res.json({ versionstamp: trades.reduce((highest, trade) => Math.max(trade.versionstamp, highest), 0) });
 }
 
 
 function getTrades(req, res) {
-    getUserTrades(req, res, req.user._id);
+    let trades = getUserTrades(req.user._id);
+    res.json({ trades: trades });
 }
 
 
@@ -454,11 +467,12 @@ function checkNewStateIsValid(value) {
 module.exports = {
     addTrade,
     deleteTrade,
+    getNewTrade,
+    getTrade,
+    getTrades,
+    getTradesByUser,
+    getTradesVersionByUser,
+    getTradeVersion,
     setTradeArticles,
     setTradeState,
-    getTradesByUser,
-    getTrades,
-    getTrade,
-    getTradeVersion,
-    getNewTrade
 };
