@@ -32,7 +32,7 @@ export default class IncomingTrades extends React.Component {
 
     createTradeActions = () => {
         return [
-            this.createTradeAction("Angebot ansehen", <ShowIcon/>, this.showTrade, true, false, true)
+            this.createTradeAction("Tauschgeschäft ansehen", <ShowIcon/>, this.showTrade, true, false, true)
         ];
     };
 
@@ -49,7 +49,7 @@ export default class IncomingTrades extends React.Component {
                 {trades.hasTradesRequiringAttention ? (
                     <TradesList trades={trades.tradesRequiringAttention} loading={loading} tradeActions={this.createTradeActions()}/>
                 ) : (
-                    <Placeholder width={100} height={100} loading={loading} text="Keine eingehenden Tauschanfragen" loadingText="... Tauschgeschäfte werden geladen ..."/>
+                    <Placeholder width={100} height={100} loading={loading} text="Keine eingehende Tauschanfragen" loadingText="... Tauschgeschäfte werden geladen ..."/>
                 )}
             </Paper>
         );

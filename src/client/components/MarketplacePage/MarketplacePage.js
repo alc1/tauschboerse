@@ -184,7 +184,7 @@ export default class MarketplacePage extends React.Component {
                         {this.props.user && this.createMarketplaceSection(1, marketplaceSectionIndex, userArticles, this.createSecondSectionText(userArticles.length), true)}
                     </Stepper> :
                     <ContentContainer>
-                        <Placeholder width={200} height={200} isVertical={true} text="Suche nach Artikeln, die Du gerne eintauschen möchtest"/>
+                        <Placeholder width={200} height={200} isVertical={true} text="Suche nach Artikeln, die Du gerne haben möchtest"/>
                     </ContentContainer>
                 }
             </div>
