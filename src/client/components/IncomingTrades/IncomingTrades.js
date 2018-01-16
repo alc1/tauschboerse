@@ -38,7 +38,6 @@ export default class IncomingTrades extends React.Component {
 
     render() {
         const { trades, loading } = this.props;
-        const countIncomingRequests = trades.receivedTrades.length;
 
         return (
             <Paper className="incoming-trades">
