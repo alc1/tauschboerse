@@ -95,7 +95,6 @@ export default function user(theState = initialState, theAction) {
                 userTradesSectionIndex: theAction.userTradesSectionIndex
             };
         case GLOBAL_PAGE_SIZE_CHANGED:
-            newState;
             if (theState.settings.pageSize !== theAction.pageSize) {
                 newState = {
                     ...theState,

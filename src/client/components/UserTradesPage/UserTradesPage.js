@@ -65,7 +65,7 @@ export default class UserTradesPage extends React.Component {
     };
 
     render() {
-        const { user, loading, userTradesSectionIndex, trades } = this.props;
+        const { loading, userTradesSectionIndex, trades } = this.props;
 
         return (
             <div>

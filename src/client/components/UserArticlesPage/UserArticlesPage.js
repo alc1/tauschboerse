@@ -46,7 +46,6 @@ export default class UserArticlesPage extends React.Component {
     };
 
     componentDidMount() {
-        const { userId } = this.props.match.params;
         this.props.loadUserArticles();
         this.filterFieldTimeout = setTimeout(() => this.filterField.focus(), 1000);
     }
