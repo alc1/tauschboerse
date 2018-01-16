@@ -29,7 +29,45 @@ export default class UserTradesPage extends React.Component {
     };
 
     componentDidMount() {
-        this.props.loadUserTrades();
+        this.loadUserTrades();
+    }
+
+    componentWillUnmount() {
+        this.stopTradeWatcher();
+    }
+
+    componentWillReceiveProps(newProps) {
+        if ((newProps.canReloadTrades !== this.props.canReloadTrades) && newProps.canReloadTrades) {
+            this.loadUserTrades();
+        } else if (newProps.pollingInterval !== this.props.pollingInterval) {
+            this.stopTradeWatcher();
+            this.startTradeWatcher(newProps.pollingInterval);
+        }
+    }
+
+    startTradeWatcher(pollingInterval) {
+        if (typeof this.props.checkForNewTrades === 'function') {
+            this.watcherIntervalId = setInterval(this.checkIfNewTradesAvailable, pollingInterval);
+        }
+    }
+
+    stopTradeWatcher() {
+        if (this.watcherIntervalId) {
+            clearInterval(this.watcherIntervalId);
+            this.watcherIntervalId = null;
+        }
+    }
+
+    checkIfNewTradesAvailable = () => {
+        if (typeof this.props.checkForNewTrades === 'function') {
+            this.props.checkForNewTrades();
+        }
+    };
+
+    loadUserTrades() {
+        this.stopTradeWatcher();
+        this.props.loadUserTrades()
+            .then(() => { this.startTradeWatcher(this.props.pollingInterval); });
     }
 
     showTradeDetails = (theTrade) => {

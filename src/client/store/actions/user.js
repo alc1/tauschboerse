@@ -114,7 +114,7 @@ export const loadUserTrades = () => (dispatch, getState) => {
     return axios.get(`/api/users/${user._id}/trades`)
         .then(response => dispatch(userTradesFetched(new TradesModel(response.data.trades, user))))
         .catch(err => handleError(err, dispatch));
-}
+};
 
 export const checkForNewTrades = () => (dispatch, getState) => {
     let user = getUser(getState());
@@ -122,7 +122,7 @@ export const checkForNewTrades = () => (dispatch, getState) => {
     return axios.get(`/api/users/${user._id}/trades/version`, { headers: { 'x-no-set-loading': true }})
         .then(response => dispatch(userTradesVersionFetched(response.data.versionstamp)))
         .catch(err => handleError(err, dispatch));
-}
+};
 
 export const filterUserArticles = (theFilterText, theFilterStatus) => dispatch =>
     dispatch(userArticlesFiltered(theFilterText, theFilterStatus));

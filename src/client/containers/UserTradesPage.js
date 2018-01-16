@@ -4,17 +4,19 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import UserTradesPage from '../components/UserTradesPage/UserTradesPage';
 
-import { loadUserTrades, openUserTradesSection } from '../store/actions/user';
-import { getUser, getUserTrades, getUserTradesSectionIndex } from '../store/selectors/user';
-import { isLoading } from '../store/selectors/application';
+import { checkForNewTrades, loadUserTrades, openUserTradesSection } from '../store/actions/user';
+import { getReloadTrades, getUser, getUserTrades, getUserTradesSectionIndex } from '../store/selectors/user';
+import { getPollingInterval, isLoading } from '../store/selectors/application';
 
 function mapStateToProps(theState) {
     return {
+        canReloadTrades: getReloadTrades(theState),
+        loading: isLoading(theState),
+        pollingInterval: getPollingInterval(theState),
         trades: getUserTrades(theState),
         user: getUser(theState),
-        loading: isLoading(theState),
         userTradesSectionIndex: getUserTradesSectionIndex(theState)
     };
 }
 
-export default connect(mapStateToProps, { loadUserTrades, openUserTradesSection })(muiThemeable()(UserTradesPage));
+export default connect(mapStateToProps, { checkForNewTrades, loadUserTrades, openUserTradesSection })(muiThemeable()(UserTradesPage));
