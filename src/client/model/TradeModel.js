@@ -33,6 +33,13 @@ class TradeModel {
         return (typeof this.trade._id !== 'undefined');
     }
 
+    get requiresAttention() {
+        return this.isNew
+            || (this.isUserSender && (this.isDeclined || this.isInvalidated))
+            || (this.isUserReceiver && !(this.isDeclined || this.isInvalidated))
+            || (this.isCompleted && !this.userHasDelivered);
+    }
+
     get isCompleted() {
         return (this.trade.state === TradeState.TRADE_STATE_COMPLETED);
     }
@@ -61,16 +68,16 @@ class TradeModel {
         return this.isOpen && (this.currentOffer.state === OfferState.OFFER_STATE_INVALIDATED);
     }
 
-    get isMakingCounteroffer() {
+    get userIsMakingCounteroffer() {
         return this.hasCounteroffer && ((this.isUserReceiver && !(this.isDeclined || this.isInvalidated)) || (this.isUserSender && (this.isDeclined || this.isInvalidated)));
     }
 
-    get hasMadeCurrentOffer() {
-        return this.isOpen && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserSender;
+    get userMadeCurrentOffer() {
+        return this.isOpen && this.isUserSender;
     }
 
-    get hasReceivedCurrentOffer() {
-        return this.isOpen && (this.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && this.isUserReceiver;
+    get userReceivedCurrentOffer() {
+        return this.isOpen && this.isUserReceiver;
     }
 
     get counteroffer() {
@@ -78,7 +85,7 @@ class TradeModel {
     }
 
     get canEditOffer() {
-        return (this.isNew && this.isUserSender) || (this.hasReceivedCurrentOffer && this.isMakingCounteroffer);
+        return (this.isNew && this.isUserSender) || (this.userReceivedCurrentOffer && this.userIsMakingCounteroffer);
     }
 
     get canSubmitOffer() {
@@ -107,7 +114,7 @@ class TradeModel {
     }
 
     get cannotSubmit() {
-        return !((this.isNew && this.currentOffer.isValid) || (this.isMakingCounteroffer && this.counteroffer.isValid));
+        return !((this.isNew && this.currentOffer.isValid) || (this.userIsMakingCounteroffer && this.counteroffer.isValid));
     }
 
     get watchForUpdates() {
@@ -135,7 +142,7 @@ class TradeModel {
     }
 
     get canEdit() {
-        return this.isNew || this.isMakingCounteroffer;
+        return this.isNew || this.userIsMakingCounteroffer;
     }
 
     isOutOfDate(versionstamp) {

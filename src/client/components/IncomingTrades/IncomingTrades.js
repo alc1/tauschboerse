@@ -44,11 +44,11 @@ export default class IncomingTrades extends React.Component {
             <Paper className="incoming-trades">
                 <Toolbar style={toolbarStyle}>
                     <ToolbarGroup>
-                        <ToolbarTitle style={toolbarTitleStyle} text={countIncomingRequests > 0 ? 'Du hast eingehende Tauschanfragen' : 'Eingehende Tauschanfragen'}/>
+                        <ToolbarTitle style={toolbarTitleStyle} text={trades.hasTradesRequiringAttention ? 'Du hast eingehende Tauschanfragen' : 'Eingehende Tauschanfragen'}/>
                     </ToolbarGroup>
                 </Toolbar>
-                {countIncomingRequests > 0 ? (
-                    <TradesList trades={trades.receivedTrades} loading={loading} tradeActions={this.createTradeActions()}/>
+                {trades.hasTradesRequiringAttention ? (
+                    <TradesList trades={trades.tradesRequiringAttention} loading={loading} tradeActions={this.createTradeActions()}/>
                 ) : (
                     <Placeholder width={100} height={100} loading={loading} text="Keine eingehenden Tauschanfragen" loadingText="... Tauschgeschäfte werden geladen ..."/>
                 )}

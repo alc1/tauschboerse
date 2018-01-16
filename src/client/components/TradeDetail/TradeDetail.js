@@ -93,7 +93,7 @@ class TradeDetail extends React.Component {
                 } else if (trade.isCanceled) {
                     content = `Das Tauschgeschäft wurde abgebrochen.`;
                 } else if (trade.isDeclined) {
-                    if (trade.isMakingCounteroffer) {
+                    if (trade.userIsMakingCounteroffer) {
                         // Offer was declined by the trade partner, the user has now prepared a counteroffer, but hasn't sent it yet
                         content = 'd';
                     } else {
@@ -101,7 +101,7 @@ class TradeDetail extends React.Component {
                         content = `Der Empfänger hat das Tauschangebot abgelehnt. Du kannst das Tauschgeschäft beenden, oder erneut einen Tauschangebot machen.`;
                     }
                 } else if (trade.isInvalidated) {
-                    if (trade.isMakingCounteroffer) {
+                    if (trade.userIsMakingCounteroffer) {
                         // Offer was invalidated and the user has now prepared a counteroffer, but hasn't sent it yet
                         content = 'f';
                     } else {
@@ -130,7 +130,7 @@ class TradeDetail extends React.Component {
                     // the offer was invalidated - the user has to wait to see what the other person (the sender) is going to do
                     content = 'm';
                 } else {
-                    if (trade.isMakingCounteroffer) {
+                    if (trade.userIsMakingCounteroffer) {
                         // user has received a request and has prepared a counteroffer, but hasn't sent it yet
                         content = 'Dieser Gegenvorschlag ist in Bearbeitung. Schicke den ihn ab, sobald Du bereit dazu bist oder entferne ihn wieder.';
                     } else {
@@ -150,7 +150,7 @@ class TradeDetail extends React.Component {
         let content = null;
 
         if (trade) {
-            let offer = trade.isMakingCounteroffer ? trade.counteroffer : trade.currentOffer;
+            let offer = trade.userIsMakingCounteroffer ? trade.counteroffer : trade.currentOffer;
 
             if (trade.isUserSender) {
                 content = (
@@ -284,7 +284,7 @@ class TradeDetail extends React.Component {
                         actions = this.createDeliverActions(trade);
                     }
                 } else if (trade.isInvalidated || trade.isDeclined) {
-                    if (trade.isMakingCounteroffer) {
+                    if (trade.userIsMakingCounteroffer) {
                         actions = this.createRequestActions(trade);
                     } else {
                         actions = this.createWithrawActions(trade, true);
@@ -298,7 +298,7 @@ class TradeDetail extends React.Component {
                         actions = this.createDeliverActions(trade);
                     }
                 } else if (!(trade.isDeclined || trade.isInvalidated)) {
-                    if (trade.isMakingCounteroffer) {
+                    if (trade.userIsMakingCounteroffer) {
                         actions = this.createRequestActions(trade);
                     } else {
                         actions = this.createResponseActions(trade);

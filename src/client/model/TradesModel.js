@@ -11,6 +11,7 @@ class TradesModel {
         this.__finishedTrades = null;
         this.__sentTrades = null;
         this.__receivedTrades = null;
+        this.__tradesRequiringAttention = null;
 
         this.__highestVersionstamp = -1;
     }
@@ -60,16 +61,23 @@ class TradesModel {
 
     get sentTrades() {
         if (this.__sentTrades === null) {
-            this.__sentTrades = this.__trades.filter(trade => trade.hasMadeCurrentOffer);
+            this.__sentTrades = this.__trades.filter(trade => trade.userMadeCurrentOffer);
         }
         return this.__sentTrades;
     }
 
     get receivedTrades() {
         if (this.__receivedTrades === null) {
-            this.__receivedTrades = this.__trades.filter(trade => trade.hasReceivedCurrentOffer);
+            this.__receivedTrades = this.__trades.filter(trade => trade.userReceivedCurrentOffer);
         }
         return this.__receivedTrades;
+    }
+
+    get tradesRequiringAttention() {
+        if (this.__tradesRequiringAttention === null) {
+            this.__tradesRequiringAttention = this.__trades.filter(trade => trade.requiresAttention);
+        }
+        return this.__tradesRequiringAttention;
     }
 
     get hasNewTrades() {
@@ -98,6 +106,10 @@ class TradesModel {
 
     get hasFinishedTrades() {
         return this.finishedTrades.length > 0;
+    }
+
+    get hasTradesRequiringAttention() {
+        return this.tradesRequiringAttention.length > 0;
     }
 
     get highestVersionstamp() {

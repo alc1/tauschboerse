@@ -93,7 +93,7 @@ export default function trade(theState = initialState, theAction) {
             };
 
         case TRADE_FETCHED:
-            let offer = theAction.trade.isMakingCounteroffer ? theAction.trade.counteroffer : theAction.trade.currentOffer;
+            let offer = theAction.trade.userIsMakingCounteroffer ? theAction.trade.counteroffer : theAction.trade.currentOffer;
 
             return {
                 ...theState,
