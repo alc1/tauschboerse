@@ -24,6 +24,7 @@ export default class TradeDetailPage extends React.Component {
         loadTrade: PropTypes.func.isRequired,
         newVersionAvailable: PropTypes.bool.isRequired,
         notFound: PropTypes.bool.isRequired,
+        pollingInterval: PropTypes.number.isRequired,
         setDelivered: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         submitTrade: PropTypes.func.isRequired,
@@ -70,7 +71,7 @@ export default class TradeDetailPage extends React.Component {
     startIntervalTimer(trade) {
         if (typeof this.props.checkForUpdatedTrade === 'function') {
             if (trade.watchForUpdates) {
-                this.intervalId = setInterval(() => { this.props.checkForUpdatedTrade(); }, 1000);
+                this.intervalId = setInterval(() => { this.props.checkForUpdatedTrade(); }, this.props.pollingInterval);
             }
         }
     }

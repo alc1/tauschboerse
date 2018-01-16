@@ -6,27 +6,28 @@ import { acceptTrade, checkForUpdatedTrade, declineTrade, loadTrade, setDelivere
 import { setLoading } from '../store/actions/application';
 import { getNewVersionAvailable, getTrade, getTradeDeleted, getTradeNotFound } from '../store/selectors/trade';
 import { getUser } from '../store/selectors/user';
-import { isLoading } from '../store/selectors/application';
+import { isLoading, getPollingInterval } from '../store/selectors/application';
 
 function mapStateToProps(theState) {
     return {
+        deleted: getTradeDeleted(theState),
         loading: isLoading(theState),
         newVersionAvailable: getNewVersionAvailable(theState),
-        trade: getTrade(theState),
-        user: getUser(theState),
         notFound: getTradeNotFound(theState),
-        deleted: getTradeDeleted(theState)
+        pollingInterval: getPollingInterval(theState),
+        trade: getTrade(theState),
+        user: getUser(theState)
     };
 }
 
 export default connect(mapStateToProps, {
-    loadTrade,
+    acceptTrade,
     checkForUpdatedTrade,
+    declineTrade,
+    deleteTrade,
+    loadTrade,
     setDelivered,
     setLoading,
     submitTrade,
-    acceptTrade,
-    declineTrade,
-    withdrawTrade,
-    deleteTrade
+    withdrawTrade
 })(TradeDetailPage);
