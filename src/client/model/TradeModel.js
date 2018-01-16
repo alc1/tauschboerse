@@ -158,33 +158,33 @@ class TradeModel {
 
         if (this.isUserSender) {
             if (this.isNew) {
-                text = onlyOneArticle ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
+                text = onlyOneArticle ? 'Du bietest folgenden Artikel an:' : 'Du bietest folgende Artikel an:';
             } else if (this.isCompleted) {
                 if (this.userHasDelivered) {
-                    text = onlyOneArticle ? `Du hast ${this.tradePartner.name} das folgende Artikel gegeben` : `Du hast ${this.tradePartner.name} die folgenden Artikel gegeben`;
+                    text = onlyOneArticle ? `Du hast ${this.tradePartner.name} folgenden Artikel gegeben:` : `Du hast ${this.tradePartner.name} folgende Artikel gegeben:`;
                 } else {
-                    text = onlyOneArticle ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
+                    text = onlyOneArticle ? `Du gibst ${this.tradePartner.name} folgenden Artikel:` : `Du gibst ${this.tradePartner.name} folgende Artikel:`;
                 }
             } else if (this.isCanceled) {
-                text = onlyOneArticle ? `Du hast ${this.tradePartner.name} das folgende Artikel angeboten` : `Du hast ${this.tradePartner.name} die folgenden Artikel angeboten`;
+                text = onlyOneArticle ? `Du hattest ${this.tradePartner.name} folgenden Artikel angeboten:` : `Du hattest ${this.tradePartner.name} folgende Artikel angeboten:`;
             } else if (this.isOpen) {
-                text = onlyOneArticle ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
+                text = onlyOneArticle ? 'Du bietest folgenden Artikel an:' : 'Du bietest folgende Artikel an:';
             } else {
-                text = onlyOneArticle ? 'Du bietest das folgende Artikel an' : 'Du bietest die folgenden Artikel an';
+                text = onlyOneArticle ? 'Du bietest folgenden Artikel an:' : 'Du bietest folgende Artikel an:';
             }
         } else {
             if (this.isCompleted) {
                 if (this.tradePartnerHasDelivered) {
-                    text = onlyOneArticle ? `${this.tradePartner.name} hat das folgende Artikel von Dir erhalten` : `${this.tradePartner.name} hat die folgenden Artikel von Dir erhalten`;
+                    text = onlyOneArticle ? `${this.tradePartner.name} hat folgenden Artikel von Dir erhalten:` : `${this.tradePartner.name} hat folgende Artikel von Dir erhalten:`;
                 } else {
-                    text = onlyOneArticle ? `Du sollst ${this.tradePartner.name} das folgende Artikel geben` : `Du sollst ${this.tradePartner.name} die folgenden Artikel geben`;
+                    text = onlyOneArticle ? `Du gibst ${this.tradePartner.name} folgenden Artikel:` : `Du gibst ${this.tradePartner.name} folgende Artikel:`;
                 }
             } else if (this.isCanceled) {
-                text = onlyOneArticle ? `${this.tradePartner.name} hat sich das folgende Artikel von Dir gewünscht` : `${this.tradePartner.name} hat sich die folgenden Artikel von Dir gewünscht`;
+                text = onlyOneArticle ? `${this.tradePartner.name} wollte folgenden Artikel von Dir:` : `${this.tradePartner.name} wollte folgende Artikel von Dir:`;
             } else if (this.isOpen) {
-                text = onlyOneArticle ? `${this.tradePartner.name} möchte das folgende Artikel von Dir` : `${this.tradePartner.name} möchte die folgenden Artikel von Dir`;
+                text = onlyOneArticle ? `${this.tradePartner.name} möchte folgenden Artikel von Dir:` : `${this.tradePartner.name} möchte folgende Artikel von Dir:`;
             } else {
-                text = onlyOneArticle ? `${this.tradePartner.name} möchte das folgende Artikel von Dir` : `${this.tradePartner.name} möchte die folgenden Artikel von Dir`;
+                text = onlyOneArticle ? `${this.tradePartner.name} möchte folgenden Artikel von Dir:` : `${this.tradePartner.name} möchte folgende Artikel von Dir:`;
             }
         }
 
@@ -200,33 +200,33 @@ class TradeModel {
 
         if (this.isUserSender) {
             if (this.isNew) {
-                text = onlyOneArticle ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = onlyOneArticle ? `Du möchtest folgenden Artikel von ${this.tradePartner.name}:` : `Du möchtest folgende Artikel von ${this.tradePartner.name}:`;
             } else if (this.isCompleted) {
                 if (this.tradePartnerHasDelivered) {
-                    text = onlyOneArticle ? `Du hast das folgende Artikel von ${this.tradePartner.name} erhalten` : `Du hast die folgenden Artikel von ${this.tradePartner.name} erhalten`;
+                    text = onlyOneArticle ? `Du hast folgenden Artikel von ${this.tradePartner.name} erhalten:` : `Du hast folgende Artikel von ${this.tradePartner.name} erhalten:`;
                 } else {
-                    text = onlyOneArticle ? `Du erhälst das folgende Artikel von ${this.tradePartner.name}` : `Du erhälst die folgenden Artikel von ${this.tradePartner.name}`;
+                    text = onlyOneArticle ? `Du erhälst folgenden Artikel von ${this.tradePartner.name}:` : `Du erhälst folgende Artikel von ${this.tradePartner.name}:`;
                 }
             } else if (this.isCanceled) {
-                text = onlyOneArticle ? `Du hast Dir das folgende Artikel von ${this.tradePartner.name} gewünscht` : `Du hast Dir die folgenden Artikel von ${this.tradePartner.name} gewünscht`;
+                text = onlyOneArticle ? `Du wolltest folgenden Artikel von ${this.tradePartner.name}:` : `Du wolltest folgende Artikel von ${this.tradePartner.name}:`;
             } else if (this.isOpen) {
-                text = onlyOneArticle ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = onlyOneArticle ? `Du möchtest folgenden Artikel von ${this.tradePartner.name}:` : `Du möchtest folgende Artikel von ${this.tradePartner.name}:`;
             } else {
-                text = onlyOneArticle ? `Du möchtest das folgende Artikel von ${this.tradePartner.name}` : `Du möchtest die folgenden Artikel von ${this.tradePartner.name}`;
+                text = onlyOneArticle ? `Du möchtest folgenden Artikel von ${this.tradePartner.name}:` : `Du möchtest folgende Artikel von ${this.tradePartner.name}:`;
             }
         } else {
             if (this.isCompleted) {
                 if (this.tradePartnerHasDelivered) {
-                    text = onlyOneArticle ? `${this.tradePartner.name} hat Dir das folgende Artikel gegeben` : `${this.tradePartner.name} hat Dir die folgenden Artikel gegeben`;
+                    text = onlyOneArticle ? `${this.tradePartner.name} hat Dir folgenden Artikel gegeben:` : `${this.tradePartner.name} hat Dir folgende Artikel gegeben:`;
                 } else {
-                    text = onlyOneArticle ? `${this.tradePartner.name} gibt Dir das folgende Artikel` : `${this.tradePartner.name}  gibt Dir die folgenden Artikel`;
+                    text = onlyOneArticle ? `${this.tradePartner.name} gibt Dir folgenden Artikel:` : `${this.tradePartner.name} gibt Dir folgende Artikel:`;
                 }
             } else if (this.isCanceled) {
-                text = onlyOneArticle ? `${this.tradePartner.name} hat Dir das folgende Artikel angeboten` : `${this.tradePartner.name} hat Dir die folgenden Artikel angeboten`;
+                text = onlyOneArticle ? `${this.tradePartner.name} hatte Dir folgenden Artikel angeboten:` : `${this.tradePartner.name} hatte Dir folgende Artikel angeboten:`;
             } else if (this.isOpen) {
-                text = onlyOneArticle ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
+                text = onlyOneArticle ? `${this.tradePartner.name} bietet Dir folgenden Artikel an:` : `${this.tradePartner.name} bietet Dir folgende Artikel an:`;
             } else {
-                text = onlyOneArticle ? `${this.tradePartner.name} bietet Dir das folgende Artikel an` : `${this.tradePartner.name} bietet Dir die folgenden Artikel an`;
+                text = onlyOneArticle ? `${this.tradePartner.name} bietet Dir folgenden Artikel an:` : `${this.tradePartner.name} bietet Dir folgende Artikel an:`;
             }
         }
 
