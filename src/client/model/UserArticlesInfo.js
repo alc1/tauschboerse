@@ -17,7 +17,7 @@ export default class UserArticlesInfo {
     }
 
     get isFilteredByStatus() {
-        return (!this.filterInfo.filterStatus || (this.filterInfo.filterStatus === ''));
+        return (typeof this.filterInfo.filterStatus === 'string') && (this.filterInfo.filterStatus.length > 0);
     }
 
     setFilter(theFilterText, theFilterStatus) {
@@ -32,7 +32,7 @@ export default class UserArticlesInfo {
     }
 
     setArticles(theArticles) {
-        this.articles = theArticles;
+        this.articles = theArticles || [];
 
         this.sortArticles(this.articles);
         this.applyFilter();
