@@ -4,5 +4,7 @@
     {"name": "Fussball"},
     {"name": "Sport"},
     {"name": "Kindersachen"},
-    {"name": "Spielzeug"}
+    {"name": "Spielzeug"},
+    {"name": "Schule"},
+    {"name": "Finanz"}
 ]

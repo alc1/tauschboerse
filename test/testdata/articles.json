@@ -10,5 +10,8 @@
     {"ownerId": 1, "title": "Fire HD 8 Tablet", "description": "Schläger mit Stahl-Schaften", "photos": ["tablet.jpg"], "categoryIds": [1]},
     {"ownerId": 1, "title": "Nuggi", "description": "Nuggi mit Lautstärkerregler", "photos": ["nuggi.jpg"], "categoryIds": [4]},
     {"ownerId": 2, "title": "Basketball", "description": "Mit diesem Ball wird in der NBA gespielt", "photos": ["basketball1.jpg", "basketball2.jpg"], "categoryIds": [3]},
-    {"ownerId": 2, "title": "Teddy", "description": "Flauschiger Teddybär", "photos": ["teddy.jpg"], "categoryIds": [4, 5]}
+    {"ownerId": 2, "title": "Teddy", "description": "Flauschiger Teddybär", "photos": ["teddy.jpg"], "categoryIds": [4, 5]},
+    {"ownerId": 4, "title": "CAS-FEE Abschluss", "description": "Mit einer guten Note...", "photos": ["certificate.jpg"], "categoryIds": [6]},
+    {"ownerId": 1, "title": "Bitcoin", "description": "Bares", "photos": ["bitcoin.jpg"], "categoryIds": [7]},
+    {"ownerId": 1, "title": "Hologram Vader", "description": "Hologram von Darth Vader", "photos": ["darthvader.jpg"], "categoryIds": [1, 5]}    
 ]
