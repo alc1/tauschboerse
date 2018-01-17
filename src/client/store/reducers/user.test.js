@@ -17,6 +17,7 @@ import {
     articleDeleted
 } from '../actions/article';
 import userReducer, { initialState } from './user';
+import UserArticlesInfo from '../../model/UserArticlesInfo';
 
 const createDummyAction = () => {
     return {
@@ -95,15 +96,18 @@ describe('User Reducer', () => {
         test(`Putting fetched articles to store which has already a logged in user but no articles. Expectation: New state should now contain the fetched articles as well.`, () => {
             const user = createUser();
             const userArticles = [ createFootball(), createTable() ];
+            const userArticlesInfo = new UserArticlesInfo().setArticles(userArticles);
             const newState = userReducer({ ...initialState, user: user }, userArticlesFetched(userArticles));
-            expect(newState).toEqual({ ...initialState, user: user, articles: userArticles });
+            expect(newState).toEqual({ ...initialState, user: user, userArticlesInfo: userArticlesInfo });
         });
         test(`Putting fetched articles to store which already has a logged in user with articles. Expectation: New state should now contain the newly fetched articles.`, () => {
             const user = createUser();
             const initialUserArticles = [ createFootball() ];
             const updatedUserArticles = [ createTable() ];
-            const newState = userReducer({ ...initialState, user: user, articles: initialUserArticles }, userArticlesFetched(updatedUserArticles));
-            expect(newState).toEqual({ ...initialState, user: user, articles: updatedUserArticles });
+            const initialUserArticlesInfo = new UserArticlesInfo().setArticles(initialUserArticles);
+            const updatedUserArticlesInfo = new UserArticlesInfo().setArticles(updatedUserArticles);
+            const newState = userReducer({ ...initialState, user: user, userArticlesInfo: initialUserArticlesInfo }, userArticlesFetched(updatedUserArticles));
+            expect(newState).toEqual({ ...initialState, user: user, userArticlesInfo: updatedUserArticlesInfo });
         });
     });
 
@@ -115,15 +119,18 @@ describe('User Reducer', () => {
         test(`Removing deleted article from store which does not contain the deleted article in user articles. Expectation: New state should still be the same.`, () => {
             const user = createUser();
             const userArticles = [ createFootball(), createTable() ];
-            const newState = userReducer({ ...initialState, user: user, articles: userArticles }, articleDeleted('3'));
-            expect(newState).toEqual({ ...initialState, user: user, articles: userArticles });
+            const userArticlesInfo = new UserArticlesInfo().setArticles(userArticles);
+            const newState = userReducer({ ...initialState, user: user, userArticlesInfo: userArticlesInfo }, articleDeleted('3'));
+            expect(newState).toEqual({ ...initialState, user: user, userArticlesInfo: userArticlesInfo });
         });
         test(`Removing deleted article from store which contains the deleted article in user articles. Expectation: New state should not contain the deleted article anymore.`, () => {
             const user = createUser();
             const initialUserArticles = [ createFootball(), createTable() ];
             const expectedUserArticles = [ createTable() ];
-            const newState = userReducer({ ...initialState, user: user, articles: initialUserArticles }, articleDeleted('1'));
-            expect(newState).toEqual({ ...initialState, user: user, articles: expectedUserArticles });
+            const initialUserArticlesInfo = new UserArticlesInfo().setArticles(initialUserArticles);
+            const expectedUserArticlesInfo = new UserArticlesInfo().setArticles(expectedUserArticles);
+            const newState = userReducer({ ...initialState, user: user, userArticlesInfo: initialUserArticlesInfo }, articleDeleted('1'));
+            expect(newState).toEqual({ ...initialState, user: user, userArticlesInfo: expectedUserArticlesInfo });
         });
     });
 
@@ -131,8 +138,9 @@ describe('User Reducer', () => {
         test(`Putting filter criteria to store which has already a logged in user. Expectation: New state should now contain the filter criteria as well.`, () => {
             const user = createUser();
             const userArticlesFilter = createUserArticlesFilter();
+            const expectedUserArticlesInfo = new UserArticlesInfo().setFilter(userArticlesFilter.filterText, userArticlesFilter.filterStatus);
             const newState = userReducer({ ...initialState, user: user }, userArticlesFiltered(userArticlesFilter.filterText, userArticlesFilter.filterStatus));
-            expect(newState).toEqual({ ...initialState, user: user, userArticlesFilter: userArticlesFilter });
+            expect(newState).toEqual({ ...initialState, user: user, userArticlesInfo: expectedUserArticlesInfo });
         });
     });
 
