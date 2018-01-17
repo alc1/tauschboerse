@@ -293,7 +293,9 @@ function getUserTrades(userId, tailorOffers = true) {
     if (tailorOffers) {
         trades = trades.map(trade => {
             if ((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && trade.offers.some(offer => (offer.state === OfferState.OFFER_STATE_INIT) && (offer.sender._id !== userId))) {
-                return commonController.makeShallowCopy(trade).offers.filter(offer => (offer.state !== OfferState.OFFER_STATE_INIT) || (offer.sender._id === userId));
+                let newTrade = commonController.makeShallowCopy(trade);
+                newTrade.offers = newTrade.offers.filter(offer => (offer.state !== OfferState.OFFER_STATE_INIT) || (offer.sender._id === userId));
+                return newTrade;
             } else {
                 return trade;
             }
