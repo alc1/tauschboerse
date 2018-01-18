@@ -9,17 +9,9 @@ import { setupApiInterceptors } from './client/utils/serverApi';
 import App from './client/App';
 import registerServiceWorker from './client/registerServiceWorker';
 
-function readJwtToken() {
-    let jwtToken = sessionStorage.getItem(JWT_TOKEN_KEY);
-    if (!jwtToken) {
-        jwtToken = localStorage.getItem(JWT_TOKEN_KEY);
-    }
-    return jwtToken;
-}
-
 setupApiInterceptors();
 
-const jwtToken = readJwtToken();
+const jwtToken = sessionStorage.getItem(JWT_TOKEN_KEY);
 if (jwtToken) {
     setToken(jwtToken, store.dispatch, userLoggedIn);
 }
