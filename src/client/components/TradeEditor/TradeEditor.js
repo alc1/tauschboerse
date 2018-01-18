@@ -1,9 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import Paper from 'material-ui/Paper';
 import { Step, Stepper, StepButton, StepLabel } from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+
+import SaveIcon from 'material-ui/svg-icons/content/save';
+import PreviousIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import NextIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import CancelIcon from 'material-ui/svg-icons/navigation/cancel';
 
 import Articles from '../Articles/Articles';
 import PageTitle from '../../containers/PageTitle';
@@ -214,15 +220,15 @@ export default class TradeEditor extends React.Component {
 
         let nextButton;
         if (this.props.stepIndex === STEP_LAST_IDX) {
-            nextButton = <RaisedButton label="Speichern" secondary={true} onClick={this.props.onSave} />;
+            nextButton = <RaisedButton label="Speichern" icon={<SaveIcon/>} secondary={true} onClick={this.props.onSave} />;
         } else {
-            nextButton = <RaisedButton label="Nächster Schritt" primary={true} onClick={this.handleNext} />;
+            nextButton = <RaisedButton label="Weiter" icon={<NextIcon/>} primary={true} onClick={this.handleNext} />;
         }
 
         let navigation = (
             <div className="trade-editor__navigation-buttons">
-                <FlatButton label="Abbrechen" onClick={this.props.onCancel} style={{marginRight: '48px'}} />
-                <FlatButton label="Voriger Schritt" disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: '12px'}} />
+                <FlatButton label="Abbrechen" icon={<CancelIcon/>} onClick={this.props.onCancel} style={{marginRight: '12px'}} />
+                <FlatButton label="Zurück" icon={<PreviousIcon/>} disabled={!this.canGoToPreviousStep()} onClick={this.handlePrev} style={{marginRight: '12px'}} />
                 {nextButton}
             </div>
         );
