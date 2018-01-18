@@ -16,6 +16,11 @@ export default class TestArticle {
         this.categories = [];
     }
 
+    setOwner(user) {
+        this.owner = user;
+        return this;
+    }
+
     setStatus(status) {
         if (!isValidArticleStatus(status)) {
             throw new Error(`${status} is not a valid ArticleStatus`);
@@ -23,6 +28,22 @@ export default class TestArticle {
 
         this.status = status;
         return this;
+    }
+
+    setDealed() {
+        return this.setStatus(STATUS_DEALED);
+    }
+
+    setDealing() {
+        return this.setStatus(STATUS_DEALING);
+    }
+
+    setDeleted() {
+        return this.setStatus(STATUS_DELETED);
+    }
+
+    setFree() {
+        return this.setStatus(STATUS_FREE);
     }
 
     addCategory(id, name) {
