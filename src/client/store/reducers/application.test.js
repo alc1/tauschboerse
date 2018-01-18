@@ -12,12 +12,8 @@ import {
 } from '../actions/application';
 import applicationReducer, { initialState } from './application';
 
-const createDummyAction = () => {
-    return {
-        type: 'ANY_ACTION',
-        payload: 'dummy payload'
-    };
-};
+import { createDummyAction } from '../../testutils/common';
+
 const createErrorGlobalMessage = () => {
     return {
         messageText: 'Ein Fehler ist aufgetreten',

@@ -19,12 +19,8 @@ import {
 import userReducer, { initialState } from './user';
 import UserArticlesInfo from '../../model/UserArticlesInfo';
 
-const createDummyAction = () => {
-    return {
-        type: 'ANY_ACTION',
-        payload: 'dummy payload'
-    };
-};
+import { createDummyAction } from '../../testutils/common';
+
 const createFootball = () => {
     return {
         _id: '1',

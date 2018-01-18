@@ -12,26 +12,8 @@ import {
 } from '../actions/article';
 import articleReducer, { initialState } from './article';
 
-const createDummyAction = () => {
-    return {
-        type: 'ANY_ACTION',
-        payload: 'dummy payload'
-    };
-};
-const createFootball = () => {
-    return {
-        _id: '1',
-        title: 'Fussball',
-        description: 'Ein Ball zum Fussballspielen'
-    };
-};
-const createTable = () => {
-    return {
-        _id: '2',
-        title: 'Tisch',
-        description: 'Ein exklusiver Designer-Tisch'
-    };
-};
+import { createDummyAction } from '../../testutils/common';
+import { createFootball, createTable } from '../../testutils/articles';
 
 describe('Article Reducer', () => {
 
@@ -84,7 +66,7 @@ describe('Article Reducer', () => {
         });
         test(`Removing deleted article from store which contains the deleted article. Expectation: New state should now be in initial state.`, () => {
             const football = createFootball();
-            const newState = articleReducer(football, articleDeleted('1'));
+            const newState = articleReducer(football, articleDeleted(football._id));
             expect(newState).toEqual(initialState);
         });
         test(`Removing deleted article from store which does not contain the deleted article. Expectation: New state should still contain the previous article.`, () => {

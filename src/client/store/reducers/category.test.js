@@ -4,12 +4,8 @@ import {
 } from '../actions/category';
 import articleReducer, { initialState } from './category';
 
-const createDummyAction = () => {
-    return {
-        type: 'ANY_ACTION',
-        payload: 'dummy payload'
-    };
-};
+import { createDummyAction } from '../../testutils/common';
+
 const createCategoriesGroup1 = () => {
     return [
         { _id: '1', name: 'Football' },
@@ -32,12 +28,14 @@ describe('Category Reducer', () => {
             const categoriesGroup1 = createCategoriesGroup1();
             const newState = articleReducer(initialState, categoriesFetched(categoriesGroup1));
             expect(newState).toEqual(categoriesGroup1);
+            expect(newState).not.toBe(initialState);
         });
         test(`Putting fetched categories to store which is not in initial state. Expectation: New state should now contain the fetched categories.`, () => {
             const categoriesGroup1 = createCategoriesGroup1();
             const categoriesGroup2 = createCategoriesGroup2();
             const newState = articleReducer(categoriesGroup1, categoriesFetched(categoriesGroup2));
             expect(newState).toEqual(categoriesGroup2);
+            expect(newState).not.toBe(initialState);
         });
     });
 
@@ -45,11 +43,13 @@ describe('Category Reducer', () => {
         test(`Expectation: Any other action should not affect store in initial state.`, () => {
             const newState = articleReducer(initialState, createDummyAction());
             expect(newState).toEqual(initialState);
+            expect(newState).toBe(initialState);
         });
         test(`Expectation: Any other action should not affect store which is not in initial state.`, () => {
             const categoriesGroup1 = createCategoriesGroup1();
             const newState = articleReducer(categoriesGroup1, createDummyAction());
             expect(newState).toEqual(categoriesGroup1);
+            expect(newState).not.toBe(initialState);
         });
     });
 });
