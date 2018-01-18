@@ -48,6 +48,12 @@ function getColor(theStatus) {
     }
 }
 
+const validArticleStatuses = [STATUS_FREE, STATUS_DEALING, STATUS_DEALED, STATUS_DELETED];
+
+function isValidArticleStatus(val) {
+    return validArticleStatuses.indexOf(val) >= 0;
+}
+
 module.exports = {
     STATUS_FREE,
     STATUS_DEALING,
@@ -55,5 +61,6 @@ module.exports = {
     STATUS_DELETED,
     getShortDescription,
     getDescription,
-    getColor
+    getColor,
+    isValidArticleStatus
 };
