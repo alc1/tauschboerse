@@ -4,7 +4,7 @@ import { createBasketball, createFootball, createTable, createUserArticlesFilter
 import TestOffer from '../testutils/TestOffer';
 import TestUser from '../testutils/TestUser';
 
-describe('ModelOffer', () => {
+describe('OfferModel', () => {
 
     describe('tradePartnerArticles', () => {
         test(`returns the articles not belonging to the given user`, () => {
