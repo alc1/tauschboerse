@@ -5,7 +5,8 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import GlobalMessage from '../components/GlobalMessage/GlobalMessage';
 
-import { removeGlobalMessage, goToLogin } from '../store/actions/application';
+import { removeGlobalMessage } from '../store/actions/application';
+import { logout } from '../store/actions/user';
 import { getGlobalMessage } from '../store/selectors/application';
 
 function mapStateToProps(theState) {
@@ -14,4 +15,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, { removeGlobalMessage, goToLogin })(muiThemeable()(GlobalMessage)));
+export default withRouter(connect(mapStateToProps, { removeGlobalMessage, logout })(muiThemeable()(GlobalMessage)));

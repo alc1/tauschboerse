@@ -2,10 +2,11 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
 import { globalMessageReceived, OK_MESSAGE, pageSizeChanged } from './application';
-import { JWT_TOKEN_KEY, DEFAULT_PAGE_SIZE } from '../../utils/constants';
 import { handleError } from './common';
+import { JWT_TOKEN_KEY, DEFAULT_PAGE_SIZE } from '../../utils/constants';
 import { setApiToken, removeApiToken } from '../../utils/serverApi';
 import { getUser } from '../selectors/user';
+
 import TradesModel from '../../model/TradesModel';
 
 /*
@@ -84,8 +85,8 @@ export const login = (user) => dispatch =>
         })
         .catch(err => handleError(err, dispatch));
 
-export const logout = () => dispatch => {
-    removeToken(dispatch, true);
+export const logout = (showLogoutMessage) => dispatch => {
+    removeToken(dispatch, showLogoutMessage);
     // apply system default settings
     dispatch(pageSizeChanged(DEFAULT_PAGE_SIZE));
 };

@@ -60,7 +60,7 @@ export default class ApplicationBar extends React.Component {
     };
 
     logout = () => {
-        this.props.logout();
+        this.props.logout(true);
         this.props.history.push('/');
     };
 

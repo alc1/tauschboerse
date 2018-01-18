@@ -45,7 +45,7 @@ export default class DashboardActions extends React.Component {
                 </ActionBox>
                 <ActionBox title="Benutzerkonto" text="Verwalte hier dein Benutzerkonto.">
                     <RaisedButton style={buttonStyle} label="Mein Konto" icon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/details`)} primary/>
-                    <RaisedButton data-button-id="logout" style={buttonStyle}  label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout} secondary/>
+                    <RaisedButton data-button-id="logout" style={buttonStyle}  label="Abmelden" icon={<ExitIcon/>} onClick={this.props.logout.bind(this, true)} secondary/>
                 </ActionBox>
             </div>
         );

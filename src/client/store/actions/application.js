@@ -1,5 +1,3 @@
-import { removeToken } from './user';
-
 /*
  * Action Type Constants
  */
@@ -70,15 +68,3 @@ export const setPageSize = (pageSize) => dispatch =>
 
 export const setPollingInterval = (milliseconds) => dispatch =>
     dispatch(pollingIntervalChanged(milliseconds));
-/*
- * Follow-up Actions from within the global message snackbar
- */
-
-export const goToLogin = (history, location) => dispatch => {
-    removeToken(dispatch, false);
-    const to = {
-        pathname: '/login',
-        state: { from: location.pathname + location.search }
-    };
-    history.push(to);
-};

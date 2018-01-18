@@ -123,7 +123,7 @@ export default function trade(theState = initialState, theAction) {
         case TRADE_ARTICLES_SAVED:
             return {
                 ...theState
-            }
+            };
 
         case TRADE_ARTICLES_FETCHED:
             newState = { ...theState };

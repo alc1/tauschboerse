@@ -33,7 +33,7 @@ export default class Navigation extends React.Component {
 
     logout = () => {
         this.props.closeMenu();
-        this.props.logout();
+        this.props.logout(true);
         this.props.history.push('/');
     };
 
