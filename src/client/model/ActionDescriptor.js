@@ -22,4 +22,9 @@ export default class ActionDescriptor{
         this.disabled = flag;
         return this;
     }
+
+    setIcon(icon) {
+        this.icon = icon;
+        return this;
+    }
 }

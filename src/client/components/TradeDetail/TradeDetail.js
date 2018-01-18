@@ -4,6 +4,15 @@ import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 
+import SendIcon from 'material-ui/svg-icons/content/send';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import CounterOfferIcon from 'material-ui/svg-icons/content/reply';
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import WithdrawIcon from 'material-ui/svg-icons/navigation/cancel';
+import AcceptIcon from 'material-ui/svg-icons/action/done-all';
+import ShippingIcon from 'material-ui/svg-icons/maps/local-shipping';
+import NewOfferIcon from 'material-ui/svg-icons/content/add';
+
 import Articles from '../Articles/Articles';
 import ActionBox from '../ActionBox/ActionBox';
 import TradeStateTag from '../TradeStateTag/TradeStateTag';
@@ -75,8 +84,6 @@ class TradeDetail extends React.Component {
 
     renderDescription(trade) {
         let content;
-        // @Christian - eventuall können einige der Zustände zusammengefasst, d.h. bei gewissen Trade-Zuständen ist es vielleicht
-        // egal, ob der User Sender oder Receiver ist. Am besten machen ein Refactoring, wenn die Texts erfasst sind.
 
         if (trade) {
             if (trade.isNew) {
@@ -85,28 +92,28 @@ class TradeDetail extends React.Component {
                 if (trade.isCompleted) {
                     if (trade.userHasDelivered) {
                         // trade was completed successfully and the user has sent the traded items
-                        content = `Das Tauschgeschäft ist zustande gekommen und Du hast den Artikel bereits verschickt.`;
+                        content = `Das Tauschgeschäft ist zustande gekommen und Du hast die Artikel bereits ausgeliefert.`;
                     } else {
                         // trade was completed successfully but the user hasn't sent the traded items yet
-                        content = `Das Tauschgeschäft ist zustande gekommen, aber Du hast den Artikel noch nicht verschickt.`;
+                        content = `Das Tauschgeschäft ist zustande gekommen, aber Du hast die Artikel noch nicht ausgeliefert.`;
                     }
                 } else if (trade.isCanceled) {
                     content = `Das Tauschgeschäft wurde abgebrochen.`;
                 } else if (trade.isDeclined) {
                     if (trade.userIsMakingCounteroffer) {
                         // Offer was declined by the trade partner, the user has now prepared a counteroffer, but hasn't sent it yet
-                        content = 'd';
+                        content = 'Der Empfänger hat das Tauschangebot abgelehnt. Du hast aber dieses neue Angebot in Vorbereitung, welches Du abschicken, bearbeiten oder immer noch löschen kannst.';
                     } else {
                         // Offer was declined by the trade partner, the user must now decide whether to make a counteroffer or cancel the trade
-                        content = `Der Empfänger hat das Tauschangebot abgelehnt. Du kannst das Tauschgeschäft beenden, oder erneut einen Tauschangebot machen.`;
+                        content = `Der Empfänger hat das Tauschangebot abgelehnt. Du kannst das Tauschgeschäft beenden, oder erneut einen Angebot machen.`;
                     }
                 } else if (trade.isInvalidated) {
                     if (trade.userIsMakingCounteroffer) {
                         // Offer was invalidated and the user has now prepared a counteroffer, but hasn't sent it yet
-                        content = 'f';
+                        content = 'Das Tauschangebot ist nicht mehr gültig. Du hast aber dieses neue Angebot in Vorbereitung, welches Du abschicken, bearbeiten oder immer noch löschen kannst.';
                     } else {
                         // Offer was invalidated and the user must now decide whether to make a counteroffer or cancel the trade
-                        content = 'g';
+                        content = 'Das Tauschangebot ist nicht mehr gültig. Möglicherweise wurde ein Artikel bereits vergeben oder gelöscht. Entscheide, ob Du das Tauschgeschäft beenden oder ein neues Angebot machen willst.';
                     }
                 } else {
                     // the user has sent a request and is waiting for an answer/reaction
@@ -116,10 +123,10 @@ class TradeDetail extends React.Component {
                 if (trade.isCompleted) {
                     if (trade.userHasDelivered) {
                         // trade was completed successfully and the user has sent the traded items
-                        content = `Das Tauschgeschäft ist zustande gekommen und Du hast den Artikel bereits verschickt.`;
+                        content = `Das Tauschgeschäft ist zustande gekommen und Du hast die Artikel bereits ausgeliefert.`;
                     } else {
                         // trade was completed successfully but the user hasn't sent the traded items yet
-                        content = `Das Tauschgeschäft ist zustande gekommen, aber Du hast den Artikel noch nicht verschickt.`;
+                        content = `Das Tauschgeschäft ist zustande gekommen, aber Du hast die Artikel noch nicht ausgeliefert.`;
                     }
                 } else if (trade.isCanceled) {
                     content = `Das Tauschgeschäft wurde abgebrochen.`;
@@ -128,11 +135,11 @@ class TradeDetail extends React.Component {
                     content = `Du hast die Tauschanfrage abgelehnt. Der Sender muss jetzt entscheiden, ob er das Tauschgeschäft beenden oder Dir ein neues Angebot machen will.`;
                 } else if (trade.isInvalidated) {
                     // the offer was invalidated - the user has to wait to see what the other person (the sender) is going to do
-                    content = 'm';
+                    content = 'Das Tauschangebot ist nicht mehr gültig. Möglicherweise wurde ein Artikel bereits vergeben oder gelöscht. Warte bis der Sender entschieden hat, ob er Dir ein neues Angebot machen will.';
                 } else {
                     if (trade.userIsMakingCounteroffer) {
                         // user has received a request and has prepared a counteroffer, but hasn't sent it yet
-                        content = 'Dieser Gegenvorschlag ist in Bearbeitung. Schicke den ihn ab, sobald Du bereit dazu bist oder entferne ihn wieder.';
+                        content = 'Dieser Gegenvorschlag ist in Bearbeitung. Schicke ihn ab, sobald Du bereit dazu bist oder entferne ihn wieder.';
                     } else {
                         // user has received a request and must now decide how to respond/react
                         content = 'Du hast diese Tauschanfrage erhalten. Entscheide, was Du machen willst.'
@@ -178,7 +185,7 @@ class TradeDetail extends React.Component {
             <div className="trade-detail__actions-container">
                 {actions.map((action, index) => (
                     <ActionBox key={index} title={action.title} text={action.text}>
-                        <RaisedButton data-button-id={action.buttonId} style={buttonStyle} label={action.label} disabled={action.disabled} onClick={action.onClick} primary/>
+                        <RaisedButton data-button-id={action.buttonId} style={buttonStyle} label={action.label} disabled={action.disabled} onClick={action.onClick} icon={action.icon} primary/>
                     </ActionBox>
                 ))}
             </div>
@@ -190,6 +197,7 @@ class TradeDetail extends React.Component {
             new ActionDescriptor('Gegenangebot machen', this.handleMakeCounteroffer, 'makeCounteroffer')
                 .setText('Wenn Du nicht einverstanden bist, kannst Du auch ein Gegenangebot machen.')
                 .setLabel('Gegenangebot erstellen')
+                .setIcon(<CounterOfferIcon/>)
         );
     }
 
@@ -198,13 +206,16 @@ class TradeDetail extends React.Component {
             new ActionDescriptor('Angebot abschicken', this.handleMakeOffer, 'makeOffer')
                 .setText('Schicke dein Tauschangebot ab, sobald Du bereit bist.')
                 .setLabel('Senden')
-                .setDisabled(this.props.trade.cannotSubmit),
+                .setDisabled(this.props.trade.cannotSubmit)
+                .setIcon(<SendIcon/>),
 
             new ActionDescriptor('Bearbeiten', this.handleEditOffer, 'editOffer')
-                .setText('Du kannst dein Tauschangebot bearbeitet, weil Du es noch nicht versendet hast.'),
+                .setText('Du kannst dein Tauschangebot bearbeitet, weil Du es noch nicht versendet hast.')
+                .setIcon(<EditIcon/>),
 
             new ActionDescriptor('Löschen', this.handleDeleteOffer, 'deleteOffer')
                 .setText('Du kannst dein Tauschangebot immer noch löschen.')
+                .setIcon(<DeleteIcon/>)
         ];
     }
 
@@ -212,24 +223,27 @@ class TradeDetail extends React.Component {
         return [
             new ActionDescriptor('Angebot annehmen', this.handleAccept, 'accept')
                 .setText('Nehme das Angebot an, damit das Tauschgeschäft zustande kommt.')
-                .setLabel('Annehmen'),
+                .setLabel('Annehmen')
+                .setIcon(<AcceptIcon/>),
 
             new ActionDescriptor('Angebot ablehnen', this.handleDecline, 'decline')
                 .setText('Wenn Du nicht einverstanden bist, dann kannst Du das Angebot ablehnen.')
-                .setLabel('Ablehnen'),
+                .setLabel('Ablehnen')
+                .setIcon(<WithdrawIcon/>),
 
-            // this.createMakeCounterofferAction(trade)
             new ActionDescriptor('Gegenangebot machen', this.handleMakeCounteroffer, 'makeCounteroffer')
                 .setText('Wenn Du nicht einverstanden bist, kannst Du auch ein Gegenangebot machen.')
                 .setLabel('Gegenangebot erstellen')
+                .setIcon(<CounterOfferIcon/>)
         ];
     }
 
     createDeliverActions(trade) {
         return [
-            new ActionDescriptor('Die Artikel abgeben', this.handleDelivered, 'delivered')
-                .setText(`Wenn Du Deine Artikel ${trade.tradePartner.name} gesendet hast, kannst Du hier angeben, dass sie auf dem Weg sind.`)
-                .setLabel('Artikel abgeben')
+            new ActionDescriptor('Artikel ausliefern', this.handleDelivered, 'delivered')
+                .setText(`Wenn Du deine Artikel ${trade.tradePartner.name} ausgeliefert hast, kannst Du hier angeben, dass sie auf dem Weg sind.`)
+                .setLabel('Artikel ausliefern')
+                .setIcon(<ShippingIcon/>)
         ];
     }
 
@@ -237,12 +251,14 @@ class TradeDetail extends React.Component {
         if (canMakeCounteroffer) {
             return [
                 new ActionDescriptor('Tauschgeschäft beenden', this.handleWithdrawOffer, 'withdrawOffer')
-                    .setText('Der Empfänger hat dein Angebot abgelehnt. Beende das Tauschgeschäft, wenn Du kein neues Angebot machen willst.')
-                    .setLabel('Beenden'),
+                    .setText('Beende das Tauschgeschäft, wenn Du kein neues Angebot machen willst.')
+                    .setLabel('Beenden')
+                    .setIcon(<WithdrawIcon/>),
 
                 new ActionDescriptor('Neues Angebot', this.handleMakeCounteroffer, 'makeCounteroffer')
-                    .setText('Der Empfänger hat dein Tauschangebot abgelehnt. Du kannst ein ihm ein neues Angebot machen.')
+                    .setText('Du kannst ein neues Tauschangebot machen.')
                     .setLabel('Angebot erstellen')
+                    .setIcon(<NewOfferIcon/>)
             ];
         }
         else {
@@ -250,25 +266,9 @@ class TradeDetail extends React.Component {
                 new ActionDescriptor('Angebot zurückziehen', this.handleWithdrawOffer, 'withdrawOffer')
                     .setText('Du kannst das Tauschangebot immer noch zurückziehen, weil sich der Empfänger noch nicht entschieden hat.')
                     .setLabel('Zurückziehen')
+                    .setIcon(<WithdrawIcon/>)
             ];
         }
-
-        // let actions = [
-        //     new ActionDescriptor('Angebot zurückziehen', this.handleWithdrawOffer, 'withdrawOffer')
-        //         .setText('Du kannst das Tauschangebot immer noch zurückziehen, weil sich der Empfänger noch nicht entschieden hat.')
-        //         .setLabel('Zurückziehen')
-        // ];
-        //
-        // if (canMakeCounteroffer) {
-        //     // actions.push(this.createMakeCounterofferAction(trade));
-        //     actions.push(
-        //         new ActionDescriptor('Neues Angebot', this.handleMakeCounteroffer, 'makeCounteroffer')
-        //             .setText('Der Empfänger hat dein Tauschangebot abgelehnt. Du kannst ein ihm ein neues Angebot machen.')
-        //             .setLabel('Angebot erstellen')
-        //     );
-        // }
-        //
-        // return actions;
     }
 
     renderActions(trade) {
