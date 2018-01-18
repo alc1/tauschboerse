@@ -27,55 +27,55 @@ export const TRADE_NEW_VERSION_AVAILABLE = 'TRADE_NEW_VERSION_AVAILABLE';
  * Action Creators
  */
 
-const tradeFetched = (theTrade) => ({
+export const tradeFetched = (theTrade) => ({
     type: TRADE_FETCHED,
     trade: theTrade,
 });
 
-const tradeIsBeingFetched = () => ({
+export const tradeIsBeingFetched = () => ({
     type: TRADE_FETCHING
 });
 
-const tradeNotFound = () => ({
+export const tradeNotFound = () => ({
     type: TRADE_NOT_FOUND
 });
 
-const newTradeVersionAvailable = () => ({
+export const newTradeVersionAvailable = () => ({
     type: TRADE_NEW_VERSION_AVAILABLE
 });
 
-const tradeDeleted = () => ({
+export const tradeDeleted = () => ({
     type: TRADE_DELETED
 });
 
-const articlesFetched = (theArticles, forUser) => ({
+export const articlesFetched = (theArticles, forUser) => ({
     type: TRADE_ARTICLES_FETCHED,
     forUser: forUser,
     articles: theArticles
 });
 
-const articleToggled = (theArticle, forUser) => ({
+export const articleToggled = (theArticle, forUser) => ({
     type: TRADE_ARTICLE_TOGGLED,
     forUser: forUser,
     article: theArticle
 });
 
-const stepIndexSet = (stepIndex) => ({
+export const stepIndexSet = (stepIndex) => ({
     type: TRADE_STEP_INDEX_SET,
     stepIndex: stepIndex
 });
 
-const pageNumSet = (val, forUser) => ({
+export const pageNumSet = (val, forUser) => ({
     type: TRADE_PAGE_NUM_SET,
     forUser: forUser,
     pageNum: val
 });
 
-const tradeEditorInitialised = () => ({
+export const tradeEditorInitialised = () => ({
     type: TRADE_EDITOR_INITIALISED
 });
 
-const articleFilterTextSet = (theText, forUser) => ({
+export const articleFilterTextSet = (theText, forUser) => ({
     type: TRADE_ARTICLE_FILTER_TEXT_SET,
     forUser: forUser,
     text: theText
