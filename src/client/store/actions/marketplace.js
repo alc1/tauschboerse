@@ -14,18 +14,18 @@ export const MARKETPLACE_SECTION_OPENED = 'MARKETPLACE_SECTION_OPENED';
  * Action Creators
  */
 
-const articlesFound = (theSearchText, theArticles, theUserArticles) => ({
+export const articlesFound = (theSearchText, theArticles, theUserArticles) => ({
     type: ARTICLES_FOUND,
     text: theSearchText,
     articles: theArticles,
     userArticles: theUserArticles
 });
 
-const lastSearchCleared = () => ({
+export const lastSearchCleared = () => ({
     type: LAST_SEARCH_CLEARED
 });
 
-const marketplaceSectionOpened = (theMarketplaceSectionIndex) => ({
+export const marketplaceSectionOpened = (theMarketplaceSectionIndex) => ({
     type: MARKETPLACE_SECTION_OPENED,
     marketplaceSectionIndex: theMarketplaceSectionIndex
 });
