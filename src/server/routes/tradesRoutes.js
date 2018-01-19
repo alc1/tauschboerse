@@ -5,7 +5,7 @@ const authenticationMiddleware = require('../middleware/authentication');
 const tradesController = require('../controller/tradesController');
 
 router.get('/', authenticationMiddleware, tradesController.getTrades);
-router.get('/new/:articleId', authenticationMiddleware, tradesController.getNewTrade)
+router.get('/new/:articleId', authenticationMiddleware, tradesController.getNewTrade);
 router.post('/', authenticationMiddleware, tradesController.addTrade);
 router.get('/:tradeId', authenticationMiddleware, tradesController.getTrade);
 router.get('/:tradeId/version', authenticationMiddleware, tradesController.getTradeVersion);
