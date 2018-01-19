@@ -14,18 +14,19 @@ import TradesList from '../TradesList/TradesList';
 export default class UserTradesPage extends React.Component {
 
     static propTypes = {
-        trades: PropTypes.object.isRequired,
-        user: PropTypes.object.isRequired,
-        userTradesSectionIndex: PropTypes.number.isRequired,
-        loadUserTrades: PropTypes.func.isRequired,
-        openUserTradesSection: PropTypes.func.isRequired,
-        loading: PropTypes.bool.isRequired,
+        checkForNewTrades: PropTypes.func,
         history: PropTypes.object.isRequired,
+        loading: PropTypes.bool.isRequired,
+        loadUserTrades: PropTypes.func.isRequired,
         muiTheme: PropTypes.shape({
             palette: PropTypes.shape({
                 primary1Color: PropTypes.string.isRequired,
             }).isRequired
-        }).isRequired
+        }).isRequired,
+        openUserTradesSection: PropTypes.func.isRequired,
+        trades: PropTypes.object.isRequired,
+        user: PropTypes.object.isRequired,
+        userTradesSectionIndex: PropTypes.number.isRequired
     };
 
     componentDidMount() {
@@ -60,7 +61,7 @@ export default class UserTradesPage extends React.Component {
 
     checkIfNewTradesAvailable = () => {
         if (typeof this.props.checkForNewTrades === 'function') {
-            this.props.checkForNewTrades();
+            this.props.checkForNewTrades().catch(() => { this.stopTradeWatcher(); });
         }
     };
 

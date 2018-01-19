@@ -80,7 +80,7 @@ export default class TradeDetailPage extends React.Component {
     startIntervalTimer(trade) {
         if (typeof this.props.checkForUpdatedTrade === 'function') {
             if (trade.watchForUpdates) {
-                this.intervalId = setInterval(() => { this.props.checkForUpdatedTrade(); }, this.props.pollingInterval);
+                this.intervalId = setInterval(() => { this.props.checkForUpdatedTrade().catch(() => { this.stopIntervalTimer(); }); }, this.props.pollingInterval);
             }
         }
     }

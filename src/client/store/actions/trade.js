@@ -105,16 +105,14 @@ export const checkForUpdatedTrade = () => (dispatch, getState) => {
 
     // Paranoia: if no trade in the store don't attempt to check for new versions!
     if (trade) {
-        axios.get(`/api/trades/${trade._id}/version`, { headers: { 'x-no-set-loading': true }})
+        return axios.get(`/api/trades/${trade._id}/version`, { headers: { 'x-no-set-loading': true }})
             .then(response => {
                 if (trade.isOutOfDate(response.data.versionstamp)) {
                     dispatch(newTradeVersionAvailable());
                 }
-            })
-            .catch((err) => {
-                // not important, just ignore it
-                console.log(err);
             });
+    } else {
+        return Promise.reolve(false);
     }
 }
 

@@ -67,7 +67,7 @@ export default class Dashboard extends React.Component {
 
     checkIfNewTradesAvailable = () => {
         if (typeof this.props.checkForNewTrades === 'function') {
-            this.props.checkForNewTrades();
+            this.props.checkForNewTrades().catch(() => { this.stopTradeWatcher(); });
         }
     };
 
