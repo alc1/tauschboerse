@@ -18,6 +18,7 @@ export default class Dashboard extends React.Component {
         super(props);
 
         this.watcherIntervalid = null;
+        this.unmounted = true;
     }
 
     static propTypes = {
@@ -37,10 +38,13 @@ export default class Dashboard extends React.Component {
             this.props.loadUserArticles(),
             this.loadUserTrades()
         ]);
+
+        this.unmounted = false;
     }
 
     componentWillUnmount() {
         this.stopTradeWatcher();
+        this.unmounted = true;
     }
 
     componentWillReceiveProps(newProps) {
@@ -53,7 +57,7 @@ export default class Dashboard extends React.Component {
     }
 
     startTradeWatcher(pollingInterval) {
-        if (typeof this.props.checkForNewTrades === 'function') {
+        if (!this.unmounted && (typeof this.props.checkForNewTrades === 'function')) {
             this.watcherIntervalId = setInterval(this.checkIfNewTradesAvailable, pollingInterval);
         }
     }
