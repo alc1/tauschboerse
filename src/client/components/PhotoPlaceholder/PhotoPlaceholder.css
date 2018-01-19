@@ -1,0 +1,13 @@
+.photo-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.photo-placeholder__text {
+    text-align: center;
+    font-size: 1.5em;
+    color: #c3c3c3;
+    margin: 10px;
+}

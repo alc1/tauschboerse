@@ -144,7 +144,7 @@ export default class PhotosComponent extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     <div className="photos-component__images-container">
-                        {hasPhotos ? photoWrappers : <PhotoPlaceholder width={100} height={100}/>}
+                        {hasPhotos ? photoWrappers : <PhotoPlaceholder width={100} height={100} text={isDisplayMode ? 'Keine Bilder vorhanden' : 'Keine Bilder ausgewählt'}/>}
                     </div>
                 </Paper>
             </div>
