@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
-import { globalMessageReceived, OK_MESSAGE, pageSizeChanged } from './application';
+import { dispatchGlobalInfoMessage, pageSizeChanged } from './application';
 import { handleError } from './common';
 import { JWT_TOKEN_KEY, DEFAULT_PAGE_SIZE } from '../../utils/constants';
 import { setApiToken, removeApiToken } from '../../utils/serverApi';
@@ -151,9 +151,6 @@ const removeToken = (dispatch, showLogoutMessage) => {
     removeApiToken();
     dispatch(userLoggedOut());
     if (showLogoutMessage) {
-        dispatch(globalMessageReceived({
-            messageText: 'Erfolgreich abgemeldet.',
-            messageType: OK_MESSAGE
-        }));
+        dispatchGlobalInfoMessage(dispatch, 'Erfolgreich abgemeldet.');
     }
 };

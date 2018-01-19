@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import ApplicationBar from '../../containers/ApplicationBar';
 import TradeDetail from '../TradeDetail/TradeDetail';
 import ContentContainer from '../ContentContainer/ContentContainer';
+import { RELOAD_TRADE, WARNING_MESSAGE } from '../../model/GlobalMessageParams';
 
 export default class TradeDetailPage extends React.Component {
 
@@ -25,7 +26,9 @@ export default class TradeDetailPage extends React.Component {
         newVersionAvailable: PropTypes.bool.isRequired,
         notFound: PropTypes.bool.isRequired,
         pollingInterval: PropTypes.number.isRequired,
+        reloadTrade: PropTypes.bool.isRequired,
         setDelivered: PropTypes.func.isRequired,
+        setGlobalMessage: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         submitTrade: PropTypes.func.isRequired,
         trade: PropTypes.object,
@@ -37,7 +40,8 @@ export default class TradeDetailPage extends React.Component {
         deleted: false,
         loading: false,
         newVersionAvailable: false,
-        notFound: false
+        notFound: false,
+        reloadTrade: false
     };
 
     componentDidMount() {
@@ -58,8 +62,13 @@ export default class TradeDetailPage extends React.Component {
             this.startIntervalTimer(nextProps.trade);
         }
 
-        if (nextProps.newVersionAvailable) {
+        if (nextProps.newVersionAvailable && (nextProps.newVersionAvailable !== this.props.newVersionAvailable)) {
             this.stopIntervalTimer();
+            this.props.setGlobalMessage('Der Handel wurde geändert', WARNING_MESSAGE, 'AKTUALIISIEREN', RELOAD_TRADE);
+        }
+
+        if (nextProps.reloadTrade && (nextProps.reloadTrade !== this.props.reloadTrade)) {
+            this.loadTrade(this.props.trade._id);
         }
     }
 
@@ -98,10 +107,6 @@ export default class TradeDetailPage extends React.Component {
         this.props.deleteTrade();
     };
 
-    handleRefresh = () => {
-        this.loadTrade(this.props.trade._id);
-    };
-
     handleSetDelivered = () => {
         this.stopIntervalTimer();
         this.props.setDelivered();
@@ -125,11 +130,9 @@ export default class TradeDetailPage extends React.Component {
                     {this.props.trade &&
                         <TradeDetail
                             history={this.props.history}
-                            newVersionAvailable={this.props.newVersionAvailable}
                             onAcceptTrade={this.handleAcceptTrade}
                             onDeclineTrade={this.handleDeclineTrade}
                             onDeleteTrade={this.handleDeleteTrade}
-                            onRefresh={this.handleRefresh}
                             onSetDelivered={this.handleSetDelivered}
                             onSubmitTrade={this.handleSubmitTrade}
                             onWithdrawTrade={this.handleWithdrawTrade}

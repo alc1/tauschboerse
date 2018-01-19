@@ -33,7 +33,6 @@ class TradeDetail extends React.Component {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
-        newVersionAvailable: PropTypes.bool.isRequired,
         onAcceptTrade: PropTypes.func.isRequired,
         onDeclineTrade: PropTypes.func.isRequired,
         onDeleteTrade: PropTypes.func.isRequired,
@@ -46,16 +45,11 @@ class TradeDetail extends React.Component {
     };
 
     static defaultProps = {
-        trade: null,
-        newVersionAvailable: false
+        trade: null
     };
 
     state = {
         isContactDetailOpen: false
-    };
-
-    handleUpdate = () => {
-        this.props.onRefresh();
     };
 
     handleMakeOffer = () => {
@@ -330,20 +324,6 @@ class TradeDetail extends React.Component {
         return (actions) ? this.renderActionBoxes(actions) : null;
     }
 
-    renderUpdateMessage() {
-        let content = null;
-
-        if (this.props.newVersionAvailable) {
-            content = (
-                <div className="trade-detail__update-message">
-                    <RaisedButton label="Aktualisieren" onClick={this.handleUpdate} /><span style={{marginLeft: '20px'}}>Das Tauschgeschäft wurde verändert - Du kannst die Anzeige aktualisieren</span>
-                </div>
-            );
-        }
-
-        return content;
-    }
-
     render() {
         const { trade } = this.props;
         const { isContactDetailOpen } = this.state;
@@ -352,7 +332,6 @@ class TradeDetail extends React.Component {
         return (
             <div>
                 <PageTitle>{title}</PageTitle>
-                {this.renderUpdateMessage()}
                 <Paper className="trade-detail__info-container">
                     <TradeStateTag status={trade.state}/>
                     <span className="trade-detail__description">{this.renderDescription(trade)}</span>

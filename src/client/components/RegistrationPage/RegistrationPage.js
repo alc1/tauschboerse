@@ -8,7 +8,7 @@ import ApplicationBar from '../../containers/ApplicationBar';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
 import ContentContainer from '../ContentContainer/ContentContainer';
 
-import { OK_MESSAGE } from '../../store/actions/application';
+import { INFO_MESSAGE } from '../../model/GlobalMessageParams';
 
 import registrationValidator from '../../../shared/validations/registration';
 import Gender from '../../../shared/constants/Gender';
@@ -50,10 +50,7 @@ export default class RegistrationPage extends React.Component {
         if (validation.isValid) {
             this.props.createUser(user)
                 .then(() => {
-                    this.props.setGlobalMessage({
-                        messageText: 'Dein Konto wurde erstellt.',
-                        messageType: OK_MESSAGE
-                    });
+                    this.props.setGlobalMessage('Dein Konto wurde erstellt.', INFO_MESSAGE);
                     this.props.history.replace('/');
                 })
                 .catch((err) => {

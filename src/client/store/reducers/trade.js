@@ -10,6 +10,7 @@ import {
     TRADE_NEW_VERSION_AVAILABLE,
     TRADE_NOT_FOUND,
     TRADE_PAGE_NUM_SET,
+    TRADE_RELOAD,
     TRADE_STEP_INDEX_SET
 } from '../actions/trade';
 import { GLOBAL_PAGE_SIZE_CHANGED } from '../actions/application';
@@ -20,6 +21,7 @@ export const initialState = {
     notFound: false,
     deleted: false,
     newVersionAvailable: false,
+    reloadTrade: false,
     stepIndex: 0,
     userArticlesInfo: new ArticlesDisplayInfo(),
     partnerArticlesInfo: new ArticlesDisplayInfo()
@@ -140,6 +142,12 @@ export default function trade(theState = initialState, theAction) {
             return {
                 ...theState,
                 newVersionAvailable: true
+            };
+        
+        case TRADE_RELOAD:
+            return {
+                ...theState,
+                reloadTrade: true
             };
 
         default:

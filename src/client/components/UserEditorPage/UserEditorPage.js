@@ -8,7 +8,7 @@ import UserDetailsForm from '../UserDetailsForm/UserDetailsForm';
 import UserPasswordForm from '../UserPasswordForm/UserPasswordForm';
 import PageButton from '../PageButton/PageButton';
 
-import { OK_MESSAGE } from '../../store/actions/application';
+import { INFO_MESSAGE } from '../../model/GlobalMessageParams';
 
 import ContentContainer from '../ContentContainer/ContentContainer';
 
@@ -94,10 +94,7 @@ export default class UserDetailsPage extends React.Component {
                         errors: {},
                         modified: false
                     });
-                    this.props.setGlobalMessage({
-                        messageText: 'Benutzerdaten wurden gespeichert.',
-                        messageType: OK_MESSAGE
-                    });
+                    this.props.setGlobalMessage('Benutzerdaten wurden gespeichert.', INFO_MESSAGE);
                 })
                 .catch((err) => {
                     this.setState({ errors: err.response.data.errors || {} })

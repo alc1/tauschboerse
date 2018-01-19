@@ -5,7 +5,9 @@ import {
     GLOBAL_POLLING_INTERVAL_CHANGED
 } from '../actions/application';
 
-const initialGlobalMessage = {};
+import GlobalMessageParams from '../../model/GlobalMessageParams';
+
+const initialGlobalMessage = new GlobalMessageParams();
 const initialLoadingCounter = 0;
 const initialPollingInterval = 1000;
 
@@ -20,12 +22,7 @@ export default function application(theState = initialState, theAction) {
         case GLOBAL_MESSAGE_RECEIVED:
             return {
                 ...theState,
-                globalMessage: {
-                    messageText: theAction.globalMessage.messageText,
-                    messageType: theAction.globalMessage.messageType,
-                    actionText: theAction.globalMessage.actionText,
-                    actionType: theAction.globalMessage.actionType
-                }
+                globalMessage: theAction.globalMessage
             };
         case GLOBAL_MESSAGE_REMOVED:
             return {

@@ -2,16 +2,13 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { WARNING_MESSAGE } from '../../store/actions/application';
+import { WARNING_MESSAGE } from '../../model/GlobalMessageParams';
 
 const PrivateRoute = ({ isLoggedIn, userId, setGlobalMessage, component: Component, ...rest }) => (
     <Route {...rest} render={props => {
         const hasPermission = props.match.params.userId === userId;
         if (!hasPermission) {
-            setGlobalMessage({
-                messageText: `Keine Berechtigung für die Seite: ${props.location.pathname + props.location.search}`,
-                messageType: WARNING_MESSAGE
-            });
+            setGlobalMessage(`Keine Berechtigung für die Seite: ${props.location.pathname + props.location.search}`, WARNING_MESSAGE);
         }
         return hasPermission ? (
             <Component {...props}/>
