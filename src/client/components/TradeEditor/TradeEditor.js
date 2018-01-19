@@ -110,13 +110,13 @@ export default class TradeEditor extends React.Component {
     getStepDescription() {
         switch(this.props.stepIndex) {
             case STEP_IDX_PARTNER_ARTICLES:
-                return `Du kannst ein oder mehrere Artikel zum Tauschen auswählen. Du kannst aber nur Artikel von ${this.props.trade.tradePartner.name} auswählen.`;
+                return `Du kannst einen oder mehrere Artikel auswählen, die Du von ${this.props.trade.tradePartner.name} haben möchtest.`;
 
             case STEP_IDX_USER_ARTICLES:
-                return 'Du kannst ein oder mehrere eigenen Artikel zum Tauschen auswählen.';
+                return 'Du kannst einen oder mehrere der eigenen Artikel zum Tauschen anbieten.';
 
             case STEP_IDX_SUMMARY:
-                return 'Hier kannst Du sehen, welche Artikel Du ausgewählt hast. Wenn alles in Ordnung ist, kannst Du Deine Änderungen speichern.';
+                return 'Hier kannst Du sehen, welche Artikel Du ausgewählt hast. Wenn alles in Ordnung ist, kannst Du deine Änderungen speichern.';
 
             default:
                 return '';
@@ -162,7 +162,7 @@ export default class TradeEditor extends React.Component {
         let toggleArticle = this.props.toggleArticle.bind(this, false);
 
         let chosenTitle = trade.partnerArticlesListTitle(chosenArticles.length === 1);
-        let availableTitle = `Weitere Artikel von ${trade.tradePartner.name}, die Du auswählen könntest`;
+        let availableTitle = `Weitere Artikel von ${trade.tradePartner.name}, die Du auswählen könntest:`;
 
         return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, hasAvailableArticles, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
     }
@@ -176,7 +176,7 @@ export default class TradeEditor extends React.Component {
         let toggleArticle = this.props.toggleArticle.bind(this, true);
 
         let chosenTitle = trade.userArticlesListTitle(chosenArticles.length === 1);
-        let availableTitle = `Weitere Artikel, die Du anbieten könntest`;
+        let availableTitle = `Weitere Artikel, die Du anbieten könntest:`;
         
         return this.renderArticleChooser(visibleArticles, chosenArticles, filterText, hasAvailableArticles, pageCount, pageNum, setFilterText, setPageNum, toggleArticle, chosenTitle, availableTitle);
     }

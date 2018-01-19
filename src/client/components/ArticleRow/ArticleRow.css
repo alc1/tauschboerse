@@ -30,6 +30,11 @@
     margin-bottom: 10px;
 }
 
+.article-row__image:hover {
+    box-shadow: 0 3px 5px 0 gray;
+    transition: all 0.5s linear;
+}
+
 .article-row__image--clickable {
     cursor: pointer;
 }
@@ -44,8 +49,17 @@
 }
 
 .article-row__title {
+    color: black;
     font-size: 1.5em;
     margin: 5px;
+}
+
+.article-row__title:link {
+    text-decoration: none;
+}
+
+.article-row__title:hover {
+    text-decoration: underline;
 }
 
 .article-row__categories {

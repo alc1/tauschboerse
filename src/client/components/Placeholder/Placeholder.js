@@ -27,17 +27,17 @@ export default class Placeholder extends React.Component {
     };
 
     render() {
-        const { width, height, loading, text, loadingText } = this.props;
+        const { width, height, loading, text, loadingText, isVertical } = this.props;
         const { fontFamily } = this.props.muiTheme;
         return (
             <div>
                 {loading ? (
-                    <div className={`placeholder__container ${this.props.isVertical ? 'placeholder__container--vertical' : 'placeholder__container--horizontal'}`}>
+                    <div className={`placeholder ${isVertical ? 'placeholder--vertical' : 'placeholder--horizontal'}`}>
                         <Loading fill="#E1E1E1" width={width} height={height}/>
                         <span className="placeholder__text" style={{ fontFamily: fontFamily }}>{loadingText}</span>
                     </div>
                 ) : (
-                    <div className={`placeholder__container ${this.props.isVertical ? 'placeholder__container--vertical' : 'placeholder__container--horizontal'}`}>
+                    <div className={`placeholder ${isVertical ? 'placeholder--vertical' : 'placeholder--horizontal'}`}>
                         <Info fill="#E1E1E1" width={width} height={height}/>
                         <span className="placeholder__text" style={{ fontFamily: fontFamily }}>{text}</span>
                     </div>

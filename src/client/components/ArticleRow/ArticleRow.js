@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -67,7 +68,7 @@ export default class ArticleRow extends React.Component {
                     )}
                 </div>
                 <div className="article-row__text-column">
-                    <span className="article-row__title">{title}</span>
+                    <Link className="article-row__title" to={`/article/${article._id}`}>{title}</Link>
                     {!hideDescription && <span className="article-row__description">{description}</span>}
                     {!hideCategories && categoryChips.length > 0 &&
                         <div className="article-row__categories">
