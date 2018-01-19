@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import PageTitle from '../../containers/PageTitle';
 import DashboardActions from '../../containers/DashboardActions';
 import IncomingTrades from '../../containers/IncomingTrades';
 import DashboardChart from '../DashboardChart/DashboardChart';
+import ContentContainer from '../ContentContainer/ContentContainer';
 
 import ArticleStatus from '../../../shared/constants/ArticleStatus';
 import TradeState from '../../../shared/constants/TradeState';
@@ -25,9 +27,6 @@ export default class Dashboard extends React.Component {
         loading: PropTypes.bool.isRequired,
         loadUserArticles: PropTypes.func.isRequired,
         loadUserTrades: PropTypes.func.isRequired,
-        muiTheme: PropTypes.shape({
-            fontFamily: PropTypes.string.isRequired
-        }).isRequired,
         pollingInterval: PropTypes.number.isRequired,
         trades: PropTypes.object.isRequired,
         user: PropTypes.object.isRequired,
@@ -80,7 +79,6 @@ export default class Dashboard extends React.Component {
 
     render() {
         const { user, articles, loading, trades } = this.props;
-        const { fontFamily } = this.props.muiTheme;
         const countArticlesFree = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_FREE ? sum + 1 : sum, 0);
         const countArticlesInNegotiation = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALING ? sum + 1 : sum, 0);
         const countArticlesDealed = articles.reduce((sum, article) => article.status === ArticleStatus.STATUS_DEALED ? sum + 1 : sum, 0);
@@ -100,15 +98,15 @@ export default class Dashboard extends React.Component {
         ];
 
         return (
-            <div className="dashboard">
-                <span className="dashboard__title" style={{ fontFamily: fontFamily }}>Hallo {user.name}</span>
+            <ContentContainer>
+                <PageTitle>{`Hallo ${user.name}`}</PageTitle>
                 <DashboardActions/>
                 <IncomingTrades trades={trades} loading={loading}/>
                 <div className="dashboard__charts-container">
                     <DashboardChart title="Meine Artikel" data={articlesData} placeholderText="Keine Artikel gefunden" placeholderLoadingText="... Artikel werden geladen ..." loading={loading}/>
                     <DashboardChart title="Meine Tauschgeschäfte" data={tradesData} placeholderText="Keine Tauschgeschäfte gefunden" placeholderLoadingText="... Tauschgeschäfte werden geladen ..." loading={loading}/>
                 </div>
-            </div>
+            </ContentContainer>
         );
     }
 }

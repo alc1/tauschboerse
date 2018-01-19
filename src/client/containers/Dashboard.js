@@ -1,7 +1,5 @@
 import { connect } from 'react-redux';
 
-import muiThemeable from 'material-ui/styles/muiThemeable';
-
 import Dashboard from '../components/Dashboard/Dashboard';
 
 import { checkForNewTrades, loadUserArticles, loadUserTrades } from '../store/actions/user';
@@ -18,4 +16,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { checkForNewTrades, loadUserArticles, loadUserTrades })(muiThemeable()(Dashboard));
+export default connect(mapStateToProps, { checkForNewTrades, loadUserArticles, loadUserTrades })(Dashboard);

@@ -8,6 +8,7 @@ const TradeState = require('../../shared/constants/TradeState');
 const Article = require('../model/Article');
 const ArticleStatus = require('../../shared/constants/ArticleStatus');
 const ParameterValidationError = require('../utils/ParameterValidationError');
+const ErrorCode = require('../../shared/constants/ErrorCode');
 
 const commonController = require('./commonController');
 
@@ -46,7 +47,7 @@ function deleteTrade(req, res) {
             // save it and send it back to the caller
             saveAndSendTrade(newTrade, res);
         } else {
-            throw new ParameterValidationError(403);
+            throw new ParameterValidationError(403, ErrorCode.TRADE_DELETE_NOT_POSSIBLE);
         }
     } catch(e) {
         handleError(e, res);
@@ -64,26 +65,26 @@ function setTradeArticles(req, res) {
         // For trades being initialised the user can only change the articles if he or she created the trade
         if (trade.state === TradeState.TRADE_STATE_INIT) {
             if (trade.offers[0].sender !== req.user) {
-                throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+                throw new ParameterValidationError(403, ErrorCode.TRADE_ARTICLES_WRONG_REQUEST_USER);
             }
         }
         // For trades in negotiation the user can only change the articles of new offers, declined offers, invalidated offers and offers sent to him or her (counter offer)
         else if (trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) {
             if (trade.hasCounteroffer && (trade.counteroffer.sender !== req.user)) {
-                throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+                throw new ParameterValidationError(403, ErrorCode.TRADE_ARTICLES_WRONG_STATE);
             } else if (trade.currentOffer.sender === req.user) {
                 if ((trade.currentOffer.state !== OfferState.OFFER_STATE_DECLINED) && (trade.currentOffer.state !== OfferState.OFFER_STATE_INVALIDATED)) {
-                    throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+                    throw new ParameterValidationError(403, ErrorCode.TRADE_ARTICLES_WRONG_STATE);
                 }
             } else {
                 if (trade.currentOffer.state !== OfferState.OFFER_STATE_REQUESTED) {
-                    throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+                    throw new ParameterValidationError(403, ErrorCode.TRADE_ARTICLES_WRONG_STATE);
                 }
             }
         }
         // Trades in all other states cannot have their articles changed
         else {
-            throw new ParameterValidationError(403, 'The trade cannot be modified in its current state');
+            throw new ParameterValidationError(403, ErrorCode.TRADE_ARTICLES_WRONG_STATE);
         }
 
         // collect a list of owners for all articles passed in who aren't the calling user
@@ -93,7 +94,7 @@ function setTradeArticles(req, res) {
 
         // if more that one owner (trade partner) were found, send an error
         if (articleOwners.length > 1) {
-            throw new ParameterValidationError(400, 'All specified articles must belong to the trade partners');
+            throw new ParameterValidationError(400, ErrorCode.TRADE_ARTICLES_BELONG_TO_WRONG_USER);
         }
 
         // if the article(s) owner is not a part of this trade, send an error
@@ -158,7 +159,7 @@ function setTradeState(req, res) {
                 break;
 
             default:
-                throw new ParameterValidationError(500, `The state [${newState}] hasn't been implemented yet`);
+                throw new ParameterValidationError(500, ErrorCode.TRADE_STATE_NOT_SUPPORTED);
         }
     } catch(e) {
         handleError(e, res);
@@ -252,7 +253,7 @@ function setTradeState(req, res) {
 
             saveAndSendTrade(newTrade, res);
         } else {
-            throw new ParameterValidationError(403);
+            throw new ParameterValidationError(403, ErrorCode.TRADE_ARTICLES_WRONG_STATE);
         }
     }
 
@@ -274,7 +275,7 @@ function setTradeState(req, res) {
 
     function checkOfferCanBeAcceptedOrDeclinedByUser(trade) {
         if (!((trade.state === TradeState.TRADE_STATE_IN_NEGOTIATION) && (trade.currentOffer.state === OfferState.OFFER_STATE_REQUESTED) && (trade.currentOffer.sender !== req.user))) {
-            throw new ParameterValidationError(403, 'The specified trade cannot be accepted or declined by the user');
+            throw new ParameterValidationError(403, ErrorCode.TRADE_ACCEPT_DECLINE_NOT_POSSIBLE);
         }
     }
 
@@ -386,12 +387,12 @@ function prepareNewTrade(articleIds, user) {
 
     // if no trade-partner or more than one found, trade cannot be created
     if (articleOwners.length > 1) {
-        throw new ParameterValidationError(400, 'All articles must belong to either the caller or one potential trade partner');
+        throw new ParameterValidationError(400, ErrorCode.TRADE_ARTICLES_BELONG_TO_WRONG_USER);
     }
 
     // if no trade-partner or more than one found, trade cannot be created
     if (articleOwners.length === 0) {
-        throw new ParameterValidationError(400, 'At least one article must belong to someone other than the caller');
+        throw new ParameterValidationError(400, ErrorCode.TRADE_NO_TRADE_PARTNER_FOUND);
     }
 
     // create new trade
@@ -437,19 +438,19 @@ function handleError(e, res) {
 
 function checkTradeExists(trade) {
     if (!trade) {
-        throw new ParameterValidationError(404, `The specified trade does not exist`);
+        throw new ParameterValidationError(404, ErrorCode.TRADE_DOES_NOT_EXIST);
     }
 }
 
 function checkUserIsPartOfTrade(trade, user) {
     if ((trade.user1 !== user) && (trade.user2 !== user)) {
-        throw new ParameterValidationError(400, 'Only trade partners can modify the trade');
+        throw new ParameterValidationError(400, ErrorCode.TRADE_ONLY_EDITABLE_BY_TRADE_PARTNER);
     }
 }
 
 function checkTradeIsCompleted(trade) {
     if (trade.state !== TradeState.TRADE_STATE_COMPLETED) {
-        throw new ParameterValidationError(403, 'Delivered can only be set on a completed trade');
+        throw new ParameterValidationError(403, ErrorCode.TRADE_SET_DELIVERED_ONLY_POSSIBLE_ON_COMPLETED);
     }
 }
 
@@ -458,7 +459,7 @@ const validStates = ['ACCEPTED', 'CANCELED', 'DECLINED', 'DELIVERED', 'REQUESTED
 
 function checkNewStateIsValid(value) {
     if (validStates.indexOf(value.toUpperCase()) < 0) {
-        throw new ParameterValidationError(400, `The given state [${value}] is not recognized`);
+        throw new ParameterValidationError(400, ErrorCode.TRADE_STATE_NOT_SUPPORTED);
     }
 }
 
