@@ -5,8 +5,6 @@ import ApplicationBar from '../../containers/ApplicationBar';
 import TradeEditor from '../../containers/TradeEditor';
 import ContentContainer from '../ContentContainer/ContentContainer';
 
-import './EditTradePage.css';
-
 export default class EditTradePage extends React.Component {
 
     static propTypes = {
