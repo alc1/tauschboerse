@@ -1,16 +1,15 @@
-.placeholder__container {
+.placeholder {
     display: flex;
     align-items: center;
-}
-
-.placeholder__container--horizontal {
-    flex-direction: row;
-    justify-content: flex-start;
-}
-
-.placeholder__container--vertical {
-    flex-direction: column;
     justify-content: center;
+}
+
+.placeholder--horizontal {
+    flex-direction: row;
+}
+
+.placeholder--vertical {
+    flex-direction: column;
 }
 
 .placeholder__text {
