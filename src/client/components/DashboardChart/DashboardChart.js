@@ -22,6 +22,20 @@ export default class DashboardChart extends React.Component {
         loading: PropTypes.bool.isRequired
     };
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.data.length !== this.props.data.length) {
+            return true;
+        }
+        for (let index = 0; index < nextProps.data.length; index++) {
+            if (nextProps.data[index].name !== this.props.data[index].name
+                || nextProps.data[index].value !== this.props.data[index].value
+                || nextProps.data[index].fill !== this.props.data[index].fill) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     render() {
         const { title, data, placeholderText, placeholderLoadingText, loading } = this.props;
         const countAll = data.reduce((sum, item) => sum + item.value, 0);
