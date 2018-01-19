@@ -21,8 +21,4 @@ export default class GlobalMessageParams {
         this.actionText = actionText;
         this.actionType = actionType;
     }
-
-    get hasAction() {
-        return (typeof this.acitonText !== 'undefined');
-    }
 }
