@@ -1,4 +1,5 @@
 import TestArticle from './TestArticle';
+import { toBase26 } from './common';
 
 export const createArticle = (id, title, description) => {
     return new TestArticle(id, title, description);
@@ -22,3 +23,13 @@ export const createUserArticlesFilter = () => {
         filterStatus: 'FREE'
     };
 };
+
+export function generateArticleList(count) {
+    let articles = [];
+    for(let i = 0; i < count; i++) {
+        let idx = toBase26(i);
+        let article = createArticle(i+1, `Article ${idx}`, `This is article ${idx}`);
+        articles.push(article);
+    }
+    return articles;
+}
