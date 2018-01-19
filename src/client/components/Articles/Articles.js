@@ -28,7 +28,8 @@ export default class Articles extends React.Component {
         pageNum: PropTypes.number.isRequired,
         selected: PropTypes.bool.isRequired,
         title: PropTypes.string.isRequired,
-        onToggleArticle: PropTypes.func
+        onToggleArticle: PropTypes.func,
+        withArticleLink: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -39,8 +40,9 @@ export default class Articles extends React.Component {
         pageCount: 1,
         paging: false,
         pageNum: 1,
-        selected: false
-    }
+        selected: false,
+        withArticleLink: false
+    };
 
     handleToggleArticle = (article) => {
         if (typeof this.props.onToggleArticle === 'function') {
@@ -87,7 +89,7 @@ export default class Articles extends React.Component {
                                 <Divider />
                             </div>
                         }
-                        <ArticleRowList articles={articles} emptyText={this.props.emptyText} isEditing={this.props.isEditing} selected={this.props.selected} onToggleArticle={this.handleToggleArticle} />
+                        <ArticleRowList articles={articles} emptyText={this.props.emptyText} isEditing={this.props.isEditing} selected={this.props.selected} onToggleArticle={this.handleToggleArticle} withArticleLink={this.props.withArticleLink}/>
                         {paging && <UltimatePaginationMaterialUi currentPage={this.props.pageNum} totalPages={this.props.pageCount} onChange={this.handlePageChange} />}
                     </div>
                 </Paper>

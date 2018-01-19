@@ -54,7 +54,8 @@ export default class ArticleList extends React.Component {
                     hideDescription={hideDescription}
                     hideOwner={hideOwner}
                     hideCreationDate={hideCreationDate}
-                    hideStatus={hideStatus}/>
+                    hideStatus={hideStatus}
+                    withArticleLink={true}/>
             );
         });
     };

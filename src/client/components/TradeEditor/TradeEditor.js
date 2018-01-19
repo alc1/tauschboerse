@@ -133,6 +133,7 @@ export default class TradeEditor extends React.Component {
                     isEditing={true}
                     selected={true}
                     onToggleArticle={toggleArticle}
+                    withArticleLink={false}
                 />
                 <Articles
                     articles={availableArticles}
@@ -148,6 +149,7 @@ export default class TradeEditor extends React.Component {
                     onFilterChange={setFilterText}
                     onPageChange={setPageNum}
                     onToggleArticle={toggleArticle}
+                    withArticleLink={false}
                 />
             </div>
         );
@@ -186,8 +188,8 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
-                <Articles articles={partnerArticlesInfo.chosenArticles} title={trade.partnerArticlesListTitle(partnerArticlesInfo.chosenArticles.length === 1)} />
-                <Articles articles={userArticlesInfo.chosenArticles} title={trade.userArticlesListTitle(userArticlesInfo.chosenArticles.length === 1)} />
+                <Articles articles={partnerArticlesInfo.chosenArticles} title={trade.partnerArticlesListTitle(partnerArticlesInfo.chosenArticles.length === 1)} withArticleLink={false}/>
+                <Articles articles={userArticlesInfo.chosenArticles} title={trade.userArticlesListTitle(userArticlesInfo.chosenArticles.length === 1)} withArticleLink={false}/>
             </div>
         );
     }

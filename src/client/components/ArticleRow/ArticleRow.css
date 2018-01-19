@@ -30,13 +30,13 @@
     margin-bottom: 10px;
 }
 
-.article-row__image:hover {
-    box-shadow: 0 3px 5px 0 gray;
-    transition: all 0.5s linear;
-}
-
 .article-row__image--clickable {
     cursor: pointer;
+}
+
+.article-row__image--clickable:hover {
+    box-shadow: 0 3px 5px 0 gray;
+    transition: all 0.5s linear;
 }
 
 .article-row__text-column {
@@ -54,11 +54,11 @@
     margin: 5px;
 }
 
-.article-row__title:link {
+.article-row__title--linkable:link {
     text-decoration: none;
 }
 
-.article-row__title:hover {
+.article-row__title--linkable:hover {
     text-decoration: underline;
 }
 

@@ -176,15 +176,15 @@ class TradeDetail extends React.Component {
             if (trade.isUserSender) {
                 content = (
                     <div>
-                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} />
-                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} />
+                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} withArticleLink={true}/>
+                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} withArticleLink={true}/>
                     </div>
                 );
             } else if (trade.isUserReceiver) {
                 content = (
                     <div>
-                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} />
-                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} />
+                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} withArticleLink={true}/>
+                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} withArticleLink={true}/>
                     </div>
                 );
             }

@@ -28,7 +28,8 @@ export default class ArticleRow extends React.Component {
         hideDescription: PropTypes.bool.isRequired,
         hideOwner: PropTypes.bool.isRequired,
         hideCreationDate: PropTypes.bool.isRequired,
-        hideStatus: PropTypes.bool.isRequired
+        hideStatus: PropTypes.bool.isRequired,
+        withArticleLink: PropTypes.bool.isRequired
     };
     
     static defaultProps = {
@@ -39,7 +40,8 @@ export default class ArticleRow extends React.Component {
         hideDescription: false,
         hideOwner: true,
         hideCreationDate: true,
-        hideStatus: false
+        hideStatus: false,
+        withArticleLink: false
     };
 
     onSelectionToggled = (theEvent, isChecked) => {
@@ -48,7 +50,7 @@ export default class ArticleRow extends React.Component {
 
     render() {
         const { article, selected, selectable } = this.props;
-        const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus } = this.props;
+        const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus, withArticleLink } = this.props;
         const { title, description, status, created, owner, categories, photos } = article;
         const name = (owner) ? owner.name : '';
         const categoryChips = (categories) ? categories.map(category => <CategoryChip key={category._id} categoryName={category.name}/>) : [];
@@ -68,7 +70,11 @@ export default class ArticleRow extends React.Component {
                     )}
                 </div>
                 <div className="article-row__text-column">
-                    <Link className="article-row__title" to={`/article/${article._id}`}>{title}</Link>
+                    {withArticleLink ? (
+                        <Link className="article-row__title article-row__title--linkable" to={`/article/${article._id}`}>{title}</Link>
+                    ) : (
+                        <span className="article-row__title">{title}</span>
+                    )}
                     {!hideDescription && <span className="article-row__description">{description}</span>}
                     {!hideCategories && categoryChips.length > 0 &&
                         <div className="article-row__categories">

@@ -13,14 +13,19 @@ export default class ArticleRowList extends React.Component {
         emptyText: PropTypes.string.isRequired,
         isEditing: PropTypes.bool.isRequired,
         selected: PropTypes.bool.isRequired,
-        onToggleArticle: PropTypes.func
+        onToggleArticle: PropTypes.func,
+        withArticleLink: PropTypes.bool.isRequired
+    };
+
+    static defaultProps = {
+        withArticleLink: false
     };
 
     handleSelectionToggled = (article, isChecked) => {
         if (typeof this.props.onToggleArticle === 'function') {
             this.props.onToggleArticle(article);
         }
-    }
+    };
 
     renderEmptyList() {
         return (
@@ -29,7 +34,7 @@ export default class ArticleRowList extends React.Component {
     }
 
     renderArticleRowList() {
-        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} selectable={true} selected={this.props.selected} hideCheckbox={!this.props.isEditing} onSelectionToggled={this.handleSelectionToggled}/>);
+        let articleRows = this.props.articles.map(article => <ArticleRow key={article._id} article={article} selectable={true} selected={this.props.selected} hideCheckbox={!this.props.isEditing} onSelectionToggled={this.handleSelectionToggled} withArticleLink={this.props.withArticleLink}/>);
 
         return (
             <div className="article-row-list_container">
