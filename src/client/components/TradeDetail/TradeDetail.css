@@ -29,3 +29,8 @@
     align-items: center;
     color: red;
 }
+
+.trade-detail__contact-info {
+    white-space: pre-wrap;
+    margin: 10px;
+}

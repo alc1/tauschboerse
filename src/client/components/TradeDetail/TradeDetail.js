@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
+import Dialog from 'material-ui/Dialog';
 
 import SendIcon from 'material-ui/svg-icons/content/send';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
@@ -12,10 +13,13 @@ import WithdrawIcon from 'material-ui/svg-icons/navigation/cancel';
 import AcceptIcon from 'material-ui/svg-icons/action/done-all';
 import ShippingIcon from 'material-ui/svg-icons/maps/local-shipping';
 import NewOfferIcon from 'material-ui/svg-icons/content/add';
+import ContactIcon from 'material-ui/svg-icons/communication/contact-mail';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 
 import Articles from '../Articles/Articles';
 import ActionBox from '../ActionBox/ActionBox';
 import TradeStateTag from '../TradeStateTag/TradeStateTag';
+import AvatarTag from '../AvatarTag/AvatarTag';
 import PageTitle from '../../containers/PageTitle';
 
 import ActionDescriptor from '../../model/ActionDescriptor';
@@ -44,6 +48,10 @@ class TradeDetail extends React.Component {
     static defaultProps = {
         trade: null,
         newVersionAvailable: false
+    };
+
+    state = {
+        isContactDetailOpen: false
     };
 
     handleUpdate = () => {
@@ -80,6 +88,12 @@ class TradeDetail extends React.Component {
 
     handleDelivered = () => {
         this.props.onSetDelivered();
+    };
+
+    handleContactDetail = (isOpen) => {
+        this.setState({
+            isContactDetailOpen: isOpen
+        });
     };
 
     renderDescription(trade) {
@@ -243,7 +257,12 @@ class TradeDetail extends React.Component {
             new ActionDescriptor('Artikel ausliefern', this.handleDelivered, 'delivered')
                 .setText(`Wenn Du deine Artikel ${trade.tradePartner.name} ausgeliefert hast, kannst Du hier angeben, dass sie auf dem Weg sind.`)
                 .setLabel('Artikel ausliefern')
-                .setIcon(<ShippingIcon/>)
+                .setIcon(<ShippingIcon/>),
+
+            new ActionDescriptor('Kontakt aufnehmen', this.handleContactDetail.bind(this, true), 'contacting')
+                .setText(`Nehme mit ${trade.tradePartner.name} Kontakt auf, damit Ihr den Austausch der Artikel organisieren könnt.`)
+                .setLabel('Kontaktdetails')
+                .setIcon(<ContactIcon/>)
         ];
     }
 
@@ -327,6 +346,7 @@ class TradeDetail extends React.Component {
 
     render() {
         const { trade } = this.props;
+        const { isContactDetailOpen } = this.state;
         const title = trade ? `Tauschgeschäft mit ${trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft';
 
         return (
@@ -339,6 +359,19 @@ class TradeDetail extends React.Component {
                 </Paper>
                 {this.renderArticles(trade)}
                 {this.renderActions(trade)}
+                <Dialog
+                    open={isContactDetailOpen}
+                    title="Kontakdetails"
+                    modal={true}
+                    actions={[
+                        <RaisedButton label="OK" onClick={this.handleContactDetail.bind(this, false)} primary/>
+                    ]}>
+                    <AvatarTag text={trade.tradePartner.name} icon={<AccountIcon/>}/>
+                    <div className="trade-detail__contact-info">{trade.tradePartner.address}</div>
+                    <div className="trade-detail__contact-info">
+                        <a href={`mailto:${trade.tradePartner.email}`}>{trade.tradePartner.email}</a>
+                    </div>
+                </Dialog>
             </div>
         );
     }
