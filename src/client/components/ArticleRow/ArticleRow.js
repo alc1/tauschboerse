@@ -20,7 +20,6 @@ export default class ArticleRow extends React.Component {
 
     static propTypes = {
         article: PropTypes.object.isRequired,
-        selectable: PropTypes.bool.isRequired,
         selected: PropTypes.bool.isRequired,
         onSelectionToggled: PropTypes.func.isRequired,
         hideCheckbox: PropTypes.bool.isRequired,
@@ -33,7 +32,6 @@ export default class ArticleRow extends React.Component {
     };
     
     static defaultProps = {
-        selectable: false,
         selected: false,
         hideCheckbox: false,
         hideCategories: false,
@@ -49,7 +47,7 @@ export default class ArticleRow extends React.Component {
     };
 
     render() {
-        const { article, selected, selectable } = this.props;
+        const { article, selected } = this.props;
         const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus, withArticleLink } = this.props;
         const { title, description, status, created, owner, categories, photos } = article;
         const name = (owner) ? owner.name : '';
@@ -60,7 +58,7 @@ export default class ArticleRow extends React.Component {
         return (
             <div className="article-row">
                 <div className="article-row__checkbox-column">
-                    {!hideCheckbox && <Checkbox checked={selected} disabled={!selectable} onCheck={this.onSelectionToggled}/>}
+                    {!hideCheckbox && <Checkbox checked={selected} onCheck={this.onSelectionToggled}/>}
                 </div>
                 <div className="article-row__image-column">
                     {photoSource ? (

@@ -47,7 +47,6 @@ export default class ArticleList extends React.Component {
                     key={article._id}
                     article={article}
                     onSelectionToggled={this.onSelectionToggled}
-                    selectable={true}
                     selected={isSelected}
                     hideCheckbox={hideCheckbox}
                     hideCategories={hideCategories}
