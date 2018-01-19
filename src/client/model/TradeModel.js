@@ -40,6 +40,11 @@ class TradeModel {
             || (this.isCompleted && !this.userHasDelivered);
     }
 
+    get openButDoesNotRequireAttention() {
+        return (this.isUserSender && this.isOpen && !(this.isDeclined || this.isInvalidated))
+            || (this.isUserReceiver && this.isOpen && (this.isDeclined || this.isInvalidated));
+    }
+
     get isCompleted() {
         return (this.trade.state === TradeState.TRADE_STATE_COMPLETED);
     }

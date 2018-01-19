@@ -115,8 +115,8 @@ export default class UserTradesPage extends React.Component {
                         linear={false}
                         orientation="vertical">
                         {trades.hasNewTrades && this.createTradesSection(0, userTradesSectionIndex, trades.newTrades, 'Noch nicht gesendete Tauschgeschäfte in Vorbereitung')}
-                        {trades.hasReceivedTrades && this.createTradesSection(1, userTradesSectionIndex, trades.receivedTrades, 'Tauschgeschäfte, die auf meine Antwort warten')}
-                        {trades.hasSentTrades && this.createTradesSection(2, userTradesSectionIndex, trades.sentTrades, 'Tauschgeschäfte, die auf Antwort des Empfängers warten')}
+                        {trades.hasTradesRequiringAttention && this.createTradesSection(1, userTradesSectionIndex, trades.tradesRequiringAttention, 'Tauschgeschäfte, die auf meine Antwort warten')}
+                        {trades.hasOpenTradesNotRequiringAttention && this.createTradesSection(2, userTradesSectionIndex, trades.sentTrades, 'Tauschgeschäfte, die auf Antwort des Empfängers warten')}
                         {trades.hasCompletedTrades && this.createTradesSection(3, userTradesSectionIndex, trades.completedTrades, 'Erfolgreich abgeschlossene Tauschgeschäfte')}
                         {trades.hasCanceledTrades && this.createTradesSection(4, userTradesSectionIndex, trades.canceledTrades, 'Abgebrochene Tauschgeschäfte')}
                     </Stepper>

@@ -12,6 +12,7 @@ class TradesModel {
         this.__sentTrades = null;
         this.__receivedTrades = null;
         this.__tradesRequiringAttention = null;
+        this.__openTradesNotRequiringAttention = null;
 
         this.__highestVersionstamp = -1;
     }
@@ -80,6 +81,13 @@ class TradesModel {
         return this.__tradesRequiringAttention;
     }
 
+    get openTradesNotRequiringAttention() {
+        if (this.__openTradesNotRequiringAttention === null) {
+            this.__openTradesNotRequiringAttention = this.__trades.filter(trade => trade.openButDoesNotRequireAttention);
+        }
+        return this.__openTradesNotRequiringAttention;
+    }
+
     get hasNewTrades() {
         return this.newTrades.length > 0;
     }
@@ -110,6 +118,10 @@ class TradesModel {
 
     get hasTradesRequiringAttention() {
         return this.tradesRequiringAttention.length > 0;
+    }
+
+    get hasOpenTradesNotRequiringAttention() {
+        return this.openTradesNotRequiringAttention.length > 0;
     }
 
     get highestVersionstamp() {
