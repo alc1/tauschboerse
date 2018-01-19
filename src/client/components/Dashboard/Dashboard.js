@@ -53,9 +53,9 @@ export default class Dashboard extends React.Component {
         }
     }
 
-    startTradeWatcher() {
+    startTradeWatcher(pollingInterval) {
         if (typeof this.props.checkForNewTrades === 'function') {
-            this.watcherIntervalId = setInterval(this.checkIfNewTradesAvailable, this.props.pollingInterval);
+            this.watcherIntervalId = setInterval(this.checkIfNewTradesAvailable, pollingInterval);
         }
     }
 
