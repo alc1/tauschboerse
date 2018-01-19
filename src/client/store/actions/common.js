@@ -2,7 +2,7 @@ import { globalMessageReceived, ERROR_MESSAGE, GO_TO_LOGIN } from './application
 
 export const handleError = (error, dispatch) => {
     if (error.response) {
-        if (error.response.status === 401 || error.response.status === 403) {
+        if (error.response.status === 401) {
             dispatch(globalMessageReceived({
                 messageText: getErrorMessage(error),
                 messageType: ERROR_MESSAGE,
@@ -24,9 +24,9 @@ export const handleError = (error, dispatch) => {
         }
     }
     else if (error.message) {
-        console.log(error);
+        console.error(error);
         dispatch(globalMessageReceived({
-            messageText: error.message,
+            messageText: "Unerwarteter Fehler",
             messageType: ERROR_MESSAGE
         }));
     }

@@ -33,6 +33,6 @@ module.exports = (req, res, next) => {
         });
     }
     else {
-        res.status(403).json({ globalError: 'Kein Token zur Authentifizierung gefunden! Bitte anmelden.' });
+        res.status(401).json({ globalError: 'Kein Token zur Authentifizierung gefunden! Bitte anmelden.' });
     }
 };
