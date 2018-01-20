@@ -122,7 +122,7 @@ export default class ApplicationBar extends React.Component {
                     style={appbarStyles}
                     titleStyle={{ lineHeight: subtitle ? 'normal' : '64px' }}
                     title={<AppTitle subtitle={subtitle}/>}
-                    iconElementLeft={<IconButton><MenuIcon/></IconButton>}
+                    iconElementLeft={<IconButton data-button-id="main-menu"><MenuIcon/></IconButton>}
                     iconElementRight={userOptionButton}
                     onLeftIconButtonClick={this.toggleMenu}/>
                 <Drawer
