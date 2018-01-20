@@ -19,16 +19,17 @@ export default class ArticleSearchInput extends React.Component {
     };
 
     componentDidMount() {
-        this.filterFieldTimeout = setTimeout(() => this.searchField.focus(), 1000);
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.filterFieldTimeout);
+        this.filterFieldTimeoutOnMount = setTimeout(() => this.searchField.focus(), 1000);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.filterFieldTimeout = setTimeout(() => this.searchField.focus(), 1000);
+        this.filterFieldTimeoutOnChange = setTimeout(() => this.searchField.focus(), 1000);
         this.setState({ text: nextProps.text });
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.filterFieldTimeoutOnMount);
+        clearTimeout(this.filterFieldTimeoutOnChange);
     }
         
     onChange = (text) => {
