@@ -7,11 +7,11 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 
 import InputComponent from '../InputComponent/InputComponent';
 
-import './UserPasswordForm.css';
+import './UserPasswordBox.css';
 
 const toolbarTitleStyle = { color: 'black' };
 
-export default class UserDetailsForm extends React.Component {
+export default class UserPasswordBox extends React.Component {
 
     static propTypes = {
         userDetails: PropTypes.shape({
@@ -31,8 +31,8 @@ export default class UserDetailsForm extends React.Component {
         const { userDetails, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
         const { changePassword, currentPassword, newPassword, passwordConfirmation } = userDetails;
         return (
-            <div className="user-password-form__container">
-                <Paper className="user-password-form__paper">
+            <div className="user-password">
+                <Paper className="user-password__container">
                     <Toolbar>
                         <ToolbarGroup>
                             <ToolbarTitle style={toolbarTitleStyle} text="Passwort"/>
@@ -47,7 +47,7 @@ export default class UserDetailsForm extends React.Component {
                         </ToolbarGroup>
                     </Toolbar>
                     {changePassword &&
-                        <div className="user-password-form__field-container" onSubmit={onSubmit}>
+                        <div className="user-password__fields-container" onSubmit={onSubmit}>
                             <InputComponent
                                 setElementRef={element => this.firstInputElement = element}
                                 error={errors.currentPassword}

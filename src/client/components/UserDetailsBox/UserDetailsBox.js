@@ -13,11 +13,11 @@ import InputComponent from '../InputComponent/InputComponent';
 
 import Gender from '../../../shared/constants/Gender';
 
-import './UserDetailsForm.css';
+import './UserDetailsBox.css';
 
 const toolbarTitleStyle = { color: 'black' };
 
-export default class UserDetailsForm extends React.Component {
+export default class UserDetailsBox extends React.Component {
 
     static propTypes = {
         userDetails: PropTypes.shape({
@@ -42,14 +42,14 @@ export default class UserDetailsForm extends React.Component {
         const { userDetails, errors, loading, onChange, onGenderSelectionChange, onSubmit } = this.props;
         const { gender, name, email, address, registration } = userDetails;
         return (
-            <div className="user-details-form__container">
-                <Paper className="user-details-form__paper">
+            <div className="user-details">
+                <Paper className="user-details__container">
                     <Toolbar>
                         <ToolbarGroup>
                             <ToolbarTitle style={toolbarTitleStyle} text="Benutzerdetails"/>
                         </ToolbarGroup>
                     </Toolbar>
-                    <div className="user-details-form__field-container" onSubmit={onSubmit}>
+                    <div className="user-details__fields-container" onSubmit={onSubmit}>
                         <AvatarTag text={`Mitglied seit ${moment(registration).format('DD.MM.YYYY | HH:mm')}`} icon={<AccountCircle/>}/>
                         <SelectField
                             style={{ width: '90%' }}
@@ -85,7 +85,7 @@ export default class UserDetailsForm extends React.Component {
                             field="address"
                             multiLine={true}
                             disabled={loading}/>
-                        <span className="user-details-form__hint-text">* Obligatorisches Feld</span>
+                        <span className="user-details__hint">* Obligatorisches Feld</span>
                     </div>
                 </Paper>
             </div>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import UserEditorPage from '../components/UserEditorPage/UserEditorPage';
+import UserFormPage from '../components/UserFormPage/UserFormPage';
 
 import { setGlobalMessage } from '../store/actions/application';
 import { updateUser } from '../store/actions/user';
@@ -14,4 +14,4 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { updateUser, setGlobalMessage })(UserEditorPage);
+export default connect(mapStateToProps, { updateUser, setGlobalMessage })(UserFormPage);
