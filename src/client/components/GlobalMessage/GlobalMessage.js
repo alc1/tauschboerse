@@ -62,7 +62,7 @@ export default class GlobalMessage extends React.Component {
                     if (typeof this.props.sendReloadTrade === 'function') {
                         this.props.sendReloadTrade();
                     }
-                }
+                };
                 break;
 
             default:

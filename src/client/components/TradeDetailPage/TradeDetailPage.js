@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ApplicationBar from '../../containers/ApplicationBar';
 import TradeDetail from '../TradeDetail/TradeDetail';
 import ContentContainer from '../ContentContainer/ContentContainer';
-import { RELOAD_TRADE, WARNING_MESSAGE } from '../../model/GlobalMessageParams';
+import { RELOAD_TRADE, ERROR_MESSAGE } from '../../model/GlobalMessageParams';
 
 export default class TradeDetailPage extends React.Component {
 
@@ -64,7 +64,7 @@ export default class TradeDetailPage extends React.Component {
 
         if (nextProps.newVersionAvailable && (nextProps.newVersionAvailable !== this.props.newVersionAvailable)) {
             this.stopIntervalTimer();
-            this.props.setGlobalMessage('Der Handel wurde geändert', WARNING_MESSAGE, 'AKTUALIISIEREN', RELOAD_TRADE);
+            this.props.setGlobalMessage('Das Tauschgeschäft wurde geändert.', ERROR_MESSAGE, 'Aktualisieren', RELOAD_TRADE);
         }
 
         if (nextProps.reloadTrade && (nextProps.reloadTrade !== this.props.reloadTrade)) {
