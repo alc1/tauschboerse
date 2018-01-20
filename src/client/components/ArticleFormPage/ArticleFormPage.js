@@ -6,16 +6,16 @@ import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../../containers/ApplicationBar';
 import Placeholder from '../../containers/Placeholder';
-import ArticleForm from '../ArticleForm/ArticleForm';
+import ArticleDetails from '../ArticleDetails/ArticleDetails';
 import PhotosComponent from '../PhotosComponent/PhotosComponent';
 import PageButton from '../PageButton/PageButton';
 import ContentContainer from '../ContentContainer/ContentContainer';
 
 import articleDetailsValidator from '../../../shared/validations/articleDetails';
 
-import './ArticleEditorPage.css';
+import './ArticleFormPage.css';
 
-export default class ArticleEditorPage extends React.Component {
+export default class ArticleFormPage extends React.Component {
 
     static propTypes = {
         article: PropTypes.object,
@@ -244,8 +244,8 @@ export default class ArticleEditorPage extends React.Component {
                 <ApplicationBar subtitle={this.getSubTitle(isEditAllowed)}/>
                 <ContentContainer>
                     {articleFound ? (
-                        <form className="article-editor__container" onSubmit={this.onSubmit}>
-                            <ArticleForm
+                        <form className="article-form" onSubmit={this.onSubmit}>
+                            <ArticleDetails
                                 isDisplayMode={!isEditAllowed}
                                 article={{title, description, categories, status, created, owner, trades}}
                                 errors={errors}

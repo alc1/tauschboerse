@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import ApplicationBar from '../../containers/ApplicationBar';
-import UserDetailsForm from '../UserDetailsForm/UserDetailsForm';
-import UserPasswordForm from '../UserPasswordForm/UserPasswordForm';
+import UserDetailsBox from '../UserDetailsBox/UserDetailsBox';
+import UserPasswordBox from '../UserPasswordBox/UserPasswordBox';
 import PageButton from '../PageButton/PageButton';
 
 import { INFO_MESSAGE } from '../../model/GlobalMessageParams';
@@ -15,9 +15,9 @@ import ContentContainer from '../ContentContainer/ContentContainer';
 import userDetailsValidator from '../../../shared/validations/userDetails';
 import Gender from '../../../shared/constants/Gender';
 
-import './UserEditorPage.css';
+import './UserFormPage.css';
 
-export default class UserDetailsPage extends React.Component {
+export default class UserFormPage extends React.Component {
 
     static propTypes = {
         updateUser: PropTypes.func.isRequired,
@@ -114,15 +114,15 @@ export default class UserDetailsPage extends React.Component {
             <div>
                 <ApplicationBar subtitle="Mein Konto verwalten"/>
                 <ContentContainer>
-                    <form className="user-editor__container" onSubmit={this.onSubmit}>
-                        <UserDetailsForm
+                    <form className="user-form" onSubmit={this.onSubmit}>
+                        <UserDetailsBox
                             userDetails={userDetails}
                             errors={errors}
                             loading={loading}
                             onChange={this.onChange}
                             onGenderSelectionChange={this.onGenderSelectionChange}
                             onSubmit={this.onSubmit}/>
-                        <UserPasswordForm
+                        <UserPasswordBox
                             userDetails={userDetails}
                             errors={errors}
                             loading={loading}

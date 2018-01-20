@@ -1,10 +1,9 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
-
 const userCreatorValidator = require('./userCreatorValidator');
 const userUpdaterValidator = require('./userUpdaterValidator');
 const encryptionUtils = require('../utils/encryptionUtils');
+const tokenUtils = require('../utils/tokenUtils');
 
 const dataCache = require('../services/DataCache').dataCache;
 
@@ -78,14 +77,14 @@ function updateUser(req, res) {
 
 function createToken(theUserId, theGender, theName, theEmail, theAddress, theRegistrationDate) {
     console.log(`Create token for user ID [${theUserId}], gender [${theGender}], name [${theName}], email [${theEmail}], registration [${theRegistrationDate}]`);
-    return jwt.sign({
+    return tokenUtils.sign({
         _id: theUserId,
         gender: theGender,
         name: theName,
         email: theEmail,
         address: theAddress,
         registration: theRegistrationDate
-    }, process.env.JWT_KEY, { expiresIn: '1h' });
+    });
 }
 
 module.exports = {

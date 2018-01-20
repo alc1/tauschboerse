@@ -11,7 +11,7 @@ import Gender from '../../../shared/constants/Gender';
 
 import './RegistrationForm.css';
 
-export default class UserDetailsForm extends React.Component {
+export default class RegistrationForm extends React.Component {
 
     static propTypes = {
         gender: PropTypes.string.isRequired,

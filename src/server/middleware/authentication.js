@@ -4,19 +4,13 @@
  */
 'use strict';
 
-const jwt = require('jsonwebtoken');
-
+const tokenUtils = require('../utils/tokenUtils');
 const dataCache = require('../services/DataCache').dataCache;
 
 module.exports = (req, res, next) => {
-    let token;
-    const authorizationHeader = req.headers['authorization'];
-    if (authorizationHeader) {
-        token = authorizationHeader.split(' ')[1];
-    }
-
+    let token = tokenUtils.getTokenFromRequest(req);
     if (token) {
-        jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+        tokenUtils.verify(token, (err, decoded) => {
             if (err) {
                 res.status(401).json({ globalError: 'Token zur Authentifizierung ungültig! Bitte erneut anmelden.' });
             }
