@@ -36,7 +36,6 @@ class TradeDetail extends React.Component {
         onAcceptTrade: PropTypes.func.isRequired,
         onDeclineTrade: PropTypes.func.isRequired,
         onDeleteTrade: PropTypes.func.isRequired,
-        onRefresh: PropTypes.func.isRequired,
         onSetDelivered: PropTypes.func.isRequired,
         onSubmitTrade: PropTypes.func.isRequired,
         onWithdrawTrade: PropTypes.func.isRequired,
