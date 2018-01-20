@@ -22,7 +22,10 @@ function findAndFlagInvalidTrades(articles, ignoreTradeId) {
     // invalidate the open offers
     invalidTrades.forEach(async trade => {
         let copy = prepareTradeCopy(trade, trade.state);
-        setOfferState(copy.offers, OfferState.OFFER_STATE_INVALIDATED, trade.hasCounteroffer ? 1 : 0);
+        if (trade.hasCounteroffer) {
+            trade.deleteCounteroffer();
+        }
+        setOfferState(copy.offers, OfferState.OFFER_STATE_INVALIDATED);
         try {
             await dataCache.saveTrade(copy);
         } catch(e) {
