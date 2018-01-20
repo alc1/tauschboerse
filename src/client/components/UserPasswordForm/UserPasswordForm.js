@@ -49,7 +49,7 @@ export default class UserDetailsForm extends React.Component {
                     {changePassword &&
                         <div className="user-password-form__field-container" onSubmit={onSubmit}>
                             <InputComponent
-                                inputRef={inputElement => this.firstInputElement = inputElement}
+                                setElementRef={element => this.firstInputElement = element}
                                 error={errors.currentPassword}
                                 label="Bisheriges Passwort"
                                 onChange={onChange}

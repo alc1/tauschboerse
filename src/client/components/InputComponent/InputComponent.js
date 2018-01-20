@@ -8,6 +8,7 @@ const displayInputStyles = { color: 'black' };
 export default class InputComponent extends React.Component {
 
     static propTypes = {
+        setElementRef: PropTypes.func,
         isDisplayMode: PropTypes.bool.isRequired,
         field: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
@@ -28,7 +29,7 @@ export default class InputComponent extends React.Component {
     };
 
     render() {
-        const { isDisplayMode, inputRef, label, error, onChange, value, type, multiLine, field, disabled } = this.props;
+        const { setElementRef, isDisplayMode, label, error, onChange, value, type, multiLine, field, disabled } = this.props;
         if (isDisplayMode) {
             styles.color = 'black';
         }
@@ -37,7 +38,7 @@ export default class InputComponent extends React.Component {
                 style={styles}
                 inputStyle={isDisplayMode ? displayInputStyles : undefined}
                 textareaStyle={isDisplayMode ? displayInputStyles : undefined}
-                ref={inputRef}
+                ref={setElementRef}
                 hintText={label}
                 floatingLabelText={label}
                 errorText={error}

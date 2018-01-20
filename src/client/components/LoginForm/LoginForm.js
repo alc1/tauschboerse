@@ -30,7 +30,7 @@ export default class LoginForm extends React.Component {
                     <h1 className="login-form__title">Melde Dich mit deiner E-Mail-Adresse an:</h1>
                     <form className="login-form__field-container" onSubmit={onSubmit}>
                         <InputComponent
-                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            setElementRef={element => this.firstInputElement = element}
                             error={errors.email}
                             label="E-Mail *"
                             onChange={onChange}

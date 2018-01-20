@@ -18,7 +18,16 @@ export default class ArticleSearchInput extends React.Component {
         text: this.props.text
     };
 
+    componentDidMount() {
+        this.filterFieldTimeout = setTimeout(() => this.searchField.focus(), 1000);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.filterFieldTimeout);
+    }
+
     componentWillReceiveProps(nextProps) {
+        this.filterFieldTimeout = setTimeout(() => this.searchField.focus(), 1000);
         this.setState({ text: nextProps.text });
     }
         
@@ -33,6 +42,7 @@ export default class ArticleSearchInput extends React.Component {
     render() {
         return (
             <SearchBar
+                ref={element => this.searchField = element}
                 hintText="Nach Titel / Beschreibung / Kategorie suchen ..."
                 onChange={this.onChange}
                 onRequestSearch={this.onSearch}

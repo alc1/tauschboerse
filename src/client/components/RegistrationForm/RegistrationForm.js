@@ -50,7 +50,7 @@ export default class UserDetailsForm extends React.Component {
                             <MenuItem value={Gender.FEMALE} primaryText="Frau"/>
                         </SelectField>
                         <InputComponent
-                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            setElementRef={element => this.firstInputElement = element}
                             error={errors.name}
                             label="Name *"
                             onChange={onChange}

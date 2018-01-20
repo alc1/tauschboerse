@@ -42,7 +42,11 @@ export default class ArticleForm extends React.Component {
     };
 
     componentDidMount() {
-        this.firstInputElement.focus();
+        this.firstInputFieldTimeout = setTimeout(() => this.firstInputElement.focus(), 1000);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.firstInputFieldTimeout);
     }
 
     render() {
@@ -71,8 +75,8 @@ export default class ArticleForm extends React.Component {
                             {status && <ArticleStatusComponent status={status}/>}
                         </div>
                         <InputComponent
+                            setElementRef={element => this.firstInputElement = element}
                             isDisplayMode={isDisplayMode}
-                            inputRef={inputElement => this.firstInputElement = inputElement}
                             error={errors.title}
                             label={isDisplayMode ? 'Titel' : 'Titel *'}
                             onChange={onChange}
