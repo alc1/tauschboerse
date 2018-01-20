@@ -124,7 +124,7 @@ export default function user(theState = initialState, theAction) {
 function getCurrentUserTradesSectionIndex(theTradesModel, currentSectionIndex) {
     if (currentSectionIndex >= 0) {
         // check if current section index is valid - if it is don't change it
-        let indexValid = false;
+        let indexValid;
         switch(currentSectionIndex) {
             case 0:
                 indexValid = theTradesModel.hasNewTrades;
@@ -141,6 +141,8 @@ function getCurrentUserTradesSectionIndex(theTradesModel, currentSectionIndex) {
             case 4:
                 indexValid = theTradesModel.hasCanceledTrades;
                 break;
+            default:
+                indexValid = false;
         }
         if (indexValid) {
             return currentSectionIndex;

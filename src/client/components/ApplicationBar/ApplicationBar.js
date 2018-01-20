@@ -96,7 +96,7 @@ export default class ApplicationBar extends React.Component {
         if (theUser) {
             return (
                 <IconMenu iconButtonElement={this.createUserMenuElement(theUser)}>
-                    <MenuItem primaryText="Meine Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.props.goToUserTradesPage.bind(this, this.props.history, theUser._id)}/>
+                    <MenuItem primaryText="Meine Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.props.gotoUserTradesPage.bind(this, this.props.history, theUser._id)}/>
                     <MenuItem primaryText="Meine Artikel" leftIcon={<ArticlesIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/articles`)}/>
                     <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/details`)}/>
                     <Divider/>

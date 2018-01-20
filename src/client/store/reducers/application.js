@@ -5,8 +5,6 @@ import {
     GLOBAL_POLLING_INTERVAL_CHANGED
 } from '../actions/application';
 
-import GlobalMessageParams from '../../model/GlobalMessageParams';
-
 const initialGlobalMessage = null;
 const initialIsLoading = false;
 const initialPollingInterval = 1000;
