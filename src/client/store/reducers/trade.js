@@ -102,6 +102,7 @@ export default function trade(theState = initialState, theAction) {
                 trade: theAction.trade,
                 notFound: false,
                 deleted: false,
+                reloadTrade: false, 
                 userArticlesInfo: new ArticlesDisplayInfo(theState.userArticlesInfo).setChosenArticles(offer.userArticles.slice()),
                 partnerArticlesInfo: new ArticlesDisplayInfo(theState.partnerArticlesInfo).setChosenArticles(offer.tradePartnerArticles.slice())
             };
