@@ -7,6 +7,7 @@ const photosController = require('./photosController');
 const commonController = require('./commonController');
 
 const ArticleStatus = require('../../shared/constants/ArticleStatus');
+const TradeState = require('../../shared/constants/TradeState');
 const Photo = require('../model/Photo');
 
 const filterArticles = require('../../shared/filterArticles');
@@ -208,7 +209,8 @@ async function createCategories(theCategories) {
 function getTradesIfAllowed(theRequestingUser, theArticleId) {
     const article = dataCache.getArticleById(theArticleId);
     if (article && theRequestingUser && theRequestingUser._id === article.owner._id) {
-        return dataCache.getTradesByArticle(theArticleId);
+        let trades = dataCache.getTradesByArticle(theArticleId);
+        return trades.filter(trade => ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1._id === theRequestingUser._id)) || (trade.state !== TradeState.TRADE_STATE_INIT));
     }
     return null;
 }
