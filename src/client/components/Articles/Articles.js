@@ -71,7 +71,7 @@ export default class Articles extends React.Component {
         let paging = this.props.paging && (this.props.pageCount > 1);
 
         return (
-            <div className="articles__container">
+            <section className="articles__container">
                 <Paper className="articles__paper">
                     <Toolbar>
                         <ToolbarGroup>
@@ -93,7 +93,7 @@ export default class Articles extends React.Component {
                         {paging && <UltimatePaginationMaterialUi currentPage={this.props.pageNum} totalPages={this.props.pageCount} onChange={this.handlePageChange} />}
                     </div>
                 </Paper>
-            </div>
+            </section>
         );
     }
 }

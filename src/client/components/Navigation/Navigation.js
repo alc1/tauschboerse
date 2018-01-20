@@ -39,7 +39,7 @@ export default class Navigation extends React.Component {
         } else {
             this.openMenuItem('/');
         }
-    }
+    };
 
     logout = () => {
         this.props.closeMenu();
@@ -65,7 +65,7 @@ export default class Navigation extends React.Component {
             userDetailsLink = `/user/${user._id}/details`;
         }
         return (
-            <div>
+            <nav>
                 <UserInfo width={100} height={100} user={user}/>
                 <Menu autoWidth={false} width={300}>
                     <Divider/>
@@ -80,7 +80,7 @@ export default class Navigation extends React.Component {
                     {!user && <MenuItem primaryText="Anmelden" leftIcon={<LoginIcon/>} onClick={this.goToLogin}/>}
                     {!user && <MenuItem primaryText="Registrieren" leftIcon={<RegistrationIcon/>} onClick={this.openMenuItem.bind(this, '/registration')}/>}
                 </Menu>
-            </div>
+            </nav>
         );
     }
 }

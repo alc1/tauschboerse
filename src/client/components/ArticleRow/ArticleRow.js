@@ -56,7 +56,7 @@ export default class ArticleRow extends React.Component {
         const mainPhotoIndex = (photos && photos.length > 0) ? photos.reduce((mainPhotoIndex, photo, index) => photo.isMain ? index : mainPhotoIndex, 0) : 0;
         const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
         return (
-            <div className="article-row">
+            <article className="article-row">
                 <div className="article-row__checkbox-column">
                     {!hideCheckbox && <Checkbox checked={selected} onCheck={this.onSelectionToggled}/>}
                 </div>
@@ -85,7 +85,7 @@ export default class ArticleRow extends React.Component {
                     {!hideCreationDate && <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>}
                     {!hideStatus && <ArticleStatusTag status={status}/>}
                 </div>
-            </div>
+            </article>
         );
     }
 }

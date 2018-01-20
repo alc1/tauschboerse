@@ -117,7 +117,7 @@ export default class ApplicationBar extends React.Component {
         const userOptionButton = this.createUserOptionButton(user);
 
         return (
-            <div>
+            <header>
                 <AppBar
                     style={appbarStyles}
                     titleStyle={{ lineHeight: subtitle ? 'normal' : '64px' }}
@@ -134,7 +134,7 @@ export default class ApplicationBar extends React.Component {
                 <div className="appbar__content"/>
                 <LoadingIndicator/>
                 <GlobalMessage/>
-            </div>
+            </header>
         );
     }
 }

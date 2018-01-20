@@ -261,10 +261,8 @@ export default class TradeEditor extends React.Component {
                     {navigation}
                 </Paper>
                 <Paper className="trade-editor__info-container">
-                    <div>
-                        <div className="trade-editor__step-title">{stepTitle}</div>
-                        <div className="trade-editor__step-description">{stepDescription}</div>
-                    </div>
+                    <div className="trade-editor__step-title">{stepTitle}</div>
+                    <div className="trade-editor__step-description">{stepDescription}</div>
                 </Paper>
                 <div className="trade-editor__step-container">
                     {this.renderStep()}

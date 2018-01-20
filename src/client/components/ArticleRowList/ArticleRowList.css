@@ -1,4 +1,4 @@
-.article-row-list_container {
+.article-row-list__container {
     display: flex;
     flex-flow: column wrap;
 }

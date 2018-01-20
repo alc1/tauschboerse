@@ -15,11 +15,13 @@ export default class ActionBox extends React.Component {
     render() {
         const { title, text } = this.props;
         return (
-            <Paper className="action-box">
-                <h2 className="action-box__title">{title}</h2>
-                <span className="action-box__text">{text}</span>
-                {this.props.children}
-            </Paper>
+            <section className="action-box">
+                <Paper className="action-box__container">
+                    <h2 className="action-box__title">{title}</h2>
+                    <span className="action-box__text">{text}</span>
+                    {this.props.children}
+                </Paper>
+            </section>
         );
     }
 }

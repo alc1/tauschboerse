@@ -109,8 +109,8 @@ export default class PhotosComponent extends React.Component {
         const photoWrappers = photos.map((photo, index) => this.createPhotoWrapper(photo, index, isDisplayMode));
 
         return (
-            <div className="photos-component__container">
-                <Paper className="photos-component__paper">
+            <section className="photos-component">
+                <Paper className="photos-component__container">
                     <Toolbar>
                         <ToolbarGroup>
                             <ToolbarTitle style={toolbarTitleStyles} text="Bilder"/>
@@ -147,7 +147,7 @@ export default class PhotosComponent extends React.Component {
                         {hasPhotos ? photoWrappers : <PhotoPlaceholder width={100} height={100} text={isDisplayMode ? 'Keine Bilder vorhanden' : 'Keine Bilder ausgewählt'}/>}
                     </div>
                 </Paper>
-            </div>
+            </section>
         );
     }
 }

@@ -34,8 +34,8 @@ export default class RegistrationForm extends React.Component {
     render() {
         const { gender, name, email, address, newPassword, passwordConfirmation, errors, loading, onChange, onGenderSelectionChange, onSubmit } = this.props;
         return (
-            <div className="registration-form__container">
-                <Paper className="registration-form__paper">
+            <section className="registration-form">
+                <Paper className="registration-form__container">
                     <h1 className="registration-form__title">Bitte gib zur Registrierung deine Benutzerdaten ein:</h1>
                     <form className="registration-form__field-container" onSubmit={onSubmit}>
                         <SelectField
@@ -92,7 +92,7 @@ export default class RegistrationForm extends React.Component {
                         {this.props.children}
                     </form>
                 </Paper>
-            </div>
+            </section>
         );
     }
 }

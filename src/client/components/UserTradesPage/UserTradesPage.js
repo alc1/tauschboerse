@@ -109,20 +109,22 @@ export default class UserTradesPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Meine Tauschgeschäfte verwalten"/>
-                {trades.count > 0 ? (
-                    <Stepper
-                        activeStep={userTradesSectionIndex}
-                        linear={false}
-                        orientation="vertical">
-                        {trades.hasNewTrades && this.createTradesSection(0, userTradesSectionIndex, trades.newTrades, 'Noch nicht gesendete Tauschgeschäfte in Vorbereitung')}
-                        {trades.hasTradesRequiringAttention && this.createTradesSection(1, userTradesSectionIndex, trades.tradesRequiringAttention, 'Tauschgeschäfte, die auf meine Antwort warten')}
-                        {trades.hasOpenTradesNotRequiringAttention && this.createTradesSection(2, userTradesSectionIndex, trades.sentTrades, 'Tauschgeschäfte, die auf Antwort des Empfängers warten')}
-                        {trades.hasCompletedTrades && this.createTradesSection(3, userTradesSectionIndex, trades.completedTrades, 'Erfolgreich abgeschlossene Tauschgeschäfte')}
-                        {trades.hasCanceledTrades && this.createTradesSection(4, userTradesSectionIndex, trades.canceledTrades, 'Abgebrochene Tauschgeschäfte')}
-                    </Stepper>
-                ) : (
-                    <Placeholder width={300} height={300} loading={loading} text="Keine Tauschgeschäfte vorhanden" loadingText="... Tauschgeschäfte werden geladen ..."/>
-                )}
+                <main>
+                    {trades.count > 0 ? (
+                        <Stepper
+                            activeStep={userTradesSectionIndex}
+                            linear={false}
+                            orientation="vertical">
+                            {trades.hasNewTrades && this.createTradesSection(0, userTradesSectionIndex, trades.newTrades, 'Noch nicht gesendete Tauschgeschäfte in Vorbereitung')}
+                            {trades.hasTradesRequiringAttention && this.createTradesSection(1, userTradesSectionIndex, trades.tradesRequiringAttention, 'Tauschgeschäfte, die auf meine Antwort warten')}
+                            {trades.hasOpenTradesNotRequiringAttention && this.createTradesSection(2, userTradesSectionIndex, trades.sentTrades, 'Tauschgeschäfte, die auf Antwort des Empfängers warten')}
+                            {trades.hasCompletedTrades && this.createTradesSection(3, userTradesSectionIndex, trades.completedTrades, 'Erfolgreich abgeschlossene Tauschgeschäfte')}
+                            {trades.hasCanceledTrades && this.createTradesSection(4, userTradesSectionIndex, trades.canceledTrades, 'Abgebrochene Tauschgeschäfte')}
+                        </Stepper>
+                    ) : (
+                        <Placeholder width={300} height={300} loading={loading} text="Keine Tauschgeschäfte vorhanden" loadingText="... Tauschgeschäfte werden geladen ..."/>
+                    )}
+                </main>
             </div>
         );
     }

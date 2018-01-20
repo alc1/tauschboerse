@@ -41,22 +41,24 @@ export default class DashboardChart extends React.Component {
         const countAll = data.reduce((sum, item) => sum + item.value, 0);
 
         return (
-            <Paper className="dashboard-chart">
-                <Toolbar style={toolbarStyle}>
-                    <ToolbarGroup>
-                        <ToolbarTitle style={toolbarTitleStyle} text={`${title} (${countAll})`}/>
-                    </ToolbarGroup>
-                </Toolbar>
-                {countAll > 0 ? (
-                    <PieChart width={450} height={400}>
-                        <Pie dataKey="value" data={data} innerRadius={20} outerRadius={120} isAnimationActive label/>
-                        <Tooltip/>
-                        <Legend/>
-                    </PieChart>
-                ) : (
-                    <Placeholder width={450} height={343} loading={loading} text={placeholderText} loadingText={placeholderLoadingText}/>
-                )}
-            </Paper>
+            <section className="dashboard-chart">
+                <Paper className="dashboard-chart__container">
+                    <Toolbar style={toolbarStyle}>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyle} text={`${title} (${countAll})`}/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    {countAll > 0 ? (
+                        <PieChart width={450} height={400}>
+                            <Pie dataKey="value" data={data} innerRadius={20} outerRadius={120} isAnimationActive label/>
+                            <Tooltip/>
+                            <Legend/>
+                        </PieChart>
+                    ) : (
+                        <Placeholder width={450} height={343} loading={loading} text={placeholderText} loadingText={placeholderLoadingText}/>
+                    )}
+                </Paper>
+            </section>
         );
     }
 }

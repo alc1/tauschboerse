@@ -39,26 +39,28 @@ export default class TradeSummary extends React.Component {
     render() {
         const { trade, actions } = this.props;
         return (
-            <Paper className="trade-summary">
-                <div className="trade-summary__trade-container">
-                    <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{trade.userArticlesListTitle()}</span>
-                        {this.createArticleList(trade.currentOffer.userArticles)}
+            <article className="trade-summary">
+                <Paper className="trade-summary__container">
+                    <div className="trade-summary__trade-container">
+                        <section className="trade-summary__articles-container">
+                            <span className="trade-summary__articles-title">{trade.userArticlesListTitle()}</span>
+                            {this.createArticleList(trade.currentOffer.userArticles)}
+                        </section>
+                        <div className="trade-summary__swap-image-wrapper">
+                            <Paper zDepth={2} circle>
+                                <Swap className="trade-summary__swap-image"/>
+                            </Paper>
+                        </div>
+                        <section className="trade-summary__articles-container">
+                            <span className="trade-summary__articles-title">{trade.partnerArticlesListTitle()}</span>
+                            {this.createArticleList(trade.currentOffer.tradePartnerArticles)}
+                        </section>
                     </div>
-                    <div className="trade-summary__swap-image-wrapper">
-                        <Paper zDepth={2} circle>
-                            <Swap className="trade-summary__swap-image"/>
-                        </Paper>
+                    <div className="trade-summary__button-bar">
+                        {actions}
                     </div>
-                    <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{trade.partnerArticlesListTitle()}</span>
-                        {this.createArticleList(trade.currentOffer.tradePartnerArticles)}
-                    </div>
-                </div>
-                <div className="trade-summary__button-bar">
-                    {actions}
-                </div>
-            </Paper>
+                </Paper>
+            </article>
         );
     }
 }

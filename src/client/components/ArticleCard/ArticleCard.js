@@ -32,7 +32,7 @@ export default class ArticleCard extends React.Component {
         const mainPhoto = (photos && photos.length > 0) ? photos.find(photo => photo.isMain) : null;
         const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
         return (
-            <div className="article-card">
+            <article className="article-card">
                 <Card>
                     <div className="article-card__header">
                         <AvatarTag text={name} icon={<AccountIcon/>}/>
@@ -47,7 +47,7 @@ export default class ArticleCard extends React.Component {
                     <CardText className="article-card__text">{description}</CardText>
                     <CardActions>{actions}</CardActions>
                 </Card>
-            </div>
+            </article>
         );
     }
 }

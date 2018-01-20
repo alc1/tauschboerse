@@ -172,9 +172,9 @@ export default class MarketplacePage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Auf dem Marktplatz"/>
-                <div className="marketplace__search-container">
+                <section className="marketplace__search-container">
                     <ArticleSearchInput text={text} onSearch={this.onSearch}/>
-                </div>
+                </section>
                 {hasSearched ?
                     <Stepper
                         activeStep={marketplaceSectionIndex}

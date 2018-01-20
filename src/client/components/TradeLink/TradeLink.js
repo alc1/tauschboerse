@@ -29,18 +29,20 @@ export default class TradeLink extends React.Component {
     render() {
         const { trade, loading } = this.props;
         return (
-            <Paper className="trade-link">
-                <div className="trade-link__left-column">
-                    <span>Tauschgeschäft mit</span>
-                    <AvatarTag text={trade.tradePartner.name} icon={<AccountIcon/>}/>
-                    <span>vom</span>
-                    <AvatarTag text={moment(trade.trade.createDate).format('DD.MM.YYYY')} icon={<EditIcon/>}/>
-                </div>
-                <div className="trade-link__right-column">
-                    <TradeStateTag status={trade.state}/>
-                    <FlatButton label="Anzeigen" icon={<ShowIcon/>} disabled={loading} onClick={this.goToTrade.bind(this, trade._id)} primary/>
-                </div>
-            </Paper>
+            <article className="trade-link">
+                <Paper className="trade-link__container">
+                    <div className="trade-link__left-column">
+                        <span>Tauschgeschäft mit</span>
+                        <AvatarTag text={trade.tradePartner.name} icon={<AccountIcon/>}/>
+                        <span>vom</span>
+                        <AvatarTag text={moment(trade.trade.createDate).format('DD.MM.YYYY')} icon={<EditIcon/>}/>
+                    </div>
+                    <div className="trade-link__right-column">
+                        <TradeStateTag status={trade.state}/>
+                        <FlatButton label="Anzeigen" icon={<ShowIcon/>} disabled={loading} onClick={this.goToTrade.bind(this, trade._id)} primary/>
+                    </div>
+                </Paper>
+            </article>
         );
     }
 }

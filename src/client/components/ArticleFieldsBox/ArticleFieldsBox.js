@@ -61,47 +61,49 @@ export default class ArticleFieldsBox extends React.Component {
             created = article.created ? moment(article.created).format('DD.MM.YYYY | HH:mm') : created;
         }
         return (
-            <Paper className="article-fields">
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle style={toolbarTitleStyle} text="Artikeldetails"/>
-                    </ToolbarGroup>
-                </Toolbar>
-                <div className="article-fields__container">
-                    <div className="article-fields__properties">
-                        {owner && <AvatarTag text={owner} icon={<AccountIcon/>}/>}
-                        {created && <AvatarTag text={created} icon={<EditIcon/>}/>}
-                        {status && <ArticleStatusComponent status={status}/>}
+            <section className="article-fields">
+                <Paper>
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyle} text="Artikeldetails"/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    <div className="article-fields__container">
+                        <div className="article-fields__properties">
+                            {owner && <AvatarTag text={owner} icon={<AccountIcon/>}/>}
+                            {created && <AvatarTag text={created} icon={<EditIcon/>}/>}
+                            {status && <ArticleStatusComponent status={status}/>}
+                        </div>
+                        <InputComponent
+                            setElementRef={element => this.firstInputElement = element}
+                            isDisplayMode={isDisplayMode}
+                            error={errors.title}
+                            label={isDisplayMode ? 'Titel' : 'Titel *'}
+                            onChange={onChange}
+                            value={title}
+                            field="title"
+                            disabled={loading}/>
+                        <InputComponent
+                            isDisplayMode={isDisplayMode}
+                            error={errors.description}
+                            label="Beschreibung"
+                            onChange={onChange}
+                            value={description}
+                            field="description"
+                            multiLine={true}
+                            disabled={loading}/>
+                        <CategoryInputField
+                            isDisplayMode={isDisplayMode}
+                            categories={categories}
+                            errors={errors}
+                            loading={loading}
+                            onAddCategory={onAddCategory}
+                            onRemoveCategory={onRemoveCategory}
+                            allowNewValues={true}/>
+                        {!isDisplayMode && <span className="article-fields__hint">* Obligatorisches Feld</span>}
                     </div>
-                    <InputComponent
-                        setElementRef={element => this.firstInputElement = element}
-                        isDisplayMode={isDisplayMode}
-                        error={errors.title}
-                        label={isDisplayMode ? 'Titel' : 'Titel *'}
-                        onChange={onChange}
-                        value={title}
-                        field="title"
-                        disabled={loading}/>
-                    <InputComponent
-                        isDisplayMode={isDisplayMode}
-                        error={errors.description}
-                        label="Beschreibung"
-                        onChange={onChange}
-                        value={description}
-                        field="description"
-                        multiLine={true}
-                        disabled={loading}/>
-                    <CategoryInputField
-                        isDisplayMode={isDisplayMode}
-                        categories={categories}
-                        errors={errors}
-                        loading={loading}
-                        onAddCategory={onAddCategory}
-                        onRemoveCategory={onRemoveCategory}
-                        allowNewValues={true}/>
-                    {!isDisplayMode && <span className="article-fields__hint">* Obligatorisches Feld</span>}
-                </div>
-            </Paper>
+                </Paper>
+            </section>
         );
     }
 }

@@ -42,7 +42,7 @@ export default class UserDetailsBox extends React.Component {
         const { userDetails, errors, loading, onChange, onGenderSelectionChange, onSubmit } = this.props;
         const { gender, name, email, address, registration } = userDetails;
         return (
-            <div className="user-details">
+            <section className="user-details">
                 <Paper className="user-details__container">
                     <Toolbar>
                         <ToolbarGroup>
@@ -88,7 +88,7 @@ export default class UserDetailsBox extends React.Component {
                         <span className="user-details__hint">* Obligatorisches Feld</span>
                     </div>
                 </Paper>
-            </div>
+            </section>
         );
     }
 }

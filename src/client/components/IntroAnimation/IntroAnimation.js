@@ -15,7 +15,7 @@ import './IntroAnimation.css';
 export default class IntroAnimation extends React.Component {
     render() {
         return (
-            <div className="intro-animation">
+            <section className="intro-animation">
                 <div className="intro-animation__images-group">
                     <Camera className="intro-animation__small-image intro-animation__timer"/>
                     <Flower className="intro-animation__medium-image intro-animation__timer"/>
@@ -29,7 +29,7 @@ export default class IntroAnimation extends React.Component {
                     <Watch className="intro-animation__medium-image intro-animation__timer"/>
                     <Tablet className="intro-animation__small-image intro-animation__timer"/>
                 </div>
-            </div>
+            </section>
         );
     }
 }

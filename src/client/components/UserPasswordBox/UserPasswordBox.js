@@ -31,7 +31,7 @@ export default class UserPasswordBox extends React.Component {
         const { userDetails, errors, loading, onChange, onPasswordChangeChecked, onSubmit } = this.props;
         const { changePassword, currentPassword, newPassword, passwordConfirmation } = userDetails;
         return (
-            <div className="user-password">
+            <section className="user-password">
                 <Paper className="user-password__container">
                     <Toolbar>
                         <ToolbarGroup>
@@ -76,7 +76,7 @@ export default class UserPasswordBox extends React.Component {
                         </div>
                     }
                 </Paper>
-            </div>
+            </section>
         );
     }
 }

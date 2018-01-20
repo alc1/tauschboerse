@@ -65,7 +65,7 @@ export default class ArticleRowList extends React.Component {
         ));
 
         return (
-            <div className="article-row-list_container">
+            <div className="article-row-list__container">
                 {articleRows}
             </div>
         );

@@ -24,16 +24,18 @@ export default class ArticleTradesBox extends React.Component {
             .map(trade => <TradeLink key={trade._id} trade={trade} loading={loading}/>);
 
         return (
-            <Paper className="article-trades">
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle style={toolbarTitleStyle} text="Involviert in:"/>
-                    </ToolbarGroup>
-                </Toolbar>
-                <div>
-                    {tradesLinks}
-                </div>
-            </Paper>
+            <section className="article-trades">
+                <Paper>
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle style={toolbarTitleStyle} text="Involviert in:"/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                    <div>
+                        {tradesLinks}
+                    </div>
+                </Paper>
+            </section>
         );
     }
 }
