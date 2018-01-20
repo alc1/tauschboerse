@@ -42,7 +42,7 @@ export default class ArticleFieldsBox extends React.Component {
     };
 
     componentDidMount() {
-        this.firstInputFieldTimeout = setTimeout(() => this.firstInputElement.focus(), 1000);
+        this.firstInputFieldTimeout = setTimeout(() => this.firstInputElement.focus(), 500);
     }
 
     componentWillUnmount() {
