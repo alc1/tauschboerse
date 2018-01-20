@@ -11,7 +11,7 @@ import MarketplacePage from './containers/MarketplacePage';
 import UserArticlesPage from './containers/UserArticlesPage';
 import UserEditorPage from './containers/UserEditorPage';
 import UserTradesPage from './containers/UserTradesPage';
-import ArticleEditorPage from './containers/ArticleEditorPage';
+import ArticleFormPage from './containers/ArticleFormPage';
 import TradeDetailPage from './containers/TradeDetailPage';
 import EditTradePage from './containers/EditTradePage';
 import NewTradePage from './containers/NewTradePage';
@@ -39,8 +39,8 @@ export default class App extends React.Component {
                         <Switch>
                             <Route exact path="/" component={HomePage}/>
                             <Route path="/marketplace" component={MarketplacePage}/>
-                            <Route exact path="/article/:articleId" component={ArticleEditorPage}/>
-                            <LoggedInRoute exact path="/article" component={ArticleEditorPage}/>
+                            <Route exact path="/article/:articleId" component={ArticleFormPage}/>
+                            <LoggedInRoute exact path="/article" component={ArticleFormPage}/>
                             <LoggedInRoute exact path="/trade/show/:tradeId" component={TradeDetailPage}/>
                             <LoggedInRoute exact path="/trade/edit/:tradeId" component={EditTradePage}/>
                             <LoggedInRoute exact path="/trade/new/:articleId" component={NewTradePage}/>

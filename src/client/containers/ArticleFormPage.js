@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import ArticleEditorPage from '../components/ArticleEditorPage/ArticleEditorPage';
+import ArticleFormPage from '../components/ArticleFormPage/ArticleFormPage';
 
 import { loadArticle, createArticle, updateArticle, removeSelectedArticle } from '../store/actions/article';
 import { isLoading } from '../store/selectors/application';
@@ -20,4 +20,4 @@ export default connect(mapStateToProps, {
     createArticle,
     updateArticle,
     removeSelectedArticle
-})(ArticleEditorPage);
+})(ArticleFormPage);
