@@ -152,7 +152,8 @@ export default class ArticleFormPage extends React.Component {
         else {
             this.setState({
                 photos: this.state.photos.map(photo => {
-                    return { ...photo, isMain: photo === theMainPhoto };
+                    photo.isMain = photo === theMainPhoto;
+                    return photo;
                 }),
                 addedPhotos: this.state.addedPhotos.map(photo => {
                     photo.isMain = false;
