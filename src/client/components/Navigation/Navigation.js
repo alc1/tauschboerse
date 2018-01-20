@@ -20,6 +20,7 @@ export default class Navigation extends React.Component {
 
     static propTypes = {
         closeMenu: PropTypes.func.isRequired,
+        gotoUserTradesPage: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
         logout: PropTypes.func.isRequired,
@@ -30,6 +31,15 @@ export default class Navigation extends React.Component {
         this.props.closeMenu();
         this.props.history.push(theLink);
     };
+
+    gotoUserTradesPage = () => {
+        if (this.props.user) {
+            this.props.closeMenu();
+            this.props.gotoUserTradesPage(this.props.history, this.props.user._id);
+        } else {
+            this.openMenuItem('/');
+        }
+    }
 
     logout = () => {
         this.props.closeMenu();
@@ -48,11 +58,9 @@ export default class Navigation extends React.Component {
 
     render() {
         const { user } = this.props;
-        let userTradesLink = '/';
         let userArticlesLink = '/';
         let userDetailsLink = '/';
         if (user) {
-            userTradesLink = `/user/${user._id}/trades`;
             userArticlesLink = `/user/${user._id}/articles`;
             userDetailsLink = `/user/${user._id}/details`;
         }
@@ -64,7 +72,7 @@ export default class Navigation extends React.Component {
                     <MenuItem primaryText="Home" leftIcon={<HomeIcon/>} onClick={this.openMenuItem.bind(this, '/')}/>
                     <MenuItem primaryText="Marktplatz" leftIcon={<MarketplaceIcon/>} onClick={this.openMenuItem.bind(this, '/marketplace')}/>
                     <Divider/>
-                    {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.openMenuItem.bind(this, userTradesLink)}/>}
+                    {user && <MenuItem primaryText="Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.gotoUserTradesPage}/>}
                     {user && <MenuItem primaryText="Meine Artikel" leftIcon={<ArticlesIcon/>} onClick={this.openMenuItem.bind(this, userArticlesLink)}/>}
                     {user && <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.openMenuItem.bind(this, userDetailsLink)}/>}
                     {user && <Divider/>}

@@ -22,6 +22,7 @@ export const USER_TRADES_FETCHED = 'USER_TRADES_FETCHED';
 export const USER_TRADES_VERSION_FETCHED = 'USER_TRADES_VERSION_FETCHED';
 export const USER_ARTICLES_FILTERED = 'USER_ARTICLES_FILTERED';
 export const USER_TRADES_SECTION_OPENED = 'USER_TRADES_SECTION_OPENED';
+export const USER_GOTO_TRADES_PAGE_RECEIVED = 'USER_GOTO_TRADES_PAGE_RECEIVED';
 
 /*
  * Action Creators
@@ -67,9 +68,13 @@ export const userArticlesFiltered = (theFilterText, theFilterStatus) => ({
     filterStatus: theFilterStatus
 });
 
-const userTradesSectionOpened = (theUserTradesSectionIndex) => ({
+export const userTradesSectionOpened = (theUserTradesSectionIndex) => ({
     type: USER_TRADES_SECTION_OPENED,
     userTradesSectionIndex: theUserTradesSectionIndex
+});
+
+export const gotoUserTradesPageReceived = () => ({
+    type: USER_GOTO_TRADES_PAGE_RECEIVED
 });
 
 /*
@@ -131,6 +136,11 @@ export const filterUserArticles = (theFilterText, theFilterStatus) => dispatch =
 export const openUserTradesSection = (theUserTradesSectionIndex) => dispatch =>
     dispatch(userTradesSectionOpened(theUserTradesSectionIndex));
 
+export const gotoUserTradesPage = (history, userId) => (dispatch) => {
+        dispatch(gotoUserTradesPageReceived());
+        history.push(`/user/${userId}/trades`);
+    }
+    
 /*
  * Actions
  */

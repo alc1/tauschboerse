@@ -20,6 +20,7 @@ export default class TradeDetailPage extends React.Component {
         declineTrade: PropTypes.func.isRequired,
         deleted: PropTypes.bool.isRequired,
         deleteTrade: PropTypes.func.isRequired,
+        gotoUserTradesPage: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         loadTrade: PropTypes.func.isRequired,
@@ -29,7 +30,6 @@ export default class TradeDetailPage extends React.Component {
         reloadTrade: PropTypes.bool.isRequired,
         setDelivered: PropTypes.func.isRequired,
         setGlobalMessage: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         submitTrade: PropTypes.func.isRequired,
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
@@ -55,7 +55,7 @@ export default class TradeDetailPage extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.deleted) {
-            this.props.history.push(`/user/${this.props.user._id}/trades`);
+            this.props.gotoUserTradesPage(this.props.history, this.props.user._id);
         }
 
         if (nextProps.trade && (nextProps.trade !== this.props.trade) && !nextProps.newVersionAvailable) {

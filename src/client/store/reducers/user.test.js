@@ -5,12 +5,14 @@ import {
     USER_UPDATED,
     USER_ARTICLES_FETCHED,
     USER_ARTICLES_FILTERED,
+    USER_GOTO_TRADES_PAGE_RECEIVED,
     userLoggedIn,
     userLoggedOut,
     userCreated,
     userUpdated,
     userArticlesFetched,
-    userArticlesFiltered
+    userArticlesFiltered,
+    gotoUserTradesPageReceived
 } from '../actions/user';
 import {
     ARTICLE_DELETED,
@@ -137,6 +139,24 @@ describe('User Reducer', () => {
             const expectedUserArticlesInfo = new UserArticlesInfo().setFilter(userArticlesFilter.filterText, userArticlesFilter.filterStatus);
             const newState = userReducer({ ...initialState, user: user }, userArticlesFiltered(userArticlesFilter.filterText, userArticlesFilter.filterStatus));
             expect(newState).toEqual({ ...initialState, user: user, userArticlesInfo: expectedUserArticlesInfo });
+        });
+    });
+
+    describe(`Test action ${USER_GOTO_TRADES_PAGE_RECEIVED}`, () => {
+        test('resets userTradesSectionIndex to -1', () => {
+            const startingState = { ...initialState, userTradesSectionIndex: 3 };
+            const startingStateCopy = { ...startingState };
+            const endState = userReducer(startingState, gotoUserTradesPageReceived());
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual({ ...initialState, userTradesSectionIndex: -1 });
+            expect(startingState).toEqual(startingStateCopy);
+        });
+        test('does not change the state if userTradesSectionIndex is -1', () => {
+            const startingState = { ...initialState, userTradesSectionIndex: -1 };
+            const startingStateCopy = { ...startingState };
+            const endState = userReducer(startingState, gotoUserTradesPageReceived());
+            expect(endState).toBe(startingState);
+            expect(JSON.stringify(startingState)).toEqual(JSON.stringify(startingStateCopy));
         });
     });
 

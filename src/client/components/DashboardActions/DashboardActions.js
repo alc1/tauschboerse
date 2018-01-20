@@ -19,9 +19,10 @@ const buttonStyle = { marginLeft: '10px', marginRight: '10px', marginBottom: '10
 export default class DashboardActions extends React.Component {
 
     static propTypes = {
+        gotoUserTradesPage: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
-        user: PropTypes.object.isRequired,
-        logout: PropTypes.func.isRequired
+        logout: PropTypes.func.isRequired,
+        user: PropTypes.object.isRequired
     };
 
     goTo = (thePath) => {
@@ -29,7 +30,7 @@ export default class DashboardActions extends React.Component {
     };
 
     render() {
-        const { user } = this.props;
+        const { history, user } = this.props;
 
         return (
             <div className="dashboard-actions">
@@ -37,7 +38,7 @@ export default class DashboardActions extends React.Component {
                     <RaisedButton style={buttonStyle} label="Zum Marktplatz" icon={<MarketplaceIcon/>} onClick={this.goTo.bind(this, '/marketplace')}/>
                 </ActionBox>
                 <ActionBox title="Tauschgeschäfte" text="Verwalte hier deine Tauschgeschäfte.">
-                    <RaisedButton style={buttonStyle} label="Meine Tauschgeschäfte" icon={<SwapIcon/>} onClick={this.goTo.bind(this, `/user/${user._id}/trades`)} primary/>
+                    <RaisedButton style={buttonStyle} label="Meine Tauschgeschäfte" icon={<SwapIcon/>} onClick={this.props.gotoUserTradesPage.bind(this, history, user._id)} primary/>
                 </ActionBox>
                 <ActionBox title="Artikel" text="Verwalte hier deine Artikel.">
                     <RaisedButton style={buttonStyle} label="Neuer Artikel erfassen" icon={<PlusIcon/>} onClick={this.goTo.bind(this, '/article')}/>
