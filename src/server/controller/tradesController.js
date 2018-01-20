@@ -248,7 +248,7 @@ function setTradeState(req, res) {
 
             // reset state of articles that were removed to make the current offer
             let removedArticles = newTrade.getArticlesRemovedForCurentOffer();
-            let articlesToReset = removedArticles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 0));
+            let articlesToReset = removedArticles.filter(article => (article.status === ArticleStatus.STATUS_DEALING) && (dataCache.getTradesByArticle(article._id, true).length === 1));
             setArticlesState(articlesToReset, ArticleStatus.STATUS_FREE);
 
             saveAndSendTrade(newTrade, res);
