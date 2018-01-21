@@ -19,4 +19,8 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { checkForNewTrades, loadUserTrades, openUserTradesSection })(muiThemeable()(UserTradesPage));
+export default connect(mapStateToProps, {
+    checkForNewTrades,
+    loadUserTrades,
+    openUserTradesSection
+})(muiThemeable()(UserTradesPage));

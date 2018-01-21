@@ -137,9 +137,9 @@ export const openUserTradesSection = (theUserTradesSectionIndex) => dispatch =>
     dispatch(userTradesSectionOpened(theUserTradesSectionIndex));
 
 export const gotoUserTradesPage = (history, userId) => (dispatch) => {
-        dispatch(gotoUserTradesPageReceived());
-        history.push(`/user/${userId}/trades`);
-    }
+    dispatch(gotoUserTradesPageReceived());
+    history.push(`/user/${userId}/trades`);
+};
     
 /*
  * Actions

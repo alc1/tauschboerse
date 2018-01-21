@@ -47,7 +47,7 @@ export default function application(theState = initialState, theAction) {
                     loadingCounter.value--;
                     isLoadingChanged = loadingCounter.value === 0;
                 } else {
-                    console.log('loadingCounter mismatch detected! Are your setLoadingState calls balanced?');
+                    console.error('loadingCounter mismatch detected! Are your setLoadingState calls balanced?');
                 }
             }
 

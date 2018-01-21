@@ -14,4 +14,7 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { updateUser, setGlobalMessage })(UserFormPage);
+export default connect(mapStateToProps, {
+    updateUser,
+    setGlobalMessage
+})(UserFormPage);

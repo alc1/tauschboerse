@@ -20,4 +20,4 @@ export const toBase26 = (num, len = 5) => {
         chars.unshift('A');
     }
     return chars.join('');
-}
+};

@@ -12,4 +12,7 @@ function mapStateToProps(theState) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, { gotoUserTradesPage, logout })(Navigation));
+export default withRouter(connect(mapStateToProps, {
+    gotoUserTradesPage,
+    logout
+})(Navigation));

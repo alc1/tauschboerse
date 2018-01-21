@@ -14,6 +14,7 @@ import {
     TRADE_STEP_INDEX_SET
 } from '../actions/trade';
 import { GLOBAL_PAGE_SIZE_CHANGED } from '../actions/application';
+
 import ArticlesDisplayInfo from '../../model/ArticlesDisplayInfo';
 
 export const initialState = {

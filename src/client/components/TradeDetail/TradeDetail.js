@@ -199,16 +199,7 @@ class TradeDetail extends React.Component {
         );
     }
 
-    createMakeCounterofferAction(trade) {
-        return (
-            new ActionDescriptor('Gegenangebot machen', this.handleMakeCounteroffer, 'makeCounteroffer')
-                .setText('Wenn Du nicht einverstanden bist, kannst Du auch ein Gegenangebot machen.')
-                .setLabel('Gegenangebot erstellen')
-                .setIcon(<CounterOfferIcon/>)
-        );
-    }
-
-    createRequestActions(trade) {
+    createRequestActions() {
         return [
             new ActionDescriptor('Angebot abschicken', this.handleMakeOffer, 'makeOffer')
                 .setText('Schicke dein Tauschangebot ab, sobald Du bereit bist.')
@@ -226,7 +217,7 @@ class TradeDetail extends React.Component {
         ];
     }
 
-    createResponseActions(trade) {
+    createResponseActions() {
         return [
             new ActionDescriptor('Angebot annehmen', this.handleAccept, 'accept')
                 .setText('Nehme das Angebot an, damit das Tauschgeschäft zustande kommt.')
@@ -259,7 +250,7 @@ class TradeDetail extends React.Component {
         ];
     }
 
-    createWithrawActions(trade, canMakeCounteroffer) {
+    createWithrawActions(canMakeCounteroffer) {
         if (canMakeCounteroffer) {
             return [
                 new ActionDescriptor('Tauschgeschäft beenden', this.handleWithdrawOffer, 'withdrawOffer')
@@ -289,7 +280,7 @@ class TradeDetail extends React.Component {
         if (trade) {
             // define the actions relevant to the trades state and the user's role in the trade
             if (trade.isNew) {
-                actions = this.createRequestActions(trade);
+                actions = this.createRequestActions();
             } else if (trade.isUserSender) {
                 if (trade.isFinished) {
                     if (trade.isCompleted && !trade.userHasDelivered) {
@@ -297,12 +288,12 @@ class TradeDetail extends React.Component {
                     }
                 } else if (trade.isInvalidated || trade.isDeclined) {
                     if (trade.userIsMakingCounteroffer) {
-                        actions = this.createRequestActions(trade);
+                        actions = this.createRequestActions();
                     } else {
-                        actions = this.createWithrawActions(trade, true);
+                        actions = this.createWithrawActions(true);
                     }
                 } else {
-                    actions = this.createWithrawActions(trade, false)
+                    actions = this.createWithrawActions(false)
                 }
             } else if (trade.isUserReceiver) {
                 if (trade.isFinished) {
@@ -311,9 +302,9 @@ class TradeDetail extends React.Component {
                     }
                 } else if (!(trade.isDeclined || trade.isInvalidated)) {
                     if (trade.userIsMakingCounteroffer) {
-                        actions = this.createRequestActions(trade);
+                        actions = this.createRequestActions();
                     } else {
-                        actions = this.createResponseActions(trade);
+                        actions = this.createResponseActions();
                     }
                 }
             }

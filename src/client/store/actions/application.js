@@ -48,20 +48,14 @@ export const setGlobalMessage = (messageText, messageType, actionText, actionTyp
 export const removeGlobalMessage = () => dispatch =>
     dispatch(globalMessageRemoved());
 
-export const setLoading = (isLoading) => dispatch =>
-    dispatch(loadingStateReceived(isLoading));
-
 export const setPageSize = (pageSize) => dispatch =>
     dispatch(pageSizeChanged(pageSize));
-
-export const setPollingInterval = (milliseconds) => dispatch =>
-    dispatch(pollingIntervalChanged(milliseconds));
 
 /*
  * Special
  */
 
- export const dispatchGlobalMessage = (dispatch, messageText, messageType, actionText, actionType) =>
+export const dispatchGlobalMessage = (dispatch, messageText, messageType, actionText, actionType) =>
     dispatch(globalMessageReceived(messageText, messageType, actionText, actionType));
 
 export const dispatchGlobalErrorMessage = (dispatch, messageText, actionText, actionType) =>

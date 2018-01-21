@@ -66,15 +66,6 @@ export default class TradeEditor extends React.Component {
         }
     }
 
-    // componentDidUpdate(previousProps, previousState) {
-    //     if (previousProps.width !== this.props.width) {
-    //         let isVertical = this.width <= 750;
-    //         if (this.isVertical !== isVertical) {
-    //             this.isVertical = isVertical;
-    //         }
-    //     }
-    // }
-
     canGoToPreviousStep = () => this.props.stepIndex > 0;
 
     canGotoNextStep = () => this.props.stepIndex < STEP_LAST_IDX;

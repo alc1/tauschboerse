@@ -36,7 +36,11 @@ export default class TradeStateTag extends React.Component {
     render() {
         const { status } = this.props;
         return (
-            <AvatarTag backgroundColor={TradeState.getColor(status)} labelColor={white} text={TradeState.getShortDescription(status)} icon={this.getIcon(status)}/>
+            <AvatarTag
+                backgroundColor={TradeState.getColor(status)}
+                labelColor={white}
+                text={TradeState.getShortDescription(status)}
+                icon={this.getIcon(status)}/>
         );
     }
 }

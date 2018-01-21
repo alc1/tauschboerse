@@ -14,7 +14,7 @@ describe('TradesModel', () => {
                 new TestTrade(user1, user2, 4),
                 new TestTrade(user1, user2, 8),
                 new TestTrade(user1, user2, 6)
-            ]
+            ];
             const tradesModel = new TradesModel(trades, user1);
             expect(tradesModel.highestVersionstamp).toEqual(8);
         });

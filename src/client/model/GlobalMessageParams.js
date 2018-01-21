@@ -13,7 +13,6 @@ export const ERROR_MESSAGE = 'ERROR_MESSAGE';
 export const GO_TO_LOGIN = 'GO_TO_LOGIN';
 export const RELOAD_TRADE = 'RELOAD_TRADE';
 
-
 export default class GlobalMessageParams {
     constructor(messageText, messageType, actionText, actionType) {
         this.messageText = messageText;

@@ -12,4 +12,7 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { createUser, setGlobalMessage })(RegistrationPage);
+export default connect(mapStateToProps, {
+    createUser,
+    setGlobalMessage
+})(RegistrationPage);
