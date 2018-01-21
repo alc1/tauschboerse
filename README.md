@@ -116,7 +116,7 @@ Das Tolle an diesem Projekt ist, dass es fast beliebig erweiterbar mit zusätzli
 * Funktionen:
   * Innerhalb seines Artikels sieht ein angemeldeter Benutzer, in welchen Tauschgeschäften dieser Artikel involviert ist. Mit einem Klick kann er direkt in das Tauschgeschäft springen.
   * Ein Paging-Mechanismus wurde in der Trade-Detail-Ansicht und im Trade-Editor für die Artikellisten implementiert.
-  * Auf dem Dashboard, auf der Seite der Tauschgeschäfte eines angemeldeten Benutzers und auf der Detailseite eines einzelnen Tauschgeschäfts wurde ein Polling-Mechanismus implementiert, damit Änderungen am Tauschgeschäft (z.B. wenn dieses vom Empfänger angenommen wurde) angezeigt werden können. 
+  * Auf dem Dashboard, auf der Seite der Tauschgeschäfte eines angemeldeten Benutzers und auf der Detailseite eines einzelnen Tauschgeschäfts wurde ein Polling-Mechanismus implementiert, damit Änderungen am Tauschgeschäft (z.B. wenn dieses vom Empfänger angenommen wurde) sofort angezeigt werden. 
 
 ## Setup
 
@@ -297,7 +297,7 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
   <dd>Ein registrierter Benutzer kann jederzeit seine Benutzerdaten und das Passwort ändern.</dd>
 
   <dt>Artikel verwalten</dt>
-  <dd>In seiner Artikelverwaltung kann ein angemeldeter Benutzer neue Artikel erfassen oder bestehende Artikel bearbeiten. Es kann sie auch löschen sofern sie noch in keinem Tauschgeschäft verwendet werden oder in einem abgeschlossenen Tauschgeschäft verwendet wurden. In diesen Fällen wird der zu löschende Artikel lediglich als gelöscht markiert, damit er nicht mehr auf dem Marktplatz erscheint.</dd>
+  <dd>In seiner Artikelverwaltung kann ein angemeldeter Benutzer neue Artikel erfassen oder bestehende Artikel bearbeiten. Er kann sie auch löschen, sofern sie noch in keinem Tauschgeschäft verwendet werden oder in einem abgeschlossenen Tauschgeschäft verwendet wurden. In diesen Fällen wird der zu löschende Artikel lediglich als gelöscht markiert, damit er nicht mehr auf dem Marktplatz erscheint.</dd>
 </dl>
 
 #### Marktplatz
@@ -306,13 +306,13 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
 
 <dl>
   <dt>Artikel suchen</dt>
-  <dd>Artikel können mittels Suchbegriffe gesucht werden. Das System stellt eine Liste der Artikel dar, die entweder ein oder mehr der Suchbegriffe im Titel und/oder in der Beschreibung haben, oder falls ein oder mehr der begriffe Kategorienamen sind, die Artikel, die diesen Kategorien zugeordnet sind.</dd>
+  <dd>Artikel können mittels Suchbegriffe gesucht werden. Das System stellt eine Liste der Artikel dar, die einen oder mehre Suchbegriffe im Titel und/oder in der Beschreibung haben. Oder falls einer oder mehrere Suchbegriffe Kategorien sind, werden diese ebenfalls angezeigt. Die Suchresultate werden anhand eines Gewichtungssystems sortiert. Die Titel hat die höchste Priorität, dann die Kategorie und dann die Beschreibung.</dd>
 
   <dt>Artikel anschauen</dt>
-  <dd>Die Details eines ausgewählten Artikels können angesehen werden. Um die Details eines Artikals anzuschauen, muss der Benutzer nicht eingeloggt sein.</dd>
+  <dd>Die Details eines ausgewählten Artikels können angesehen werden. Dazu muss der Benutzer nicht angemeldet sein.</dd>
 
   <dt>Tauschgeschäft erstellen</dt>
-  <dd>Wenn ein Artikel ausgewählt wird, kann ein neues Tauschgeschäft für den Artikel erstellt werden. Bedingung ist, dass der Benutzer eingeloggt ist und der Artikel gehört ihm nicht.</dd>
+  <dd>Wenn ein Artikel ausgewählt wird, kann ein neues Tauschgeschäft für diesen Artikel erstellt werden. Bedingung ist, dass der Benutzer eingeloggt ist und der Artikel gehört nicht ihm.</dd>
 </dl>
 
 #### Tauschgeschäfte
@@ -321,13 +321,13 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
 
 <dl>
   <dt>Tauschgeschäft anschauen</dt>
-  <dd>Die Beteiligten eines Tauschgeschäftes dürfen die Details des Tauschgeschäftes anschauen.</dd>
+  <dd>Die Beteiligten eines Tauschgeschäftes dürfen die Details des Tauschgeschäfts anschauen.</dd>
 
   <dt>Tauschgeschäft bearbeiten</dt>
-  <dd>Das Bearbeiten eines Tauschgeschäfts entspricht das Erstellen oder Bearbeiten eines Angebots. Wenn ein Tauschgeschäft neu erstellt wird, wird es direkt bearbeitet. Bevor das erste Angebot unterbreitet wird, kann das Geschäft bzw. das erste Angebot beliebig bearbeitet werden. Nach dem Senden eines Angebots kann der Empfänger das Geschäft bearbeiten. In diesem Fall wird ein Gegenangebot erstellt. Wird das Angebot vom Empfänger abgelehnt oder wird das Angebot ungültig, darf der Sender das Geschäft bearbeiten. Auch in diesem Fall wird ein Gegenangebot erstellt.</dd>
+  <dd>Das Bearbeiten eines Tauschgeschäfts entspricht dem Erstellen oder Bearbeiten eines Angebots. Wenn ein Tauschgeschäft neu erstellt wird, wird es direkt bearbeitet. Bevor das erste Angebot unterbreitet wird, kann das Geschäft bzw. das erste Angebot beliebig bearbeitet werden. Nach dem Senden eines Angebots kann der Empfänger das Geschäft bearbeiten. In diesem Fall wird ein Gegenangebot erstellt. Wird das Angebot vom Empfänger abgelehnt oder wird das Angebot ungültig, darf der Sender das Geschäft bearbeiten. Auch in diesem Fall wird ein Gegenangebot erstellt.</dd>
 
   <dt>Tauschgeschäft löschen</dt>
-  <dd>Ein Tauschgeschäft kann nur gelöscht werden, wenn ein Angebot vorbereitet wird (bevor es gesendet wird). Nur der Ersteller des Angebots kann das Geschäft löschen. Ist noch kein Angebot gesendet worden, wird das ganze Tauschgeschäft physisch gelöscht. Wenn mindestens ein Angebot unterbreitet wurde, wird nur das neu erstellte Gegenangebot gelöscht.</dd>
+  <dd>Ein Tauschgeschäft kann nur gelöscht werden, wenn es in Vorbereitung ist (bevor es gesendet wird). Nur der Ersteller des Angebots kann das Geschäft löschen. Ist noch kein Angebot gesendet worden, wird das ganze Tauschgeschäft physisch gelöscht. Wenn mindestens ein Angebot unterbreitet wurde, wird nur das neu erstellte Gegenangebot gelöscht.</dd>
 
   <dt>Angebot unterbreiten</dt>
   <dd>Der Ersteller eines Angebots oder eines Gegenangebots kann dieses dem anderen Beteiligten unterbreiten. In diesem Fall übernimmt der Unterbreiter die Rolle als Sender. Der andere Beteiligter wird automatisch zum Empfänger.</dd>
@@ -336,7 +336,7 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
   <dd>Der Empfänger des aktuellen Angebots darf das Angebot anehmen. Wenn das Angebot angenommen wird, gilt das Geschäft als erfolgreich abgeschlossen.</dd>
 
   <dt>Angebot ablehnen</dt>
-  <dd>Der Empfänger des aktuellen Angebots darf das Angebot ablehnen. Wenn das Angebot abgelehnt wird, ist der Sender wieder daran. Er kann entweder ein Gegenangebot erstellen oder das Geschäft abbrechen.</dd>
+  <dd>Der Empfänger des aktuellen Angebots darf das Angebot ablehnen. Wenn das Angebot abgelehnt wird, ist der Sender wieder an der Reihe. Er kann entweder ein Gegenangebot erstellen oder das Geschäft abbrechen.</dd>
 
   <dt>Gegenangebot erstellen</dt>
   <dd>Ein Gegenangebot kann vom Empfänger des aktuellen Angebots erstellt werden oder vom Sender, falls der Empfänger das Angebot abgelehnt hat oder das Angebot ungültig wird.</dd>
@@ -350,7 +350,7 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
 
 ### Zustandsdiagramme
 
-Tauschgeschäfte, Angebote und Artikel durchlaufen verschiedene Zustände. In den folgenden Abschnitte sind die entsprechenden Zustandsdiagramme zu sehen.
+Tauschgeschäfte, Angebote und Artikel durchlaufen verschiedene Zustände. In den folgenden Abschnitten sind die entsprechenden Zustandsdiagramme zu sehen.
 
 #### Tauschgeschäft (Trade)
 
@@ -368,7 +368,7 @@ Der Zustand eines Angebots wird in erster Linie durch direktes Handeln der beide
 
 ![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/stateDiagram_article.png "Zustandsdiagramm: Artikel")
 
-Die Zustände der Artikel werden einerseits durch direktes Handeln der Artikelbesitzer geändert (Löschen), aber auch durch das Aufnehmen und das Wiederentfern in Tauschangebote (DEALING und DEALED).
+Die Zustände der Artikel werden einerseits durch direktes Handeln der Artikelbesitzer geändert (Löschen), aber auch durch das Aufnehmen und das Wiederentfernen in Tauschangebote (DEALING und DEALED).
 
 ### Datenhaltung
 
