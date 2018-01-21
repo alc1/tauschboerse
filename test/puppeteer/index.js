@@ -47,7 +47,7 @@ const screenshotsToCompare = [
 
     // Login in order to go to the dashboard
     await page.type('input[type="text"][name="email"]','max@mustermann.com');
-    await page.type('input[type="password"][name="currentPassword"]','max');
+    await page.type('input[type="password"][name="currentPassword"]','1234');
     await page.click('button[type="submit"]');
     await page.waitFor(2000);
     await page.screenshot({

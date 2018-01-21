@@ -1,7 +1,7 @@
 [
-    {"gender": "MALE", "email": "calbiez@hsr.ch", "name": "Christian", "address": "", "newPassword": "c", "registration": "NOW", "pageSize": 15},
-    {"gender": "MALE", "email": "stephen.atchison@hsr.ch", "name": "Stephen Atchison", "address": "", "newPassword": "stephen", "registration": "NOW", "pageSize": 5},
-    {"gender": "MALE", "email": "max@mustermann.com", "name": "Max Mustermann", "address": "", "newPassword": "max", "registration": "NOW"},
-    {"gender": "MALE", "email": "jamesbond007@agent.com", "name": "James Bond", "address": "", "newPassword": "james", "registration": "NOW"},
-    {"gender": "MALE", "email": "mgfeller@hsr.ch", "name": "Michael Gfeller", "address": "", "newPassword": "m", "registration": "NOW"}
+    {"gender": "MALE", "email": "calbiez@hsr.ch", "name": "Christian", "address": "", "newPassword": "1234", "registration": "NOW", "pageSize": 15},
+    {"gender": "MALE", "email": "stephen.atchison@hsr.ch", "name": "Stephen Atchison", "address": "", "newPassword": "1234", "registration": "NOW", "pageSize": 5},
+    {"gender": "MALE", "email": "max@mustermann.com", "name": "Max Mustermann", "address": "", "newPassword": "1234", "registration": "NOW"},
+    {"gender": "MALE", "email": "jamesbond007@agent.com", "name": "James Bond", "address": "", "newPassword": "1234", "registration": "NOW"},
+    {"gender": "MALE", "email": "mgfeller@hsr.ch", "name": "Michael Gfeller", "address": "", "newPassword": "1234", "registration": "NOW"}
 ]
