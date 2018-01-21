@@ -24,8 +24,8 @@ function startServer(port) {
 
 env(path.join(__dirname, 'config.env'));
 
-const port = process.env.PORT || (isProd ? process.env.PORT_PROD : process.env.PORT);
-const webroot = path.join(__dirname, isProd ? process.env.WEBROOT_PROD : process.env.WEBROOT);
+const port = process.env.PORT || (isProd ? process.env.PORT_PROD : process.env.PORT_DEV);
+const webroot = path.join(__dirname, isProd ? process.env.WEBROOT_PROD : process.env.WEBROOT_DEV);
 const indexHtml = path.join(webroot, '/index.html');
 
 app.use((req, res, next) => {
