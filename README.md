@@ -30,7 +30,10 @@
       - [Benutzer](#benutzer)
       - [Marktplatz](#marktplatz)
       - [Tauschgeschäfte](#tauschgesch%C3%A4fte)
-    - [State Diagrams (Trade)](#state-diagrams-trade)
+    - [Zustandsdiagramme](#zustandsdiagramme)
+      - [Tauschgeschäft (Trade)](#tauschgesch%C3%A4ft-trade)
+      - [Angebot (Offer)](#angebot-offer)
+      - [Artikel](#artikel)
     - [Server](#server)
       - [API](#api)
         - [Articles](#articles)
@@ -354,7 +357,27 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
   <dd>Wenn ein Tauschgeschäft erfolreich abgeschlossen werden kann, können die Beteiligten im Tauschgeschäft vermerken, dass sie die jeweiligen Artikel den anderen ausgeliefert haben.</dd>
 </dl>
 
-### State Diagrams (Trade)
+### Zustandsdiagramme
+
+Tauschgeschäfte, Angebote und Artikel durchlaufen verschiedene Zustände. In den folgenden Abschnitte sind die entsprechenden Zustandsdiagramme zu sehen.
+
+#### Tauschgeschäft (Trade)
+
+![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/stateDiagram_trade.png "Zustandsdiagramm: Tauschgeschäft")
+
+Wenn ein Tauschgeschäft gehandelt wird (IN_NEGOTIATION) kommen die Zustände des aktuellen Angebots zum Tragen. Der Tauschgeschäft-Zustand verlässt IN_NEGOTIATION erst wenn ein Angebot angenommen oder das Geschäft abgebrochen wird.
+
+#### Angebot (Offer)
+
+![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/stateDiagram_offer.png "Zustandsdiagramm: Angebot")
+
+Der Zustand eines Angebots wird in erster Linie durch direktes Handeln der beiden Beteiligten geändert. Wenn ein Artikel nicht mehr zur Verfügung steht - weil er gelöscht oder in einem anderen Geschäft erfolgreich getauscht wird - werden alle Tauschgeschäfte mit aktuellen Angeboten, die diesen Artikel enthalten, automatisch ungültig.
+
+#### Artikel
+
+![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/stateDiagram_article.png "Zustandsdiagramm: Artikel")
+
+Die Zustände der Artikel werden einerseits durch direktes Handeln der Artikelbesitzer geändert (Löschen), aber auch durch das Aufnehmen und das Wiederentfern in Tauschangebote (DEALING und DEALED).
 
 ### Server
 
