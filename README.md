@@ -22,6 +22,23 @@
     - [b) End-to-End Tests](#b-end-to-end-tests)
     - [c) CSS Style Tests](#c-css-style-tests)
     - [d) Echte Benutzertests](#d-echte-benutzertests)
+  - [Implementierungsdetails](#implementierungsdetails)
+    - [Use Cases](#use-cases)
+      - [Benutzer](#benutzer)
+      - [Marktplatz](#marktplatz)
+      - [Tauschgeschäfte](#tauschgesch%C3%A4fte)
+    - [State Diagrams (Trade)](#state-diagrams-trade)
+    - [Server](#server)
+      - [API](#api)
+        - [Articles](#articles)
+        - [Categories](#categories)
+        - [trades](#trades)
+        - [users](#users)
+          - [GET /api/users](#get-apiusers)
+          - [POST /api/users](#post-apiusers)
+          - [GET /api/{user id}](#get-apiuser-id)
+          - [PUT /api/](#put-api)
+      - [Datenbank](#datenbank)
 - [Rückblick](#r%C3%BCckblick)
   - [Gut gelöst](#gut-gel%C3%B6st)
   - [Das nächste Mal anders](#das-n%C3%A4chste-mal-anders)
@@ -235,6 +252,46 @@ Wir liessen die Applikation auch von echten Benutzern testen. Folgende Punkte wa
 * Das Kategorie-Eingabefeld auf der Artikelerfassungsseite hat zuerst die eingegebene Kategorie nur übernommen wenn man die Enter-Taste betätigt hat. Die Testperson hat jedoch nicht die Enter-Taste betätigt, sondern direkt den Speichern-Button geklickt. Somit wurde die Kategorie nicht gespeichert. Wir haben dies dann so geändert, dass die Kategorie beim Verlassen des Feldes (focus lost) übernommen wird.
 * Eine Testperson hätte erwartet, dass ein Klick auf das Logo bzw. den Applikationstitel auf die Startseite springt, wie es auch bei anderen Webseiten der Fall ist. Dies war bei uns zu diesem Zeitpunkt noch nicht so.
 * Dass ein angemeldeter Benutzer auf dem Marktplatz nach seinen eigenen Artikeln sucht, ist wohl eher unwahrscheinlich, weil er ja seinen eigenen Bereich "Artikelverwaltung" hat. Eine Testperson möchte aber gerne seine Artikel auch über den Marktplatz sehen, um zu schauen, wie sie im "öffentlichen" Bereich der Applikation den anderen Benutzern präsentiert werden.
+
+## Implementierungsdetails
+
+### Use Cases
+
+#### Benutzer
+
+![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/useCases_user.png "Use Cases: Benutzer")
+
+#### Marktplatz
+
+![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/useCases_marktplatz.png "Use Cases: Benutzer")
+
+#### Tauschgeschäfte
+
+![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/useCases_trades.png "Use Cases: Tauschgeschäfte")
+
+### State Diagrams (Trade)
+
+### Server
+
+#### API
+
+##### Articles
+
+##### Categories
+
+##### trades
+
+##### users
+
+###### GET /api/users
+
+###### POST /api/users
+
+###### GET /api/{user id}
+
+###### PUT /api/
+
+#### Datenbank
 
 # Rückblick
 
