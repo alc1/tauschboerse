@@ -130,10 +130,10 @@ function getCurrentUserTradesSectionIndex(theTradesModel, currentSectionIndex) {
                 indexValid = theTradesModel.hasNewTrades;
                 break;
             case 1:
-                indexValid = theTradesModel.hasReceivedTrades;
+                indexValid = theTradesModel.hasTradesRequiringAttention;
                 break;
             case 2:
-                indexValid = theTradesModel.hasSentTrades;
+                indexValid = theTradesModel.hasOpenTradesNotRequiringAttention;
                 break;
             case 3:
                 indexValid = theTradesModel.hasCompletedTrades;
@@ -148,13 +148,14 @@ function getCurrentUserTradesSectionIndex(theTradesModel, currentSectionIndex) {
             return currentSectionIndex;
         }
     }
-    else if (theTradesModel.hasReceivedTrades) {
+
+    if (theTradesModel.hasTradesRequiringAttention) {
         return 1;
     }
     else if (theTradesModel.hasNewTrades) {
         return 0;
     }
-    else if (theTradesModel.hasSentTrades) {
+    else if (theTradesModel.hasOpenTradesNotRequiringAttention) {
         return 2;
     }
     else if (theTradesModel.hasCompletedTrades) {

@@ -34,8 +34,7 @@ class TradeModel {
     }
 
     get requiresAttention() {
-        return this.isNew
-            || (this.isUserSender && this.isOpen && (this.isDeclined || this.isInvalidated))
+        return (this.isUserSender && this.isOpen && (this.isDeclined || this.isInvalidated))
             || (this.isUserReceiver && this.isOpen && !(this.isDeclined || this.isInvalidated))
             || (this.isCompleted && !this.userHasDelivered);
     }

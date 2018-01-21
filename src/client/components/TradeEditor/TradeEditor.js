@@ -22,7 +22,7 @@ const STEP_IDX_SUMMARY = 2;
 
 const STEP_LAST_IDX = 2;
 
-const stepButtonStyle = {fontSize: '1.25rem'};
+const stepButtonStyle = { fontSize: '1.25rem', textAlign: 'left' };
 
 export default class TradeEditor extends React.Component {
 
