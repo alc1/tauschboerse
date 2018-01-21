@@ -121,7 +121,8 @@ Das Tolle an diesem Projekt ist, dass es fast beliebig erweiterbar mit zusätzli
     * Zudem wird der angemeldete Benutzer per Links zu den weiteren Funktionen geführt.
 * Funktionen:
   * Innerhalb seines Artikels sieht ein angemeldeter Benutzer, in welchen Tauschgeschäften dieser Artikel involviert ist. Mit einem Klick kann er direkt in das Tauschgeschäft springen.
-  * Ein Paging-Mechanismus wurde in der Trade-Detail-Ansicht und im Trade-Editor für die Artikellisten implementiert. 
+  * Ein Paging-Mechanismus wurde in der Trade-Detail-Ansicht und im Trade-Editor für die Artikellisten implementiert.
+  * Auf dem Dashboard, auf der Seite der Tauschgeschäfte eines angemeldeten Benutzers und auf der Detailseite eines einzelnen Tauschgeschäfts wurde ein Polling-Mechanismus implementiert, damit Änderungen am Tauschgeschäft (z.B. wenn dieses vom Empfänger angenommen wurde) angezeigt werden können. 
 
 ## Setup
 
@@ -220,7 +221,7 @@ Es gibt verschiedenste Möglichkeiten, wie man React-Komponenten testen kann. Wi
 
 #### Tests für clientseitige Modellklassen
 
-Für die die meisten clientseitigen Modellklassen haben wir ebenfalls Unit Tests implementiert.
+Für die meisten clientseitigen Modellklassen haben wir ebenfalls Unit Tests implementiert.
 
 ### b) End-to-End Tests
 
@@ -254,7 +255,7 @@ Mit Puppeteer wird auf verschiedene Seiten der Applikation navigiert und jeweils
 
 Folgende Bedingungen müssen erfüllt sein, damit dieser Tests funktioniert:
 * Die Applikation muss laufen auf <code>http://localhost:3000</code>.
-* Der Benutzer mit der E-Mail-Adresse "max@mustermann.com" muss mit dem Passwort "max" vorhanden sein (dieser wird automatisch mit den Testdaten eingespielt) und dieser Benutzer muss genau den initialen Stand aus den Testdaten haben.
+* Der Benutzer mit der E-Mail-Adresse "max@mustermann.com" muss mit dem Passwort "1234" vorhanden sein (dieser wird automatisch mit den Testdaten eingespielt) und dieser Benutzer muss genau den initialen Stand aus den Testdaten haben.
 
 ```bash
 npm run test-ppt
