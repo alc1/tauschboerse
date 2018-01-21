@@ -35,11 +35,12 @@ const appbarStyles = {
 export default class ApplicationBar extends React.Component {
 
     static propTypes = {
+        gotoUserTradesPage: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
         logout: PropTypes.func.isRequired,
-        user: PropTypes.object,
-        subtitle: PropTypes.string
+        subtitle: PropTypes.string,
+        user: PropTypes.object
     };
 
     state = {
@@ -95,7 +96,7 @@ export default class ApplicationBar extends React.Component {
         if (theUser) {
             return (
                 <IconMenu iconButtonElement={this.createUserMenuElement(theUser)}>
-                    <MenuItem primaryText="Meine Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/trades`)}/>
+                    <MenuItem primaryText="Meine Tauschgeschäfte" leftIcon={<SwapIcon/>} onClick={this.props.gotoUserTradesPage.bind(this, this.props.history, theUser._id)}/>
                     <MenuItem primaryText="Meine Artikel" leftIcon={<ArticlesIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/articles`)}/>
                     <MenuItem primaryText="Mein Konto" leftIcon={<SettingsIcon/>} onClick={this.goTo.bind(this, `/user/${theUser._id}/details`)}/>
                     <Divider/>
@@ -116,12 +117,12 @@ export default class ApplicationBar extends React.Component {
         const userOptionButton = this.createUserOptionButton(user);
 
         return (
-            <div>
+            <header>
                 <AppBar
                     style={appbarStyles}
                     titleStyle={{ lineHeight: subtitle ? 'normal' : '64px' }}
                     title={<AppTitle subtitle={subtitle}/>}
-                    iconElementLeft={<IconButton><MenuIcon/></IconButton>}
+                    iconElementLeft={<IconButton data-button-id="main-menu"><MenuIcon/></IconButton>}
                     iconElementRight={userOptionButton}
                     onLeftIconButtonClick={this.toggleMenu}/>
                 <Drawer
@@ -133,7 +134,7 @@ export default class ApplicationBar extends React.Component {
                 <div className="appbar__content"/>
                 <LoadingIndicator/>
                 <GlobalMessage/>
-            </div>
+            </header>
         );
     }
 }

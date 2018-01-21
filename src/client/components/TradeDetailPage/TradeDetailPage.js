@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import ApplicationBar from '../../containers/ApplicationBar';
 import TradeDetail from '../TradeDetail/TradeDetail';
 import ContentContainer from '../ContentContainer/ContentContainer';
+import { RELOAD_TRADE, ERROR_MESSAGE } from '../../model/GlobalMessageParams';
 
 export default class TradeDetailPage extends React.Component {
 
@@ -19,14 +20,16 @@ export default class TradeDetailPage extends React.Component {
         declineTrade: PropTypes.func.isRequired,
         deleted: PropTypes.bool.isRequired,
         deleteTrade: PropTypes.func.isRequired,
+        gotoUserTradesPage: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
         loading: PropTypes.bool.isRequired,
         loadTrade: PropTypes.func.isRequired,
         newVersionAvailable: PropTypes.bool.isRequired,
         notFound: PropTypes.bool.isRequired,
         pollingInterval: PropTypes.number.isRequired,
+        reloadTrade: PropTypes.bool.isRequired,
         setDelivered: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
+        setGlobalMessage: PropTypes.func.isRequired,
         submitTrade: PropTypes.func.isRequired,
         trade: PropTypes.object,
         user: PropTypes.object.isRequired,
@@ -37,7 +40,8 @@ export default class TradeDetailPage extends React.Component {
         deleted: false,
         loading: false,
         newVersionAvailable: false,
-        notFound: false
+        notFound: false,
+        reloadTrade: false
     };
 
     componentDidMount() {
@@ -51,15 +55,20 @@ export default class TradeDetailPage extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.deleted) {
-            this.props.history.push(`/user/${this.props.user._id}/trades`);
+            this.props.gotoUserTradesPage(this.props.history, this.props.user._id);
         }
 
         if (nextProps.trade && (nextProps.trade !== this.props.trade) && !nextProps.newVersionAvailable) {
             this.startIntervalTimer(nextProps.trade);
         }
 
-        if (nextProps.newVersionAvailable) {
+        if (nextProps.newVersionAvailable && (nextProps.newVersionAvailable !== this.props.newVersionAvailable)) {
             this.stopIntervalTimer();
+            this.props.setGlobalMessage('Das Tauschgeschäft wurde geändert.', ERROR_MESSAGE, 'Aktualisieren', RELOAD_TRADE);
+        }
+
+        if (nextProps.reloadTrade && (nextProps.reloadTrade !== this.props.reloadTrade)) {
+            this.loadTrade(this.props.trade._id);
         }
     }
 
@@ -71,7 +80,7 @@ export default class TradeDetailPage extends React.Component {
     startIntervalTimer(trade) {
         if (typeof this.props.checkForUpdatedTrade === 'function') {
             if (trade.watchForUpdates) {
-                this.intervalId = setInterval(() => { this.props.checkForUpdatedTrade(); }, this.props.pollingInterval);
+                this.intervalId = setInterval(() => { this.props.checkForUpdatedTrade().catch(() => { this.stopIntervalTimer(); }); }, this.props.pollingInterval);
             }
         }
     }
@@ -98,10 +107,6 @@ export default class TradeDetailPage extends React.Component {
         this.props.deleteTrade();
     };
 
-    handleRefresh = () => {
-        this.loadTrade(this.props.trade._id);
-    };
-
     handleSetDelivered = () => {
         this.stopIntervalTimer();
         this.props.setDelivered();
@@ -125,11 +130,9 @@ export default class TradeDetailPage extends React.Component {
                     {this.props.trade &&
                         <TradeDetail
                             history={this.props.history}
-                            newVersionAvailable={this.props.newVersionAvailable}
                             onAcceptTrade={this.handleAcceptTrade}
                             onDeclineTrade={this.handleDeclineTrade}
                             onDeleteTrade={this.handleDeleteTrade}
-                            onRefresh={this.handleRefresh}
                             onSetDelivered={this.handleSetDelivered}
                             onSubmitTrade={this.handleSubmitTrade}
                             onWithdrawTrade={this.handleWithdrawTrade}

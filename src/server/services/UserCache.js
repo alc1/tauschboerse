@@ -55,7 +55,7 @@ class UserCache {
     }
 
     dump() {
-        console.log('Users:')
+        console.log('Users:');
         console.log(JSON.stringify(this.users, null, 2));
         console.log('');
     }

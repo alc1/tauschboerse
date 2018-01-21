@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { handleError } from './common';
-import { loadingStateReceived, globalMessageReceived, OK_MESSAGE, WARNING_MESSAGE } from './application';
+import { dispatchGlobalInfoMessage, dispatchGlobalWarningMessage, loadingStateReceived } from './application';
 import { getUser } from '../selectors/user';
 
 import TradesModel from '../../model/TradesModel';
@@ -97,9 +97,9 @@ export const createArticle = (article, photos) => dispatch => {
         });
 };
 
-export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (dispatch, getState) => {
+export const updateArticle = (article, addedPhotos, removedPhotos) => (dispatch, getState) => {
     dispatch(loadingStateReceived(true));
-    return axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
+    return axios.put(`/api/articles/${article._id}`, { article })
         .then(async articleResponse => {
             if (addedPhotos.length > 0 || removedPhotos.length > 0) {
                 let lastSuccessfulResult;
@@ -150,8 +150,8 @@ export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (
         });
 };
 
-export const deleteArticle = (ownerId, articleId) => (dispatch, getState) =>
-    axios.delete(`/api/users/${ownerId}/articles/${articleId}`)
+export const deleteArticle = (articleId) => (dispatch, getState) =>
+    axios.delete(`/api/articles/${articleId}`)
         .then(response => {
             if (response.data.isDeleted) {
                 if (response.data.articleId) {
@@ -185,15 +185,9 @@ const handlePromiseErrorAsNull = async (theRequestPromise) => {
 };
 
 const dispatchSavedWithWarningsMessage = (dispatch, failedPhotos) => {
-    dispatch(globalMessageReceived({
-        messageText: 'Folgende Bilder konnten nicht gespeichert werden:\n' + failedPhotos.join('\n'),
-        messageType: WARNING_MESSAGE
-    }));
+    dispatchGlobalWarningMessage(dispatch, 'Folgende Bilder konnten nicht gespeichert werden:\n' + failedPhotos.join('\n'));
 };
 
 const dispatchSuccessfullySavedMessage = (dispatch) => {
-    dispatch(globalMessageReceived({
-        messageText: 'Artikel wurde gespeichert.',
-        messageType: OK_MESSAGE
-    }));
+    dispatchGlobalInfoMessage(dispatch, 'Artikel wurde gespeichert.');
 };

@@ -42,7 +42,11 @@ export default class TradesList extends React.Component {
         const { tradeActions } = this.props;
         return this.props.trades.map(trade => {
             return (
-                <TradeSummary key={trade._id} trade={trade} loading={this.props.loading} actions={this.createActionButtons(trade, tradeActions)}/>
+                <TradeSummary
+                    key={trade._id}
+                    trade={trade}
+                    loading={this.props.loading}
+                    actions={this.createActionButtons(trade, tradeActions)}/>
             );
         });
     };
@@ -53,7 +57,7 @@ export default class TradesList extends React.Component {
 
     render() {
         const { loading } = this.props;
-        let tradeList = this.hasTrades() ? this.generateTradeList() : <Placeholder width={300} height={300} loading={loading} text="Keine Tauschgeschäfte gefunden" loadingText="... Tauschgeschäfte werden geladen ..."/>;
+        let tradeList = this.hasTrades() ? this.generateTradeList() : <Placeholder width={200} height={200} loading={loading} text="Keine Tauschgeschäfte gefunden" loadingText="... Tauschgeschäfte werden geladen ..."/>;
         return (
             <div className="trades-list">
                 {tradeList}

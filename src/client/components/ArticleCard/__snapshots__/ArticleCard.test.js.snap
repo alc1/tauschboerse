@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ArticleCard Test that the ArticleCard renders correctly (snapshot). 1`] = `
-<div
+<article
   className="article-card"
 >
   <Card
@@ -50,5 +50,5 @@ exports[`ArticleCard Test that the ArticleCard renders correctly (snapshot). 1`]
     </CardText>
     <CardActions />
   </Card>
-</div>
+</article>
 `;

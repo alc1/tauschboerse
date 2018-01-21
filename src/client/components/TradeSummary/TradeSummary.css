@@ -10,6 +10,10 @@
     margin-top: 10px;
 }
 
+.trade-summary__container {
+    width: 100%;
+}
+
 .trade-summary__trade-container {
     display: flex;
     flex-direction: row;

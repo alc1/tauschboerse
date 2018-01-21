@@ -11,7 +11,7 @@ import Gender from '../../../shared/constants/Gender';
 
 import './RegistrationForm.css';
 
-export default class UserDetailsForm extends React.Component {
+export default class RegistrationForm extends React.Component {
 
     static propTypes = {
         gender: PropTypes.string.isRequired,
@@ -34,8 +34,8 @@ export default class UserDetailsForm extends React.Component {
     render() {
         const { gender, name, email, address, newPassword, passwordConfirmation, errors, loading, onChange, onGenderSelectionChange, onSubmit } = this.props;
         return (
-            <div className="registration-form__container">
-                <Paper className="registration-form__paper">
+            <section className="registration-form">
+                <Paper className="registration-form__container">
                     <h1 className="registration-form__title">Bitte gib zur Registrierung deine Benutzerdaten ein:</h1>
                     <form className="registration-form__field-container" onSubmit={onSubmit}>
                         <SelectField
@@ -50,7 +50,7 @@ export default class UserDetailsForm extends React.Component {
                             <MenuItem value={Gender.FEMALE} primaryText="Frau"/>
                         </SelectField>
                         <InputComponent
-                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            setElementRef={element => this.firstInputElement = element}
                             error={errors.name}
                             label="Name *"
                             onChange={onChange}
@@ -92,7 +92,7 @@ export default class UserDetailsForm extends React.Component {
                         {this.props.children}
                     </form>
                 </Paper>
-            </div>
+            </section>
         );
     }
 }

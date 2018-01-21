@@ -8,5 +8,15 @@
         ],
         "user1HasDelivered": false,
         "user2HasDelivered": false
+    },
+    {
+        "user1Id": 2,
+        "user2Id": 0,
+        "state": "INIT",
+        "offers": [
+            { "senderId": 2, "state": "INIT", "articleIds": [0, 10] }
+        ],
+        "user1HasDelivered": false,
+        "user2HasDelivered": false
     }
 ]

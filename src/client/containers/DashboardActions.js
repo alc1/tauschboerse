@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import DashboardActions from '../components/DashboardActions/DashboardActions';
 
-import { logout } from '../store/actions/user';
+import { gotoUserTradesPage, logout } from '../store/actions/user';
 import { getUser } from '../store/selectors/user';
 
 function mapStateToProps(theState) {
@@ -12,4 +12,7 @@ function mapStateToProps(theState) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, { logout })(DashboardActions));
+export default withRouter(connect(mapStateToProps, {
+    gotoUserTradesPage,
+    logout
+})(DashboardActions));

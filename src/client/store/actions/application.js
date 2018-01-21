@@ -1,3 +1,5 @@
+import GlobalMessageParams, { ERROR_MESSAGE, INFO_MESSAGE, WARNING_MESSAGE } from '../../model/GlobalMessageParams';
+
 /*
  * Action Type Constants
  */
@@ -9,26 +11,12 @@ export const GLOBAL_PAGE_SIZE_CHANGED = 'GLOBAL_SET_PAGE_SIZE';
 export const GLOBAL_POLLING_INTERVAL_CHANGED = 'GLOBAL_POLLING_INTERVAL_CHANGED';
 
 /*
- * Global Message Types
- */
-
-export const OK_MESSAGE = 'OK_MESSAGE';
-export const WARNING_MESSAGE = 'WARNING_MESSAGE';
-export const ERROR_MESSAGE = 'ERROR_MESSAGE';
-
-/*
- * Follow-up Action Type Constants from within the global message snackbar
- */
-
-export const GO_TO_LOGIN = 'GO_TO_LOGIN';
-
-/*
  * Action Creators
  */
 
-export const globalMessageReceived = (theGlobalMessage) => ({
+export const globalMessageReceived = (messageText, messageType, actionText, actionType) => ({
     type: GLOBAL_MESSAGE_RECEIVED,
-    globalMessage: theGlobalMessage
+    globalMessage: new GlobalMessageParams(messageText, messageType, actionText, actionType)
 });
 
 export const globalMessageRemoved = () => ({
@@ -54,17 +42,27 @@ export const pollingIntervalChanged = (interval) => ({
  * Thunk Actions
  */
 
-export const setGlobalMessage = (theGlobalMessage) => dispatch =>
-    dispatch(globalMessageReceived(theGlobalMessage));
+export const setGlobalMessage = (messageText, messageType, actionText, actionType) => dispatch =>
+    dispatchGlobalMessage(dispatch, messageText, messageType, actionText, actionType);
 
 export const removeGlobalMessage = () => dispatch =>
     dispatch(globalMessageRemoved());
 
-export const setLoading = (isLoading) => dispatch =>
-    dispatch(loadingStateReceived(isLoading));
-
 export const setPageSize = (pageSize) => dispatch =>
     dispatch(pageSizeChanged(pageSize));
 
-export const setPollingInterval = (milliseconds) => dispatch =>
-    dispatch(pollingIntervalChanged(milliseconds));
+/*
+ * Special
+ */
+
+export const dispatchGlobalMessage = (dispatch, messageText, messageType, actionText, actionType) =>
+    dispatch(globalMessageReceived(messageText, messageType, actionText, actionType));
+
+export const dispatchGlobalErrorMessage = (dispatch, messageText, actionText, actionType) =>
+    dispatchGlobalMessage(dispatch, messageText, ERROR_MESSAGE, actionText, actionType);
+
+export const dispatchGlobalWarningMessage = (dispatch, messageText, actionText, actionType) =>
+    dispatchGlobalMessage(dispatch, messageText, WARNING_MESSAGE, actionText, actionType);
+
+export const dispatchGlobalInfoMessage = (dispatch, messageText, actionText, actionType) =>
+    dispatchGlobalMessage(dispatch, messageText, INFO_MESSAGE, actionText, actionType);

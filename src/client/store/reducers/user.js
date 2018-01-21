@@ -2,6 +2,7 @@ import {
     USER_ARTICLES_FETCHED,
     USER_ARTICLES_FILTERED,
     USER_CREATED,
+    USER_GOTO_TRADES_PAGE_RECEIVED,
     USER_LOGGED_IN,
     USER_LOGGED_OUT,
     USER_TRADES_FETCHED,
@@ -25,6 +26,7 @@ import { DEFAULT_PAGE_SIZE } from '../../utils/constants';
 export const initialState = {
     user: null,
     trades: new TradesModel(),
+    highestVersionstamp: 0,
     reloadTrades: false,
     userTradesSectionIndex: -1,
     userArticlesInfo: new UserArticlesInfo(),
@@ -32,9 +34,6 @@ export const initialState = {
         pageSize: DEFAULT_PAGE_SIZE
     }
 };
-
-// current highest trade versionstamp
-let highestVersionstamp = 0;
 
 export default function user(theState = initialState, theAction) {
     let newState;
@@ -55,21 +54,20 @@ export default function user(theState = initialState, theAction) {
                 userArticlesInfo: new UserArticlesInfo(theState.userArticlesInfo).setArticles(theAction.articles)
             };
         case USER_TRADES_FETCHED:
-            highestVersionstamp = theAction.trades.highestVersionstamp;
-
             return {
                 ...theState,
                 trades: theAction.trades,
                 reloadTrades: false,
-                userTradesSectionIndex: getCurrentUserTradesSectionIndex(theAction.trades, -1)
+                highestVersionstamp: theAction.trades.highestVersionstamp,
+                userTradesSectionIndex: getCurrentUserTradesSectionIndex(theAction.trades, theState.userTradesSectionIndex)
             };
         case USER_TRADES_VERSION_FETCHED:
             newState = theState;
-            if (theAction.versionstamp > highestVersionstamp) {
-                highestVersionstamp = theAction.versionstamp;
+            if (theAction.versionstamp > theState.highestVersionstamp) {
                 newState = {
                     ...theState,
-                    reloadTrades: true
+                    reloadTrades: true,
+                    highestVersionstamp: theAction.versionstamp
                 };
             }
             return newState;
@@ -106,6 +104,15 @@ export default function user(theState = initialState, theAction) {
             }
 
             return (newState) ? newState : theState;
+        case USER_GOTO_TRADES_PAGE_RECEIVED:
+            if (theState.userTradesSectionIndex === -1) {
+                return theState;
+            } else {
+                return {
+                    ...theState,
+                    userTradesSectionIndex: -1
+                };
+            }
         default:
             return theState;
     }
@@ -113,15 +120,39 @@ export default function user(theState = initialState, theAction) {
 
 function getCurrentUserTradesSectionIndex(theTradesModel, currentSectionIndex) {
     if (currentSectionIndex >= 0) {
-        return currentSectionIndex;
+        // check if current section index is valid - if it is don't change it
+        let indexValid;
+        switch(currentSectionIndex) {
+            case 0:
+                indexValid = theTradesModel.hasNewTrades;
+                break;
+            case 1:
+                indexValid = theTradesModel.hasTradesRequiringAttention;
+                break;
+            case 2:
+                indexValid = theTradesModel.hasOpenTradesNotRequiringAttention;
+                break;
+            case 3:
+                indexValid = theTradesModel.hasCompletedTrades;
+                break;
+            case 4:
+                indexValid = theTradesModel.hasCanceledTrades;
+                break;
+            default:
+                indexValid = false;
+        }
+        if (indexValid) {
+            return currentSectionIndex;
+        }
     }
-    else if (theTradesModel.hasReceivedTrades) {
+
+    if (theTradesModel.hasTradesRequiringAttention) {
         return 1;
     }
     else if (theTradesModel.hasNewTrades) {
         return 0;
     }
-    else if (theTradesModel.hasSentTrades) {
+    else if (theTradesModel.hasOpenTradesNotRequiringAttention) {
         return 2;
     }
     else if (theTradesModel.hasCompletedTrades) {

@@ -11,7 +11,7 @@ function filterArticles(text, articles) {
     const articleByTextFinder = (text, property, article) => {
         return article[property].toLowerCase().indexOf(text) >= 0;
     };
-    const articleByCategoryFinder = (text, article) => articles.categories ? article.categories.some(category => category.name.toLowerCase() === text) : false;
+    const articleByCategoryFinder = (text, article) => article.categories ? article.categories.some(category => category.name.toLowerCase() === text) : false;
     const resultFinder = (result, article) => {
         return article._id === result._id;
     };

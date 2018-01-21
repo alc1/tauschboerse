@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
+import Dialog from 'material-ui/Dialog';
 
 import SendIcon from 'material-ui/svg-icons/content/send';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
@@ -12,10 +13,13 @@ import WithdrawIcon from 'material-ui/svg-icons/navigation/cancel';
 import AcceptIcon from 'material-ui/svg-icons/action/done-all';
 import ShippingIcon from 'material-ui/svg-icons/maps/local-shipping';
 import NewOfferIcon from 'material-ui/svg-icons/content/add';
+import ContactIcon from 'material-ui/svg-icons/communication/contact-mail';
+import AccountIcon from 'material-ui/svg-icons/action/account-circle';
 
 import Articles from '../Articles/Articles';
 import ActionBox from '../ActionBox/ActionBox';
 import TradeStateTag from '../TradeStateTag/TradeStateTag';
+import AvatarTag from '../AvatarTag/AvatarTag';
 import PageTitle from '../../containers/PageTitle';
 
 import ActionDescriptor from '../../model/ActionDescriptor';
@@ -29,11 +33,9 @@ class TradeDetail extends React.Component {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
-        newVersionAvailable: PropTypes.bool.isRequired,
         onAcceptTrade: PropTypes.func.isRequired,
         onDeclineTrade: PropTypes.func.isRequired,
         onDeleteTrade: PropTypes.func.isRequired,
-        onRefresh: PropTypes.func.isRequired,
         onSetDelivered: PropTypes.func.isRequired,
         onSubmitTrade: PropTypes.func.isRequired,
         onWithdrawTrade: PropTypes.func.isRequired,
@@ -42,12 +44,11 @@ class TradeDetail extends React.Component {
     };
 
     static defaultProps = {
-        trade: null,
-        newVersionAvailable: false
+        trade: null
     };
 
-    handleUpdate = () => {
-        this.props.onRefresh();
+    state = {
+        isContactDetailOpen: false
     };
 
     handleMakeOffer = () => {
@@ -80,6 +81,12 @@ class TradeDetail extends React.Component {
 
     handleDelivered = () => {
         this.props.onSetDelivered();
+    };
+
+    handleContactDetail = (isOpen) => {
+        this.setState({
+            isContactDetailOpen: isOpen
+        });
     };
 
     renderDescription(trade) {
@@ -162,15 +169,15 @@ class TradeDetail extends React.Component {
             if (trade.isUserSender) {
                 content = (
                     <div>
-                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} />
-                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} />
+                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} withArticleLink={true}/>
+                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} withArticleLink={true}/>
                     </div>
                 );
             } else if (trade.isUserReceiver) {
                 content = (
                     <div>
-                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} />
-                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} />
+                        <Articles articles={offer.userArticles} title={trade.userArticlesListTitle()} withArticleLink={true}/>
+                        <Articles articles={offer.tradePartnerArticles} title={trade.partnerArticlesListTitle()} withArticleLink={true}/>
                     </div>
                 );
             }
@@ -192,16 +199,7 @@ class TradeDetail extends React.Component {
         );
     }
 
-    createMakeCounterofferAction(trade) {
-        return (
-            new ActionDescriptor('Gegenangebot machen', this.handleMakeCounteroffer, 'makeCounteroffer')
-                .setText('Wenn Du nicht einverstanden bist, kannst Du auch ein Gegenangebot machen.')
-                .setLabel('Gegenangebot erstellen')
-                .setIcon(<CounterOfferIcon/>)
-        );
-    }
-
-    createRequestActions(trade) {
+    createRequestActions() {
         return [
             new ActionDescriptor('Angebot abschicken', this.handleMakeOffer, 'makeOffer')
                 .setText('Schicke dein Tauschangebot ab, sobald Du bereit bist.')
@@ -219,7 +217,7 @@ class TradeDetail extends React.Component {
         ];
     }
 
-    createResponseActions(trade) {
+    createResponseActions() {
         return [
             new ActionDescriptor('Angebot annehmen', this.handleAccept, 'accept')
                 .setText('Nehme das Angebot an, damit das Tauschgeschäft zustande kommt.')
@@ -243,11 +241,16 @@ class TradeDetail extends React.Component {
             new ActionDescriptor('Artikel ausliefern', this.handleDelivered, 'delivered')
                 .setText(`Wenn Du deine Artikel ${trade.tradePartner.name} ausgeliefert hast, kannst Du hier angeben, dass sie auf dem Weg sind.`)
                 .setLabel('Artikel ausliefern')
-                .setIcon(<ShippingIcon/>)
+                .setIcon(<ShippingIcon/>),
+
+            new ActionDescriptor('Kontakt aufnehmen', this.handleContactDetail.bind(this, true), 'contacting')
+                .setText(`Nehme mit ${trade.tradePartner.name} Kontakt auf, damit Ihr den Austausch der Artikel organisieren könnt.`)
+                .setLabel('Kontaktdetails')
+                .setIcon(<ContactIcon/>)
         ];
     }
 
-    createWithrawActions(trade, canMakeCounteroffer) {
+    createWithrawActions(canMakeCounteroffer) {
         if (canMakeCounteroffer) {
             return [
                 new ActionDescriptor('Tauschgeschäft beenden', this.handleWithdrawOffer, 'withdrawOffer')
@@ -277,7 +280,7 @@ class TradeDetail extends React.Component {
         if (trade) {
             // define the actions relevant to the trades state and the user's role in the trade
             if (trade.isNew) {
-                actions = this.createRequestActions(trade);
+                actions = this.createRequestActions();
             } else if (trade.isUserSender) {
                 if (trade.isFinished) {
                     if (trade.isCompleted && !trade.userHasDelivered) {
@@ -285,12 +288,12 @@ class TradeDetail extends React.Component {
                     }
                 } else if (trade.isInvalidated || trade.isDeclined) {
                     if (trade.userIsMakingCounteroffer) {
-                        actions = this.createRequestActions(trade);
+                        actions = this.createRequestActions();
                     } else {
-                        actions = this.createWithrawActions(trade, true);
+                        actions = this.createWithrawActions(true);
                     }
                 } else {
-                    actions = this.createWithrawActions(trade, false)
+                    actions = this.createWithrawActions(false)
                 }
             } else if (trade.isUserReceiver) {
                 if (trade.isFinished) {
@@ -299,9 +302,9 @@ class TradeDetail extends React.Component {
                     }
                 } else if (!(trade.isDeclined || trade.isInvalidated)) {
                     if (trade.userIsMakingCounteroffer) {
-                        actions = this.createRequestActions(trade);
+                        actions = this.createRequestActions();
                     } else {
-                        actions = this.createResponseActions(trade);
+                        actions = this.createResponseActions();
                     }
                 }
             }
@@ -311,34 +314,33 @@ class TradeDetail extends React.Component {
         return (actions) ? this.renderActionBoxes(actions) : null;
     }
 
-    renderUpdateMessage() {
-        let content = null;
-
-        if (this.props.newVersionAvailable) {
-            content = (
-                <div className="trade-detail__update-message">
-                    <RaisedButton label="Aktualisieren" onClick={this.handleUpdate} /><span style={{marginLeft: '20px'}}>Das Tauschgeschäft wurde verändert - Du kannst die Anzeige aktualisieren</span>
-                </div>
-            );
-        }
-
-        return content;
-    }
-
     render() {
         const { trade } = this.props;
+        const { isContactDetailOpen } = this.state;
         const title = trade ? `Tauschgeschäft mit ${trade.tradePartner.name}` : 'Unbekanntes Tauschgeschäft';
 
         return (
             <div>
                 <PageTitle>{title}</PageTitle>
-                {this.renderUpdateMessage()}
                 <Paper className="trade-detail__info-container">
                     <TradeStateTag status={trade.state}/>
                     <span className="trade-detail__description">{this.renderDescription(trade)}</span>
                 </Paper>
                 {this.renderArticles(trade)}
                 {this.renderActions(trade)}
+                <Dialog
+                    open={isContactDetailOpen}
+                    title="Kontakdetails"
+                    modal={true}
+                    actions={[
+                        <RaisedButton label="OK" onClick={this.handleContactDetail.bind(this, false)} primary/>
+                    ]}>
+                    <AvatarTag text={trade.tradePartner.name} icon={<AccountIcon/>}/>
+                    <div className="trade-detail__contact-info">{trade.tradePartner.address}</div>
+                    <div className="trade-detail__contact-info">
+                        <a href={`mailto:${trade.tradePartner.email}`}>{trade.tradePartner.email}</a>
+                    </div>
+                </Dialog>
             </div>
         );
     }

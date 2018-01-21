@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import ApplicationBar from '../components/ApplicationBar/ApplicationBar';
 
 import { getUser } from '../store/selectors/user';
-import { logout } from '../store/actions/user';
+import { gotoUserTradesPage, logout } from '../store/actions/user';
 
 function mapStateToProps(theState) {
     return {
@@ -12,4 +12,7 @@ function mapStateToProps(theState) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, { logout })(ApplicationBar));
+export default withRouter(connect(mapStateToProps, {
+    gotoUserTradesPage,
+    logout
+})(ApplicationBar));

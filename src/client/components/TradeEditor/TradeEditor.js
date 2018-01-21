@@ -22,7 +22,7 @@ const STEP_IDX_SUMMARY = 2;
 
 const STEP_LAST_IDX = 2;
 
-const stepButtonStyle = {fontSize: '1.25rem'};
+const stepButtonStyle = { fontSize: '1.25rem', textAlign: 'left' };
 
 export default class TradeEditor extends React.Component {
 
@@ -65,15 +65,6 @@ export default class TradeEditor extends React.Component {
             }
         }
     }
-
-    // componentDidUpdate(previousProps, previousState) {
-    //     if (previousProps.width !== this.props.width) {
-    //         let isVertical = this.width <= 750;
-    //         if (this.isVertical !== isVertical) {
-    //             this.isVertical = isVertical;
-    //         }
-    //     }
-    // }
 
     canGoToPreviousStep = () => this.props.stepIndex > 0;
 
@@ -133,6 +124,7 @@ export default class TradeEditor extends React.Component {
                     isEditing={true}
                     selected={true}
                     onToggleArticle={toggleArticle}
+                    withArticleLink={false}
                 />
                 <Articles
                     articles={availableArticles}
@@ -148,6 +140,7 @@ export default class TradeEditor extends React.Component {
                     onFilterChange={setFilterText}
                     onPageChange={setPageNum}
                     onToggleArticle={toggleArticle}
+                    withArticleLink={false}
                 />
             </div>
         );
@@ -186,8 +179,8 @@ export default class TradeEditor extends React.Component {
 
         return (
             <div>
-                <Articles articles={partnerArticlesInfo.chosenArticles} title={trade.partnerArticlesListTitle(partnerArticlesInfo.chosenArticles.length === 1)} />
-                <Articles articles={userArticlesInfo.chosenArticles} title={trade.userArticlesListTitle(userArticlesInfo.chosenArticles.length === 1)} />
+                <Articles articles={partnerArticlesInfo.chosenArticles} title={trade.partnerArticlesListTitle(partnerArticlesInfo.chosenArticles.length === 1)} withArticleLink={false}/>
+                <Articles articles={userArticlesInfo.chosenArticles} title={trade.userArticlesListTitle(userArticlesInfo.chosenArticles.length === 1)} withArticleLink={false}/>
             </div>
         );
     }
@@ -259,10 +252,8 @@ export default class TradeEditor extends React.Component {
                     {navigation}
                 </Paper>
                 <Paper className="trade-editor__info-container">
-                    <div>
-                        <div className="trade-editor__step-title">{stepTitle}</div>
-                        <div className="trade-editor__step-description">{stepDescription}</div>
-                    </div>
+                    <div className="trade-editor__step-title">{stepTitle}</div>
+                    <div className="trade-editor__step-description">{stepDescription}</div>
                 </Paper>
                 <div className="trade-editor__step-container">
                     {this.renderStep()}

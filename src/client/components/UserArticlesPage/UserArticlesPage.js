@@ -100,7 +100,7 @@ export default class UserArticlesPage extends React.Component {
 
     deleteArticle = (theArticle) => {
         this.closeDeleteDialog();
-        this.props.deleteArticle(theArticle.owner._id, theArticle._id);
+        this.props.deleteArticle(theArticle._id);
     };
 
     createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised, isDisabled) => {
@@ -136,7 +136,7 @@ export default class UserArticlesPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Meine Artikel verwalten"/>
-                <div className="user-articles-page__filter-container">
+                <section className="user-articles-page__filter-container">
                     <SearchBar
                         ref={element => this.filterField = element}
                         hintText="Nach Titel / Beschreibung / Kategorie filtern ..."
@@ -157,21 +157,23 @@ export default class UserArticlesPage extends React.Component {
                             <RadioButton style={statusRadioButtonStyle} disabled={loading} value={ArticleStatus.STATUS_DELETED} label="Gelöschte Artikel"/>
                         </RadioButtonGroup>
                     </Paper>
-                </div>
-                <ArticleGridList articles={filteredArticles} articleActions={this.createArticleActions()} loading={loading}/>
-                <PageButton onClick={this.createNewArticle}>
-                    <PlusIcon/>
-                </PageButton>
-                <Dialog
-                    open={isDeleteDialogOpen}
-                    title="Löschen?"
-                    modal={true}
-                    actions={[
-                        <RaisedButton label="Löschen" icon={<DeleteIcon/>} onClick={this.deleteArticle.bind(this, articleToDelete)} keyboardFocused secondary/>,
-                        <RaisedButton label="Abbrechen" onClick={this.closeDeleteDialog}/>
-                    ]}>
-                    {deleteDialogContext}
-                </Dialog>
+                </section>
+                <main>
+                    <ArticleGridList articles={filteredArticles} articleActions={this.createArticleActions()} loading={loading}/>
+                    <PageButton onClick={this.createNewArticle}>
+                        <PlusIcon/>
+                    </PageButton>
+                    <Dialog
+                        open={isDeleteDialogOpen}
+                        title="Löschen?"
+                        modal={true}
+                        actions={[
+                            <RaisedButton label="Löschen" icon={<DeleteIcon/>} onClick={this.deleteArticle.bind(this, articleToDelete)} keyboardFocused secondary/>,
+                            <RaisedButton label="Abbrechen" onClick={this.closeDeleteDialog}/>
+                        ]}>
+                        {deleteDialogContext}
+                    </Dialog>
+                </main>
             </div>
         );
     }

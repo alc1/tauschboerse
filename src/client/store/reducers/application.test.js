@@ -4,12 +4,16 @@ import {
     loadingStateReceived,
     GLOBAL_MESSAGE_RECEIVED,
     GLOBAL_MESSAGE_REMOVED,
-    LOADING_STATE_RECEIVED,
+    LOADING_STATE_RECEIVED
+} from '../actions/application';
+import {
     ERROR_MESSAGE,
     WARNING_MESSAGE,
-    OK_MESSAGE,
-    GO_TO_LOGIN
-} from '../actions/application';
+    INFO_MESSAGE,
+    GO_TO_LOGIN,
+    RELOAD_TRADE
+} from '../../model/GlobalMessageParams';
+
 import applicationReducer, { initialState } from './application';
 
 import { createDummyAction } from '../../testutils/common';
@@ -31,7 +35,7 @@ const createWarningGlobalMessage = () => {
 const createOkGlobalMessage = () => {
     return {
         messageText: 'Alles ist OK',
-        messageType: OK_MESSAGE,
+        messageType: INFO_MESSAGE,
     };
 };
 
@@ -39,75 +43,85 @@ describe('Application Reducer', () => {
 
     describe(`Test action ${GLOBAL_MESSAGE_RECEIVED}`, () => {
         test(`Putting OK global message to store with initial state. Expectation: New state should now contain the OK global message.`, () => {
-            const okMessage = createOkGlobalMessage();
-            const newState = applicationReducer(initialState, globalMessageReceived(okMessage));
-            expect(newState).toEqual({ ...initialState, globalMessage: okMessage });
-        });
-        test(`Putting OK global message to store with any state. Expectation: New state should now contain the OK global message.`, () => {
-            const okMessage = createOkGlobalMessage();
-            const warningMessage = createWarningGlobalMessage();
-            const newState = applicationReducer({ ...initialState, globalMessage: warningMessage }, globalMessageReceived(okMessage));
-            expect(newState).toEqual({ ...initialState, globalMessage: okMessage });
-        });
-
-        test(`Putting WARNING global message to store with initial state. Expectation: New state should now contain the WARNING global message.`, () => {
-            const warningMessage = createWarningGlobalMessage();
-            const newState = applicationReducer(initialState, globalMessageReceived(warningMessage));
-            expect(newState).toEqual({ ...initialState, globalMessage: warningMessage });
-        });
-        test(`Putting WARNING global message to store with any state. Expectation: New state should now contain the WARNING global message.`, () => {
-            const warningMessage = createWarningGlobalMessage();
-            const errorMessage = createErrorGlobalMessage();
-            const newState = applicationReducer({ ...initialState, globalMessage: errorMessage }, globalMessageReceived(warningMessage));
-            expect(newState).toEqual({ ...initialState, globalMessage: warningMessage });
-        });
-
-        test(`Putting ERROR global message to store with initial state. Expectation: New state should now contain the ERROR global message.`, () => {
-            const errorMessage = createErrorGlobalMessage();
-            const newState = applicationReducer(initialState, globalMessageReceived(errorMessage));
-            expect(newState).toEqual({ ...initialState, globalMessage: errorMessage });
-        });
-        test(`Putting ERROR global message to store with any state. Expectation: New state should now contain the ERROR global message.`, () => {
-            const errorMessage = createWarningGlobalMessage();
-            const okMessage = createOkGlobalMessage();
-            const newState = applicationReducer({ ...initialState, globalMessage: okMessage }, globalMessageReceived(errorMessage));
-            expect(newState).toEqual({ ...initialState, globalMessage: errorMessage });
+            const messageText = 'Ein Fehler ist aufgetreten';
+            const messageType = ERROR_MESSAGE;
+            const actionText = 'Login';
+            const actionType = GO_TO_LOGIN;
+            const message = { messageText, messageType, actionText, actionType };
+            const initialStateCopy = { ...initialState };
+            const newState = applicationReducer(initialState, globalMessageReceived(messageText, messageType, actionText, actionType));
+            expect(newState).not.toBe(initialState);
+            expect(newState).toEqual({ ...initialState, globalMessage: message });
+            expect(initialState).toEqual(initialStateCopy);
         });
     });
 
     describe(`Test action ${GLOBAL_MESSAGE_REMOVED}`, () => {
         test(`Removing global message from store with initial state. Expectation: New state should still be the initial state.`, () => {
+            const initialStateCopy = { ...initialState };
             const newState = applicationReducer(initialState, globalMessageRemoved());
-            expect(newState).toEqual(initialState);
+            expect(newState).toBe(initialState);
+            expect(initialState).toEqual(initialStateCopy);
         });
         test(`Removing global message from store with any state. Expectation: New state should now be in initial state.`, () => {
-            const okMessage = createOkGlobalMessage();
-            const newState = applicationReducer({ ...initialState, globalMessage: okMessage }, globalMessageRemoved());
-            expect(newState).toEqual(initialState);
+            const message = { messageText: 'Ein Fehler ist aufgetreten', messageType: ERROR_MESSAGE, actionText: 'Login', actionType: GO_TO_LOGIN };
+            const startingState = { ...initialState, globalMessage: message };
+            const startingStateCopy = { ...startingState };
+            const endState = applicationReducer(startingState, globalMessageRemoved());
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual(initialState);
+            expect(startingState).toEqual(startingStateCopy);
         });
     });
 
     describe(`Test action ${LOADING_STATE_RECEIVED}`, () => {
-        test(`Increase loading counter with initial state before. Expectation: New state should now contain the loading counter 1.`, () => {
-            const newState = applicationReducer(initialState, loadingStateReceived(true));
-            expect(newState).toEqual({ ...initialState, loadingCounter: 1 });
+        test(`Change loadingCounter from 0 to 1 should change isLoading from false to true`, () => {
+            const startingState = { ...initialState, isLoading: false, loadingCounter: 0 };
+            const startingStateCopy = { ...startingState };
+            const endState = applicationReducer(startingState, loadingStateReceived(true));
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual({ ...initialState, isLoading: true, loadingCounter: 1 });
+            expect(startingState).toEqual(startingStateCopy);
         });
-        test(`Decrease loading counter with loading counter 1 before. Expectation: The loading counter should now be 0 in the new state.`, () => {
-            const newState = applicationReducer({ ...initialState, loadingCounter: 1 }, loadingStateReceived(false));
-            expect(newState).toEqual({ ...initialState, loadingCounter: 0 });
+        test(`Change loading counter from 1 to 0 should change isLoading from true to false`, () => {
+            const startingState = { ...initialState, isLoading: true, loadingCounter: 1 };
+            const startingStateCopy = { ...startingState };
+            const endState = applicationReducer(startingState, loadingStateReceived(false));
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual({ ...initialState, isLoading: false, loadingCounter: 0 });
+            expect(startingState).toEqual(startingStateCopy);
         });
-        test(`Decrease loading counter with loading counter 0 before. Expectation: The loading counter should still be 0 in the new state.`, () => {
-            const newState = applicationReducer({ ...initialState, loadingCounter: 0 }, loadingStateReceived(false));
-            expect(newState).toEqual({ ...initialState, loadingCounter: 0 });
+        test(`Increase loading counter from any number greater than 0 to the next higher doesn't change the isLoading flag`, () => {
+            const startingState = { ...initialState, isLoading: true, loadingCounter: 6 };
+            const startingStateCopy = { ...startingState };
+            const endState = applicationReducer(startingState, loadingStateReceived(true));
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual({ ...initialState, isLoading: true, loadingCounter: 7 });
+            expect(startingState).toEqual(startingStateCopy);
         });
-        test(`Decrease loading counter with loading counter -1 before (which should never happen). Expectation: The loading counter should now be 0 in the new state.`, () => {
-            const newState = applicationReducer({ ...initialState, loadingCounter: -1 }, loadingStateReceived(false));
-            expect(newState).toEqual({ ...initialState, loadingCounter: 0 });
+        test(`Decrease loading counter from any number greater than 1 to the next lower doesn't change the isLoading flag`, () => {
+            const startingState = { ...initialState, isLoading: true, loadingCounter: 3 };
+            const startingStateCopy = { ...startingState };
+            const endState = applicationReducer(startingState, loadingStateReceived(false));
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual({ ...initialState, isLoading: true, loadingCounter: 2 });
+            expect(startingState).toEqual(startingStateCopy);
         });
-        test(`Increase loading counter with state which also contains any global message. Expectation: New state should now contain the new loading counter and the global message from before.`, () => {
-            const okMessage = createOkGlobalMessage();
-            const newState = applicationReducer({ ...initialState, globalMessage: okMessage }, loadingStateReceived(true));
-            expect(newState).toEqual({ ...initialState, globalMessage: okMessage, loadingCounter: 1 });
+        test('Decrease loading counter when it is already 0 should not change the state and leave a message in the console', () => {
+            let consoleSpy = jest.spyOn(console, 'error');
+            consoleSpy.mockImplementation((theLogMessage) => {
+                expect(theLogMessage).toBe('loadingCounter mismatch detected! Are your setLoadingState calls balanced?');
+            });
+
+            const startingState = { ...initialState, isLoading: false, loadingCounter: 0 };
+            const startingStateCopy = { ...startingState };
+            const endState = applicationReducer(startingState, loadingStateReceived(false));
+            expect(endState).toBe(startingState);
+            expect(endState).toEqual(startingStateCopy);
+            expect(consoleSpy).toHaveBeenCalledTimes(1);
+
+            consoleSpy.mockReset();
+            consoleSpy.mockRestore();
         });
     });
 

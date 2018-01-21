@@ -25,12 +25,12 @@ export default class LoginForm extends React.Component {
     render() {
         const { email, currentPassword, errors, loading, onChange, onSubmit } = this.props;
         return (
-            <div className="login-form__container">
-                <Paper className="login-form__paper">
+            <section className="login-form">
+                <Paper className="login-form__container">
                     <h1 className="login-form__title">Melde Dich mit deiner E-Mail-Adresse an:</h1>
                     <form className="login-form__field-container" onSubmit={onSubmit}>
                         <InputComponent
-                            inputRef={inputElement => this.firstInputElement = inputElement}
+                            setElementRef={element => this.firstInputElement = element}
                             error={errors.email}
                             label="E-Mail *"
                             onChange={onChange}
@@ -49,7 +49,7 @@ export default class LoginForm extends React.Component {
                         {this.props.children}
                     </form>
                 </Paper>
-            </div>
+            </section>
         );
     }
 }

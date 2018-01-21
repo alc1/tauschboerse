@@ -20,8 +20,8 @@ function assertLogin(theName, theEmail, thePassword) {
     browser.click('button[type="submit"]');
 
     // Check the greeting on the dashboard
-    browser.waitForExist('.dashboard__title', 5000);
-    expect(browser.getText('.dashboard__title')).toBe(`Hallo ${theName}`);
+    browser.waitForExist('.page-title', 5000);
+    expect(browser.getText('.page-title')).toBe(`Hallo ${theName}`);
 }
 
 function assertLogout() {
@@ -29,8 +29,8 @@ function assertLogout() {
     browser.click('button[data-button-id="logout"]');
 
     // Check the general greeting on the home page
-    browser.waitForExist('.intro__title', 5000);
-    expect(browser.getText('.intro__title')).toBe('Willkommen bei der Tauschbörse!');
+    browser.waitForExist('.page-title', 5000);
+    expect(browser.getText('.page-title')).toBe('Willkommen bei der Tauschbörse!');
 }
 
 module.exports = {

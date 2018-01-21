@@ -8,10 +8,8 @@ class TradesModel {
         this.__openTrades = null;
         this.__completedTrades = null;
         this.__canceledTrades = null;
-        this.__finishedTrades = null;
-        this.__sentTrades = null;
-        this.__receivedTrades = null;
         this.__tradesRequiringAttention = null;
+        this.__openTradesNotRequiringAttention = null;
 
         this.__highestVersionstamp = -1;
     }
@@ -52,27 +50,6 @@ class TradesModel {
         return this.__canceledTrades;
     }
 
-    get finishedTrades() {
-        if (this.__finishedTrades === null) {
-            this.__finishedTrades = this.__trades.filter(trade => trade.isFinished);
-        }
-        return this.__finishedTrades;
-    }
-
-    get sentTrades() {
-        if (this.__sentTrades === null) {
-            this.__sentTrades = this.__trades.filter(trade => trade.userMadeCurrentOffer);
-        }
-        return this.__sentTrades;
-    }
-
-    get receivedTrades() {
-        if (this.__receivedTrades === null) {
-            this.__receivedTrades = this.__trades.filter(trade => trade.userReceivedCurrentOffer);
-        }
-        return this.__receivedTrades;
-    }
-
     get tradesRequiringAttention() {
         if (this.__tradesRequiringAttention === null) {
             this.__tradesRequiringAttention = this.__trades.filter(trade => trade.requiresAttention);
@@ -80,16 +57,15 @@ class TradesModel {
         return this.__tradesRequiringAttention;
     }
 
+    get openTradesNotRequiringAttention() {
+        if (this.__openTradesNotRequiringAttention === null) {
+            this.__openTradesNotRequiringAttention = this.__trades.filter(trade => trade.openButDoesNotRequireAttention);
+        }
+        return this.__openTradesNotRequiringAttention;
+    }
+
     get hasNewTrades() {
         return this.newTrades.length > 0;
-    }
-
-    get hasReceivedTrades() {
-        return this.receivedTrades.length > 0;
-    }
-
-    get hasSentTrades() {
-        return this.sentTrades.length > 0;
     }
 
     get hasCompletedTrades() {
@@ -100,16 +76,12 @@ class TradesModel {
         return this.canceledTrades.length > 0;
     }
 
-    get hasOpenTrades() {
-        return this.openTrades.length > 0;
-    }
-
-    get hasFinishedTrades() {
-        return this.finishedTrades.length > 0;
-    }
-
     get hasTradesRequiringAttention() {
         return this.tradesRequiringAttention.length > 0;
+    }
+
+    get hasOpenTradesNotRequiringAttention() {
+        return this.openTradesNotRequiringAttention.length > 0;
     }
 
     get highestVersionstamp() {

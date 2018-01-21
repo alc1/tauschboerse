@@ -11,21 +11,24 @@ import ApplicationBar from '../../containers/ApplicationBar';
 import Placeholder from '../../containers/Placeholder';
 import TradesList from '../TradesList/TradesList';
 
+const stepButtonStyle = { fontSize: '1.15rem', textAlign: 'left' };
+
 export default class UserTradesPage extends React.Component {
 
     static propTypes = {
-        trades: PropTypes.object.isRequired,
-        user: PropTypes.object.isRequired,
-        userTradesSectionIndex: PropTypes.number.isRequired,
-        loadUserTrades: PropTypes.func.isRequired,
-        openUserTradesSection: PropTypes.func.isRequired,
-        loading: PropTypes.bool.isRequired,
+        checkForNewTrades: PropTypes.func,
         history: PropTypes.object.isRequired,
+        loading: PropTypes.bool.isRequired,
+        loadUserTrades: PropTypes.func.isRequired,
         muiTheme: PropTypes.shape({
             palette: PropTypes.shape({
                 primary1Color: PropTypes.string.isRequired,
             }).isRequired
-        }).isRequired
+        }).isRequired,
+        openUserTradesSection: PropTypes.func.isRequired,
+        trades: PropTypes.object.isRequired,
+        user: PropTypes.object.isRequired,
+        userTradesSectionIndex: PropTypes.number.isRequired
     };
 
     componentDidMount() {
@@ -60,7 +63,7 @@ export default class UserTradesPage extends React.Component {
 
     checkIfNewTradesAvailable = () => {
         if (typeof this.props.checkForNewTrades === 'function') {
-            this.props.checkForNewTrades();
+            this.props.checkForNewTrades().catch(() => { this.stopTradeWatcher(); });
         }
     };
 
@@ -93,7 +96,7 @@ export default class UserTradesPage extends React.Component {
         return (
             <Step>
                 <StepButton icon={theCurrentUserTradesSectionIndex === theSectionIndex ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, theSectionIndex)}>
-                    <StepLabel>{`${theSectionTitle} (${theTrades.length})`}</StepLabel>
+                    <StepLabel style={stepButtonStyle}>{`${theSectionTitle} (${theTrades.length})`}</StepLabel>
                 </StepButton>
                 <StepContent transitionDuration={0}>
                     <TradesList trades={theTrades} loading={loading} tradeActions={this.buildActionList()}/>
@@ -108,20 +111,22 @@ export default class UserTradesPage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Meine Tauschgeschäfte verwalten"/>
-                {trades.count > 0 ? (
-                    <Stepper
-                        activeStep={userTradesSectionIndex}
-                        linear={false}
-                        orientation="vertical">
-                        {trades.hasNewTrades && this.createTradesSection(0, userTradesSectionIndex, trades.newTrades, 'Noch nicht gesendete Tauschgeschäfte in Vorbereitung')}
-                        {trades.hasReceivedTrades && this.createTradesSection(1, userTradesSectionIndex, trades.receivedTrades, 'Tauschgeschäfte, die auf meine Antwort warten')}
-                        {trades.hasSentTrades && this.createTradesSection(2, userTradesSectionIndex, trades.sentTrades, 'Tauschgeschäfte, die auf Antwort des Empfängers warten')}
-                        {trades.hasCompletedTrades && this.createTradesSection(3, userTradesSectionIndex, trades.completedTrades, 'Erfolgreich abgeschlossene Tauschgeschäfte')}
-                        {trades.hasCanceledTrades && this.createTradesSection(4, userTradesSectionIndex, trades.canceledTrades, 'Abgebrochene Tauschgeschäfte')}
-                    </Stepper>
-                ) : (
-                    <Placeholder width={300} height={300} loading={loading} text="Keine Tauschgeschäfte vorhanden" loadingText="... Tauschgeschäfte werden geladen ..."/>
-                )}
+                <main>
+                    {trades.count > 0 ? (
+                        <Stepper
+                            activeStep={userTradesSectionIndex}
+                            linear={false}
+                            orientation="vertical">
+                            {this.createTradesSection(0, userTradesSectionIndex, trades.newTrades, 'Noch nicht gesendete Tauschgeschäfte in Vorbereitung')}
+                            {this.createTradesSection(1, userTradesSectionIndex, trades.tradesRequiringAttention, 'Laufende Tauschgeschäfte mit Handlungsbedarf')}
+                            {this.createTradesSection(2, userTradesSectionIndex, trades.openTradesNotRequiringAttention, 'Laufende Tauschgeschäfte ohne Handlungsbedarf')}
+                            {this.createTradesSection(3, userTradesSectionIndex, trades.completedTrades, 'Erfolgreich abgeschlossene Tauschgeschäfte')}
+                            {this.createTradesSection(4, userTradesSectionIndex, trades.canceledTrades, 'Abgebrochene Tauschgeschäfte')}
+                        </Stepper>
+                    ) : (
+                        <Placeholder width={300} height={300} loading={loading} text="Keine Tauschgeschäfte vorhanden" loadingText="... Tauschgeschäfte werden geladen ..."/>
+                    )}
+                </main>
             </div>
         );
     }

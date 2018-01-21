@@ -53,7 +53,7 @@ class ArticleCache {
     }
 
     dump() {
-        console.log('Articles:')
+        console.log('Articles:');
         console.log(JSON.stringify(this.articles, null, 2));
         console.log('');
     }
@@ -186,7 +186,8 @@ class ArticleCache {
             return {
                 fileName: photo.fileName,
                 isMain: photo.isMain,
-                url: `/images/article/${article._id}/${photo.fileName}`
+                url: `/images/article/${article._id}/${photo.fileName}`,
+                title: article.title
             };
         }) : [];
         article.categories = thePhysicalRecord.categoryIds ? thePhysicalRecord.categoryIds.map(id => this.categories.findById(id)) : [];

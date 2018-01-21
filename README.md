@@ -1,27 +1,31 @@
 # Inhaltsverzeichnis
-* [Inhaltsverzeichnis](#inhaltsverzeichnis)
-* [Tauschbörse](#tauschbörse)
-  * [Module/Features](#modulefeatures)
-    * [Anforderungen](#anforderungen)
-    * [Optionale Ideen](#optionale-ideen)
-    * [Implementierte Zusatzmodule/-funktionen](#implementierte-zusatzmodule-funktionen)
-  * [Setup](#setup)
-    * [Installation](#installation)
-    * [Testdaten](#testdaten)
-  * [Applikation starten](#applikation-starten)
-    * [1) API-Server starten](#1-api-server-starten)
-    * [2) Web-Server starten](#2-web-server-starten)
-  * [Tests](#tests)
-    * [a) Unit Tests](#a-unit-tests)
-      * [Tests für die Reducers (Redux)](#tests-für-die-reducers-redux)
-      * [Tests für die React-Komponenten](#tests-für-die-react-komponenten)
-    * [b) End-to-End Tests](#b-end-to-end-tests)
-    * [c) CSS Style Tests](#c-css-style-tests)
-    * [d) Echte Benutzertests](#d-echte-benutzertests)
-* [Rückblick](#rückblick)
-  * [Gut gelöst](#gut-gelöst)
-  * [Das nächste Mal anders](#das-nächste-mal-anders)
-  * [Gelernt](#gelernt)
+- [Inhaltsverzeichnis](#inhaltsverzeichnis)
+- [Tauschbörse](#tauschb%C3%B6rse)
+  - [Module/Features](#modulefeatures)
+    - [Anforderungen](#anforderungen)
+    - [Optionale Ideen](#optionale-ideen)
+    - [Implementierte Zusatzmodule/-funktionen](#implementierte-zusatzmodule-funktionen)
+  - [Setup](#setup)
+    - [Installation](#installation)
+    - [Testdaten](#testdaten)
+  - [Applikation starten](#applikation-starten)
+    - [Entwicklung](#entwicklung)
+      - [1) API-Server starten](#1-api-server-starten)
+      - [2) Web-Server starten](#2-web-server-starten)
+    - [Produktion](#produktion)
+      - [1) Vorbereiten](#1-vorbereiten)
+      - [2) Web-Server starten](#2-web-server-starten)
+  - [Tests](#tests)
+    - [a) Unit Tests](#a-unit-tests)
+      - [Tests für die Reducers (Redux)](#tests-f%C3%BCr-die-reducers-redux)
+      - [Tests für die React-Komponenten](#tests-f%C3%BCr-die-react-komponenten)
+    - [b) End-to-End Tests](#b-end-to-end-tests)
+    - [c) CSS Style Tests](#c-css-style-tests)
+    - [d) Echte Benutzertests](#d-echte-benutzertests)
+- [Rückblick](#r%C3%BCckblick)
+  - [Gut gelöst](#gut-gel%C3%B6st)
+  - [Das nächste Mal anders](#das-n%C3%A4chste-mal-anders)
+  - [Gelernt](#gelernt)
 
 # Tauschbörse
 
@@ -50,7 +54,7 @@ Online-Tauschbörse im Rahmen des CAS FEE 2017. Ziel des Projekts ist es, eine W
 
 * Marktplatz
   * Auf dem "Marktplatz" kann ein Benutzer nach Artikeln suchen.
-  * Dies ist das einzige Modul, welches auch nicht registrierten Benutzern (Gast) zur Verfügung steht.
+  * Dies ist das einzige Modul, welches auch nicht-registrierten Benutzern (Gast) zur Verfügung steht.
   * Ein Gast kann aber nur nach Artikeln suchen und diese anschauen.
   * Hingegen ein registrierter Benutzer hat hier die Möglichkeit, einen Artikel auszuwählen, den er haben möchte und für diesen ein Angebot zu machen.
   * Dieses Angebot besteht aus einem oder mehreren der eigenen Artikeln.
@@ -97,6 +101,7 @@ Das Tolle an diesem Projekt ist, dass es fast beliebig erweiterbar mit zusätzli
     * Zudem wird der angemeldete Benutzer per Links zu den weiteren Funktionen geführt.
 * Funktionen:
   * Innerhalb seines Artikels sieht ein angemeldeter Benutzer, in welchen Tauschgeschäften dieser Artikel involviert ist. Mit einem Klick kann er direkt in das Tauschgeschäft springen.
+  * Ein Paging-Mechanismus wurde in der Trade-Detail-Ansicht und im Trade-Editor für die Artikellisten implementiert. 
 
 ## Setup
 
@@ -112,7 +117,7 @@ npm install
 
 ### Testdaten
 
-Wir stellen Testdaten zur Verfügung, welche mit dem folgenden Kommando eingespielt werden können. Achtung: Dabei werden bestehende Daten gelöscht, so dass nur die Testdaten in der Datenbank vorhanden sind. Es wird empfohlen dies bei gestopptem API-Server auszuführen.
+Wir stellen Testdaten zur Verfügung, welche mit dem folgenden Kommando eingespielt werden können. Achtung: Dabei werden bestehende Daten gelöscht, so dass nur die Testdaten in der Datenbank vorhanden sind. Es wird dringend empfohlen dies bei gestopptem API-Server auszuführen.
 
 ```bash
 npm run reset-data
@@ -120,7 +125,9 @@ npm run reset-data
 
 ## Applikation starten
 
-### 1) API-Server starten
+### Entwicklung
+
+#### 1) API-Server starten
 
 ```bash
 npm run start-server
@@ -128,10 +135,43 @@ npm run start-server
 
 Der API-Server läuft nun auf <code>http://localhost:3001</code>.
 
-### 2) Web-Server starten
+#### 2) Web-Server starten
 
 ```bash
 npm run start
+```
+
+Der Web-Server läuft nun auf <code>http://localhost:3000</code> und die Applikation kann über diese Adresse im Browser gestartet werden.
+
+### Produktion
+
+#### 1) Vorbereiten
+
+Anders als beim Starten des Entwicklungsservers muss die Frontend-Anwendung statisch gebündelt werden. Dazu kann der folgende Befehl verwendet werden:
+
+```bash
+npm run build
+```
+
+Sind Test-Daten erwünscht kann mit dem Befehl
+
+```bash
+npm run reset-data-prod
+```
+
+die Datenbank mit Test-Daten initialisiert. Mit den Test-Daten werden die folgenden fünf Benutzer registriert:
++ calbiez@hsr
++ stephen.atchison@hsr.ch
++ max@mustermann.com
++ jamesbond007@agent.com
++ mgfeller@hsr.ch
+
+Diese Benutzer haben alle das gleiche Passwort, nämlich **1234**.
+
+#### 2) Web-Server starten
+
+```bash
+npm run start-server-prod
 ```
 
 Der Web-Server läuft nun auf <code>http://localhost:3000</code> und die Applikation kann über diese Adresse im Browser gestartet werden.
@@ -208,7 +248,7 @@ Wir liessen die Applikation auch von echten Benutzern testen. Folgende Punkte wa
   * Greift Benutzer auf einen Link zu, dessen Inhalt er nicht sehen darf, erscheint eine Meldung und er wird auf sein Dashboard umgeleitet.
   * Greift ein nicht angemeldeter Benutzer auf einen Link zu, dessen Inhalt er nicht sehen darf, wird er auf die Login-Seite umgeleitet, wo er sich anmelden muss. Meldet er sich nun mit dem richtigen Benutzer an, wird er automatisch auf die ursprüngliche Seite umgeleitet, auf die er nun Zugriff hat.
 * **Einsatz von UI-Libraries/Packages (npm):**
-  * Man muss das Rad nicht neu erfinden, darum haben wir in einige Fällen (Bildgalerie, Kuchendiagramme, Paging-Mechanismuss, Chip-Eingabefeld...) diverse Libraries aus "npm" evaluiert und jeweils die passendsten davon in unserem Projekt eingebungen.
+  * Man muss das Rad nicht neu erfinden, darum haben wir in einige Fällen (Bildgalerie, Kuchendiagramme, Paging-Mechanismus, Chip-Eingabefeld...) diverse Libraries aus "npm" evaluiert und jeweils die passendsten davon in unserem Projekt eingebungen.
 * **Benutzerführung:**
   * Von Beginn weg (Startseite/Dashboard) wird der Benutzer geführt. Es wird ihm erklärt, wo er was machen kann.
   * Je nach Zustand des Tauschgeschäfts wird dem Benutzer erklärt, was er nun machen kann/muss.

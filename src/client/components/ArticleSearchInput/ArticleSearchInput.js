@@ -21,7 +21,7 @@ export default class ArticleSearchInput extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({ text: nextProps.text });
     }
-        
+
     onChange = (text) => {
         this.setState({ text: text });
     };
@@ -33,6 +33,7 @@ export default class ArticleSearchInput extends React.Component {
     render() {
         return (
             <SearchBar
+                ref={element => this.searchField = element}
                 hintText="Nach Titel / Beschreibung / Kategorie suchen ..."
                 onChange={this.onChange}
                 onRequestSearch={this.onSearch}

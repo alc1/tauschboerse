@@ -18,6 +18,8 @@ import Placeholder from '../../containers/Placeholder';
 
 import './MarketplacePage.css';
 
+const stepButtonStyle = { fontSize: '1.15rem', textAlign: 'left' };
+
 export default class MarketplacePage extends React.Component {
 
     constructor(props) {
@@ -156,7 +158,7 @@ export default class MarketplacePage extends React.Component {
         return (
             <Step>
                 <StepButton icon={theCurrentMarketplaceSectionIndex === theSectionIndex ? <SectionOpenedIcon color={muiTheme.palette.primary1Color}/> : <SectionClosedIcon/>} onClick={this.onSectionClick.bind(this, theSectionIndex)}>
-                    <StepLabel>{theSectionTitle}</StepLabel>
+                    <StepLabel style={stepButtonStyle}>{theSectionTitle}</StepLabel>
                 </StepButton>
                 <StepContent transitionDuration={0}>
                     <ArticleGridList articles={theArticles} articleActions={this.buildActionList(forUserArticles)} loading={loading}/>
@@ -172,9 +174,9 @@ export default class MarketplacePage extends React.Component {
         return (
             <div>
                 <ApplicationBar subtitle="Auf dem Marktplatz"/>
-                <div className="marketplace__search-container">
+                <section className="marketplace__search-container">
                     <ArticleSearchInput text={text} onSearch={this.onSearch}/>
-                </div>
+                </section>
                 {hasSearched ?
                     <Stepper
                         activeStep={marketplaceSectionIndex}

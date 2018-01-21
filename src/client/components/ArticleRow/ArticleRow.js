@@ -20,7 +20,6 @@ export default class ArticleRow extends React.Component {
 
     static propTypes = {
         article: PropTypes.object.isRequired,
-        selectable: PropTypes.bool.isRequired,
         selected: PropTypes.bool.isRequired,
         onSelectionToggled: PropTypes.func.isRequired,
         hideCheckbox: PropTypes.bool.isRequired,
@@ -28,18 +27,19 @@ export default class ArticleRow extends React.Component {
         hideDescription: PropTypes.bool.isRequired,
         hideOwner: PropTypes.bool.isRequired,
         hideCreationDate: PropTypes.bool.isRequired,
-        hideStatus: PropTypes.bool.isRequired
+        hideStatus: PropTypes.bool.isRequired,
+        withArticleLink: PropTypes.bool.isRequired
     };
     
     static defaultProps = {
-        selectable: false,
         selected: false,
         hideCheckbox: false,
         hideCategories: false,
         hideDescription: false,
         hideOwner: true,
         hideCreationDate: true,
-        hideStatus: false
+        hideStatus: false,
+        withArticleLink: false
     };
 
     onSelectionToggled = (theEvent, isChecked) => {
@@ -47,8 +47,8 @@ export default class ArticleRow extends React.Component {
     };
 
     render() {
-        const { article, selected, selectable } = this.props;
-        const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus } = this.props;
+        const { article, selected } = this.props;
+        const { hideCheckbox, hideCategories, hideDescription, hideOwner, hideCreationDate, hideStatus, withArticleLink } = this.props;
         const { title, description, status, created, owner, categories, photos } = article;
         const name = (owner) ? owner.name : '';
         const categoryChips = (categories) ? categories.map(category => <CategoryChip key={category._id} categoryName={category.name}/>) : [];
@@ -56,9 +56,9 @@ export default class ArticleRow extends React.Component {
         const mainPhotoIndex = (photos && photos.length > 0) ? photos.reduce((mainPhotoIndex, photo, index) => photo.isMain ? index : mainPhotoIndex, 0) : 0;
         const photoSource = (mainPhoto) ? mainPhoto.url : photos && photos.length > 0 ? photos[0].url : null;
         return (
-            <div className="article-row">
+            <article className="article-row">
                 <div className="article-row__checkbox-column">
-                    {!hideCheckbox && <Checkbox checked={selected} disabled={!selectable} onCheck={this.onSelectionToggled}/>}
+                    {!hideCheckbox && <Checkbox checked={selected} onCheck={this.onSelectionToggled}/>}
                 </div>
                 <div className="article-row__image-column">
                     {photoSource ? (
@@ -68,7 +68,11 @@ export default class ArticleRow extends React.Component {
                     )}
                 </div>
                 <div className="article-row__text-column">
-                    <Link className="article-row__title" to={`/article/${article._id}`}>{title}</Link>
+                    {withArticleLink ? (
+                        <Link className="article-row__title article-row__title--linkable" to={`/article/${article._id}`}>{title}</Link>
+                    ) : (
+                        <span className="article-row__title">{title}</span>
+                    )}
                     {!hideDescription && <span className="article-row__description">{description}</span>}
                     {!hideCategories && categoryChips.length > 0 &&
                         <div className="article-row__categories">
@@ -81,7 +85,7 @@ export default class ArticleRow extends React.Component {
                     {!hideCreationDate && <AvatarTag text={`${moment(created).format('DD.MM.YYYY | HH:mm')}`} icon={<EditIcon/>}/>}
                     {!hideStatus && <ArticleStatusTag status={status}/>}
                 </div>
-            </div>
+            </article>
         );
     }
 }

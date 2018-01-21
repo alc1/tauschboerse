@@ -10,9 +10,11 @@ import {
     TRADE_NEW_VERSION_AVAILABLE,
     TRADE_NOT_FOUND,
     TRADE_PAGE_NUM_SET,
+    TRADE_RELOAD,
     TRADE_STEP_INDEX_SET
 } from '../actions/trade';
 import { GLOBAL_PAGE_SIZE_CHANGED } from '../actions/application';
+
 import ArticlesDisplayInfo from '../../model/ArticlesDisplayInfo';
 
 export const initialState = {
@@ -20,6 +22,7 @@ export const initialState = {
     notFound: false,
     deleted: false,
     newVersionAvailable: false,
+    reloadTrade: false,
     stepIndex: 0,
     userArticlesInfo: new ArticlesDisplayInfo(),
     partnerArticlesInfo: new ArticlesDisplayInfo()
@@ -100,6 +103,7 @@ export default function trade(theState = initialState, theAction) {
                 trade: theAction.trade,
                 notFound: false,
                 deleted: false,
+                reloadTrade: false, 
                 userArticlesInfo: new ArticlesDisplayInfo(theState.userArticlesInfo).setChosenArticles(offer.userArticles.slice()),
                 partnerArticlesInfo: new ArticlesDisplayInfo(theState.partnerArticlesInfo).setChosenArticles(offer.tradePartnerArticles.slice())
             };
@@ -140,6 +144,12 @@ export default function trade(theState = initialState, theAction) {
             return {
                 ...theState,
                 newVersionAvailable: true
+            };
+        
+        case TRADE_RELOAD:
+            return {
+                ...theState,
+                reloadTrade: true
             };
 
         default:

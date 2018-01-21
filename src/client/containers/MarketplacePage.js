@@ -18,4 +18,8 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { clearLastSearch, findArticles, openMarketplaceSection })(muiThemeable()(MarketplacePage));
+export default connect(mapStateToProps, {
+    clearLastSearch,
+    findArticles,
+    openMarketplaceSection
+})(muiThemeable()(MarketplacePage));

@@ -5,8 +5,6 @@ import ApplicationBar from '../../containers/ApplicationBar';
 import TradeEditor from '../../containers/TradeEditor';
 import ContentContainer from '../ContentContainer/ContentContainer';
 
-import './EditTradePage.css';
-
 export default class EditTradePage extends React.Component {
 
     static propTypes = {
@@ -21,7 +19,6 @@ export default class EditTradePage extends React.Component {
         partnerArticlesInfo: PropTypes.object,
         saveTrade: PropTypes.func.isRequired,
         setFilterText: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired,
         setPageNum: PropTypes.func.isRequired,
         setStepIndex: PropTypes.func.isRequired,
         stepIndex: PropTypes.number.isRequired,
@@ -36,7 +33,6 @@ export default class EditTradePage extends React.Component {
     };
 
     componentDidMount() {
-        this.props.setLoading(true);
         this.props.initTradeEditor();
 
         const id = this.props.match.params[this.props.idParamName];
@@ -46,9 +42,7 @@ export default class EditTradePage extends React.Component {
             this.props.loadUserArticles()
         ];
         Promise.all(loadPromises)
-            .then(() => this.props.loadPartnerArticles())
-            .then(() => this.props.setLoading(false))
-            .catch(() => this.props.setLoading(false));
+            .then(() => this.props.loadPartnerArticles());
     }
 
     handleSave = () => {

@@ -9,9 +9,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import HomePage from './containers/HomePage';
 import MarketplacePage from './containers/MarketplacePage';
 import UserArticlesPage from './containers/UserArticlesPage';
-import UserEditorPage from './containers/UserEditorPage';
+import UserFormPage from './containers/UserFormPage';
 import UserTradesPage from './containers/UserTradesPage';
-import ArticleEditorPage from './containers/ArticleEditorPage';
+import ArticleFormPage from './containers/ArticleFormPage';
 import TradeDetailPage from './containers/TradeDetailPage';
 import EditTradePage from './containers/EditTradePage';
 import NewTradePage from './containers/NewTradePage';
@@ -39,8 +39,8 @@ export default class App extends React.Component {
                         <Switch>
                             <Route exact path="/" component={HomePage}/>
                             <Route path="/marketplace" component={MarketplacePage}/>
-                            <Route exact path="/article/:articleId" component={ArticleEditorPage}/>
-                            <LoggedInRoute exact path="/article" component={ArticleEditorPage}/>
+                            <Route exact path="/article/:articleId" component={ArticleFormPage}/>
+                            <LoggedInRoute exact path="/article" component={ArticleFormPage}/>
                             <LoggedInRoute exact path="/trade/show/:tradeId" component={TradeDetailPage}/>
                             <LoggedInRoute exact path="/trade/edit/:tradeId" component={EditTradePage}/>
                             <LoggedInRoute exact path="/trade/new/:articleId" component={NewTradePage}/>
@@ -48,7 +48,7 @@ export default class App extends React.Component {
                             <PublicRoute exact path="/login" component={LoginPage}/>
                             <PrivateRoute path="/user/:userId/articles" component={UserArticlesPage}/>
                             <PrivateRoute exact path="/user/:userId/trades" component={UserTradesPage}/>
-                            <PrivateRoute exact path="/user/:userId/details" component={UserEditorPage}/>
+                            <PrivateRoute exact path="/user/:userId/details" component={UserFormPage}/>
                             <Route component={NoMatchPage}/>
                         </Switch>
                     </Router>

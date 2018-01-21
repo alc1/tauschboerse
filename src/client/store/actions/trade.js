@@ -22,6 +22,7 @@ export const TRADE_PAGE_NUM_SET = 'TRADE_PAGE_NUM_SET';
 export const TRADE_ARTICLE_FILTER_TEXT_SET = 'TRADE_ARTICLE_FILTERTEXT_SET';
 export const TRADE_EDITOR_INITIALISED = 'TRADE_EDITOR_INITIALISED';
 export const TRADE_NEW_VERSION_AVAILABLE = 'TRADE_NEW_VERSION_AVAILABLE';
+export const TRADE_RELOAD = 'TRADE_RELOAD';
 
 /*
  * Action Creators
@@ -42,6 +43,10 @@ export const tradeNotFound = () => ({
 
 export const newTradeVersionAvailable = () => ({
     type: TRADE_NEW_VERSION_AVAILABLE
+});
+
+export const reloadTradeReceived = () => ({
+    type: TRADE_RELOAD
 });
 
 export const tradeDeleted = () => ({
@@ -100,18 +105,18 @@ export const checkForUpdatedTrade = () => (dispatch, getState) => {
 
     // Paranoia: if no trade in the store don't attempt to check for new versions!
     if (trade) {
-        axios.get(`/api/trades/${trade._id}/version`, { headers: { 'x-no-set-loading': true }})
+        return axios.get(`/api/trades/${trade._id}/version`, { headers: { 'x-no-set-loading': true }})
             .then(response => {
                 if (trade.isOutOfDate(response.data.versionstamp)) {
                     dispatch(newTradeVersionAvailable());
                 }
-            })
-            .catch((err) => {
-                // not important, just ignore it
-                console.log(err);
             });
+    } else {
+        return Promise.resolve(false);
     }
-}
+};
+
+export const sendReloadTrade = () => (dispatch) => dispatch(reloadTradeReceived());
 
 export const loadNewTrade = (theArticleId) => (dispatch, getState) => {
     dispatch(tradeIsBeingFetched());
@@ -123,9 +128,7 @@ export const loadNewTrade = (theArticleId) => (dispatch, getState) => {
         });
 };
 
-export const loadUserArticles = () => (dispatch, getState) => {
-    return loadArticlesByUserId(true, getUser(getState())._id, dispatch);
-};
+export const loadUserArticles = () => (dispatch, getState) => loadArticlesByUserId(true, getUser(getState())._id, dispatch);
 
 export const loadPartnerArticles = () => (dispatch, getState) => {
     let currentState = getState();
@@ -160,47 +163,27 @@ export const deleteTrade = () => (dispatch, getState) => {
     return axios.delete(`/api/trades/${trade._id}`)
         .then(response => dispatch(response.data.trade ? tradeFetched(new TradeModel(response.data.trade, user)) : tradeDeleted()))
         .catch(err => handleError(err, dispatch))
-}
-
-export const submitTrade = () => (dispatch, getState) => {
-    return setTradeState('REQUESTED', dispatch, getState);
 };
 
-export const withdrawTrade = () => (dispatch, getState) => {
-    return setTradeState('CANCELED', dispatch, getState);
-};
+export const submitTrade = () => (dispatch, getState) => setTradeState('REQUESTED', dispatch, getState);
 
-export const acceptTrade = () => (dispatch, getState) => {
-    return setTradeState('ACCEPTED', dispatch, getState);
-};
+export const withdrawTrade = () => (dispatch, getState) => setTradeState('CANCELED', dispatch, getState);
 
-export const declineTrade = () => (dispatch, getState) => {
-    return setTradeState('DECLINED', dispatch, getState);
-};
+export const acceptTrade = () => (dispatch, getState) => setTradeState('ACCEPTED', dispatch, getState);
 
-export const setDelivered = () => (dispatch, getState) => {
-    return setTradeState('DELIVERED', dispatch, getState);
-}
+export const declineTrade = () => (dispatch, getState) => setTradeState('DECLINED', dispatch, getState);
 
-export const setStepIndex = (theStepIndex) => (dispatch) => {
-    return dispatch(stepIndexSet(theStepIndex));
-};
+export const setDelivered = () => (dispatch, getState) => setTradeState('DELIVERED', dispatch, getState);
 
-export const toggleArticle = (forUser, theArticle) => dispatch => {
-    dispatch(articleToggled(theArticle, forUser));
-};
+export const setStepIndex = (theStepIndex) => (dispatch) => dispatch(stepIndexSet(theStepIndex));
 
-export const setPageNum = (forUser, thePageNum) => (dispatch) => {
-    return dispatch(pageNumSet(thePageNum, forUser));
-};
+export const toggleArticle = (forUser, theArticle) => dispatch => dispatch(articleToggled(theArticle, forUser));
 
-export const setFilterText = (forUser, theText) => (dispatch) => {
-    return dispatch(articleFilterTextSet(theText, forUser));
-};
+export const setPageNum = (forUser, thePageNum) => (dispatch) => dispatch(pageNumSet(thePageNum, forUser));
 
-export const initTradeEditor = () => (dispatch) => {
-    return dispatch(tradeEditorInitialised());
-};
+export const setFilterText = (forUser, theText) => (dispatch) => dispatch(articleFilterTextSet(theText, forUser));
+
+export const initTradeEditor = () => (dispatch) => dispatch(tradeEditorInitialised());
 
 function setTradeState(theNewTradeState, dispatch, getState) {
     let currentState = getState();

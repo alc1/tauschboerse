@@ -13,3 +13,5 @@ export const getUserArticlesInfo = (theState) => theState[TRADE_SLICE_NAME].user
 export const getTradeNotFound = (theState) => theState[TRADE_SLICE_NAME].notFound;
 
 export const getTradeDeleted = (theState) => theState[TRADE_SLICE_NAME].deleted;
+
+export const getReloadTrade = (theState) => theState[TRADE_SLICE_NAME].reloadTrade;

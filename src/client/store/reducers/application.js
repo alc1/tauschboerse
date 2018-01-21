@@ -5,13 +5,14 @@ import {
     GLOBAL_POLLING_INTERVAL_CHANGED
 } from '../actions/application';
 
-const initialGlobalMessage = {};
-const initialLoadingCounter = 0;
+const initialGlobalMessage = null;
+const initialIsLoading = false;
 const initialPollingInterval = 1000;
 
 export const initialState = {
     globalMessage: initialGlobalMessage,
-    loadingCounter: initialLoadingCounter,
+    isLoading: initialIsLoading,
+    loadingCounter: 0,
     pollingInterval: initialPollingInterval
 };
 
@@ -20,22 +21,31 @@ export default function application(theState = initialState, theAction) {
         case GLOBAL_MESSAGE_RECEIVED:
             return {
                 ...theState,
-                globalMessage: {
-                    messageText: theAction.globalMessage.messageText,
-                    messageType: theAction.globalMessage.messageType,
-                    actionText: theAction.globalMessage.actionText,
-                    actionType: theAction.globalMessage.actionType
-                }
+                globalMessage: theAction.globalMessage
             };
         case GLOBAL_MESSAGE_REMOVED:
-            return {
-                ...theState,
-                globalMessage: initialGlobalMessage
-            };
+            if (theState.globalMessage) {
+                return {
+                    ...theState,
+                    globalMessage: initialGlobalMessage
+                };
+            } else {
+                return theState;
+            }
         case LOADING_STATE_RECEIVED:
+            if ((theState.loadingCounter === 0) && !theAction.isLoading) {
+                console.error('loadingCounter mismatch detected! Are your setLoadingState calls balanced?');
+                return theState;
+            }
+
+            let { loadingCounter } = theState;
+            loadingCounter = theAction.isLoading ? loadingCounter + 1 : loadingCounter - 1;
+
+            // only change the store if the isLoading flag has changed
             return {
                 ...theState,
-                loadingCounter: theAction.isLoading ? theState.loadingCounter + 1 : (theState.loadingCounter <= 0 ? 0 : theState.loadingCounter - 1)
+                isLoading: loadingCounter > 0,
+                loadingCounter: loadingCounter
             };
         case GLOBAL_POLLING_INTERVAL_CHANGED:
             return {

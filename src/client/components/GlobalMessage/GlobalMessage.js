@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Snackbar from 'material-ui/Snackbar';
 import { orange500 } from 'material-ui/styles/colors';
 
-import { GO_TO_LOGIN, OK_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE } from '../../store/actions/application';
+import { ERROR_MESSAGE, GO_TO_LOGIN, INFO_MESSAGE, RELOAD_TRADE, WARNING_MESSAGE } from '../../model/GlobalMessageParams';
 
 const bodyStyle = { height: 'auto' };
 const contentStyle = { whiteSpace: 'pre-wrap' };
@@ -22,7 +22,8 @@ export default class GlobalMessage extends React.Component {
                 primary1Color: PropTypes.string.isRequired,
                 accent1Color: PropTypes.string.isRequired,
             }).isRequired
-        }).isRequired
+        }).isRequired,
+        sendReloadTrade: PropTypes.func
     };
 
     goToLogin = () => {
@@ -46,16 +47,31 @@ export default class GlobalMessage extends React.Component {
         }
 
         let action;
-        if (actionType === GO_TO_LOGIN) {
-            action = () => {
-                this.props.removeGlobalMessage();
-                this.props.logout(false);
-                this.goToLogin();
-            }
+        switch(actionType) {
+            case GO_TO_LOGIN:
+                action = () => {
+                    this.props.removeGlobalMessage();
+                    this.props.logout(false);
+                    this.goToLogin();
+                };
+                break;
+            
+            case RELOAD_TRADE:
+                action = () => {
+                    this.props.removeGlobalMessage();
+                    if (typeof this.props.sendReloadTrade === 'function') {
+                        this.props.sendReloadTrade();
+                    }
+                };
+                break;
+
+            default:
+                action = () => {};
+                break;
         }
 
         let borderColor = 'black';
-        if (messageType === OK_MESSAGE) {
+        if (messageType === INFO_MESSAGE) {
             borderColor = this.props.muiTheme.palette.primary1Color;
         }
         else if (messageType === WARNING_MESSAGE) {
@@ -79,7 +95,7 @@ export default class GlobalMessage extends React.Component {
                 action={actionText}
                 onActionClick={action}
                 onRequestClose={this.props.removeGlobalMessage}
-                autoHideDuration={messageType === OK_MESSAGE ? 2000 : 0}/>
+                autoHideDuration={messageType === INFO_MESSAGE ? 2000 : 0}/>
         );
     }
 }

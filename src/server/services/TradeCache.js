@@ -60,7 +60,7 @@ class TradeCache {
     }
 
     dump() {
-        console.log('Trades:')
+        console.log('Trades:');
         console.log(JSON.stringify(this.trades, null, 2));
         console.log('');
     }

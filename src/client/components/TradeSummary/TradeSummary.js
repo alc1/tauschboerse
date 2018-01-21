@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 
 import Swap from '../_svg/Swap';
-import ArticleList from '../ArticleList/ArticleList';
+import ArticleRowList from '../ArticleRowList/ArticleRowList';
 
 import './TradeSummary.css';
 
@@ -20,29 +20,47 @@ export default class TradeSummary extends React.Component {
         actions: []
     };
 
-    render() {
-        const { trade, loading, actions } = this.props;
+    createArticleList = (theArticles) => {
+        const { loading } = this.props;
         return (
-            <Paper className="trade-summary">
-                <div className="trade-summary__trade-container">
-                    <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{trade.userArticlesListTitle()}</span>
-                        <ArticleList articles={trade.currentOffer.userArticles} loading={loading} hideCheckbox hideDescription hideOwner hideCreationDate hideStatus/>
+            <ArticleRowList
+                articles={theArticles}
+                loading={loading}
+                emptyText="Keine Artikel gefunden"
+                hideCheckbox
+                hideDescription
+                hideOwner
+                hideCreationDate
+                hideStatus
+                withArticleLink/>
+        );
+    };
+
+    render() {
+        const { trade, actions } = this.props;
+        return (
+            <article className="trade-summary">
+                <Paper className="trade-summary__container">
+                    <div className="trade-summary__trade-container">
+                        <section className="trade-summary__articles-container">
+                            <span className="trade-summary__articles-title">{trade.userArticlesListTitle()}</span>
+                            {this.createArticleList(trade.currentOffer.userArticles)}
+                        </section>
+                        <div className="trade-summary__swap-image-wrapper">
+                            <Paper zDepth={2} circle>
+                                <Swap className="trade-summary__swap-image"/>
+                            </Paper>
+                        </div>
+                        <section className="trade-summary__articles-container">
+                            <span className="trade-summary__articles-title">{trade.partnerArticlesListTitle()}</span>
+                            {this.createArticleList(trade.currentOffer.tradePartnerArticles)}
+                        </section>
                     </div>
-                    <div className="trade-summary__swap-image-wrapper">
-                        <Paper zDepth={2} circle>
-                            <Swap className="trade-summary__swap-image"/>
-                        </Paper>
+                    <div className="trade-summary__button-bar">
+                        {actions}
                     </div>
-                    <div className="trade-summary__articles-container">
-                        <span className="trade-summary__articles-title">{trade.partnerArticlesListTitle()}</span>
-                        <ArticleList articles={trade.currentOffer.tradePartnerArticles} loading={loading} hideCheckbox hideDescription hideOwner hideCreationDate hideStatus/>
-                    </div>
-                </div>
-                <div className="trade-summary__button-bar">
-                    {actions}
-                </div>
-            </Paper>
+                </Paper>
+            </article>
         );
     }
 }

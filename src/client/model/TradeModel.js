@@ -34,10 +34,14 @@ class TradeModel {
     }
 
     get requiresAttention() {
-        return this.isNew
-            || (this.isUserSender && (this.isDeclined || this.isInvalidated))
-            || (this.isUserReceiver && !(this.isDeclined || this.isInvalidated))
+        return (this.isUserSender && this.isOpen && (this.isDeclined || this.isInvalidated))
+            || (this.isUserReceiver && this.isOpen && !(this.isDeclined || this.isInvalidated))
             || (this.isCompleted && !this.userHasDelivered);
+    }
+
+    get openButDoesNotRequireAttention() {
+        return (this.isUserSender && this.isOpen && !(this.isDeclined || this.isInvalidated))
+            || (this.isUserReceiver && this.isOpen && (this.isDeclined || this.isInvalidated));
     }
 
     get isCompleted() {

@@ -83,10 +83,6 @@ class Trade {
 
         return modified;
     }
-
-    canSave() {
-        return (this.user1 != null) && (this.user2 != null) && (this.user1 !== this.user2);
-    }
 }
 
 module.exports = Trade;
