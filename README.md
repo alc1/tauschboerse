@@ -257,17 +257,76 @@ Wir liessen die Applikation auch von echten Benutzern testen. Folgende Punkte wa
 
 ### Use Cases
 
+In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
+
 #### Benutzer
 
 ![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/useCases_user.png "Use Cases: Benutzer")
+
+<dl>
+  <dt>Registrieren</dt>
+  <dd></dd>
+
+  <dt>Login</dt>
+  <dd></dd>
+
+  <dt>Logout</dt>
+  <dd></dd>
+
+  <dt>Profil bearbeiten</dt>
+  <dd></dd>
+
+  <dt>Artikel verwalten</dt>
+  <dd></dd>
+</dl>
 
 #### Marktplatz
 
 ![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/useCases_marktplatz.png "Use Cases: Benutzer")
 
+<dl>
+  <dt>Artikel suchen</dt>
+  <dd></dd>
+
+  <dt>Artikel anschauen</dt>
+  <dd></dd>
+
+  <dt>Tauschgeschäft erstellen</dt>
+  <dd></dd>
+</dl>
+
 #### Tauschgeschäfte
 
 ![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/useCases_trades.png "Use Cases: Tauschgeschäfte")
+
+<dl>
+  <dt>Tauschgeschäft anschauen</dt>
+  <dd></dd>
+
+  <dt>Tauschgeschäft bearbeiten</dt>
+  <dd></dd>
+
+  <dt>Tauschgeschäft löschen</dt>
+  <dd>Ein Tauschgeschäft kann nur gelöscht werden, wenn ein Angebot vorbereitet wird (bevor es gesendet wird). Nur der Ersteller des Angebots kann das Geschäft löschen.</dd>
+
+  <dt>Angebot unterbreiten</dt>
+  <dd>Der Ersteller eines Angebots oder eines Gegenangebots kann dieses dem anderen Beteiligten unterbreiten. In diesem Fall übernimmt der Unterbreiter die Rolle als Sender. Der andere Beteiligter wird automatisch zum Empfänger.</dd>
+
+  <dt>Angebot annehmen</dt>
+  <dd>Der Empfänger des aktuellen Angebots darf das Angebot anehmen. Wenn das Angebot angenommen wird, gilt das Geschäft als erfolgreich abgeschlossen.</dd>
+
+  <dt>Angebot ablehnen</dt>
+  <dd>Der Empfänger des aktuellen Angebots darf das Angebot ablehnen. Wenn das Angebot abgelehnt wird, ist der Sender wieder daran. Er kann entweder ein Gegenangebot erstellen oder das Geschäft abbrechen.</dd>
+
+  <dt>Gegenangebot erstellen</dt>
+  <dd>Ein Gegenangebot kann vom Empfänger des aktuellen Angebots erstellt werden oder vom Sender, falls der Empfänger das Angebot abgelehnt hat oder das Angebot ungültig wird.</dd>
+
+  <dt>Tauschgeschäft abbrechen</dt>
+  <dd>Der Sender des aktuellen Angebots kann das Tauschgeschäft abbrechen. Das Tauschgeschäft ist dann beendet und kann nicht mehr weitergeführt werden. Das Tauschgeschäft erscheint bei beiden Beteiligten in der Liste der abgebrochenen Geschäfte.</dd>
+
+  <dt>Artikel zustellen</dt>
+  <dd>Wenn ein Tauschgeschäft erfolreich abgeschlossen werden kann, können die Beteiligten im Tauschgeschäft vermerken, dass sie die jeweiligen Artikel den anderen ausgeliefert haben.</dd>
+</dl>
 
 ### State Diagrams (Trade)
 
