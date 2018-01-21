@@ -382,6 +382,8 @@ Datenänderungen werden vom Cache automatisch in nedb persistiert - die Daten we
 
 ![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/LogicalModel.png "Datenmodell")
 
+Obwohl <code>Offer</code> als Entität dargestellt wird, werden die Angebote jeweils in einem Array-Property der zugehörigen Tauschgeschäft (Trade) gehalten. Darum hat die Entität Offer kein _id Property.
+
 # Rückblick
 
 ## Gut gelöst
