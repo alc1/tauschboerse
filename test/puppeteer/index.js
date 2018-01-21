@@ -90,7 +90,7 @@ const screenshotsToCompare = [
 
     // Go to the dashboard and to user trades
     await page.click('.app-title__main');
-    await page.waitFor(1000);
+    await page.waitFor(2000);
     await page.click('button[data-button-id="user-trades"]');
     await page.waitFor(2000);
     await page.screenshot({

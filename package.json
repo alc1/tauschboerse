@@ -75,8 +75,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test-e2e": "./node_modules/.bin/wdio ./test/config/wdio.conf.js",
+    "test-ppt": "node ./test/puppeteer/index.js",
     "test-css": "./node_modules/.bin/stylelint ./src/**/*.css",
-    "test-pt": "node ./test/puppeteer/index.js",
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:3001"
