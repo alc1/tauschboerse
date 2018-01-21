@@ -59,14 +59,9 @@ async function deleteArticleById(req, res) {
             }
         }
         else if (article.status === ArticleStatus.STATUS_FREE) {
-            dataCache.deleteArticleById(articleId)
-                .then(() => {
-                    photosController.deleteAllPhotosForArticle(articleId);
-                    res.json({ isDeleted: true, articleId });
-                })
-                .catch(() => {
-                    throw new Error('Unbekannter Server-Fehler');
-                });
+            await dataCache.deleteArticleById(articleId);
+            photosController.deleteAllPhotosForArticle(articleId);
+            res.json({ isDeleted: true, articleId });
         }
         else {
             res.json({ isDeleted: false, articleId });
