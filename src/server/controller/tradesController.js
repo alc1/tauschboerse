@@ -284,7 +284,6 @@ function setTradeState(req, res) {
     }
 }
 
-
 function getUserTrades(userId, tailorOffers = true) {
     let trades = dataCache.getTradesByUser(userId)
         // if trade hasn't been started yet, it is only visible to user1
@@ -306,13 +305,11 @@ function getUserTrades(userId, tailorOffers = true) {
     return trades;
 }
 
-
 function getTradesByUser(req, res) {
     const { userId } = req.params;
     let trades = getUserTrades(userId);
     res.json({ trades: trades });
 }
-
 
 function getTradesVersionByUser(req, res) {
     const { userId } = req.params;
@@ -320,12 +317,10 @@ function getTradesVersionByUser(req, res) {
     res.json({ versionstamp: trades.reduce((highest, trade) => Math.max(trade.versionstamp, highest), 0) });
 }
 
-
 function getTrades(req, res) {
     let trades = getUserTrades(req.user._id);
     res.json({ trades: trades });
 }
-
 
 function getTrade(req, res) {
     try {

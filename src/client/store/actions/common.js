@@ -57,7 +57,7 @@ const getErrorMessage = (error) => {
             return 'Dieser Status des Tauschgeschäfts wird nicht unterstützt.';
         }
         else if (error.response.data === ErrorCode.TRADE_NO_TRADE_PARTNER_FOUND) {
-            return 'Es wurden keine Parteien im Tauschgeschäft gefunden.';//At least one article must belong to someone other than the caller
+            return 'Es wurden keine Parteien im Tauschgeschäft gefunden.';
         }
     }
     return error.response.statusText;

@@ -18,6 +18,7 @@ import {
     ARTICLE_DELETED,
     articleDeleted
 } from '../actions/article';
+
 import userReducer, { initialState } from './user';
 import UserArticlesInfo from '../../model/UserArticlesInfo';
 

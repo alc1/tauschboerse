@@ -16,4 +16,8 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { checkForNewTrades, loadUserArticles, loadUserTrades })(Dashboard);
+export default connect(mapStateToProps, {
+    checkForNewTrades,
+    loadUserArticles,
+    loadUserTrades
+})(Dashboard);

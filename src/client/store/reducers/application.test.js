@@ -108,11 +108,20 @@ describe('Application Reducer', () => {
             expect(startingState).toEqual(startingStateCopy);
         });
         test('Decrease loading counter when it is already 0 should not change the state and leave a message in the console', () => {
+            let consoleSpy = jest.spyOn(console, 'error');
+            consoleSpy.mockImplementation((theLogMessage) => {
+                expect(theLogMessage).toBe('loadingCounter mismatch detected! Are your setLoadingState calls balanced?');
+            });
+
             const startingState = { ...initialState, isLoading: false, loadingCounter: 0 };
             const startingStateCopy = { ...startingState };
             const endState = applicationReducer(startingState, loadingStateReceived(false));
             expect(endState).toBe(startingState);
             expect(endState).toEqual(startingStateCopy);
+            expect(consoleSpy).toHaveBeenCalledTimes(1);
+
+            consoleSpy.mockReset();
+            consoleSpy.mockRestore();
         });
     });
 

@@ -16,7 +16,7 @@ describe('Marketplace Reducer', () => {
 
     describe(`Action ${ARTICLES_FOUND}`, () => {
         test('', () => {
-            const searchText = 'abcd'
+            const searchText = 'abcd';
             const articles = [createTable()];
             const userArticles = [createFootball()];
             const newState = marketplaceReducer(initialState, articlesFound(searchText, articles, userArticles));
@@ -27,7 +27,7 @@ describe('Marketplace Reducer', () => {
 
     describe(`Action ${LAST_SEARCH_CLEARED}`, () => {
         test('', () => {
-            const searchText = 'abcd'
+            const searchText = 'abcd';
             const articles = [createTable()];
             const userArticles = [createFootball()];
             const searchedState = marketplaceReducer(initialState, articlesFound(searchText, articles, userArticles));

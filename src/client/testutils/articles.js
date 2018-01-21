@@ -3,7 +3,7 @@ import { toBase26 } from './common';
 
 export const createArticle = (id, title, description) => {
     return new TestArticle(id, title, description);
-}
+};
 
 export const createBasketball = () => {
     return createArticle(3, 'Basketball', 'Ein Ball zum Basketballspielen');

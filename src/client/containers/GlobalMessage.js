@@ -16,4 +16,8 @@ function mapStateToProps(theState) {
     };
 }
 
-export default withRouter(connect(mapStateToProps, { logout, removeGlobalMessage, sendReloadTrade })(muiThemeable()(GlobalMessage)));
+export default withRouter(connect(mapStateToProps, {
+    logout,
+    removeGlobalMessage,
+    sendReloadTrade
+})(muiThemeable()(GlobalMessage)));

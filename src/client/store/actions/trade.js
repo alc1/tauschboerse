@@ -47,7 +47,7 @@ export const newTradeVersionAvailable = () => ({
 
 export const reloadTradeReceived = () => ({
     type: TRADE_RELOAD
-})
+});
 
 export const tradeDeleted = () => ({
     type: TRADE_DELETED
@@ -112,9 +112,9 @@ export const checkForUpdatedTrade = () => (dispatch, getState) => {
                 }
             });
     } else {
-        return Promise.reolve(false);
+        return Promise.resolve(false);
     }
-}
+};
 
 export const sendReloadTrade = () => (dispatch) => dispatch(reloadTradeReceived());
 
@@ -163,7 +163,7 @@ export const deleteTrade = () => (dispatch, getState) => {
     return axios.delete(`/api/trades/${trade._id}`)
         .then(response => dispatch(response.data.trade ? tradeFetched(new TradeModel(response.data.trade, user)) : tradeDeleted()))
         .catch(err => handleError(err, dispatch))
-}
+};
 
 export const submitTrade = () => (dispatch, getState) => setTradeState('REQUESTED', dispatch, getState);
 

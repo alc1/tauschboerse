@@ -16,4 +16,9 @@ function mapStateToProps(theState) {
     };
 }
 
-export default connect(mapStateToProps, { loadUserArticles, filterUserArticles, loadArticle, deleteArticle })(UserArticlesPage);
+export default connect(mapStateToProps, {
+    loadUserArticles,
+    filterUserArticles,
+    loadArticle,
+    deleteArticle
+})(UserArticlesPage);
