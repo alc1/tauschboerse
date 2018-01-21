@@ -5,7 +5,7 @@ const initDataCache = require('./services/DataCache').initDataCache;
 env(path.join(__dirname, 'config.env'));
 
 const isProd = (process.argv.length > 2) && (process.argv[2].toLowerCase() === 'prod');
-const webroot = path.join(__dirname, isProd ? process.env.WEBROOT_PROD : process.env.WEBROOT);
+const webroot = path.join(__dirname, isProd ? process.env.WEBROOT_PROD : process.env.WEBROOT_DEV);
 
 initDataCache(true, webroot)
 .then(() => {
