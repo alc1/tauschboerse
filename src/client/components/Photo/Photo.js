@@ -41,7 +41,7 @@ export default class Photo extends React.Component {
                     className={imageClassName}
                     style={imageStyle}
                     src={photo.isNew ? photo.fileContent : photo.url}
-                    alt={photo.fileName}
+                    alt={photo.title ? photo.title : photo.fileName}
                     onClick={this.onOpenPhoto.bind(this, mainPhotoIndex)}/>
                 <PhotoLightbox
                     isPhotoLightboxOpen={isPhotoLightboxOpen}
