@@ -19,7 +19,10 @@
     - [a) Unit Tests](#a-unit-tests)
       - [Tests für die Reducers (Redux)](#tests-f%C3%BCr-die-reducers-redux)
       - [Tests für die React-Komponenten](#tests-f%C3%BCr-die-react-komponenten)
+      - [Tests für clientseitige Modellklassen](#tests-für-clientseitige-modellklassen)
     - [b) End-to-End Tests](#b-end-to-end-tests)
+      - [WebdriverIO/Selenium](#webdriverio-selenium)
+      - [Puppeteer](#puppeteer)
     - [c) CSS Style Tests](#c-css-style-tests)
     - [d) Echte Benutzertests](#d-echte-benutzertests)
   - [Implementierungsdetails](#implementierungsdetails)
@@ -170,14 +173,14 @@ Anders als beim Starten des Entwicklungsservers muss die Frontend-Anwendung stat
 npm run build
 ```
 
-Sind Test-Daten erwünscht kann mit dem Befehl
+Falls Testdaten erwünscht sind, kann mit dem Befehl ...
 
 ```bash
 npm run reset-data-prod
 ```
 
-die Datenbank mit Test-Daten initialisiert. Mit den Test-Daten werden die folgenden fünf Benutzer registriert:
-+ calbiez@hsr
+... die Datenbank mit Testdaten initialisiert werden. Mit den Testdaten werden die folgenden fünf Benutzer registriert:
++ calbiez@hsr.ch
 + stephen.atchison@hsr.ch
 + max@mustermann.com
 + jamesbond007@agent.com
@@ -215,13 +218,21 @@ Da die Reducers "pure functions" sind, sind sie mit normalen Unit Tests einfach 
 
 Es gibt verschiedenste Möglichkeiten, wie man React-Komponenten testen kann. Wir haben sogenannte "shallow" und "snapshot" Tests umgesetzt.
 
+#### Tests für clientseitige Modellklassen
+
+Für die die meisten clientseitigen Modellklassen haben wir ebenfalls Unit Tests implementiert.
+
 ### b) End-to-End Tests
 
-Mit vollautomatisierten End-to-End Tests kann ein ganzer Workflow von Benutzerinteraktionen ausgeführt und auf richtiges Verhalten getestet werden. Wir haben dafür Selenium/Webdriver verwendet und damit den Login- und den Registrierungsprozess abgedeckt.
+Mit vollautomatisierten End-to-End Tests kann ein ganzer Workflow von Benutzerinteraktionen ausgeführt und auf richtiges Verhalten getestet werden. Wir haben dazu zwei Möglichkeiten umgesetzt. Erstens mit WebdriverIO/Selenium und zweitens mit Puppeteer.
+
+#### WebdriverIO/Selenium
+
+Mit WebdriverIO/Selenium haben wir den Login- und den Registrierungsprozess abgedeckt.
 
 Folgende Bedingungen müssen erfüllt sein, damit diese Tests funktionieren:
-* Der Web-Server und der API-Server müssen laufen auf <code>http://localhost:3000</code> und <code>http://localhost:3001</code>.
-* Der Benutzer mit der E-Mail-Adresse "max@mustermann.com" muss mit dem Passwort "max" vorhanden sein (dieser wird automatisch mit den Testdaten eingespielt).
+* Die Applikation muss laufen auf <code>http://localhost:3000</code>.
+* Der Benutzer mit der E-Mail-Adresse "max@mustermann.com" muss mit dem Passwort "1234" vorhanden sein (dieser wird automatisch mit den Testdaten eingespielt).
 * Der Chrome Browser muss installiert sein (die E2E-Tests sind so konfiguriert, dass sie diesen Browser verwenden).
 * Eine Java Runtime Environment muss installiert sein (Selenium ist in Java geschrieben und benötigt darum eine Java JRE).
 
@@ -234,6 +245,18 @@ npm run test-e2e
 ```
 
 Bei fehlgeschlagenen Tests wird ein Screenshot gemacht und im Verzeichnis <code>./test/wdioErrorShots/</code> gespeichert.
+
+#### Puppeteer
+
+Mit Puppeteer wird auf verschiedene Seiten der Applikation navigiert und jeweils ein Screenshot gemacht, der später mit einem Referenz-Bild verglichen wird. Im Gegensatz zu den WebdriverIO/Selenium-Tests wird bei diesem Test kein Browser-Fenster geöffnet (headless).
+
+Folgende Bedingungen müssen erfüllt sein, damit dieser Tests funktioniert:
+* Die Applikation muss laufen auf <code>http://localhost:3000</code>.
+* Der Benutzer mit der E-Mail-Adresse "max@mustermann.com" muss mit dem Passwort "max" vorhanden sein (dieser wird automatisch mit den Testdaten eingespielt) und dieser Benutzer muss genau den initialen Stand aus den Testdaten haben.
+
+```bash
+npm run test-ppt
+```
 
 ### c) CSS Style Tests
 
@@ -299,7 +322,8 @@ Wir liessen die Applikation auch von echten Benutzern testen. Folgende Punkte wa
 
 * **Komponenten-Strukturierung (technisch):**
   * Aufteilung in sinnvolle Komponenten
-  * Und dadurch starke Kohäsion (Single Responsibility Prinzip) 
+  * Und dadurch starke Kohäsion (Single Responsibility Prinzip)
+  * Umsetzung des Patterns mit Container und Presentational Components
 * **Route Protection (Authentication):**
   * Mit generischen Routing-Komponenten sind die Routen abgesichert, so dass nur der richtige Benutzer die Seite anschauen darf.
   * Greift Benutzer auf einen Link zu, dessen Inhalt er nicht sehen darf, erscheint eine Meldung und er wird auf sein Dashboard umgeleitet.
