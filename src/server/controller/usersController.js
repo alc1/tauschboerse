@@ -76,7 +76,6 @@ function updateUser(req, res) {
 }
 
 function createToken(theUserId, theGender, theName, theEmail, theAddress, theRegistrationDate) {
-    console.log(`Create token for user ID [${theUserId}], gender [${theGender}], name [${theName}], email [${theEmail}], registration [${theRegistrationDate}]`);
     return tokenUtils.sign({
         _id: theUserId,
         gender: theGender,
