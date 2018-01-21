@@ -7,18 +7,6 @@ function getAllCategories(req, res) {
     res.json({ categories : categories || [] });
 }
 
-function getCategory(req, res) {
-    const { categoryId } = req.params;
-    const category = dataCache.getCategory(categoryId);
-    if (category) {
-        res.json({ category });
-    }
-    else {
-        res.status(404).json({ globalError: `Kategorie [${categoryId}] nicht gefunden` });
-    }
-}
-
 module.exports = {
-    getAllCategories,
-    getCategory
+    getAllCategories
 };
