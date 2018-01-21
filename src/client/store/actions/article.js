@@ -97,9 +97,9 @@ export const createArticle = (article, photos) => dispatch => {
         });
 };
 
-export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (dispatch, getState) => {
+export const updateArticle = (article, addedPhotos, removedPhotos) => (dispatch, getState) => {
     dispatch(loadingStateReceived(true));
-    return axios.put(`/api/users/${ownerId}/articles/${article._id}`, { article })
+    return axios.put(`/api/articles/${article._id}`, { article })
         .then(async articleResponse => {
             if (addedPhotos.length > 0 || removedPhotos.length > 0) {
                 let lastSuccessfulResult;
@@ -150,8 +150,8 @@ export const updateArticle = (ownerId, article, addedPhotos, removedPhotos) => (
         });
 };
 
-export const deleteArticle = (ownerId, articleId) => (dispatch, getState) =>
-    axios.delete(`/api/users/${ownerId}/articles/${articleId}`)
+export const deleteArticle = (articleId) => (dispatch, getState) =>
+    axios.delete(`/api/articles/${articleId}`)
         .then(response => {
             if (response.data.isDeleted) {
                 if (response.data.articleId) {

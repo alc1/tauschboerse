@@ -170,7 +170,6 @@ export default class ArticleFormPage extends React.Component {
 
     onSubmit = (theEvent) => {
         theEvent.preventDefault();
-        const { user } = this.props;
         const { title, description, categories, photos, status, created, addedPhotos, removedPhotos } = this.state;
         const { articleId } = this.props.match.params;
         let articleToSave = { title, description, categories, photos };
@@ -181,7 +180,7 @@ export default class ArticleFormPage extends React.Component {
                 articleToSave._id = articleId;
                 articleToSave.status = status;
                 articleToSave.created = created;
-                articleSaveRequest = this.props.updateArticle(user._id, articleToSave, addedPhotos, removedPhotos)
+                articleSaveRequest = this.props.updateArticle(articleToSave, addedPhotos, removedPhotos)
                     .then(response => {
                         this.resetArticleInState(response.article);
                     });

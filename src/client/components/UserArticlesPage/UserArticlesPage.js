@@ -100,7 +100,7 @@ export default class UserArticlesPage extends React.Component {
 
     deleteArticle = (theArticle) => {
         this.closeDeleteDialog();
-        this.props.deleteArticle(theArticle.owner._id, theArticle._id);
+        this.props.deleteArticle(theArticle._id);
     };
 
     createArticleAction = (label, icon, onClick, isPrimary, isSecondary, isRaised, isDisabled) => {

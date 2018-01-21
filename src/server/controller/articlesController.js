@@ -9,8 +9,9 @@ const commonController = require('./commonController');
 const ArticleStatus = require('../../shared/constants/ArticleStatus');
 const TradeState = require('../../shared/constants/TradeState');
 const Photo = require('../model/Photo');
-
 const filterArticles = require('../../shared/filterArticles');
+
+const ParameterValidationError = require('../utils/ParameterValidationError');
 
 const dataCache = require('../services/DataCache').dataCache;
 
@@ -39,9 +40,12 @@ function getArticleById(req, res) {
 }
 
 async function deleteArticleById(req, res) {
-    const { articleId } = req.params;
-    const article = dataCache.getArticleById(articleId);
-    if (article) {
+    try {
+        const { articleId } = req.params;
+
+        // check article exists - we decided against allowing not-existing articles to be created this way
+        const article = checkUserOwnsArticle(articleId, req.user._id, `Artikel [${articleId}] darf nicht gelöscht werden`);
+
         if (dataCache.isArticleUsed(article._id) && article.status !== ArticleStatus.STATUS_DEALED && article.status !== ArticleStatus.STATUS_DELETED) {
             let articleToSave = dataCache.prepareArticle(article, req.user);
             articleToSave.status = ArticleStatus.STATUS_DELETED;
@@ -51,7 +55,7 @@ async function deleteArticleById(req, res) {
                 res.json({ isDeleted: true, article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
             }
             else {
-                res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
+                throw new Error('Unbekannter Server-Fehler');
             }
         }
         else if (article.status === ArticleStatus.STATUS_FREE) {
@@ -61,15 +65,14 @@ async function deleteArticleById(req, res) {
                     res.json({ isDeleted: true, articleId });
                 })
                 .catch(() => {
-                    res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
+                    throw new Error('Unbekannter Server-Fehler');
                 });
         }
         else {
             res.json({ isDeleted: false, articleId });
         }
-    }
-    else {
-        res.status(404).json({ globalError: 'Der zu löschende Artikel wurde nicht gefunden.' });
+    } catch(e) {
+        handleError(e, res);
     }
 }
 
@@ -93,22 +96,30 @@ async function createArticle(req, res) {
 }
 
 async function updateArticle(req, res) {
-    const { articleId } = req.params;
-    const { article } = req.body;
-    const validation = articleUpdaterValidator.validate(articleId, article);
-    if (validation.success) {
+    try {
+        const { articleId } = req.params;
+        const { article } = req.body;
+
+        // check article exists - we decided against allowing not-existing articles to be created this way
+        checkUserOwnsArticle(articleId, req.user._id, `Artikel [${articleId}] darf nicht verändert werden`);
+
+        // validate new values
+        const validation = articleUpdaterValidator.validate(articleId, article);
+        if (!validation.success) {
+            throw new ParameterValidationError(validation.status, validation.globalError, validation.errors);
+        }
+
         await createNewCategories(article);
         const preparedArticle = dataCache.prepareArticle(article, req.user);
         const savedArticle = await dataCache.saveArticle(preparedArticle);
-        if (savedArticle) {
-            res.json({ article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
+        if (!savedArticle) {
+            throw new ParameterValidationError(500, 'Unbekannter Server-Fehler');
         }
-        else {
-            res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
-        }
-    }
-    else {
-        res.status(validation.status).json({ errors: validation.errors, globalError: validation.globalError });
+
+        // success
+        res.json({ article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
+    } catch(e) {
+        handleError(e, res);
     }
 }
 
@@ -137,17 +148,15 @@ function findArticles(req, res) {
 }
 
 async function addPhoto(req, res) {
-    const { articleId } = req.params;
-    const { photo } = req.body;
-    let article = dataCache.getArticleById(articleId);
-    if (article) {
-        let newFileName;
-        try {
-            newFileName = photosController.addPhotoForArticle(articleId, photo);
-        } catch (error) {
-            res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
-            return;
-        }
+    try {
+        const { articleId } = req.params;
+
+        // check article exists - we decided against allowing not-existing articles to be created this way
+        let article = checkUserOwnsArticle(articleId, req.user._id, `Artikel [${articleId}] darf nicht verändert werden`);
+
+        const { photo } = req.body;
+
+        let newFileName = photosController.addPhotoForArticle(articleId, photo);
         const isNewMainPhoto = photo.isMain;
         let photos = article.photos.map(photo => {
             if (isNewMainPhoto) {
@@ -163,18 +172,20 @@ async function addPhoto(req, res) {
             res.json({ article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
         }
         else {
-            res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
+            throw new Error('Unbekannter Server-Fehler');
         }
-    }
-    else {
-        res.status(404).json({ globalError: 'Der Artikel wurde nicht gefunden.' });
+    } catch(e) {
+        handleError(e, res);
     }
 }
 
 async function deletePhoto(req, res) {
-    const { articleId, fileName } = req.params;
-    let article = dataCache.getArticleById(articleId);
-    if (article) {
+    try {
+        const { articleId, fileName } = req.params;
+
+        // check article exists - we decided against allowing not-existing articles to be created this way
+        let article = checkUserOwnsArticle(articleId, req.user._id, `Artikel [${articleId}] darf nicht verändert werden`);
+
         let photos = article.photos.filter(photo => photo.fileName !== fileName);
         let articleToSave = dataCache.prepareArticle(article, req.user);
         articleToSave.photos = photos;
@@ -184,11 +195,10 @@ async function deletePhoto(req, res) {
             res.json({ article: savedArticle, trades: getTradesIfAllowed(req.user, articleId) });
         }
         else {
-            res.status(500).json({ globalError: 'Unbekannter Server-Fehler' });
+            throw new Error('Unbekannter Server-Fehler');
         }
-    }
-    else {
-        res.status(404).json({ globalError: 'Der Artikel wurde nicht gefunden.' });
+    } catch(e) {
+        handleError(e);
     }
 }
 
@@ -213,6 +223,28 @@ function getTradesIfAllowed(theRequestingUser, theArticleId) {
         return trades.filter(trade => ((trade.state === TradeState.TRADE_STATE_INIT) && (trade.user1._id === theRequestingUser._id)) || (trade.state !== TradeState.TRADE_STATE_INIT));
     }
     return null;
+}
+
+function checkUserOwnsArticle(articleId, userId, errorText) {
+    const article = dataCache.getArticleById(articleId);
+    if (!article) {
+        throw new ParameterValidationError(404, `Artikel [${articleId}] nicht gefunden`);
+    }
+
+    // check user owns this article
+    if (article.owner._id !== userId) {
+        throw new ParameterValidationError(403, errorText);
+    }
+
+    return article;
+}
+
+function handleError(e, res) {
+    if (e instanceof ParameterValidationError) {
+        res.status(e.statusCode).json({ errors: e.errors, globalError: e.message});
+    } else {
+        res.status(500).json({ globalError: e.message});
+    }
 }
 
 module.exports = {
