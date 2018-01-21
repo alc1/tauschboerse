@@ -34,18 +34,8 @@
       - [Tauschgeschäft (Trade)](#tauschgesch%C3%A4ft-trade)
       - [Angebot (Offer)](#angebot-offer)
       - [Artikel](#artikel)
-    - [Server](#server)
-      - [API](#api)
-        - [Articles](#articles)
-        - [Categories](#categories)
-        - [trades](#trades)
-        - [users](#users)
-          - [GET /api/users](#get-apiusers)
-          - [POST /api/users](#post-apiusers)
-          - [GET /api/{user id}](#get-apiuser-id)
-          - [PUT /api/](#put-api)
-      - [Datenbank](#datenbank)
-        - [Logisches Datenmodell](#logisches-datenmodell)
+    - [Datenhaltung](#datenhaltung)
+    - [Logisches Datenmodell](#logisches-datenmodell)
 - [Rückblick](#r%C3%BCckblick)
   - [Gut gelöst](#gut-gel%C3%B6st)
   - [Das nächste Mal anders](#das-n%C3%A4chste-mal-anders)
@@ -380,29 +370,15 @@ Der Zustand eines Angebots wird in erster Linie durch direktes Handeln der beide
 
 Die Zustände der Artikel werden einerseits durch direktes Handeln der Artikelbesitzer geändert (Löschen), aber auch durch das Aufnehmen und das Wiederentfern in Tauschangebote (DEALING und DEALED).
 
-### Server
+### Datenhaltung
 
-#### API
+Für dieses Projekt wurde viel Gewicht auf eine möglichst einfach aufbaubarer Entwicklungs- und Laufzeitumgebung. Der Einsatz eines DBMS hätte diese von uns gestellte Anforderung zu erreichen erschwert. Wir haben uns für <code>nedb</code> entschieden, da diese einfach gestaltet ist. Wir haben bewusst, auf die komfortableren Funktionen eines DBMS wie das Schützen der Datenintegrität wie auch die Macht von SQL verzichtet.
 
-##### Articles
+Nach kurzer Zeit ist uns aufgefallen, dass nedb auf asynchrone Methoden (Callbacks) setzt. Dies hat und dazu gebracht, alle Daten beim Starten des Servers in einer in-memory Cache zu laden und zu halten. Somit konnten Lesezugriffe synchron durchgeführt werden und das Auflösen der Referenzen wird vom Cache automatisch durchgeführt (Startvorgang des Servers).
 
-##### Categories
+Datenänderungen werden vom Cache automatisch in nedb persistiert - die Daten werden vom Cache normalisiert und entsprechend in nedb gespeichert.
 
-##### trades
-
-##### users
-
-###### GET /api/users
-
-###### POST /api/users
-
-###### GET /api/{user id}
-
-###### PUT /api/
-
-#### Datenbank
-
-##### Logisches Datenmodell
+### Logisches Datenmodell
 
 ![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/LogicalModel.png "Datenmodell")
 
