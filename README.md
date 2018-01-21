@@ -19,7 +19,7 @@
     - [a) Unit Tests](#a-unit-tests)
       - [Tests für die Reducers (Redux)](#tests-f%C3%BCr-die-reducers-redux)
       - [Tests für die React-Komponenten](#tests-f%C3%BCr-die-react-komponenten)
-      - [Tests für clientseitige Modellklassen](#tests-für-clientseitige-modellklassen)
+      - [Tests für clientseitige Modellklassen](#tests-f%C3%BCr-clientseitige-modellklassen)
     - [b) End-to-End Tests](#b-end-to-end-tests)
       - [WebdriverIO/Selenium](#webdriverioselenium)
       - [Puppeteer](#puppeteer)
@@ -312,13 +312,13 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
 
 <dl>
   <dt>Artikel suchen</dt>
-  <dd></dd>
+  <dd>Artikel können mittels Suchbegriffe gesucht werden. Das System stellt eine Liste der Artikel dar, die entweder ein oder mehr der Suchbegriffe im Titel und/oder in der Beschreibung haben, oder falls ein oder mehr der begriffe Kategorienamen sind, die Artikel, die diesen Kategorien zugeordnet sind.</dd>
 
   <dt>Artikel anschauen</dt>
-  <dd></dd>
+  <dd>Die Details eines ausgewählten Artikels können angesehen werden. Um die Details eines Artikals anzuschauen, muss der Benutzer nicht eingeloggt sein.</dd>
 
   <dt>Tauschgeschäft erstellen</dt>
-  <dd></dd>
+  <dd>Wenn ein Artikel ausgewählt wird, kann ein neues Tauschgeschäft für den Artikel erstellt werden. Bedingung ist, dass der Benutzer eingeloggt ist und der Artikel gehört ihm nicht.</dd>
 </dl>
 
 #### Tauschgeschäfte
@@ -327,13 +327,13 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
 
 <dl>
   <dt>Tauschgeschäft anschauen</dt>
-  <dd></dd>
+  <dd>Die Beteiligten eines Tauschgeschäftes dürfen die Details des Tauschgeschäftes anschauen.</dd>
 
   <dt>Tauschgeschäft bearbeiten</dt>
-  <dd></dd>
+  <dd>Das Bearbeiten eines Tauschgeschäfts entspricht das Erstellen oder Bearbeiten eines Angebots. Wenn ein Tauschgeschäft neu erstellt wird, wird es direkt bearbeitet. Bevor das erste Angebot unterbreitet wird, kann das Geschäft bzw. das erste Angebot beliebig bearbeitet werden. Nach dem Senden eines Angebots kann der Empfänger das Geschäft bearbeiten. In diesem Fall wird ein Gegenangebot erstellt. Wird das Angebot vom Empfänger abgelehnt oder wird das Angebot ungültig, darf der Sender das Geschäft bearbeiten. Auch in diesem Fall wird ein Gegenangebot erstellt.</dd>
 
   <dt>Tauschgeschäft löschen</dt>
-  <dd>Ein Tauschgeschäft kann nur gelöscht werden, wenn ein Angebot vorbereitet wird (bevor es gesendet wird). Nur der Ersteller des Angebots kann das Geschäft löschen.</dd>
+  <dd>Ein Tauschgeschäft kann nur gelöscht werden, wenn ein Angebot vorbereitet wird (bevor es gesendet wird). Nur der Ersteller des Angebots kann das Geschäft löschen. Ist noch kein Angebot gesendet worden, wird das ganze Tauschgeschäft physisch gelöscht. Wenn mindestens ein Angebot unterbreitet wurde, wird nur das neu erstellte Gegenangebot gelöscht.</dd>
 
   <dt>Angebot unterbreiten</dt>
   <dd>Der Ersteller eines Angebots oder eines Gegenangebots kann dieses dem anderen Beteiligten unterbreiten. In diesem Fall übernimmt der Unterbreiter die Rolle als Sender. Der andere Beteiligter wird automatisch zum Empfänger.</dd>
