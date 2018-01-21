@@ -1,3 +1,3 @@
 import 'core-js/fn/array/find';
-import 'core-js/fn/array/findIndex';
+import 'core-js/fn/array/find-index';
 import 'core-js/fn/array/includes';
