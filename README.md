@@ -1,27 +1,31 @@
 # Inhaltsverzeichnis
-* [Inhaltsverzeichnis](#inhaltsverzeichnis)
-* [Tauschbörse](#tauschbörse)
-  * [Module/Features](#modulefeatures)
-    * [Anforderungen](#anforderungen)
-    * [Optionale Ideen](#optionale-ideen)
-    * [Implementierte Zusatzmodule/-funktionen](#implementierte-zusatzmodule-funktionen)
-  * [Setup](#setup)
-    * [Installation](#installation)
-    * [Testdaten](#testdaten)
-  * [Applikation starten](#applikation-starten)
-    * [1) API-Server starten](#1-api-server-starten)
-    * [2) Web-Server starten](#2-web-server-starten)
-  * [Tests](#tests)
-    * [a) Unit Tests](#a-unit-tests)
-      * [Tests für die Reducers (Redux)](#tests-für-die-reducers-redux)
-      * [Tests für die React-Komponenten](#tests-für-die-react-komponenten)
-    * [b) End-to-End Tests](#b-end-to-end-tests)
-    * [c) CSS Style Tests](#c-css-style-tests)
-    * [d) Echte Benutzertests](#d-echte-benutzertests)
-* [Rückblick](#rückblick)
-  * [Gut gelöst](#gut-gelöst)
-  * [Das nächste Mal anders](#das-nächste-mal-anders)
-  * [Gelernt](#gelernt)
+- [Inhaltsverzeichnis](#inhaltsverzeichnis)
+- [Tauschbörse](#tauschb%C3%B6rse)
+  - [Module/Features](#modulefeatures)
+    - [Anforderungen](#anforderungen)
+    - [Optionale Ideen](#optionale-ideen)
+    - [Implementierte Zusatzmodule/-funktionen](#implementierte-zusatzmodule-funktionen)
+  - [Setup](#setup)
+    - [Installation](#installation)
+    - [Testdaten](#testdaten)
+  - [Applikation starten](#applikation-starten)
+    - [Entwicklung](#entwicklung)
+      - [1) API-Server starten](#1-api-server-starten)
+      - [2) Web-Server starten](#2-web-server-starten)
+    - [Produktion](#produktion)
+      - [1) Vorbereiten](#1-vorbereiten)
+      - [2) Web-Server starten](#2-web-server-starten)
+  - [Tests](#tests)
+    - [a) Unit Tests](#a-unit-tests)
+      - [Tests für die Reducers (Redux)](#tests-f%C3%BCr-die-reducers-redux)
+      - [Tests für die React-Komponenten](#tests-f%C3%BCr-die-react-komponenten)
+    - [b) End-to-End Tests](#b-end-to-end-tests)
+    - [c) CSS Style Tests](#c-css-style-tests)
+    - [d) Echte Benutzertests](#d-echte-benutzertests)
+- [Rückblick](#r%C3%BCckblick)
+  - [Gut gelöst](#gut-gel%C3%B6st)
+  - [Das nächste Mal anders](#das-n%C3%A4chste-mal-anders)
+  - [Gelernt](#gelernt)
 
 # Tauschbörse
 
@@ -112,7 +116,7 @@ npm install
 
 ### Testdaten
 
-Wir stellen Testdaten zur Verfügung, welche mit dem folgenden Kommando eingespielt werden können. Achtung: Dabei werden bestehende Daten gelöscht, so dass nur die Testdaten in der Datenbank vorhanden sind. Es wird empfohlen dies bei gestopptem API-Server auszuführen.
+Wir stellen Testdaten zur Verfügung, welche mit dem folgenden Kommando eingespielt werden können. Achtung: Dabei werden bestehende Daten gelöscht, so dass nur die Testdaten in der Datenbank vorhanden sind. Es wird dringend empfohlen dies bei gestopptem API-Server auszuführen.
 
 ```bash
 npm run reset-data
@@ -120,7 +124,9 @@ npm run reset-data
 
 ## Applikation starten
 
-### 1) API-Server starten
+### Entwicklung
+
+#### 1) API-Server starten
 
 ```bash
 npm run start-server
@@ -128,10 +134,43 @@ npm run start-server
 
 Der API-Server läuft nun auf <code>http://localhost:3001</code>.
 
-### 2) Web-Server starten
+#### 2) Web-Server starten
 
 ```bash
 npm run start
+```
+
+Der Web-Server läuft nun auf <code>http://localhost:3000</code> und die Applikation kann über diese Adresse im Browser gestartet werden.
+
+### Produktion
+
+#### 1) Vorbereiten
+
+Anders als beim Starten des Entwicklungsservers muss die Frontend-Anwendung statisch gebündelt werden. Dazu kann der folgende Befehl verwendet werden:
+
+```bash
+npm run build
+```
+
+Sind Test-Daten erwünscht kann mit dem Befehl
+
+```bash
+npm run reset-data-prod
+```
+
+die Datenbank mit Test-Daten initialisiert. Mit den Test-Daten werden die folgenden fünf Benutzer registriert:
++ calbiez@hsr
++ stephen.atchison@hsr.ch
++ max@mustermann.com
++ jamesbond007@agent.com
++ mgfeller@hsr.ch
+
+Diese Benutzer haben alle das gleiche Passwort, nämlich **1234**.
+
+#### 2) Web-Server starten
+
+```bash
+npm run start-server-prod
 ```
 
 Der Web-Server läuft nun auf <code>http://localhost:3000</code> und die Applikation kann über diese Adresse im Browser gestartet werden.
