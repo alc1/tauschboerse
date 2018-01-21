@@ -54,9 +54,9 @@ class DataCache {
         return this.__webrootDir;
     }
 
-    /*
-     * Article
-     */
+    //--------------------
+    // article methods
+    //--------------------
 
     prepareArticle(obj, theOwner) {
         return this.articles.prepare(obj, theOwner);
@@ -89,6 +89,7 @@ class DataCache {
     //--------------------
     // category methods
     //--------------------
+
     prepareCategory(obj) {
         return this.categories.prepare(obj);
     }
@@ -108,6 +109,7 @@ class DataCache {
     //--------------------
     // trade methods
     //--------------------
+
     prepareTrade(obj) {
         return this.trades.prepare(obj);
     }
@@ -140,9 +142,10 @@ class DataCache {
         return this.trades.isArticleUsed(theArticleId);
     }
 
-    /*
-     * User
-     */
+    //--------------------
+    // user methods
+    //--------------------
+
     prepareUser(obj) {
         return this.users.prepare(obj);
     }

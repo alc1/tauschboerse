@@ -55,7 +55,7 @@ class CategoryCache {
     }
 
     dump() {
-        console.log('Categories:')
+        console.log('Categories:');
         console.log(JSON.stringify(this.categories, null, 2));
         console.log('');
     }

@@ -17,10 +17,6 @@ class Category {
 
         return modified;
     }
-
-    canSave() {
-        return (this.name != null);
-    }
 }
 
 module.exports = Category;

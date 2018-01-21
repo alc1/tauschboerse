@@ -53,7 +53,7 @@ class ArticleCache {
     }
 
     dump() {
-        console.log('Articles:')
+        console.log('Articles:');
         console.log(JSON.stringify(this.articles, null, 2));
         console.log('');
     }
