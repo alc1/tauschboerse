@@ -291,19 +291,19 @@ In den folgenden Diagrammen sind die umgesetzten Use Cases abgebildet.
 
 <dl>
   <dt>Registrieren</dt>
-  <dd></dd>
+  <dd>Um Artikel in der Applikation tauschen zu können, muss er sich zuerst registrieren. Dies kann er tun, in dem er seine Benutzerdaten angibt und ein Passwort wählt.</dd>
 
   <dt>Login</dt>
-  <dd></dd>
+  <dd>Mit der bei der Registrierung angegebenen E-Mail-Adresse und dem Passwort kann er sich dann in der Applikation anmelden.</dd>
 
   <dt>Logout</dt>
-  <dd></dd>
+  <dd>Er kann sich auch wieder abmelden.</dd>
 
   <dt>Profil bearbeiten</dt>
-  <dd></dd>
+  <dd>Ein registrierter Benutzer kann jederzeit seine Benutzerdaten und das Passwort ändern.</dd>
 
   <dt>Artikel verwalten</dt>
-  <dd></dd>
+  <dd>In seiner Artikelverwaltung kann ein angemeldeter Benutzer neue Artikel erfassen oder bestehende Artikel bearbeiten. Es kann sie auch löschen sofern sie noch in keinem Tauschgeschäft verwendet werden oder in einem abgeschlossenen Tauschgeschäft verwendet wurden. In diesen Fällen wird der zu löschende Artikel lediglich als gelöscht markiert, damit er nicht mehr auf dem Marktplatz erscheint.</dd>
 </dl>
 
 #### Marktplatz
