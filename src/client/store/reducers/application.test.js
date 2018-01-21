@@ -14,7 +14,7 @@ import {
     RELOAD_TRADE
 } from '../../model/GlobalMessageParams';
 
-import applicationReducer, { initialState, loadingCounter } from './application';
+import applicationReducer, { initialState } from './application';
 
 import { createDummyAction } from '../../testutils/common';
 
@@ -76,38 +76,39 @@ describe('Application Reducer', () => {
 
     describe(`Test action ${LOADING_STATE_RECEIVED}`, () => {
         test(`Change loadingCounter from 0 to 1 should change isLoading from false to true`, () => {
-            loadingCounter.value = 0;
-            const startingState = { ...initialState, isLoading: false };
+            const startingState = { ...initialState, isLoading: false, loadingCounter: 0 };
+            const startingStateCopy = { ...startingState };
             const endState = applicationReducer(startingState, loadingStateReceived(true));
             expect(endState).not.toBe(startingState);
-            expect(endState).toEqual({ ...initialState, isLoading: true });
+            expect(endState).toEqual({ ...initialState, isLoading: true, loadingCounter: 1 });
+            expect(startingState).toEqual(startingStateCopy);
         });
         test(`Change loading counter from 1 to 0 should change isLoading from true to false`, () => {
-            loadingCounter.value = 1;
-            const startingState = { ...initialState, isLoading: true };
+            const startingState = { ...initialState, isLoading: true, loadingCounter: 1 };
+            const startingStateCopy = { ...startingState };
             const endState = applicationReducer(startingState, loadingStateReceived(false));
             expect(endState).not.toBe(startingState);
-            expect(endState).toEqual({ ...initialState, isLoading: false });
+            expect(endState).toEqual({ ...initialState, isLoading: false, loadingCounter: 0 });
+            expect(startingState).toEqual(startingStateCopy);
         });
-        test(`Increase loading counter from any number greater than 0 to the next higher doesn't change the state`, () => {
-            loadingCounter.value = 6;
-            const startingState = { ...initialState, isLoading: true };
+        test(`Increase loading counter from any number greater than 0 to the next higher doesn't change the isLoading flag`, () => {
+            const startingState = { ...initialState, isLoading: true, loadingCounter: 6 };
             const startingStateCopy = { ...startingState };
             const endState = applicationReducer(startingState, loadingStateReceived(true));
-            expect(endState).toBe(startingState);
-            expect(endState).toEqual(startingStateCopy);
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual({ ...initialState, isLoading: true, loadingCounter: 7 });
+            expect(startingState).toEqual(startingStateCopy);
         });
-        test(`Decrease loading counter from any number greater than 1 to the next lower doesn't change the state`, () => {
-            loadingCounter.value = 3;
-            const startingState = { ...initialState, isLoading: true };
+        test(`Decrease loading counter from any number greater than 1 to the next lower doesn't change the isLoading flag`, () => {
+            const startingState = { ...initialState, isLoading: true, loadingCounter: 3 };
             const startingStateCopy = { ...startingState };
             const endState = applicationReducer(startingState, loadingStateReceived(false));
-            expect(endState).toBe(startingState);
-            expect(endState).toEqual(startingStateCopy);
+            expect(endState).not.toBe(startingState);
+            expect(endState).toEqual({ ...initialState, isLoading: true, loadingCounter: 2 });
+            expect(startingState).toEqual(startingStateCopy);
         });
         test('Decrease loading counter when it is already 0 should not change the state and leave a message in the console', () => {
-            loadingCounter.value = 0;
-            const startingState = { ...initialState, isLoading: false };
+            const startingState = { ...initialState, isLoading: false, loadingCounter: 0 };
             const startingStateCopy = { ...startingState };
             const endState = applicationReducer(startingState, loadingStateReceived(false));
             expect(endState).toBe(startingState);

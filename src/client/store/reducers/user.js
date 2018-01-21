@@ -26,6 +26,7 @@ import { DEFAULT_PAGE_SIZE } from '../../utils/constants';
 export const initialState = {
     user: null,
     trades: new TradesModel(),
+    highestVersionstamp: 0,
     reloadTrades: false,
     userTradesSectionIndex: -1,
     userArticlesInfo: new UserArticlesInfo(),
@@ -33,9 +34,6 @@ export const initialState = {
         pageSize: DEFAULT_PAGE_SIZE
     }
 };
-
-// current highest trade versionstamp
-let highestVersionstamp = 0;
 
 export default function user(theState = initialState, theAction) {
     let newState;
@@ -56,21 +54,20 @@ export default function user(theState = initialState, theAction) {
                 userArticlesInfo: new UserArticlesInfo(theState.userArticlesInfo).setArticles(theAction.articles)
             };
         case USER_TRADES_FETCHED:
-            highestVersionstamp = theAction.trades.highestVersionstamp;
-
             return {
                 ...theState,
                 trades: theAction.trades,
                 reloadTrades: false,
+                highestVersionstamp: theAction.trades.highestVersionstamp,
                 userTradesSectionIndex: getCurrentUserTradesSectionIndex(theAction.trades, theState.userTradesSectionIndex)
             };
         case USER_TRADES_VERSION_FETCHED:
             newState = theState;
-            if (theAction.versionstamp > highestVersionstamp) {
-                highestVersionstamp = theAction.versionstamp;
+            if (theAction.versionstamp > theState.highestVersionstamp) {
                 newState = {
                     ...theState,
-                    reloadTrades: true
+                    reloadTrades: true,
+                    highestVersionstamp: theAction.versionstamp
                 };
             }
             return newState;
