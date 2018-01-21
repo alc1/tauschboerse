@@ -54,7 +54,7 @@ Online-Tauschbörse im Rahmen des CAS FEE 2017. Ziel des Projekts ist es, eine W
 
 * Marktplatz
   * Auf dem "Marktplatz" kann ein Benutzer nach Artikeln suchen.
-  * Dies ist das einzige Modul, welches auch nicht registrierten Benutzern (Gast) zur Verfügung steht.
+  * Dies ist das einzige Modul, welches auch nicht-registrierten Benutzern (Gast) zur Verfügung steht.
   * Ein Gast kann aber nur nach Artikeln suchen und diese anschauen.
   * Hingegen ein registrierter Benutzer hat hier die Möglichkeit, einen Artikel auszuwählen, den er haben möchte und für diesen ein Angebot zu machen.
   * Dieses Angebot besteht aus einem oder mehreren der eigenen Artikeln.
@@ -101,6 +101,7 @@ Das Tolle an diesem Projekt ist, dass es fast beliebig erweiterbar mit zusätzli
     * Zudem wird der angemeldete Benutzer per Links zu den weiteren Funktionen geführt.
 * Funktionen:
   * Innerhalb seines Artikels sieht ein angemeldeter Benutzer, in welchen Tauschgeschäften dieser Artikel involviert ist. Mit einem Klick kann er direkt in das Tauschgeschäft springen.
+  * Ein Paging-Mechanismus wurde in der Trade-Detail-Ansicht und im Trade-Editor für die Artikellisten implementiert. 
 
 ## Setup
 
@@ -247,7 +248,7 @@ Wir liessen die Applikation auch von echten Benutzern testen. Folgende Punkte wa
   * Greift Benutzer auf einen Link zu, dessen Inhalt er nicht sehen darf, erscheint eine Meldung und er wird auf sein Dashboard umgeleitet.
   * Greift ein nicht angemeldeter Benutzer auf einen Link zu, dessen Inhalt er nicht sehen darf, wird er auf die Login-Seite umgeleitet, wo er sich anmelden muss. Meldet er sich nun mit dem richtigen Benutzer an, wird er automatisch auf die ursprüngliche Seite umgeleitet, auf die er nun Zugriff hat.
 * **Einsatz von UI-Libraries/Packages (npm):**
-  * Man muss das Rad nicht neu erfinden, darum haben wir in einige Fällen (Bildgalerie, Kuchendiagramme, Paging-Mechanismuss, Chip-Eingabefeld...) diverse Libraries aus "npm" evaluiert und jeweils die passendsten davon in unserem Projekt eingebungen.
+  * Man muss das Rad nicht neu erfinden, darum haben wir in einige Fällen (Bildgalerie, Kuchendiagramme, Paging-Mechanismus, Chip-Eingabefeld...) diverse Libraries aus "npm" evaluiert und jeweils die passendsten davon in unserem Projekt eingebungen.
 * **Benutzerführung:**
   * Von Beginn weg (Startseite/Dashboard) wird der Benutzer geführt. Es wird ihm erklärt, wo er was machen kann.
   * Je nach Zustand des Tauschgeschäfts wird dem Benutzer erklärt, was er nun machen kann/muss.
