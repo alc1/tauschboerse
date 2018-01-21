@@ -45,6 +45,7 @@
           - [GET /api/{user id}](#get-apiuser-id)
           - [PUT /api/](#put-api)
       - [Datenbank](#datenbank)
+        - [Logisches Datenmodell](#logisches-datenmodell)
 - [Rückblick](#r%C3%BCckblick)
   - [Gut gelöst](#gut-gel%C3%B6st)
   - [Das nächste Mal anders](#das-n%C3%A4chste-mal-anders)
@@ -400,6 +401,10 @@ Die Zustände der Artikel werden einerseits durch direktes Handeln der Artikelbe
 ###### PUT /api/
 
 #### Datenbank
+
+##### Logisches Datenmodell
+
+![alt text](https://github.com/alc-hsr/tauschboerse/raw/master/docs/diagrams/LogicalModel.png "Datenmodell")
 
 # Rückblick
 
