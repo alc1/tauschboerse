@@ -21,7 +21,7 @@
       - [Tests für die React-Komponenten](#tests-f%C3%BCr-die-react-komponenten)
       - [Tests für clientseitige Modellklassen](#tests-für-clientseitige-modellklassen)
     - [b) End-to-End Tests](#b-end-to-end-tests)
-      - [WebdriverIO/Selenium](#webdriverio-selenium)
+      - [WebdriverIO/Selenium](#webdriverioselenium)
       - [Puppeteer](#puppeteer)
     - [c) CSS Style Tests](#c-css-style-tests)
     - [d) Echte Benutzertests](#d-echte-benutzertests)
@@ -245,6 +245,8 @@ npm run test-e2e
 ```
 
 Bei fehlgeschlagenen Tests wird ein Screenshot gemacht und im Verzeichnis <code>./test/wdioErrorShots/</code> gespeichert.
+
+Das folgende Video zeigt einen Testdurchlauf: [Link zum Video (e2e.wmv)](https://github.com/alc-hsr/tauschboerse/blob/master/docs/media/e2e.wmv)
 
 #### Puppeteer
 
